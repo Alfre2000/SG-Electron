@@ -1,0 +1,101 @@
+.nav-link:hover {
+    background-color: rgb(71 85 105 / 0.3);
+}
+.dropdown ul {
+  max-height: 0;
+  overflow: hidden;
+}
+#navbar:not(.closed) .dropdown:not(.open) ul {
+  transition: max-height 0.25s ease-out;
+}
+.dropdown.open ul {
+  max-height: 500px;
+  transition: max-height 0.5s ease-in;
+}
+#navbar svg.caret {
+  transform: rotate(-90deg);
+  transition: transform 0.25s ease-in-out;
+}
+#navbar svg.caret.up {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease-in-out;
+}
+#navbar {
+  width: 20%;
+  min-width: 15em;
+  transition: width 0.4s ease-in-out, min-width 0.4s ease-in-out,;
+}
+#navbar.closed {
+  width: 80px;
+  min-width: 80px;
+  transition: width 0.4s ease-in-out, min-width 0.4s ease-in-out,;
+}
+#navbar img {
+  margin-bottom: 0px;
+  width: 130px;
+  transition: width 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
+}
+#navbar.closed img {
+  margin-bottom: 30px;
+  width: 60px;
+  transition: width 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
+}
+#navbar svg {
+  height: 1em;
+  transition: height 0.4s ease-in-out;
+}
+#navbar.closed svg {
+  height: 1.3em;
+  transition: height 0.4s ease-in-out;
+  position: relative;
+  left: 7px;
+}
+#navbar.closed .title,
+#navbar.closed .caret {
+  display: none;
+}
+#navbar.closed .dropdown > div {
+  padding: 0.9rem .75rem;
+}
+#navbar.closed .dropdown.open {
+  position: relative;
+}
+#navbar.closed .dropdown.open ul {
+  background-color: #2061a7;
+  position: absolute;
+  left: 60px;
+  top: 20px;
+  list-style-type: disc;
+  width: max-content;
+  border-radius: 2px 16px 16px 16px;
+  padding: 10px;
+  padding-left: 23px;
+}
+#navbar li {
+  text-decoration: none;
+  position: relative;
+  width: fit-content;
+}
+#navbar a:before,
+#navbar a:after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  width: 0px;
+  height: 1px;
+  margin: 5px 0 0;
+  transition: all 0.4s ease-in-out;
+  opacity: 0;
+  background-color: white;
+  /* left: 0; */
+}
+#navbar a:before {
+  left: 50%;
+}
+#navbar a:after {
+  right: 50%;
+}
+#navbar li:hover a:before, #navbar li:hover a:after {
+  width: 50%;
+  opacity: 1;
+}

@@ -1,8 +1,11 @@
 {
-  "name": "electron-project",
+  "name": "supergalvanica",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
@@ -11,11 +14,15 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "main": "public/electron.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm run electron\"",
+    "electron": "wait-on tcp:3000 && electron .",
+    "watch": "electron ."
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +41,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.4",
+    "electron": "^18.0.4",
+    "electron-builder": "^23.0.3",
+    "electron-is-dev": "^2.0.0",
+    "postcss": "^8.4.12",
+    "tailwindcss": "^3.0.24"
   }
 }
