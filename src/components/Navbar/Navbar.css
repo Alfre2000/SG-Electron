@@ -8,6 +8,13 @@
 #navbar:not(.closed) .dropdown:not(.open) ul {
   transition: max-height 0.25s ease-out;
 }
+#navbar.closed .dropdown ul li {
+  visibility: hidden;
+}
+#navbar.closed .dropdown.open ul li {
+  visibility: visible;
+  transition: visibility 0.5s ease-in 0.15s;
+}
 .dropdown.open ul {
   max-height: 500px;
   transition: max-height 0.5s ease-in;
@@ -50,9 +57,19 @@
   position: relative;
   left: 7px;
 }
-#navbar.closed .title,
 #navbar.closed .caret {
-  display: none;
+  display: none !important;
+}
+#navbar.closed .dropdown .title {
+  max-width: 0px;
+  position: absolute;
+  visibility: hidden;
+}
+#navbar .dropdown .title {
+  display: inline-flex;
+  overflow: hidden;
+  visibility: visible;
+  transition: visibility 0.4s cubic-bezier(0.88, -1.56, 1, 0.75);
 }
 #navbar.closed .dropdown > div {
   padding: 0.9rem .75rem;
@@ -61,15 +78,18 @@
   position: relative;
 }
 #navbar.closed .dropdown.open ul {
+  border-radius: 0 6px 6px 0;
+  left: 53px;
+  padding: 12px;
+  top: 8px;
+  padding-left: 23px;
   background-color: #2061a7;
   position: absolute;
-  left: 60px;
-  top: 20px;
   list-style-type: disc;
   width: max-content;
-  border-radius: 2px 16px 16px 16px;
-  padding: 10px;
-  padding-left: 23px;
+}
+#navbar.closed .dropdown.open ul li:last-of-type {
+  margin-bottom: 0px;
 }
 #navbar li {
   text-decoration: none;

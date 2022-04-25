@@ -4,7 +4,7 @@ const fs = require('fs');
 const { app, BrowserWindow, ipcMain, desktopCapturer, dialog } = require('electron');
 const isDev = require('electron-is-dev');
 
-
+// process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 function createWindow() {
   // Create the browser window.
@@ -26,16 +26,20 @@ function createWindow() {
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
   // Open the DevTools.
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
+  // if (isDev) {
+  win.webContents.openDevTools({ mode: 'detach' });
+  // }
   ipcMain.handle('toggle-fullscreen', () => {
     win.setFullScreen(!win.isFullScreen())  
   })
   ipcMain.handle('save-schreenshot', () => {
     desktopCapturer.getSources({ types: ['window'], thumbnailSize: {width: 1350, height: 800} }).then(sources => {
         const defaultPath = app.getPath('desktop')
-        dialog.showSaveDialog(win, { defaultPath: defaultPath}).then((file => {
+        dialog.showSaveDialog(win, { 
+          title: "Salva Schreenshot",
+          defaultPath: defaultPath,
+          properties: ['openFile', 'openDirectory', 'createDirectory'],
+        }).then((file => {
             if (!file.canceled) {
                 const path = file.filePath.toString() + '.png'
                 fs.writeFile(path, sources[0].thumbnail.toPNG(), function (err) {

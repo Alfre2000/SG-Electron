@@ -14,9 +14,9 @@ function Menu({title, icon, links, navOpen}) {
   return (
     <div className={`mt-3 dropdown ${open ? "open" : ""} cursor-pointer`} onClick={() => setOpen(!open)}>
         <div className="flex justify-between py-2 px-4 nav-link rounded-md">
-            <div>
+            <div className="flex items-center">
               <FontAwesomeIcon icon={icon} />
-              <span className="pl-4 title">{title}</span>
+              <div className="pl-4 title">{title}</div>
             </div>
             <div className="text-right caret"><FontAwesomeIcon icon={faCaretDown} className={`caret ${open ? "up": ""}`} /></div>
         </div>

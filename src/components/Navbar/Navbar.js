@@ -8,7 +8,9 @@ function Navbar({ menu, navOpen }) {
   const versione = navOpen ? "Versione Software" : "Versione"
   return (
     <div id="navbar" className={`bg-nav-blue min-h-screen ${navOpen ? "" : "closed"} flex flex-col font-poppins text-white`} style={{maxWidth: "15rem"}}>
-        <img src={Icona} alt="Icona SuperGalvanica" className="mx-auto mt-5" />
+        <a href="/">
+          <img src={Icona} alt="Icona SuperGalvanica" className="mx-auto mt-5" />
+        </a>
         <div id="navbar-content" className="px-2 mt-2">
             {menu.map(menu => <Menu {...menu} key={menu.title} navOpen={navOpen} />)}
         </div>
