@@ -1,9 +1,12 @@
-.nav-link:hover {
+.sg-nav-link:hover {
     background-color: rgb(71 85 105 / 0.3);
 }
 .dropdown ul {
   max-height: 0;
   overflow: hidden;
+}
+.dropdown ul a {
+  color: white;
 }
 #navbar:not(.closed) .dropdown:not(.open) ul {
   transition: max-height 0.25s ease-out;
@@ -72,12 +75,13 @@
   transition: visibility 0.4s cubic-bezier(0.88, -1.56, 1, 0.75);
 }
 #navbar.closed .dropdown > div {
-  padding: 0.9rem .75rem;
+  padding: 0.9rem .75rem !important;
 }
 #navbar.closed .dropdown.open {
   position: relative;
 }
 #navbar.closed .dropdown.open ul {
+  z-index: 1000;
   border-radius: 0 6px 6px 0;
   left: 53px;
   padding: 12px;

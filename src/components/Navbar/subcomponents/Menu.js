@@ -2,6 +2,7 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useRef, useState } from 'react'
 import useOutsideAlerter from '../../../hooks/useOutsideAlerter';
+import { Link } from 'react-router-dom';
 
 function Menu({title, icon, links, navOpen}) {
   const [open, setOpen] = useState(false)
@@ -13,7 +14,7 @@ function Menu({title, icon, links, navOpen}) {
   });
   return (
     <div className={`mt-3 dropdown ${open ? "open" : ""} cursor-pointer`} onClick={() => setOpen(!open)}>
-        <div className="flex justify-between py-2 px-4 nav-link rounded-md">
+        <div className="flex justify-between py-2 px-4 sg-nav-link rounded-md">
             <div className="flex items-center">
               <FontAwesomeIcon icon={icon} />
               <div className="pl-4 title">{title}</div>
@@ -21,7 +22,7 @@ function Menu({title, icon, links, navOpen}) {
             <div className="text-right caret"><FontAwesomeIcon icon={faCaretDown} className={`caret ${open ? "up": ""}`} /></div>
         </div>
         <ul className="pl-6 pr-2 ml-[1.15em] list-disc" ref={wrapperRef}>
-            {links.map(el => <li className="text-sm mb-2 hover:underline" key={el.name}><a href={el.link}>{el.name}</a></li>)}
+            {links.map(el => <li className="text-sm mb-2 hover:underline" key={el.name}><Link to={el.link}>{el.name}</Link></li>)}
         </ul>
     </div>
   )

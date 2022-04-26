@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import Icona from "./../../images/icona.png";
 import './Navbar.css'
 import Menu from './subcomponents/Menu';
@@ -8,9 +9,9 @@ function Navbar({ menu, navOpen }) {
   const versione = navOpen ? "Versione Software" : "Versione"
   return (
     <div id="navbar" className={`bg-nav-blue min-h-screen ${navOpen ? "" : "closed"} flex flex-col font-poppins text-white`} style={{maxWidth: "15rem"}}>
-        <a href="/">
+        <Link to="/">
           <img src={Icona} alt="Icona SuperGalvanica" className="mx-auto mt-5" />
-        </a>
+        </Link>
         <div id="navbar-content" className="px-2 mt-2">
             {menu.map(menu => <Menu {...menu} key={menu.title} navOpen={navOpen} />)}
         </div>

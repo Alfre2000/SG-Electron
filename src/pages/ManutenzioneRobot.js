@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Navbar from "./../components/Navbar/Navbar";
 import Header from "./../components/Header/Header";
 import useCheckAuth from '../hooks/useCheckAuth';
-import { faComputer } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faComputer } from '@fortawesome/free-solid-svg-icons'
 import { apiGet, apiPost } from '../api/utils';
 import { URLS } from '../urls';
-import { Alert, Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Skeleton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Col, Container, Row, Alert, Card, Placeholder, Form, Button, Table } from 'react-bootstrap';
+import { dateToDatePicker, dateToTimePicker } from '../utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function ManutenzioneRobot() {
   useCheckAuth();
@@ -13,6 +15,8 @@ function ManutenzioneRobot() {
   const [pezzi, setPezzi] = useState("")
   const [operatore, setOperatore] = useState("")
   const [note, setNote] = useState("")
+  const [date, setDate] = useState(dateToDatePicker(new Date()))
+  const [time, setTime] = useState(dateToTimePicker(new Date()))
   const [navOpen, setNavOpen] = useState(false)
   const [success, setSuccess] = useState(false)
   const navbar = [
@@ -21,7 +25,6 @@ function ManutenzioneRobot() {
       {name: 'Manutenzione Robot', link: '/robot'},
     ]},
   ];
-  console.log(data);
   const toggleNavbar = () => {
     setNavOpen(!navOpen)
   }
@@ -34,9 +37,10 @@ function ManutenzioneRobot() {
   }, [])
   const handleForm = (e) => {
     e.preventDefault();
+    let datetime = new Date(date + " " + time).toISOString()
     apiPost(
       URLS.CREA_RECORD_LAVORAZIONE,
-      { n_pezzi: pezzi, operatore, note }
+      { n_pezzi: pezzi, operatore, note, data: datetime }
     ).then(response => {
       response.operatore = { id: response.operatore, nome: data.operatori.filter(el => el.id === response.operatore)[0].nome}
       setData({...data, lavorazioni: [response, ...data.lavorazioni], n_pezzi: data.n_pezzi - pezzi})
@@ -47,120 +51,172 @@ function ManutenzioneRobot() {
       setTimeout(() => setSuccess(false), 4000)
     }).catch(err => console.log(err));
   }
+  setInterval(() => {
+    setTime(dateToTimePicker(new Date()))
+  }, 1000 * 60)
+  const manutenzioneUrgente = data.n_giorni <= 0 || data.n_pezzi <= 0
   return (
     <>
-      <Navbar menu={navbar} navOpen={navOpen}></Navbar>
+      <Navbar menu={navbar} navOpen={navOpen} />
       <div className="grow flex flex-col">
         <Header toggleNavbar={toggleNavbar} title="Manutenzione Robot" />
         <div className="bg-gray-50 grow flex px-8">
-          <Container className="text-center my-10">
-            <Grid container spacing={6}>
-              <Grid item xs={4}>
-                <Paper elevation={2}>
-                  <Typography variant="h6">N° pezzi alla manutezione</Typography>
-                  <Typography variant="h5">{data.n_pezzi !== undefined ? data.n_pezzi : <Skeleton className="m-auto" variant="text" width={100} height={30}/>}</Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={4}>
-                <Paper elevation={2} className="h-full flex items-center justify-center">
-                  <Typography variant="h5" style={{ color: '#0b0b55' }}>{data.impianto ||  <Skeleton className="m-auto" variant="text" width={150} height={50}/>}</Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={4}>
-                <Paper elevation={2}>
-                  <Typography variant="h6">N° giorni alla manutezione</Typography>
-                  <Typography variant="h5">{data.n_giorni !== undefined ? data.n_giorni : <Skeleton className="m-auto" variant="text" width={100} height={30}/>}</Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper elevation={2} align="left" sx={{ p: 3 }}>
-                  <Typography variant="h6">Aggiungi lavorazione lotto</Typography>
-                  <Box component="form" onSubmit={handleForm}>
-                    <Grid container sx={{ mt: -1 }} spacing={4}>
-                      <Grid item xs={2.5}>
-                        <TextField 
-                          type="number"
-                          label="Numero Pezzi"
-                          value={pezzi}
-                          onChange={(e) => setPezzi(e.target.value)}
-                          InputProps={{
-                            required: true,
-                            step: "100",
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <FormControl fullWidth>
-                          <InputLabel id="operatore-label">Operatore</InputLabel>
-                          <Select
-                              labelId="operatore-label"
-                              label="Operatore"
-                              value={operatore}
-                              onChange={(e) => setOperatore(e.target.value)}
-                              required
-                            >
-                              {data.operatori && data.operatori.map(operatore => (
-                                <MenuItem key={operatore.id} value={operatore.id}>{operatore.nome}</MenuItem>  
-                              ))}
-                            </Select>
-                          </FormControl>
-                      </Grid>
-                      <Grid item xs={6.5}>
-                        <TextField
-                          type="text" 
-                          label="Note" 
-                          fullWidth
-                          value={note}
-                          onChange={(e) => setNote(e.target.value)} />
-                      </Grid>
-                      <Grid item xs={2} alignItems="center">
-                        <Button sx={{ mt: 0.5 }} color="primary" variant="contained" type="submit">Aggiungi</Button>
-                      </Grid>
-                      {success && (
-                        <Grid item xs={6}>
-                          <Alert severity="success">Lavorazione aggiunta !</Alert>
-                        </Grid>
-                      )}
-                    </Grid>
-                  </Box>
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper elevation={2} align="left" sx={{ p: 3 }}>
-                  <Typography variant="h6">Ultimi lotti lavorati</Typography>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">Data</TableCell>
-                        <TableCell align="center">Ora</TableCell>
-                        <TableCell align="center">N° pezzi</TableCell>
-                        <TableCell align="center">Operatore</TableCell>
-                        <TableCell align="center">Note</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
+          <Container className="text-center my-10 lg: mx-2 xl:mx-10 2xl:mx-12">
+            {manutenzioneUrgente && (
+              <Row className="justify-center mb-2 -mt-3">
+                <Col xs={12}>
+                  <Alert variant="danger"><strong>É necessaria la manutenzione dell'impianto !</strong></Alert>
+                </Col>
+              </Row>)}
+            <Row>
+              <Col xs={4} className="pr-6">
+                <Card>
+                  <Card.Header className="font-semibold text-lg">N° pezzi alla manutenzione</Card.Header>
+                  <Card.Body className="text-center">
+                    {data.n_pezzi !== undefined ? (
+                      <h5 className="text-2xl text-semibold">{data.n_pezzi}</h5>
+                    )
+                      : (
+                      <Placeholder as="h5" animation="glow">
+                        <Placeholder xs={4} className="rounded-md" />
+                      </Placeholder>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col xs={4} className="px-6">
+                <Card className="h-full">
+                  <Card.Header className="h-full grid items-center border-b-0">
+                    {data.impianto ? (
+                      <h3 className="text-3xl text-semibold">{data.impianto}</h3>
+                    ) : (
+                      <Placeholder as="h5" animation="glow">
+                        <Placeholder xs={4} className="rounded-md" />
+                      </Placeholder>
+                    )}
+                  </Card.Header>
+                </Card>
+              </Col>
+              <Col xs={4} className="pl-6">
+                <Card className="rounded-xl">
+                  <Card.Header className="font-semibold text-lg">N° giorni alla manutenzione</Card.Header>
+                  <Card.Body className="text-center">
+                    {data.n_giorni !== undefined ? (
+                      <h5 className="text-2xl text-semibold">{data.n_giorni}</h5>
+                    )
+                      : (
+                      <Placeholder as="h5" animation="glow">
+                        <Placeholder xs={4} className="rounded-md" />
+                      </Placeholder>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            <Row className="mt-10">
+              <Col xs={12}>
+                <Card>
+                  <Card.Header as="h6" className="font-semibold text-lg">Aggiungi lavorazione lotto</Card.Header>
+                  <Card.Body className="px-5">
+                    <Form onSubmit={handleForm}>
+                      <Row className="mb-4">
+                        <Col xs={2}>
+                        <Form.Group>
+                          <Form.Label>N° di pezzi</Form.Label>
+                          <Form.Control type="number" className="text-center" required value={pezzi} onChange={e => setPezzi(e.target.value)} />
+                        </Form.Group>
+                        </Col>
+                        <Col xs={4}>
+                          <Form.Group>
+                            <Form.Label>Operatore</Form.Label>
+                            <Form.Select required className="text-center" value={operatore} onChange={e => setOperatore(e.target.value)}>
+                                <option value=""></option>  
+                                {data.operatori && data.operatori.map(operatore => (
+                                  <option key={operatore.id} value={operatore.id}>{operatore.nome}</option>  
+                                ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                        <Col xs={3}>
+                          <Form.Group>
+                            <Form.Label>Data</Form.Label>
+                            <Form.Control className="text-center" type="date" value={date} onChange={e => setDate(e.target.value)}/>
+                          </Form.Group>
+                        </Col>
+                        <Col xs={3}>
+                          <Form.Group>
+                            <Form.Label>Ora</Form.Label>
+                            <Form.Control className="text-center" type="time" value={time} onChange={e => setTime(e.target.value)}/>
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group>
+                        <Row className="mb-4">
+                          <Col xs={1} className="flex items-center">
+                            <Form.Label>Note</Form.Label>
+                          </Col>
+                          <Col sm={11}>
+                            <Form.Control as="textarea" rows={3} value={note} onChange={e => setNote(e.target.value)} />
+                          </Col>
+                        </Row>
+                      </Form.Group>
+                      <Row className="mb-2 items-center">
+                        <Col sx={4}></Col>
+                        <Col sx={4}>
+                          <Button type="submit" className="bg-[#0d6efd] w-28 font-medium">Salva</Button>
+                        </Col>
+                        <Col sx={4}>
+                          {success && (
+                            <Alert className="m-0 p-2" variant="success"><FontAwesomeIcon size="lg" className="mr-3" icon={faCheck} />Lavorazione aggiunta !</Alert>
+                          )}
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            <Row className="mt-10">
+              <Col xs={12}>
+                <Card>
+                  <Card.Header as="h6" className="font-semibold text-lg">Ultimi lotti lavorati</Card.Header>
+                  <Card.Body>
+                    <Table striped bordered>
+                      <thead>
+                        <tr>
+                          <th>Data</th>
+                          <th>Ora</th>
+                          <th>N° Pezzi</th>
+                          <th>Operatore</th>
+                          <th>Note</th>
+                        </tr>
+                      </thead>
+                      <tbody>
                       {data.lavorazioni ? data.lavorazioni.map(lavorazione => {
                         let data = new Date(lavorazione.data)
                         return (
-                          <TableRow key={lavorazione.id}>
-                            <TableCell align="center">{data.toLocaleDateString()}</TableCell>
-                            <TableCell align="center">{data.toLocaleTimeString()}</TableCell>
-                            <TableCell align="center">{lavorazione.n_pezzi}</TableCell>
-                            <TableCell align="center">{lavorazione.operatore ? lavorazione.operatore.nome : ""}</TableCell>
-                            <TableCell align="center">{lavorazione.note}</TableCell>
-                          </TableRow>
-                      )}) : Array.from(Array(5)).map((_, idx) => (
-                        <TableRow key={idx}>
-                          <TableCell colSpan="5">
-                            <Skeleton />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Paper>
-              </Grid>
-            </Grid>
+                          <tr key={lavorazione.id}>
+                            <td>{data.toLocaleDateString()}</td>
+                            <td>{data.toLocaleTimeString()}</td>
+                            <td>{lavorazione.n_pezzi}</td>
+                            <td>{lavorazione.operatore ? lavorazione.operatore.nome : ""}</td>
+                            <td>{lavorazione.note}</td>
+                          </tr>
+                        )}) : Array.from(Array(5)).map((_, idx) => (
+                          <tr key={idx}>
+                            <td colSpan="5">
+                              <Placeholder as="p" animation="glow">
+                                <Placeholder xs={12} className="rounded-md"/>
+                              </Placeholder>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
           </Container>
         </div>
       </div>

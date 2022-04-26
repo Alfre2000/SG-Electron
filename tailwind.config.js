@@ -12,7 +12,8 @@ module.exports = {
         'btn-dark-blue': '#05196e'
       },
       fontFamily: {
-        'poppins': ['Poppins', 'sans-serif']
+        'poppins': ['Poppins', 'sans-serif'],
+        'roboto': ['Roboto', 'Helvetica', 'Arial', 'sans-serif']
       },
       boxShadow: {
         'header': 'inset 0px 1px 40px 6px rgb(0 0 25 / 20%)',
