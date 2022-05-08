@@ -25,13 +25,38 @@ export const apiPost = async (url, body = {}) => {
   }
 }
 
+export const apiDelete = async (url) => {
+  try {
+    const { data } = await axios.delete(
+        url,
+        { headers: getHeaders()}
+    );
+    return data
+  } catch (error) {
+      throw getErrors(error)
+  }
+}
+
+export const apiUpdate = async (url, body) => {
+  try {
+    const { data } = await axios.patch(
+      url,
+      body,
+      { headers: getHeaders()}
+  );
+    return data
+  } catch (error) {
+      throw getErrors(error)
+  }
+}
+
 
 export const getHeaders = (auth = true) => {
     const headers = {
         "Content-type": "application/json",
     }
     if (auth) {
-        const authToken = JSON.parse(localStorage.getItem("token"))
+        const authToken = JSON.parse(localStorage.getItem("user")).key
         headers["Authorization"] = `Token ${authToken}`
     }
     return headers

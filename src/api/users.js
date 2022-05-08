@@ -13,7 +13,22 @@ export const login = async (username, password) => {
         { username, password },
         { headers: getHeaders(false)}
     );
-    localStorage.setItem("token", JSON.stringify(data.key));
+    localStorage.setItem("user", JSON.stringify(data));
+    return data
+  } catch (error) {
+      throw error.response && error.response.data
+      ? error.response.data
+      : error.message
+  }
+}
+
+export const adminLogin = async (password) => {
+  try {
+    const { data } = await axios.post(
+        URLS.LOGIN,
+        { username: "admin", password },
+        { headers: getHeaders(false)}
+    );
     return data.key
   } catch (error) {
       throw error.response && error.response.data
@@ -29,7 +44,7 @@ export const logout = async () => {
         {},
         { headers: getHeaders(false)}
     );
-    localStorage.removeItem("token")
+    localStorage.removeItem("user")
     return data
   } catch (error) {
       return error.response && error.response.data

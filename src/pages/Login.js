@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../api/users';
 import Header from '../components/Header/Header'
 import Navbar from '../components/Navbar/Navbar'
 import { Card, FloatingLabel, Form, Button, Alert } from 'react-bootstrap';
+import UserContext from '../UserContext';
 
 function Login({ from, afterLogin }) {
   let navigate = useNavigate();
@@ -12,6 +13,7 @@ function Login({ from, afterLogin }) {
   const [errors, setErrors] = useState({})
 
   const [navOpen, setNavOpen] = useState(true)
+  const { user, setUser } = useContext(UserContext)
   const navbar = [];
   const toggleNavbar = () => {
     setNavOpen(!navOpen)
@@ -21,9 +23,10 @@ function Login({ from, afterLogin }) {
     login(username, password).then(data => {
       afterLogin();
       navigate("/");
+      setUser(data)
     }).catch(err => setErrors(err))
   }
-  if (JSON.parse(localStorage.getItem("token"))) {
+  if (user.key) {
     return <Navigate to={{ pathname: from || '/' }} />
   }
   return (

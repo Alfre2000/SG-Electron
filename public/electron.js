@@ -1,10 +1,29 @@
 const path = require('path');
 const fs = require('fs');
 
-const { app, BrowserWindow, ipcMain, desktopCapturer, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('electron');
 const isDev = require('electron-is-dev');
 
 // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+const mainMenuTemplate = [
+  { 
+    label: "Finestre",
+    submenu: [
+      { label: "Nuova Finestra", click: () => createWindow() }
+    ],
+  },
+  {
+    label: "File",
+    submenu: [
+      { label: "Upload File" },
+      { label: "Preferences" },
+      { label: "Exit" },
+    ],
+  },
+  { label: "Tools" },
+  { label: "Edit" },
+];
+
 
 function createWindow() {
   // Create the browser window.
@@ -29,11 +48,23 @@ function createWindow() {
   // if (isDev) {
   win.webContents.openDevTools({ mode: 'detach' });
   // }
+  
+}
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(() => {
+  createWindow();
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  Menu.setApplicationMenu(mainMenu);
   ipcMain.handle('toggle-fullscreen', () => {
+    const win = BrowserWindow.getFocusedWindow()
     win.setFullScreen(!win.isFullScreen())  
   })
   ipcMain.handle('save-schreenshot', () => {
     desktopCapturer.getSources({ types: ['window'], thumbnailSize: {width: 1350, height: 800} }).then(sources => {
+        const win = BrowserWindow.getFocusedWindow()
         const defaultPath = app.getPath('desktop')
         dialog.showSaveDialog(win, { 
           title: "Salva Schreenshot",
@@ -49,12 +80,25 @@ function createWindow() {
         }))
     })
   })
-}
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow);
+  ipcMain.handle('alerts-manutenzioni', async (event, alerts) => {
+    const win = event.sender.getOwnerBrowserWindow()
+    let response = null;
+    alerts.forEach((operazione) => {
+      if (response === null) {
+        const btn = dialog.showMessageBoxSync(win, {
+          type: "warning",
+          title: `Manutenzione necessaria !`,
+          message: `É necessario effettuare la seguente manutenzione:\n\n ${operazione.nome}`,
+          buttons: ['Ok', 'Effettua']
+        })
+        if (btn === 1) {
+          response = operazione
+        }
+      }
+    })
+    return response
+  })
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

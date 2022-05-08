@@ -92,8 +92,8 @@
   list-style-type: disc;
   width: max-content;
 }
-#navbar.closed .dropdown.open ul li:last-of-type {
-  margin-bottom: 0px;
+#navbar.closed .dropdown.open ul li:last-child {
+  margin-bottom: 0px !important;
 }
 #navbar li {
   text-decoration: none;

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 function useCheckAuth() {
   let navigate = useNavigate();
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem("token"))) {
+    if (!JSON.parse(localStorage.getItem("user"))) {
       navigate('/login')
     }
   }, [navigate])

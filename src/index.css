@@ -31,3 +31,46 @@ a {
   box-shadow: rgb(0 0 0 / 20%) 0px 3px 5px -1px, rgb(0 0 0 / 14%) 0px 6px 10px 0px, rgb(0 0 0 / 12%) 0px 1px 18px 0px;
   border: unset;
 }
+:not(.active).list-group-item:hover {
+  background-color: rgb(241 245 249);
+}
+.container .card-header:not(.titolo-pagina) {
+  /* background-color: #215cb5; */
+  background-color: #449b8d;
+  /* background-color: #F18F01; */
+  color: white;
+  text-transform: uppercase;
+  font-size: 17px;
+  padding: 0.3em 1em;
+  height: fit-content;
+  text-shadow: 1px 1px 4px #000;
+}
+.titolo-pagina h3 {
+  text-align: center;
+  font-size:30px;
+  font-weight:300;
+  color:#222; 
+  letter-spacing:1px;
+  text-transform: uppercase;
+  /* display: grid;
+  grid-template-columns: 1fr max-content 1fr;
+  grid-gap: 20px; */
+  align-items: center;
+  padding: 0 5%;
+  text-shadow: 1px 1px 1px rgb(181, 198, 209);
+  font-weight: 500;
+  color: #215cb5;
+  font-size: 32px;
+}
+/* .titolo-pagina h3:after,.titolo-pagina h3:before {
+  content: " ";
+  display: block;
+  border-bottom: 2px solid #215cb5;
+  border-top: 2px solid #215cb5;
+  height: 8px;
+  background-color:#f8f8f8;
+} */
+
+.toast-container.fixed {
+  position: fixed !important;
+}
