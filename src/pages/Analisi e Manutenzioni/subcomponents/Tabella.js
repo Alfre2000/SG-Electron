@@ -11,7 +11,8 @@ import { deleteRecord } from "../utils";
 import FormWrapper from "./FormWrapper";
 
 function Tabella({ headers, data, setData, FormComponent }) {
-  const [showDeleteModal, setShowDeleteModal] = useState("0");
+  const [showPasswordDeleteModal, setShowPasswordDeleteModal] = useState("0");
+  const [showPasswordModifyModal, setShowPasswordModifyModal] = useState("0");
   const [showConfirmModal, setShowConfirmModal] = useState("0");
   const [showModifyModal, setShowModifyModal] = useState("0");
   const [deletedtoast, setDeletedtoast] = useState(false)
@@ -25,6 +26,12 @@ function Tabella({ headers, data, setData, FormComponent }) {
     }
     setShow("0");
   };
+  const handlePasswordModify = (authed) => {
+    if (authed) {
+      setShowModifyModal(showPasswordModifyModal)
+    }
+    setShowPasswordModifyModal("0");
+  }
   const isRecent = (date) => {
     const recordDate = new Date(date)
     const now = new Date()
@@ -36,8 +43,12 @@ function Tabella({ headers, data, setData, FormComponent }) {
     {deletedtoast && <MyToast>Record eliminato con successo !</MyToast>}
     {modifytoast && <MyToast>Record modificato con successo !</MyToast>}
     <PasswordModal 
-      show={showDeleteModal !== "0"} 
-      handleClose={(authed) => handleRemove(authed, showDeleteModal, setShowDeleteModal)}
+      show={showPasswordDeleteModal !== "0"} 
+      handleClose={(authed) => handleRemove(authed, showPasswordDeleteModal, setShowPasswordDeleteModal)}
+    />
+    <PasswordModal 
+      show={showPasswordModifyModal !== "0"} 
+      handleClose={(authed) => handlePasswordModify(authed)}
     />
     <ConfirmModal 
       show={showConfirmModal !== "0"} 
@@ -82,15 +93,21 @@ function Tabella({ headers, data, setData, FormComponent }) {
                     else value = record[header];
                     return <td key={value || idx}>{value || "-"}</td>
                   })}
-                  <td className="cursor-pointer" onClick={() => setShowModifyModal(record.id)}>
-                    <FontAwesomeIcon icon={faWrench} />
-                  </td>
+                  {i === 0 && isRecent(record.data) ? (
+                    <td className="cursor-pointer" onClick={() => setShowModifyModal(record.id)}>
+                      <FontAwesomeIcon icon={faWrench} />
+                    </td>
+                  ) : (
+                    <td className="cursor-pointer"onClick={() => setShowPasswordModifyModal(record.id)}>
+                      <FontAwesomeIcon icon={faWrench} />
+                    </td>
+                  )}
                   {i === 0 && isRecent(record.data) ? (
                     <td className="cursor-pointer" onClick={() => setShowConfirmModal(record.id)}>
                       <FontAwesomeIcon icon={faTrash} className="text-red-800" />
                     </td>
                   ) : (
-                    <td className="cursor-pointer"onClick={() => setShowDeleteModal(record.id)}>
+                    <td className="cursor-pointer"onClick={() => setShowPasswordDeleteModal(record.id)}>
                       <FontAwesomeIcon icon={faTrash} className="text-red-800" />
                     </td>
                   )}

@@ -131,7 +131,6 @@ function Prossime() {
                       const colorePezzi = operazione.pezzi_mancanti > 0 ? "#058020" : "#960c0c"
                       const coloreGiorni = operazione.giorni_mancanti > 0 ? "#058020" : "#960c0c"
                       let link = "/";
-                      console.log(operazione.nome, operazione.tipologia);
                       if (operazione.tipologia === "fissaggio") link = `/manutenzione/fissaggio/`;
                       if (operazione.tipologia === "analisi") link = `/manutenzione/analisi/?analisi=${operazione.id}`;
                       if (operazione.tipologia === "manutenzione") link = `/manutenzione/manutenzioni/?manutenzione=${operazione.id}`;
