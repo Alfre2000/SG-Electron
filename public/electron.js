@@ -9,7 +9,11 @@ const mainMenuTemplate = [
   { 
     label: "Finestre",
     submenu: [
-      { label: "Nuova Finestra", click: () => createWindow() }
+      { label: "Nuova Finestra", click: () => createWindow() },
+      { label: "Apri DevTools", click: () => {
+        const win = BrowserWindow.getFocusedWindow()
+        win.webContents.openDevTools({ mode: 'detach' });
+      }}
     ],
   },
   {
