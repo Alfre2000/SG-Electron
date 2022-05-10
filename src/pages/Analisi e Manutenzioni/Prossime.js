@@ -32,7 +32,7 @@ function Prossime() {
     setData(parsedData)
   }
   return (
-    <Wrapper defaultNav={false}>
+    <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <Row className="justify-center">
           <Col xs={8} className="px-6">
