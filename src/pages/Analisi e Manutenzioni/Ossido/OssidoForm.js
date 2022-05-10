@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker, dateToTimePicker } from "../../../utils";
 
-function OssidoForm({ data, initialData }) {
+function OssidoForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
   const startManutenzione = initialData ? initialData.operazione : searchParams.get('manutenzione') ? searchParams.get('manutenzione') : ""
   const [operazione, setOperazione] = useState(startManutenzione)

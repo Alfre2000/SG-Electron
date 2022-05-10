@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker, dateToTimePicker } from "../../../utils";
 
-function ManutenzioneForm({ data, initialData }) {
+function ManutenzioneForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
   const startManutenzione = initialData ? initialData.operazione : searchParams.get('manutenzione') ? searchParams.get('manutenzione') : ""
   const [manutenzione, setManutenzione] = useState(startManutenzione)

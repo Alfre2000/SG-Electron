@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker, dateToTimePicker } from "../../../utils";
 
-function AnalisiForm({ data, initialData }) {
+function AnalisiForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
   const startAnalisi = initialData ? initialData.operazione : searchParams.get('analisi') ? searchParams.get('analisi') : ""
   const [analisi, setAnalisi] = useState(startAnalisi)

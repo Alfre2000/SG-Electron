@@ -4,7 +4,8 @@ import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker, dateToTimePicker } from "../../../utils";
 
 
-function SchedaControlloForm({ data, initialData }) {
+function SchedaControlloForm({ data, initialData, errors }) {
+  console.log(errors);
   const [materiale, setMateriale] = useState(initialData?.n_difetti_materiale || 0)
   const [sporco, setSporco] = useState(initialData?.n_difetti_sporco || 0)
   const [meccanici, setMeccanici] = useState(initialData?.n_difetti_meccanici || 0)
@@ -142,7 +143,11 @@ function SchedaControlloForm({ data, initialData }) {
                 required
                 name="n_pezzi_dichiarati"
                 className="text-center"
+                isInvalid={Boolean(errors.n_pezzi_dichiarati)}
               />
+              <Form.Control.Feedback type="invalid" className="text-xs text-center">
+                {errors.n_pezzi_dichiarati}
+              </Form.Control.Feedback>
             </Col>
           </Form.Group>
         </Col>

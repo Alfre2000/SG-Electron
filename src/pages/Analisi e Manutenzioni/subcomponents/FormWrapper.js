@@ -47,6 +47,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
     event.stopPropagation();
     const manutenzioneSelected = form.querySelector('.list-group-item') && !form.querySelector('.list-group-item.active')
     if (form.checkValidity() === false || manutenzioneSelected) {
+      form.reportValidity()
       setError(true)
       setTimeout(() => setError(false), 4000)
       setValidated(true);
@@ -85,7 +86,13 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
       setSuccess(true)
       setTimeout(() => setSuccess(false), 4000)
       setKey(key + 1)
-    }).catch(err => console.log('Erro', err))
+    }).catch(err => {
+      setValidated(true);
+      // setTimeout(() => setValidated(false), 1000 * 10)
+      setError(err)
+      setTimeout(() => setError(false), 1000 * 10)
+      console.log(err);
+    })
   }
 
   // Funzione che gestisce la modifica di un record già esistente
@@ -147,7 +154,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
       onSubmit={handleForm}
       key={key}
     >
-      {children}
+      {React.cloneElement(children, { errors: error })}
       <Row className="mb-2 items-center">
         <Col sx={4}></Col>
         <Col sx={4} className="text-center">

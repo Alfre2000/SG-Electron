@@ -3,7 +3,7 @@ import React from "react";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker, dateToTimePicker } from "../../../utils";
 
-function FissaggioForm({ data, initialData }) {
+function FissaggioForm({ data, initialData, errors }) {
   const parametroID = data.operazioni ? data.operazioni[0].parametri[0].id : ""
   const operazioneID = data.operazioni ? data.operazioni[0].id : ""
   return (
@@ -99,6 +99,9 @@ function FissaggioForm({ data, initialData }) {
                 name={`valore-${parametroID}`}
                 className="text-center w-2/3 m-auto"
               />
+              {/* <Form.Control.Feedback type="invalid" className="text-xs text-center">
+                Please choose a username.
+              </Form.Control.Feedback> */}
             </Col>
           </Form.Group>
         </Stack>
