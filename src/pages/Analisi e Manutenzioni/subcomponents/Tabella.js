@@ -26,12 +26,6 @@ function Tabella({ headers, data, setData, FormComponent }) {
     }
     setShow("0");
   };
-  const handlePasswordModify = (authed) => {
-    if (authed) {
-      setShowModifyModal(showPasswordModifyModal)
-    }
-    setShowPasswordModifyModal("0");
-  }
   const isRecent = (date) => {
     const recordDate = new Date(date)
     const now = new Date()
@@ -44,11 +38,21 @@ function Tabella({ headers, data, setData, FormComponent }) {
     {modifytoast && <MyToast>Record modificato con successo !</MyToast>}
     <PasswordModal 
       show={showPasswordDeleteModal !== "0"} 
-      handleClose={(authed) => handleRemove(authed, showPasswordDeleteModal, setShowPasswordDeleteModal)}
+      onSuccess={() => {
+        deleteRecord(showPasswordDeleteModal, data, setData);
+        setDeletedtoast(true)
+        setTimeout(() => setDeletedtoast(false), 4000)
+        setShowPasswordDeleteModal("0")
+      }}
+      onFail={() => setShowPasswordDeleteModal("0")}
     />
     <PasswordModal 
-      show={showPasswordModifyModal !== "0"} 
-      handleClose={(authed) => handlePasswordModify(authed)}
+      show={showPasswordModifyModal !== "0"}
+      onSuccess={() => {
+        setShowModifyModal(showPasswordModifyModal);
+        setShowPasswordModifyModal("0")
+      }}
+      onFail={() =>  setShowPasswordModifyModal("0")}
     />
     <ConfirmModal 
       show={showConfirmModal !== "0"} 

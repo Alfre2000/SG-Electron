@@ -5,12 +5,15 @@ import Header from '../components/Header/Header'
 import Navbar from '../components/Navbar/Navbar'
 import { Card, FloatingLabel, Form, Button, Alert } from 'react-bootstrap';
 import UserContext from '../UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
 
 function Login({ from, afterLogin }) {
   let navigate = useNavigate();
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [errors, setErrors] = useState({})
+  const [passwordType, setPasswordType] = useState("password")
 
   const [navOpen, setNavOpen] = useState(true)
   const { user, setUser } = useContext(UserContext)
@@ -25,6 +28,10 @@ function Login({ from, afterLogin }) {
       navigate("/");
       setUser(data)
     }).catch(err => setErrors(err))
+  }
+  const handleEyePassword = () => {
+    if (passwordType === "password") setPasswordType("text")
+    else setPasswordType("password")
   }
   if (user.key) {
     return <Navigate to={{ pathname: from || '/' }} />
@@ -51,10 +58,11 @@ function Login({ from, afterLogin }) {
                   </FloatingLabel>
                   <FloatingLabel label="Password" className="mb-8">
                     <Form.Control
-                      type="password" 
+                      type={passwordType}
                       onChange={(e) => setPassword(e.target.value)}
                       className={errors.password || errors.non_field_errors ? "is-invalid" : ""}
                       placeholder="Password" />
+                      <FontAwesomeIcon icon={faEye} onClick={handleEyePassword} className="absolute top-[23px] left-[90%] text-nav-blue cursor-pointer" />
                       <Form.Text className="text-danger">{errors.password}</Form.Text>
                   </FloatingLabel>
                   <Button type="submit" className="bg-[#0d6efd] w-28 font-medium">Accedi</Button>
