@@ -5,10 +5,14 @@ import { apiGet } from '../../api/utils'
 import { URLS } from '../../urls'
 import { colors, getOperatoreName, capitalize } from '../../utils'
 import Wrapper from './subcomponents/Wrapper'
+import PasswordModal from "../../components/PasswordModal/PasswordModal";
+import { useNavigate } from 'react-router-dom'
 
 function Produzione() {
   const [data, setData] = useState({})
   const [frequenza, setFrequenza] = useState("day")
+  const [authed, setAuthed] = useState(false)
+  let navigate = useNavigate();
   useEffect(() => {
     apiGet(URLS.PRODUZIONE).then(data => setData(data))
     setInterval(() => apiGet(URLS.PRODUZIONE).then(data => {
@@ -59,7 +63,8 @@ function Produzione() {
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
-        <Stack gap={5}>
+        {authed ? (
+          <Stack gap={5}>
           <Card>
             <Card.Header as="h6" className="font-semibold text-lg">
               Andamento produzione
@@ -163,6 +168,13 @@ function Produzione() {
             </Card.Body>
           </Card>
         </Stack>
+        ) : (
+          <PasswordModal 
+            show={authed === false}
+            onSuccess={() => setAuthed(true)}
+            onFail={() => navigate('/manutenzione/scheda/')}
+          />
+        )}
       </Container>
     </Wrapper>
   )

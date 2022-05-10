@@ -24,7 +24,6 @@ function PasswordModal({ show, onSuccess, onFail }) {
     setErrors({});
   };
   const handleEyePassword = () => {
-    console.log('ciao');
     if (passwordType === "password") setPasswordType("text")
     else setPasswordType("password")
   }
