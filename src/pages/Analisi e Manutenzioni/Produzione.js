@@ -25,8 +25,11 @@ function Produzione() {
       let options;
       switch (frequenza) {
         case "day":
-          options = { weekday: 'long', day: 'numeric', month: 'long' }
+          options = { weekday: 'short', day: 'numeric', month: 'long' }
           break;
+        case "week":
+            options = { month: 'long', year: "numeric" }
+            break;
         case "month":
           options = { month: 'long', year: "numeric" }
           break;
@@ -138,9 +141,12 @@ function Produzione() {
                       },
                     }} />
                   </div>
-                  <Row>
-                    <Col xs={4}>
-                      <Form.Group>
+                  <Card className="px-0 mt-4 mb-2">
+                    <Card.Header as="h6" className="font-semibold text-md text-left">
+                      Impostazioni
+                    </Card.Header>
+                    <Card.Body className="px-5">
+                      <Form.Group className="w-1/2 m-auto">
                         <Form.Label>Arco temporale:</Form.Label>
                         <Form.Select required size="sm" className="text-center" value={frequenza} onChange={(e) => updateChart(e.target.value)} >
                           <option value="day">Ultimo Mese</option>  
@@ -149,8 +155,8 @@ function Produzione() {
                           <option value="year">Da sempre</option>  
                         </Form.Select>
                       </Form.Group>
-                    </Col>
-                  </Row>
+                    </Card.Body>
+                  </Card>
                 </>
               )}
             </Card.Body>
@@ -161,7 +167,7 @@ function Produzione() {
             </Card.Header>
             <Card.Body className="px-5">
               {data.pezzi_per_operatore && (
-                <div className="max-h-[300px]">
+                <div className="max-h-[300px] h-[200px]">
                   <Pie data={getPieChartData()} options={{maintainAspectRatio: false}} />
                 </div>
               )}
