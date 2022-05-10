@@ -78,7 +78,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
     Object.keys(formData).forEach(key => {
       if (formData[key] === "") delete formData[key]
     })
-    const baseUrl = URLS[`BASE_RECORD_${data.tipologia.toUpperCase()}`];
+    const baseUrl = URLS[`RECORD_${data.tipologia.toUpperCase()}`];
     apiPost(baseUrl, formData).then(response => {
       setData({...data, records: [response, ...data.records]})
       form.reset()
@@ -97,7 +97,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
         if (formData[el.name] === "") formData[el.name] = null
       }
     })
-    const baseUrl = URLS[`BASE_RECORD_${data.tipologia.toUpperCase()}`];
+    const baseUrl = URLS[`RECORD_${data.tipologia.toUpperCase()}`];
     apiUpdate(baseUrl + initialData.id + '/', formData).then(response => {
       const records = data.records.map(record => {
         if (record.id === response.id) return response

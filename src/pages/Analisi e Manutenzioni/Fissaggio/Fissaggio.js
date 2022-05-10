@@ -10,8 +10,8 @@ import FormWrapper from "../subcomponents/FormWrapper";
 function Fissaggio() {
   const [data, setData] = useState({});
   useEffect(() => {
-    apiGet(URLS.RECORD_FISSAGGI).then(data => setParsedData(data))
-    setInterval(() => apiGet(URLS.RECORD_FISSAGGI).then(data => {
+    apiGet(URLS.PAGINA_FISSAGGI).then(data => setParsedData(data))
+    setInterval(() => apiGet(URLS.PAGINA_FISSAGGI).then(data => {
       setParsedData(data)
       console.log('Data updated !');
     }), 1000 * 60 * 10)

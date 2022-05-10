@@ -11,8 +11,8 @@ import OssidoForm from "./OssidoForm";
 function Ossido() {
   const [data, setData] = useState({});
   useEffect(() => {
-    apiGet(URLS.RECORD_OSSIDI).then(data => setParsedData(data))
-    setInterval(() => apiGet(URLS.RECORD_OSSIDI).then(data => {
+    apiGet(URLS.PAGINA_OSSIDI).then(data => setParsedData(data))
+    setInterval(() => apiGet(URLS.PAGINA_OSSIDI).then(data => {
       setParsedData(data)
       console.log('Data updated !');
     }), 1000 * 60 * 10)

@@ -14,8 +14,8 @@ function Produzione() {
   const [authed, setAuthed] = useState(false)
   let navigate = useNavigate();
   useEffect(() => {
-    apiGet(URLS.PRODUZIONE).then(data => setData(data))
-    setInterval(() => apiGet(URLS.PRODUZIONE).then(data => {
+    apiGet(URLS.PAGINA_PRODUZIONE).then(data => setData(data))
+    setInterval(() => apiGet(URLS.PAGINA_PRODUZIONE).then(data => {
       setData(data)
       console.log('Data updated !');
     }), 1000 * 60 * 10)
@@ -58,7 +58,7 @@ function Produzione() {
   }}
   const updateChart = (freq) => {
     setFrequenza(freq)
-    apiGet(URLS.PRODUZIONE + `?frequenza=${freq}`).then(data => setData(data))
+    apiGet(URLS.PAGINA_PRODUZIONE + `?frequenza=${freq}`).then(data => setData(data))
   }
   return (
     <Wrapper>

@@ -15,10 +15,10 @@ function SchedaControllo() {
   const [data, setData] = useState({});
   const [avvisi, setAvvisi] = useState([])
   useEffect(() => {
-    apiGet(URLS.SCHEDA_CONTROLLO).then((data) => setData(data));
+    apiGet(URLS.PAGINA_LAVORAZIONI).then((data) => setData(data));
     setInterval(
       () =>
-        apiGet(URLS.SCHEDA_CONTROLLO).then((data) => {
+        apiGet(URLS.PAGINA_LAVORAZIONI).then((data) => {
           setData(data);
           console.log("Data updated !");
         }),
@@ -26,7 +26,7 @@ function SchedaControllo() {
     );
   }, []);
   useEffect(() => {
-    apiGet(URLS.PROSSIME).then(res => {
+    apiGet(URLS.PAGINA_PROSSIME).then(res => {
       if (!res) return;
       let parsedData = { ok: [], late: [] }
       res.operazioni.forEach(operazione => {

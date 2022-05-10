@@ -2,7 +2,7 @@ import { apiDelete } from "../../api/utils";
 import { URLS } from "../../urls";
 
 export const deleteRecord = (recordID, data, setData) => {
-  const baseUrl = URLS[`BASE_RECORD_${data.tipologia.toUpperCase()}`];
+  const baseUrl = URLS[`RECORD_${data.tipologia.toUpperCase()}`];
   apiDelete(`${baseUrl}${recordID}/`)
     .then((res) => {
       setData({

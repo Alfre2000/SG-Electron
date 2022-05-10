@@ -69,7 +69,7 @@ function PasswordModal({ show, onSuccess, onFail }) {
                 }
                 placeholder="Password"
               />
-              <FontAwesomeIcon icon={faEye} onClick={handleEyePassword} className="absolute top-[23px] left-[90%] text-nav-blue cursor-pointer" />
+              <FontAwesomeIcon icon={faEye} onClick={handleEyePassword} className="absolute top-[23px] left-[85%] text-nav-blue cursor-pointer" />
               <Form.Text className="text-danger">{errors.password}</Form.Text>
             </FloatingLabel>
             {errors.non_field_errors && (

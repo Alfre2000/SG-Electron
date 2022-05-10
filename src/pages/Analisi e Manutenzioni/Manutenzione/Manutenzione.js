@@ -10,8 +10,8 @@ import ManutenzioneForm from "./ManutenzioneForm";
 function Manutenzione() {
   const [data, setData] = useState({});
   useEffect(() => {
-    apiGet(URLS.MANUTENZIONE).then(data => setData(data))
-    setInterval(() => apiGet(URLS.MANUTENZIONE).then(data => {
+    apiGet(URLS.PAGINA_MANUTENZIONI).then(data => setData(data))
+    setInterval(() => apiGet(URLS.PAGINA_MANUTENZIONI).then(data => {
       setData(data)
       console.log('Data updated !');
     }), 1000 * 60 * 10)

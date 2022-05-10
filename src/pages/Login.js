@@ -62,7 +62,7 @@ function Login({ from, afterLogin }) {
                       onChange={(e) => setPassword(e.target.value)}
                       className={errors.password || errors.non_field_errors ? "is-invalid" : ""}
                       placeholder="Password" />
-                      <FontAwesomeIcon icon={faEye} onClick={handleEyePassword} className="absolute top-[23px] left-[90%] text-nav-blue cursor-pointer" />
+                      <FontAwesomeIcon icon={faEye} onClick={handleEyePassword} className="absolute top-[23px] left-[85%] text-nav-blue cursor-pointer" />
                       <Form.Text className="text-danger">{errors.password}</Form.Text>
                   </FloatingLabel>
                   <Button type="submit" className="bg-[#0d6efd] w-28 font-medium">Accedi</Button>

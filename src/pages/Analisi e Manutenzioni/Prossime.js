@@ -10,8 +10,8 @@ import Wrapper from './subcomponents/Wrapper'
 function Prossime() {
   const [data, setData] = useState({})
   useEffect(() => {
-    apiGet(URLS.PROSSIME).then(data => parseOperazioni(data))
-    setInterval(() => apiGet(URLS.PROSSIME).then(data => {
+    apiGet(URLS.PAGINA_PROSSIME).then(data => parseOperazioni(data))
+    setInterval(() => apiGet(URLS.PAGINA_PROSSIME).then(data => {
       parseOperazioni(data)
       console.log('Data updated !');
     }), 1000 * 60 * 10)
