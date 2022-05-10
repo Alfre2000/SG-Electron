@@ -1,4 +1,4 @@
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, Button, FloatingLabel, Form, Modal } from "react-bootstrap";
@@ -10,6 +10,7 @@ function PasswordModal({ show, onSuccess, onFail }) {
   const [errors, setErrors] = useState({});
   const [passwordType, setPasswordType] = useState("password")
   const { user } = useContext(UserContext)
+  const EyeIcon = passwordType === "password" ? faEye : faEyeSlash
   useEffect(() => {
     if (show && user.user.is_staff) {
       onSuccess();
@@ -69,7 +70,7 @@ function PasswordModal({ show, onSuccess, onFail }) {
                 }
                 placeholder="Password"
               />
-              <FontAwesomeIcon icon={faEye} onClick={handleEyePassword} className="absolute top-[23px] left-[85%] text-nav-blue cursor-pointer" />
+              <FontAwesomeIcon icon={EyeIcon} onClick={handleEyePassword} className="absolute top-[23px] left-[85%] text-nav-blue cursor-pointer" />
               <Form.Text className="text-danger">{errors.password}</Form.Text>
             </FloatingLabel>
             {errors.non_field_errors && (
