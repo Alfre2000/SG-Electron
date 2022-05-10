@@ -37,11 +37,9 @@ function Tabella({ headers, data, setData, FormComponent }) {
     {deletedtoast && <MyToast>Record eliminato con successo !</MyToast>}
     {modifytoast && <MyToast>Record modificato con successo !</MyToast>}
     <PasswordModal 
-      show={showPasswordDeleteModal !== "0"} 
+      show={showPasswordDeleteModal !== "0"}
       onSuccess={() => {
-        deleteRecord(showPasswordDeleteModal, data, setData);
-        setDeletedtoast(true)
-        setTimeout(() => setDeletedtoast(false), 4000)
+        setShowConfirmModal(showPasswordDeleteModal)
         setShowPasswordDeleteModal("0")
       }}
       onFail={() => setShowPasswordDeleteModal("0")}
