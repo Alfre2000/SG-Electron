@@ -87,8 +87,6 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
       setTimeout(() => setSuccess(false), 4000)
       setKey(key + 1)
     }).catch(err => {
-      setValidated(true);
-      // setTimeout(() => setValidated(false), 1000 * 10)
       setError(err)
       setTimeout(() => setError(false), 1000 * 10)
       console.log(err);
@@ -117,7 +115,11 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
         form.querySelector('.list-group-item.active').classList.remove('active')
       }
       
-    }).catch(err => console.log('Erro', err))
+    }).catch(err => {
+      setError(err)
+      setTimeout(() => setError(false), 1000 * 10)
+      console.log(err);
+    })
   }
 
   const addParametri = (formData) => {

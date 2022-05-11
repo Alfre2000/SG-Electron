@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Col, Row, Form, Stack, ListGroup } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+import Input from "../../../components/form-components/Input";
+import Select from "../../../components/form-components/Select";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker, dateToTimePicker } from "../../../utils";
+import { dateToDatePicker } from "../../../utils";
 
 function OssidoForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
@@ -14,62 +16,30 @@ function OssidoForm({ data, initialData, errors }) {
         xs={6}
         className="flex pr-12 border-r-2 border-r-gray-500 border-b-2 border-b-gray-500 pb-6"
       >
-        <Stack gap={2} className="text-left justify-center">
-          <Form.Group as={Row}>
-            <Form.Label column sm="4">
-              Data:
-            </Form.Label>
-            <Col sm="8">
-              <Form.Control
-                size="sm"
-                className="text-center"
-                type="date"
-                defaultValue={dateToDatePicker(
-                  initialData?.data ? new Date(initialData.data) : new Date()
-                )}
-                name="data"
-              />
-            </Col>
-          </Form.Group>
+        <Stack gap={2} className="text-left">
+          <Input 
+            name="data"
+            errors={errors}
+            inputProps={{
+              type: "date",
+              defaultValue: dateToDatePicker(
+                initialData?.data ? new Date(initialData.data) : new Date()
+              )
+            }}
+          />
           <Form.Group as={Row}>
             <Form.Label column sm="4">
               Ora:
             </Form.Label>
             <Col sm="8">
-              {initialData?.data ? (
-                <Form.Control
-                  size="sm"
-                  className="text-center"
-                  type="time"
-                  name="ora"
-                  defaultValue={dateToTimePicker(new Date(initialData.data))}
-                />
-              ) : (
-                <TimeInput />
-              )}
+              <TimeInput initialData={initialData} />
             </Col>
           </Form.Group>
-          <Form.Group as={Row}>
-            <Form.Label column sm="4">
-              Operatore:
-            </Form.Label>
-            <Col sm="8">
-              <Form.Select
-                required
-                size="sm"
-                className="text-center"
-                name="operatore"
-              >
-                <option value=""></option>
-                {data.operatori &&
-                  data.operatori.map((operatore) => (
-                    <option key={operatore.id} value={operatore.id}>
-                      {operatore.nome}
-                    </option>
-                  ))}
-              </Form.Select>
-            </Col>
-          </Form.Group>
+          <Select 
+            name="operatore"
+            inputProps={{ required: true }}
+            data={data?.operatori?.map(o => [o.id, o.nome])}
+          />
         </Stack>
       </Col>
       <Col xs={6} className="px-10 border-b-2 border-b-gray-500 pb-6">

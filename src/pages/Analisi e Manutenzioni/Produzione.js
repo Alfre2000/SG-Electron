@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Col, Container, Form, Row, Stack } from 'react-bootstrap'
+import { Card, Container, Form, Stack } from 'react-bootstrap'
 import { Bar, Pie } from 'react-chartjs-2'
 import { apiGet } from '../../api/utils'
 import { URLS } from '../../urls'

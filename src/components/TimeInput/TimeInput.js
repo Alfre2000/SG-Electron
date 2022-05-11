@@ -2,21 +2,32 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import { dateToTimePicker } from "../../utils";
 
-function TimeInput() {
+function TimeInput({ initialData }) {
   const [time, setTime] = useState(dateToTimePicker(new Date()));
   setInterval(() => {
-    setTime(dateToTimePicker(new Date()));
+    if (!initialData) {
+      setTime(dateToTimePicker(new Date()));
+    }
   }, 1000 * 60)
 
-  return (
-    <Form.Control
-      size="sm"
-      className="text-center"
-      type="time"
-      value={time}
-      onChange={(e) => setTime(e.target.value)}
-      name="ora"
-    />
+  return (initialData?.data ? (
+      <Form.Control
+        size="sm"
+        className="text-center"
+        type="time"
+        name="ora"
+        defaultValue={dateToTimePicker(new Date(initialData.data))}
+      />
+    ) : (
+      <Form.Control
+        size="sm"
+        className="text-center"
+        type="time"
+        value={time}
+        onChange={(e) => setTime(e.target.value)}
+        name="ora"
+      />
+    )
   );
 }
 

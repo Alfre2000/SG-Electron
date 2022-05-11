@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+import Checkbox from "../../../components/form-components/Checkbox";
+import Input from "../../../components/form-components/Input";
+import Select from "../../../components/form-components/Select";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker, dateToTimePicker } from "../../../utils";
+import { dateToDatePicker } from "../../../utils";
 
 function AnalisiForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
@@ -16,89 +19,44 @@ function AnalisiForm({ data, initialData, errors }) {
       <Row className="mb-4">
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                Data:
-              </Form.Label>
-              <Col sm="8">
-                <Form.Control
-                  size="sm"
-                  className="text-center"
-                  type="date"
-                  defaultValue={dateToDatePicker(
-                    initialData?.data ? new Date(initialData.data) : new Date()
-                  )}
-                  name="data"
-                />
-              </Col>
-            </Form.Group>
+            <Input 
+              name="data"
+              errors={errors}
+              inputProps={{
+                type: "date",
+                defaultValue: dateToDatePicker(
+                  initialData?.data ? new Date(initialData.data) : new Date()
+                )
+              }}
+            />
             <Form.Group as={Row}>
               <Form.Label column sm="4">
                 Ora:
               </Form.Label>
               <Col sm="8">
-                {initialData?.data ? (
-                  <Form.Control
-                    size="sm"
-                    className="text-center"
-                    type="time"
-                    name="ora"
-                    defaultValue={dateToTimePicker(new Date(initialData.data))}
-                  />
-                ) : (
-                  <TimeInput />
-                )}
+                <TimeInput initialData={initialData} />
               </Col>
             </Form.Group>
           </Stack>
         </Col>
         <Col xs={6} className="pl-10">
           <Stack gap={2} className="text-left">
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                Operatore:
-              </Form.Label>
-              <Col sm="8">
-                <Form.Select
-                  required
-                  size="sm"
-                  className="text-center"
-                  name="operatore"
-                >
-                  <option value=""></option>
-                  {data.operatori &&
-                    data.operatori.map((operatore) => (
-                      <option key={operatore.id} value={operatore.id}>
-                        {operatore.nome}
-                      </option>
-                    ))}
-                </Form.Select>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                Analisi:
-              </Form.Label>
-              <Col sm="8">
-                <Form.Select
-                  required
-                  disabled={!!initialData}
-                  size="sm"
-                  className="text-center"
-                  name="operazione"
-                  value={analisi}
-                  onChange={(e) => setAnalisi(e.target.value)}
-                >
-                  <option value=""></option>
-                  {data.operazioni &&
-                    data.operazioni.map((analisi) => (
-                      <option key={analisi.id} value={analisi.id}>
-                        {analisi.nome}
-                      </option>
-                    ))}
-                </Form.Select>
-              </Col>
-            </Form.Group>
+            <Select 
+              name="operatore"
+              inputProps={{ required: true }}
+              data={data?.operatori?.map(o => [o.id, o.nome])}
+            />
+            <Select 
+              label="Analisi:"
+              name="operazione"
+              inputProps={{ 
+                required: true,
+                disabled: !!initialData,
+                value: analisi,
+                onChange: (e) => setAnalisi(e.target.value)
+              }}
+              data={data?.operazioni?.map(o => [o.id, o.nome])}
+            />
           </Stack>
         </Col>
       </Row>
@@ -159,10 +117,12 @@ function AnalisiForm({ data, initialData, errors }) {
           </Form.Group>
         </Col>
         <Col xs={3} className="flex">
-          <Form.Group className="m-auto text-center">
-            <Form.Label>Controanalisi:</Form.Label>
-            <Form.Check type="checkbox" className="" name="contro_analisi" defaultChecked={initialData ? initialData.contro_analisi : true} />
-          </Form.Group>
+          <Checkbox 
+            label="Controanalisi:"
+            name="contro_analisi"
+            inputProps={{ defaultChecked: initialData ? initialData.contro_analisi : true }}
+            vertical={true}
+          />
         </Col>
       </Row>
     </>

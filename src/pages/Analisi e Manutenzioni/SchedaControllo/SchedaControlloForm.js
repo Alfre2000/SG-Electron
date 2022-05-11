@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Col, Row, Form, Stack } from "react-bootstrap";
+import Checkbox from "../../../components/form-components/Checkbox";
+import Input from "../../../components/form-components/Input";
+import Select from "../../../components/form-components/Select";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker, dateToTimePicker } from "../../../utils";
+import { dateToDatePicker } from "../../../utils";
 
 
 function SchedaControlloForm({ data, initialData, errors }) {
-  console.log(errors);
   const [materiale, setMateriale] = useState(initialData?.n_difetti_materiale || 0)
   const [sporco, setSporco] = useState(initialData?.n_difetti_sporco || 0)
   const [meccanici, setMeccanici] = useState(initialData?.n_difetti_meccanici || 0)
@@ -20,152 +22,92 @@ function SchedaControlloForm({ data, initialData, errors }) {
           className="pr-20 pb-7 border-b-2 border-b-gray-500 border-r-2 border-r-gray-500"
         >
           <Stack gap={2} className="text-left">
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                Data:
-              </Form.Label>
-              <Col sm="8">
-                <Form.Control
-                  size="sm"
-                  className="text-center"
-                  type="date"
-                  defaultValue={dateToDatePicker(
-                    initialData?.data ? new Date(initialData.data) : new Date()
-                  )}
-                  name="data"
-                />
-              </Col>
-            </Form.Group>
+            <Input 
+              name="data"
+              errors={errors}
+              inputProps={{
+                type: "date",
+                defaultValue: dateToDatePicker(
+                  initialData?.data ? new Date(initialData.data) : new Date()
+                )
+              }}
+            />
             <Form.Group as={Row}>
               <Form.Label column sm="4">
                 Ora:
               </Form.Label>
               <Col sm="8">
-              {initialData?.data ? (
-                <Form.Control
-                  size="sm"
-                  className="text-center"
-                  type="time"
-                  name="ora"
-                  defaultValue={dateToTimePicker(new Date(initialData.data))}
-                />
-              ) : (
-                <TimeInput />
-              )}
+                <TimeInput initialData={initialData} />
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                Operatore:
-              </Form.Label>
-              <Col sm="8">
-                <Form.Select
-                  required
-                  size="sm"
-                  className="text-center"
-                  name="operatore"
-                >
-                  <option value=""></option>
-                  {data.operatori &&
-                    data.operatori.map((operatore) => (
-                      <option key={operatore.id} value={operatore.id}>
-                        {operatore.nome}
-                      </option>
-                    ))}
-                </Form.Select>
-              </Col>
-            </Form.Group>
+            <Select 
+              name="operatore"
+              inputProps={{ required: true }}
+              data={data?.operatori?.map(o => [o.id, o.nome])}
+            />
           </Stack>
         </Col>
         <Col xs={6} className="pb-7 border-b-2 border-b-gray-500">
           <Stack gap={2} className="text-right">
-            <Form.Group as={Row}>
-              <Form.Label column sm="6" className="pr-6">
-                Modello:
-              </Form.Label>
-              <Col sm="6">
-                <Form.Select
-                  required
-                  size="sm"
-                  className="text-center"
-                  name="articolo"
-                >
-                  <option value=""></option>
-                  {data.articoli &&
-                    data.articoli.map((articolo) => (
-                      <option key={articolo.id} value={articolo.id}>
-                        {articolo.nome}
-                      </option>
-                    ))}
-                </Form.Select>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="6" className="pr-6">
-                Numero Lotto:
-              </Form.Label>
-              <Col sm="6">
-                <Form.Control
-                  type="text"
-                  required
-                  size="sm"
-                  name="lotto"
-                  className="text-center"
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="6" className="pr-6">
-                Idoneità al trattamento:
-              </Form.Label>
-              <Col sm="6">
-                <Form.Check
-                  type="checkbox"
-                  className="text-left mt-2"
-                  name="idoneità"
-                  defaultChecked={initialData ? initialData['idoneità'] : true}
-                />
-              </Col>
-            </Form.Group>
+            <Select 
+              label="Modello:"
+              labelCols={6}
+              name="articolo"
+              labelProps={{ className: "pr-6" }}
+              inputProps={{ required: true }}
+              data={data?.articoli?.map(o => [o.id, o.nome])}
+            />
+            <Input 
+              label="Numero Lotto:"
+              name="lotto"
+              errors={errors}
+              labelCols={6}
+              labelProps={{ className: "pr-6" }}
+              inputProps={{ required: true }}
+            />
+            <Checkbox 
+              label="Idoneità al trattamento:"
+              name="idoneità"
+              labelCols={6}
+              labelProps={{ className: "pr-6" }}
+              inputProps={{ 
+                defaultChecked: initialData ? initialData['idoneità'] : true,
+                className: "text-left mt-2"
+              }}
+            />
           </Stack>
         </Col>
       </Row>
       <Row className="mb-3 text-left">
-        <Col xs={6}>
-          <Form.Group as={Row}>
-            <Form.Label column sm="5" className="pr-0">
-              Valvole dichiarate:
-            </Form.Label>
-            <Col sm="6" className="pr-10">
-              <Form.Control
-                type="number"
-                size="sm"
-                required
-                name="n_pezzi_dichiarati"
-                className="text-center"
-                isInvalid={Boolean(errors.n_pezzi_dichiarati)}
-              />
-              <Form.Control.Feedback type="invalid" className="text-xs text-center">
-                {errors.n_pezzi_dichiarati}
-              </Form.Control.Feedback>
-            </Col>
-          </Form.Group>
+        <Col xs={5}>
+          <Input 
+            label="Valvole dichiarate:"
+            name="n_pezzi_dichiarati"
+            errors={errors}
+            labelCols={5}
+            labelProps={{ className: "pr-0" }}
+            inputProps={{ 
+              type: "number",
+              required: true,
+              className: "text-center w-4/5 ml-auto"
+            }}
+          />
         </Col>
+        <Col xs={1}></Col>
         <Col xs={6}>
-          <Form.Group as={Row}>
-            <Form.Label column sm="6" className="pr-0">
-              Valvole conformi:
-            </Form.Label>
-            <Col sm="5" className="pr-14">
-              <Form.Control
-                type="number"
-                size="sm"
-                required
-                name="n_pezzi_conformi"
-                className="text-center"
-              />
-            </Col>
-          </Form.Group>
+          <Input 
+            label="Valvole conformi:"
+            name="n_pezzi_conformi"
+            errors={errors}
+            labelCols={5}
+            labelProps={{ className: "pr-0" }}
+            inputProps={{ 
+              type: "number",
+              required: true,
+              className: "w-[64%] text-center mx-auto"
+            }}
+            colProps={{ className: "pr-14" }}
+          />
         </Col>
       </Row>
       <Row className="mb-4 border-b-2 border-b-gray-500 flex-nowrap">
@@ -174,71 +116,16 @@ function SchedaControlloForm({ data, initialData, errors }) {
           className="py-6 mt-2 border-t-2 border-t-gray-500 border-r-2 border-r-gray-500"
         >
           <Stack gap={2} className="text-left">
-            <Form.Group as={Row}>
-              <Form.Label column sm="7" className="pr-6">
-                Verifiche Preliminari:
-              </Form.Label>
-              <Col sm="5">
-                <Form.Check
-                  type="checkbox"
-                  className="text-left mt-2 pl-10"
-                  name="verifiche_preliminari"
-                  defaultChecked={initialData ? initialData['verifiche_preliminari'] : true}
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="7" className="pr-6">
-                Pulizia:
-              </Form.Label>
-              <Col sm="5">
-                <Form.Check
-                  type="checkbox"
-                  className="text-left mt-2 pl-10"
-                  name="pulizia"
-                  defaultChecked={initialData ? initialData['pulizia'] : true}
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="7" className="pr-6">
-                Filetto M6:
-              </Form.Label>
-              <Col sm="5">
-                <Form.Check
-                  type="checkbox"
-                  className="text-left mt-2 pl-10"
-                  name="filetto_m6"
-                  defaultChecked={initialData ? initialData['filetto_m6'] : true}
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="7" className="pr-6">
-                Accantonato campione:
-              </Form.Label>
-              <Col sm="5">
-                <Form.Check
-                  type="checkbox"
-                  className="text-left mt-2 pl-10"
-                  name="accantonato_campione"
-                  defaultChecked={initialData ? initialData['accantonato_campione'] : true}
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="7" className="pr-6">
-                Master:
-              </Form.Label>
-              <Col sm="5">
-                <Form.Check
-                  type="checkbox"
-                  className="text-left mt-2 pl-10"
-                  name="master"
-                  defaultChecked={initialData ? initialData['master'] : true}
-                />
-              </Col>
-            </Form.Group>
+            {['verifiche_preliminari', 'pulizia', 'filetto_m6', 'accantonato_campione', 'master'].map(name => (
+              <Checkbox 
+                key={name}
+                name={name}
+                initialData={initialData}
+                labelCols={7}
+                labelProps={{ className: "pr-6" }}
+                inputProps={{ className: "text-left mt-2 pl-10" }}
+              />
+            ))}
           </Stack>
         </Col>
         <Col xs={1}></Col>
@@ -358,104 +245,34 @@ function SchedaControlloForm({ data, initialData, errors }) {
         </Col>
       </Row>
       <Row className="pb-4 mb-3 -mt-1 border-b-2 border-b-gray-500">
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Spessore ossido:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="spessore_ossido"
+        {['spessore_ossido', 'spessore_minimo', 'spessore_massimo', 'spessore_deviazione'].map(name => (
+          <Col xs={3} key={name}>
+            <Input
+              name={name}
+              vertical={true}
+              inputProps={{
+                className: "w-3/4 m-auto text-center",
+                step: "0.01",
+                type: "number"
+              }}
             />
-          </Form.Group>
-        </Col>
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Spessore minimo:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="spessore_minimo"
-            />
-          </Form.Group>
-        </Col>
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Spessore massimo:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="spessore_massimo"
-            />
-          </Form.Group>
-        </Col>
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Spessore deviazione:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="spessore_deviazione"
-            />
-          </Form.Group>
-        </Col>
+          </Col>  
+        ))}
       </Row>
       <Row className="pb-4 mb-4 border-b-2 border-b-gray-500">
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Temperatura soda:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="temperatura_soda"
+        {['temperatura_soda', 'temperatura_ossido', 'temperatura_colore', 'temperatura_fissaggio'].map(name => (
+          <Col xs={3} key={name}>
+            <Input
+              name={name}
+              vertical={true}
+              inputProps={{
+                className: "w-3/4 m-auto text-center",
+                step: "0.01",
+                type: "number"
+              }}
             />
-          </Form.Group>
-        </Col>
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Temperatura ossido:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="temperatura_ossido"
-            />
-          </Form.Group>
-        </Col>
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Temperatura colore:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="temperatura_colore"
-            />
-          </Form.Group>
-        </Col>
-        <Col xs={3}>
-          <Form.Group>
-            <Form.Label>Temperatura fissaggio:</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              size="sm"
-              className="w-3/4 m-auto text-center"
-              name="temperatura_fissaggio"
-            />
-          </Form.Group>
-        </Col>
+          </Col>  
+        ))}
       </Row>
       <Form.Group>
         <Row className="mb-4">

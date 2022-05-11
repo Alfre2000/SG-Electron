@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Col, Row, Form, ListGroup } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+import Input from "../../../components/form-components/Input";
+import Select from "../../../components/form-components/Select";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker, dateToTimePicker } from "../../../utils";
+import { dateToDatePicker } from "../../../utils";
 
 function ManutenzioneForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
@@ -12,53 +14,32 @@ function ManutenzioneForm({ data, initialData, errors }) {
     <>
       <Row>
         <Col xs={4}>
-          <Form.Group className="text-center">
-            <Form.Label>Data:</Form.Label>
-            <Form.Control
-              size="sm"
-              className="text-center"
-              type="date"
-              defaultValue={dateToDatePicker(
+          <Input 
+            name="data"
+            errors={errors}
+            vertical={true}
+            inputProps={{
+              type: "date",
+              defaultValue: dateToDatePicker(
                 initialData?.data ? new Date(initialData.data) : new Date()
-              )}
-              name="data"
-            />
-          </Form.Group>
+              )
+            }}
+          />
         </Col>
         <Col xs={4}>
           <Form.Group className="text-center">
             <Form.Label>Ora:</Form.Label>
-            {initialData?.data ? (
-              <Form.Control
-                size="sm"
-                className="text-center"
-                type="time"
-                name="ora"
-                defaultValue={dateToTimePicker(new Date(initialData.data))}
-              />
-            ) : (
-              <TimeInput />
-            )}
+              <TimeInput initialData={initialData} />
           </Form.Group>
         </Col>
         <Col xs={4}>
-          <Form.Group className="text-center">
-            <Form.Label>Operatore:</Form.Label>
-            <Form.Select
-              required
-              size="sm"
-              className="text-center"
-              name="operatore"
-            >
-              <option value=""></option>
-              {data.operatori &&
-                data.operatori.map((operatore) => (
-                  <option key={operatore.id} value={operatore.id}>
-                    {operatore.nome}
-                  </option>
-                ))}
-            </Form.Select>
-          </Form.Group>
+          <Select
+            name="operatore"
+            labelCols={4}
+            inputProps={{ required: true }}
+            data={data?.operatori?.map(o => [o.id, o.nome])}
+            vertical={true}
+          />
         </Col>
       </Row>
       <Row className="my-8">
