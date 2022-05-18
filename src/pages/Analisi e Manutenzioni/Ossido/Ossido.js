@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { apiGet } from "../../../api/utils";
+import React, { useState } from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
 import Tabella from "../subcomponents/Tabella";
 import FormWrapper from "../subcomponents/FormWrapper";
 import OssidoForm from "./OssidoForm";
+import useUpdateData from "../../../hooks/useUpdateData";
 
 
 function Ossido() {
   const [data, setData] = useState({});
-  useEffect(() => {
-    apiGet(URLS.PAGINA_OSSIDI).then(data => setParsedData(data))
-    setInterval(() => apiGet(URLS.PAGINA_OSSIDI).then(data => {
-      setParsedData(data)
-      console.log('Data updated !');
-    }), 1000 * 60 * 10)
-  }, [])
+  useUpdateData(setData, URLS.PAGINA_OSSIDI);
   const setParsedData = (response) => {
     response.records = response.records.map(record => {
       const manutenzione = response.operazioni.filter(op => op.id === record.operazione)[0]

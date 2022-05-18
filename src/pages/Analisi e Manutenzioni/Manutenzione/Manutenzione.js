@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { apiGet } from "../../../api/utils";
+import React, { useState } from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "./../subcomponents/Wrapper";
 import Tabella from "./../subcomponents/Tabella";
 import FormWrapper from "../subcomponents/FormWrapper";
 import ManutenzioneForm from "./ManutenzioneForm";
+import useUpdateData from "../../../hooks/useUpdateData";
 
 function Manutenzione() {
   const [data, setData] = useState({});
-  useEffect(() => {
-    apiGet(URLS.PAGINA_MANUTENZIONI).then(data => setData(data))
-    setInterval(() => apiGet(URLS.PAGINA_MANUTENZIONI).then(data => {
-      setData(data)
-      console.log('Data updated !');
-    }), 1000 * 60 * 10)
-  }, [])
+  useUpdateData(setData, URLS.PAGINA_MANUTENZIONI);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

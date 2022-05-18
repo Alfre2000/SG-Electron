@@ -1,3 +1,5 @@
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Col, Row, Form, Stack } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
@@ -13,7 +15,23 @@ function SchedaControlloForm({ data, initialData, errors }) {
   const [meccanici, setMeccanici] = useState(initialData?.n_difetti_meccanici || 0)
   const [trattamento, setTrattamento] = useState(initialData?.n_difetti_trattamento || 0)
   const [altro, setAltro] = useState(initialData?.n_difetti_altro || 0)
+
+  const [errValore, setErrValore] = useState({})
+
   const valvoleScarto = +materiale + +sporco + +meccanici + +trattamento + +altro
+  const handleValoreChange = (e) => {
+    const name = e.target.name.includes('spessore') ? 'spessore_ossido' : e.target.name
+    const minimo = data.scheda_controllo[`${name}_minimo`]
+    const massimo = data.scheda_controllo[`${name}_massimo`]
+    const value = parseFloat(e.target.value)
+    if (value > massimo) {
+      setErrValore({...errValore, [e.target.name]: `Valore oltre il massimo di ${massimo} !`})
+    } else if (value < minimo) {
+      setErrValore({...errValore, [e.target.name]: `Valore sotto il minimo di ${minimo} !`})
+    } else {
+      setErrValore({...errValore, [e.target.name]: ""})
+    }
+  }
   return (
     <>
       <Row className="mb-4 justify-between">
@@ -246,31 +264,45 @@ function SchedaControlloForm({ data, initialData, errors }) {
       </Row>
       <Row className="pb-4 mb-3 -mt-1 border-b-2 border-b-gray-500">
         {['spessore_ossido', 'spessore_minimo', 'spessore_massimo', 'spessore_deviazione'].map(name => (
-          <Col xs={3} key={name}>
+          <Col xs={3} key={name} className="text-center">
             <Input
               name={name}
               vertical={true}
               inputProps={{
                 className: "w-3/4 m-auto text-center",
                 step: "0.01",
-                type: "number"
+                type: "number",
+                onBlur: handleValoreChange,
               }}
             />
+            {errValore[name] && (
+              <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
+                  <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
+                  {errValore[name]}
+              </span>
+            )}
           </Col>  
         ))}
       </Row>
       <Row className="pb-4 mb-4 border-b-2 border-b-gray-500">
         {['temperatura_soda', 'temperatura_ossido', 'temperatura_colore', 'temperatura_fissaggio'].map(name => (
-          <Col xs={3} key={name}>
+          <Col xs={3} key={name} className="text-center">
             <Input
               name={name}
               vertical={true}
               inputProps={{
                 className: "w-3/4 m-auto text-center",
                 step: "0.01",
-                type: "number"
+                type: "number",
+                onBlur: handleValoreChange,
               }}
             />
+            {errValore[name] && (
+              <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
+                  <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
+                  {errValore[name]}
+              </span>
+            )}
           </Col>  
         ))}
       </Row>

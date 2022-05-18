@@ -1,3 +1,5 @@
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
@@ -11,8 +13,21 @@ function AnalisiForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
   const startAnalisi = initialData ? initialData.operazione : searchParams.get('analisi') ? searchParams.get('analisi') : ""
   const [analisi, setAnalisi] = useState(startAnalisi)
+  const [errValore, setErrValore] = useState({})
   const getParametri = (analisiID) => {
     return data.operazioni.filter(el => el.id === analisiID)[0].parametri
+  }
+  const handleValoreChange = (e) => {
+    const parametroID = e.target.name.split('valore-').at(-1)
+    const value = parseFloat(e.target.value)
+    const parametro = getParametri(analisi).filter(el => el.id === parametroID)[0]
+    if (value > parametro.massimo) {
+      setErrValore({...errValore, [`valore-${parametroID}`]: 'Valore oltre il massimo !'})
+    } else if (value < parametro.minimo) {
+      setErrValore({...errValore, [`valore-${parametroID}`]: 'Valore sotto il minimo !'})
+    } else {
+      setErrValore({...errValore, [`valore-${parametroID}`]: ""})
+    }
   }
   return (
     <>
@@ -84,8 +99,15 @@ function AnalisiForm({ data, initialData, errors }) {
                         size="sm"
                         className="w-2/3 m-auto text-center"
                         name={`valore-${parametro.id}`}
+                        onBlur={handleValoreChange}
                       />
-                    </td>
+                      {errValore[`valore-${parametro.id}`] && (
+                        <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
+                            <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
+                            {errValore[`valore-${parametro.id}`]}
+                        </span>
+                      )}
+                      </td>
                     <td>
                       <Form.Control
                         type="number"

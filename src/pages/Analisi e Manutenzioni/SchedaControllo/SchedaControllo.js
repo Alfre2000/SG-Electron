@@ -9,22 +9,13 @@ import SchedaControlloForm from "./SchedaControlloForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import useUpdateData from "../../../hooks/useUpdateData";
 
 
 function SchedaControllo() {
   const [data, setData] = useState({});
-  const [avvisi, setAvvisi] = useState([])
-  useEffect(() => {
-    apiGet(URLS.PAGINA_LAVORAZIONI).then((data) => setData(data));
-    setInterval(
-      () =>
-        apiGet(URLS.PAGINA_LAVORAZIONI).then((data) => {
-          setData(data);
-          console.log("Data updated !");
-        }),
-      1000 * 60 * 10
-    );
-  }, []);
+  const [avvisi, setAvvisi] = useState([]);
+  useUpdateData(setData, URLS.PAGINA_LAVORAZIONI);
   useEffect(() => {
     apiGet(URLS.PAGINA_PROSSIME).then(res => {
       if (!res) return;

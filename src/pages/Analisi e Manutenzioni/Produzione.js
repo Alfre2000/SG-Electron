@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Card, Container, Form, Stack } from 'react-bootstrap'
 import { Bar, Pie } from 'react-chartjs-2'
 import { apiGet } from '../../api/utils'
@@ -7,19 +7,14 @@ import { colors, getOperatoreName, capitalize } from '../../utils'
 import Wrapper from './subcomponents/Wrapper'
 import PasswordModal from "../../components/PasswordModal/PasswordModal";
 import { useNavigate } from 'react-router-dom'
+import useUpdateData from '../../hooks/useUpdateData'
 
 function Produzione() {
   const [data, setData] = useState({})
   const [frequenza, setFrequenza] = useState("day")
   const [authed, setAuthed] = useState(false)
   let navigate = useNavigate();
-  useEffect(() => {
-    apiGet(URLS.PAGINA_PRODUZIONE).then(data => setData(data))
-    setInterval(() => apiGet(URLS.PAGINA_PRODUZIONE).then(data => {
-      setData(data)
-      console.log('Data updated !');
-    }), 1000 * 60 * 10)
-  }, [])
+  useUpdateData(setData, URLS.PAGINA_PRODUZIONE);
   const getProduzioneChartData = () => {return {
     labels: data.produzione.map(d => {
       let options;
