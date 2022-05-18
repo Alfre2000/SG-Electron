@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const updater = require('./updater');
 
 const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('electron');
 const isDev = require('electron-is-dev');
@@ -30,6 +31,10 @@ const mainMenuTemplate = [
 
 
 function createWindow() {
+
+  // Check for Updates after 8 seconds
+  setTimeout(updater, 8000)
+
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1350, minWidth: 1000,
