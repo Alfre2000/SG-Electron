@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
@@ -8,14 +8,16 @@ import FormWrapper from "../subcomponents/FormWrapper";
 import useUpdateData from "../../../hooks/useUpdateData";
 
 function Fissaggio() {
-  const [data, setData] = useState({});
-  useUpdateData(setData, URLS.PAGINA_FISSAGGI);
-  const setParsedData = (response) => {
+  const parser = useCallback((response) => {
     response.records = response.records.map(record => {
       record.ph = record.record_parametri[0].valore
       return record
     })
-    setData(response)
+    return response
+  }, [])
+  const [data, setData] = useUpdateData(URLS.PAGINA_FISSAGGI, parser);
+  const setParsedData = (data) => {
+    setData(parser(data))
   }
   return (
     <Wrapper>

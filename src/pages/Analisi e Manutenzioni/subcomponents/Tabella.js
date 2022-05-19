@@ -92,7 +92,6 @@ function Tabella({ headers, data, setData, FormComponent }) {
                     else if (header === "analisi") value = data.operazioni.filter(el => el.id === record.operazione)[0]?.nome
                     else if (header === "manutenzione") value = data.operazioni.filter(el => el.id === record.operazione)[0]?.nome
                     else if (header === "n_pezzi") value = record['n_pezzi_dichiarati']
-                    else if (header === "ph") value = record.record_parametri[0].valore
                     else value = record[header];
                     return <td key={value || idx}>{value || "-"}</td>
                   })}

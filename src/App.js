@@ -3,9 +3,6 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import { useReducer, useState } from "react";
-import { Toast, ToastContainer } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import SchedaControllo from "./pages/Analisi e Manutenzioni/SchedaControllo/SchedaControllo";
 import Analisi from "./pages/Analisi e Manutenzioni/Analisi/Analisi";
 import Fissaggio from "./pages/Analisi e Manutenzioni/Fissaggio/Fissaggio";
@@ -14,6 +11,7 @@ import Ossido from "./pages/Analisi e Manutenzioni/Ossido/Ossido";
 import Prossime from "./pages/Analisi e Manutenzioni/Prossime";
 import Produzione from "./pages/Analisi e Manutenzioni/Produzione";
 import UserContext from "./UserContext";
+import MyToast from "./components/MyToast/MyToast";
 
 
 function reducer (state, userInfo) {
@@ -45,11 +43,7 @@ function App() {
           </Routes>
         </HashRouter>
         {success && (
-          <ToastContainer position="bottom-end" className="p-2">
-            <Toast className="bg-[#457b3b] text-center text-white w-80">
-              <Toast.Body><FontAwesomeIcon size="lg" className="mr-3" icon={faCheck} />Login avvenuto con successo !</Toast.Body>
-            </Toast>
-          </ToastContainer>
+          <MyToast>Login avvenuto con successo !</MyToast>
         )}
       </div>
     </UserContext.Provider>

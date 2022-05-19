@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "./../subcomponents/Wrapper";
@@ -8,8 +8,7 @@ import ManutenzioneForm from "./ManutenzioneForm";
 import useUpdateData from "../../../hooks/useUpdateData";
 
 function Manutenzione() {
-  const [data, setData] = useState({});
-  useUpdateData(setData, URLS.PAGINA_MANUTENZIONI);
+  const [data, setData] = useUpdateData(URLS.PAGINA_MANUTENZIONI);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

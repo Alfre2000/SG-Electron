@@ -20,6 +20,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
 
   const valvoleScarto = +materiale + +sporco + +meccanici + +trattamento + +altro
   const handleValoreChange = (e) => {
+    if (e.target.name === 'spessore_deviazione') return;
     const name = e.target.name.includes('spessore') ? 'spessore_ossido' : e.target.name
     const minimo = data.scheda_controllo[`${name}_minimo`]
     const massimo = data.scheda_controllo[`${name}_massimo`]

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
@@ -8,8 +8,7 @@ import AnalisiForm from "./AnalisiForm";
 import useUpdateData from "../../../hooks/useUpdateData";
 
 function Analisi() {
-  const [data, setData] = useState({});
-  useUpdateData(setData, URLS.PAGINA_ANALISI);
+  const [data, setData] = useUpdateData(URLS.PAGINA_ANALISI);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

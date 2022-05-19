@@ -13,9 +13,8 @@ import useUpdateData from "../../../hooks/useUpdateData";
 
 
 function SchedaControllo() {
-  const [data, setData] = useState({});
+  const [data, setData] = useUpdateData(URLS.PAGINA_LAVORAZIONI);
   const [avvisi, setAvvisi] = useState([]);
-  useUpdateData(setData, URLS.PAGINA_LAVORAZIONI);
   useEffect(() => {
     apiGet(URLS.PAGINA_PROSSIME).then(res => {
       if (!res) return;

@@ -5,6 +5,7 @@ export const BASE_PATH =
 
 
 export const URLS = {
+    // USERS
     LOGIN: BASE_PATH + '/auth/login/',
     LOGOUT: BASE_PATH + '/auth/logout/',
     INFO_UTENTE: BASE_PATH + '/auth/info-utente/',

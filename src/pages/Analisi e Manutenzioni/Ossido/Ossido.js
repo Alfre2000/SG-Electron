@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
@@ -9,9 +9,7 @@ import useUpdateData from "../../../hooks/useUpdateData";
 
 
 function Ossido() {
-  const [data, setData] = useState({});
-  useUpdateData(setData, URLS.PAGINA_OSSIDI);
-  const setParsedData = (response) => {
+  const parser = useCallback((response) => {
     response.records = response.records.map(record => {
       const manutenzione = response.operazioni.filter(op => op.id === record.operazione)[0]
       record.aggiuta_solforico = manutenzione.nome.toLowerCase().includes('solforico') 
@@ -19,7 +17,11 @@ function Ossido() {
       record.tagliato_bagno = manutenzione.nome.toLowerCase().includes('taglio bagno') 
       return record
     })
-    setData(response)
+    return response
+  }, [])
+  const [data, setData] = useUpdateData(URLS.PAGINA_OSSIDI, parser);
+  const setParsedData = (data) => {
+    setData(parser(data))
   }
   return (
     <Wrapper>
