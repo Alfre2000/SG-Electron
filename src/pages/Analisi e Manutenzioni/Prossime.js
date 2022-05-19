@@ -1,22 +1,14 @@
 import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Card, Col, Container, Placeholder, Row, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { apiGet } from '../../api/utils'
+import useUpdateData from '../../hooks/useUpdateData'
 import { URLS } from '../../urls'
 import Wrapper from './subcomponents/Wrapper'
 
 function Prossime() {
-  const [data, setData] = useState({})
-  useEffect(() => {
-    apiGet(URLS.PAGINA_PROSSIME).then(data => parseOperazioni(data))
-    setInterval(() => apiGet(URLS.PAGINA_PROSSIME).then(data => {
-      parseOperazioni(data)
-      console.log('Data updated !');
-    }), 1000 * 60 * 10)
-  }, [])
-  const parseOperazioni = (res) => {
+  const parser = useCallback((res) => {
     if (!res) return;
     let parsedData = { ok: [], late: [] }
     res.operazioni.forEach(operazione => {
@@ -29,8 +21,9 @@ function Prossime() {
       }
     })
     parsedData.ok = parsedData.ok.sort((a, b) => a.pezzi_mancanti - b.pezzi_mancanti)
-    setData(parsedData)
-  }
+    return parsedData
+  }, [])
+  const [data, ] = useUpdateData(URLS.PAGINA_PROSSIME, parser)
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

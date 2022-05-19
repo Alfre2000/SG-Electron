@@ -10,11 +10,10 @@ import { useNavigate } from 'react-router-dom'
 import useUpdateData from '../../hooks/useUpdateData'
 
 function Produzione() {
-  const [data, setData] = useState({})
+  const [data, setData] = useUpdateData(URLS.PAGINA_PRODUZIONE);
   const [frequenza, setFrequenza] = useState("day")
   const [authed, setAuthed] = useState(false)
   let navigate = useNavigate();
-  useUpdateData(setData, URLS.PAGINA_PRODUZIONE);
   const getProduzioneChartData = () => {return {
     labels: data.produzione.map(d => {
       let options;
