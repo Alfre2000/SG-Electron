@@ -44,7 +44,10 @@ function createWindow() {
       contextIsolation: false,
       enableRemoteModule: true,
     },
+    show: false,
   });
+
+  win.once('ready-to-show', win.show)
 
   // and load the index.html of the app.
   // win.loadFile("index.html");
@@ -106,7 +109,39 @@ app.whenReady().then(() => {
     })
     return response
   })
+  ipcMain.handle('open-admin', () => {
+    openAdminSite()
+  })
 });
+
+
+function openAdminSite () {
+  // Create the browser window.
+  const win = new BrowserWindow({
+    width: 1000, minWidth: 1000,
+    height: 800, minHeight: 500,
+    x: 0, y: 0,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: false,
+      enableRemoteModule: false,
+    },
+    show: false,
+  });
+  win.once('ready-to-show', win.show)
+
+  // and load the index.html of the app.
+  // win.loadFile("index.html");
+  win.loadURL(
+    isDev
+      ? 'http://localhost:8000/sg-admin'
+      : 'https://supergalvanica.herokuapp.com/sg-admin/'
+  );
+  // Open the DevTools.
+  if (isDev) {
+    win.webContents.openDevTools({ mode: 'detach' });
+  }
+}
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

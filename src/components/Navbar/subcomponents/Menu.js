@@ -22,7 +22,13 @@ function Menu({title, icon, links, navOpen}) {
             <div className="text-right caret"><FontAwesomeIcon icon={faCaretDown} className={`caret ${open ? "up": ""}`} /></div>
         </div>
         <ul className="pl-6 pr-2 ml-[1.15em] list-disc" ref={wrapperRef}>
-            {links.map(el => <li className="text-sm mb-2 hover:underline" key={el.name}><Link to={el.link}>{el.name}</Link></li>)}
+            {links.map(el => {
+              if (el.link) {
+                return <li className="text-sm mb-2 hover:underline" key={el.name}><Link to={el.link}>{el.name}</Link></li>
+              } else {
+                return <li className="text-sm mb-2 hover:underline" key={el.name}><a href='.' onClick={el.action}>{el.name}</a></li>
+              }
+            })}
         </ul>
     </div>
   )

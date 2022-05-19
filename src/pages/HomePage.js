@@ -6,6 +6,7 @@ import Header from "./../components/Header/Header";
 import UserContext from '../UserContext';
 import { PROGRAMMI } from '../programmi';
 import { useNavigate } from 'react-router-dom';
+const electron = window.require('electron');
 
 function HomePage(props) {
   let navigate = useNavigate();
@@ -32,7 +33,7 @@ function HomePage(props) {
   ];
   if (user.user && user.user.is_staff) {
     navbar.push({ title: "Admin", icon: faUserPlus, links: [
-      {name: 'Pannello Amministratore', link: '#'},
+      {name: 'Pannello Amministratore', action: () => electron.ipcRenderer.invoke('open-admin')},
       {name: 'Riepilogo Programmi', link: '#'},
       {name: 'Analisi Anomalie', link: '#'},
     ]})
