@@ -137,10 +137,6 @@ function openAdminSite () {
       ? 'http://localhost:8000/sg-admin'
       : 'https://supergalvanica.herokuapp.com/sg-admin/'
   );
-  // Open the DevTools.
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

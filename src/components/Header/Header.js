@@ -15,7 +15,7 @@ const electron = window.require('electron');
 
 function Header(props) {
   let navigate = useNavigate();
-  const { setUser } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const [userOpen, setUserOpen] = useState(false)
   const setFullScreen = () => {
     electron.ipcRenderer.invoke('toggle-fullscreen')
@@ -47,6 +47,9 @@ function Header(props) {
         <Nav.Link className="px-4 text-white" onClick={saveScreenShot}><FontAwesomeIcon size="lg" icon={faPrint}/></Nav.Link>
         <NavDropdown className="px-4 text-white" title={<FontAwesomeIcon className="text-white" size="lg" icon={faUser}/>}>
           <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+          {user.user && user.user.is_staff && (
+            <NavDropdown.Item onClick={() => electron.ipcRenderer.invoke('open-admin')}>Area Admin</NavDropdown.Item>
+          )}
         </NavDropdown>
       </Nav>
       </Container>
