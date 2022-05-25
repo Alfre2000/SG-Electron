@@ -50,9 +50,9 @@ function Prossime() {
                     <tr>
                       <th>Nome</th>
                       <th>Frequenza (n)</th>
-                      <th>N° pezzi da ultima</th>
+                      <th>Ritardo</th>
                       <th>Frequenza (g)</th>
-                      <th>N° giorni da ultima</th>
+                      <th>Ritardo</th>
                       <th>Esegui</th>
                     </tr>
                   </thead>
@@ -65,8 +65,8 @@ function Prossime() {
                       if (operazione.tipologia === "analisi") link = `/manutenzione/analisi/?analisi=${operazione.id}`;
                       if (operazione.tipologia === "manutenzione") link = `/manutenzione/manutenzioni/?manutenzione=${operazione.id}`;
                       if (operazione.tipologia === "ossido") link = `/manutenzione/ossido/`;
-                      const pezziDaUltima = operazione.intervallo_pezzi ? (operazione.intervallo_pezzi - operazione.pezzi_mancanti).toLocaleString() + ' pezzi' : "-"
-                      const giorniDaUltima = operazione.intervallo_giorni ? operazione.intervallo_giorni - operazione.giorni_mancanti + ' giorni' : "-"
+                      const pezziDaUltima = operazione.intervallo_pezzi &&  operazione.pezzi_mancanti <= 0? -operazione.pezzi_mancanti.toLocaleString() + ' pezzi' : "-"
+                      const giorniDaUltima = operazione.intervallo_giorni && operazione.giorni_mancanti <= 0? -operazione.giorni_mancanti + ' giorni' : "-"
                       const intervalloPezzi = operazione.intervallo_pezzi ? operazione.intervallo_pezzi.toLocaleString() + ' pezzi' : "-"
                       const intervalloGiorni = operazione.intervallo_giorni ? operazione.intervallo_giorni + ' giorni' : "-"
                       return (
