@@ -1,6 +1,6 @@
 import { faCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../../../api/utils";
 import { URLS } from "../../../urls";
@@ -28,7 +28,9 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
       }
       if (defaultValue !== undefined && defaultValue !== null) {
         if (el.tagName === 'SELECT') {
-          el.querySelector(`option[value="${defaultValue}"]`).setAttribute('selected', 'selected')
+          if (el.querySelector(`option[value="${defaultValue}"]`)) {
+            el.querySelector(`option[value="${defaultValue}"]`).setAttribute('selected', 'selected')
+          }
         } else if (el.type === "checkbox") {
           el.setAttribute('checked', defaultValue)
         } else if (el.type === "date") {
@@ -78,9 +80,19 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
   const createRecord = (formData, form) => {
     Object.keys(formData).forEach(key => {
       if (formData[key] === "") delete formData[key]
+      if (key.includes('.')) {
+        let [parent_obj, child_key] = key.split('.')
+        if (formData[parent_obj] === undefined) formData[parent_obj] = {};
+        formData[parent_obj][child_key] = formData[key]
+        delete formData[key]
+      }
     })
+    if (data.tipologia === 'lavorazione') {
+      formData['scheda_controllo'] = data.scheda_controllo.id
+    }
     const baseUrl = URLS[`RECORD_${data.tipologia.toUpperCase()}`];
     apiPost(baseUrl, formData).then(response => {
+      response = data.tipologia === 'lavorazione' ? parserSchedaControllo(response) : response
       setData({...data, records: [response, ...data.records]})
       form.reset()
       setSuccess(true)
@@ -95,6 +107,14 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
 
   // Funzione che gestisce la modifica di un record già esistente
   const updateRecord = (formData, form) => {
+    Object.keys(formData).forEach(key => {
+      if (key.includes('.')) {
+        let [parent_obj, child_key] = key.split('.')
+        if (formData[parent_obj] === undefined) formData[parent_obj] = {};
+        formData[parent_obj][child_key] = formData[key]
+        delete formData[key]
+      }
+    });
     [...form.elements].forEach(el => {
       if (el.type ===  'checkbox' && !el.checked) {
         formData[el.name] = "false"
@@ -105,7 +125,10 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
     const baseUrl = URLS[`RECORD_${data.tipologia.toUpperCase()}`];
     apiUpdate(baseUrl + initialData.id + '/', formData).then(response => {
       const records = data.records.map(record => {
-        if (record.id === response.id) return response
+        if (record.id === response.id) {
+          record = data.tipologia === 'lavorazione' ? parserSchedaControllo(response) : response
+          return record
+        }
         return record
       })
       setData({...data, records: records})
@@ -148,6 +171,13 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
     })
     return formData
   }
+  const parserSchedaControllo = useCallback((record) => {
+    for (const [key, value] of Object.entries(record.dati_aggiuntivi)) {
+      record['dati_aggiuntivi.' + key] =  value
+    }
+    delete record.dati_aggiuntivi
+    return record
+  }, [])
   return (
     <Form
       ref={formRef}

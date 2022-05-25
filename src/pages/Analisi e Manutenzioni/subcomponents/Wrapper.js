@@ -28,7 +28,7 @@ function Wrapper({ children, defaultNav }) {
         {name: 'Andamento Produzione', link: '/manutenzione/produzione/'},
     ]},
   ];
-  if (user.user.programmi.length > 1) {
+  if (user.user && user.user.programmi.length > 1) {
     const links = user.user.programmi ? user.user.programmi.map(el => PROGRAMMI[el]) : []
     navbar.unshift({ title: "Programmi", icon: faComputer, links: [
       {name: 'HomePage', link: '/'},

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { apiGet } from "../../../api/utils";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card, Stack, Alert } from "react-bootstrap";
@@ -13,7 +13,21 @@ import useUpdateData from "../../../hooks/useUpdateData";
 
 
 function SchedaControllo() {
-  const [data, setData] = useUpdateData(URLS.PAGINA_LAVORAZIONI);
+  const parser = useCallback((response) => {
+    response.records.forEach((record, idx) => {
+      for (const [key, value] of Object.entries(response.records[idx].dati_aggiuntivi)) {
+        response.records[idx]['dati_aggiuntivi.' + key] =  value
+      }
+      delete response.records[idx].dati_aggiuntivi
+    })
+    for (const [key, value] of Object.entries(response.scheda_controllo.caratteristiche)) {
+      response.scheda_controllo[key] = value
+    }
+    delete response.scheda_controllo.caratteristiche
+    return response
+  }, [])
+
+  const [data, setData] = useUpdateData(URLS.PAGINA_LAVORAZIONI, parser);
   const [avvisi, setAvvisi] = useState([]);
   useEffect(() => {
     apiGet(URLS.PAGINA_PROSSIME).then(res => {

@@ -11,7 +11,7 @@ export const URLS = {
     INFO_UTENTE: BASE_PATH + '/auth/info-utente/',
 
     // VIEWSETS
-    RECORD_LAVORAZIONE: BASE_PATH + '/scheda-controllo/record-lavorazioni-ossido/',
+    RECORD_LAVORAZIONE: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
     RECORD_FISSAGGIO: BASE_PATH + '/analisi-manutenzioni/record-fissaggi/',
     RECORD_OSSIDO: BASE_PATH + '/analisi-manutenzioni/record-ossidi/',
     RECORD_MANUTENZIONE: BASE_PATH + '/analisi-manutenzioni/record-manutenzioni/',

@@ -3,7 +3,7 @@ import { Col, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../utils";
 
 function Input({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols }) {
-  const labelText = label ? label : `${capitalize(name).replace('_', ' ')}:`
+  const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = inputCols ? inputCols : 12 - labelColumns
   return vertical ? (

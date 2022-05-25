@@ -10,18 +10,18 @@ import { dateToDatePicker } from "../../../utils";
 
 
 function SchedaControlloForm({ data, initialData, errors }) {
-  const [materiale, setMateriale] = useState(initialData?.n_difetti_materiale || 0)
-  const [sporco, setSporco] = useState(initialData?.n_difetti_sporco || 0)
-  const [meccanici, setMeccanici] = useState(initialData?.n_difetti_meccanici || 0)
-  const [trattamento, setTrattamento] = useState(initialData?.n_difetti_trattamento || 0)
-  const [altro, setAltro] = useState(initialData?.n_difetti_altro || 0)
+  const [materiale, setMateriale] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_materiale'] : 0)
+  const [sporco, setSporco] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_sporco'] : 0)
+  const [meccanici, setMeccanici] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_meccanici'] : 0)
+  const [trattamento, setTrattamento] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_trattamento'] : 0)
+  const [altro, setAltro] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_altro'] : 0)
 
   const [errValore, setErrValore] = useState({})
 
   const valvoleScarto = +materiale + +sporco + +meccanici + +trattamento + +altro
   const handleValoreChange = (e) => {
-    if (e.target.name === 'spessore_deviazione') return;
-    const name = e.target.name.includes('spessore') ? 'spessore_ossido' : e.target.name
+    if (e.target.name === 'dati_aggiuntivi.spessore_deviazione') return;
+    const name = e.target.name.includes('spessore') ? 'spessore_ossido' : e.target.name.split('.').at(-1)
     const minimo = data.scheda_controllo[`${name}_minimo`]
     const massimo = data.scheda_controllo[`${name}_massimo`]
     const value = parseFloat(e.target.value)
@@ -86,7 +86,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
             />
             <Checkbox 
               label="Idoneità al trattamento:"
-              name="idoneità"
+              name="dati_aggiuntivi.idoneità"
               labelCols={6}
               labelProps={{ className: "pr-6" }}
               inputProps={{ 
@@ -116,7 +116,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
         <Col xs={6}>
           <Input 
             label="Valvole conformi:"
-            name="n_pezzi_conformi"
+            name="dati_aggiuntivi.n_pezzi_conformi"
             errors={errors}
             labelCols={5}
             labelProps={{ className: "pr-0" }}
@@ -138,7 +138,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
             {['verifiche_preliminari', 'pulizia', 'filetto_m6', 'accantonato_campione', 'master'].map(name => (
               <Checkbox 
                 key={name}
-                name={name}
+                name={'dati_aggiuntivi.' + name}
                 initialData={initialData}
                 labelCols={7}
                 labelProps={{ className: "pr-6" }}
@@ -177,7 +177,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
                 <Form.Control
                   type="number"
                   size="sm"
-                  name="n_difetti_materiale"
+                  name="dati_aggiuntivi.n_difetti_materiale"
                   className="text-center"
                   value={materiale}
                   onChange={(e) => setMateriale(e.target.value)}
@@ -195,7 +195,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
                 <Form.Control
                   type="number"
                   size="sm"
-                  name="n_difetti_sporco"
+                  name="dati_aggiuntivi.n_difetti_sporco"
                   className="text-center"
                   value={sporco}
                   onChange={(e) => setSporco(e.target.value)}
@@ -213,7 +213,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
                 <Form.Control
                   type="number"
                   size="sm"
-                  name="n_difetti_meccanici"
+                  name="dati_aggiuntivi.n_difetti_meccanici"
                   className="text-center"
                   value={meccanici}
                   onChange={(e) => setMeccanici(e.target.value)}
@@ -231,7 +231,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
                 <Form.Control
                   type="number"
                   size="sm"
-                  name="n_difetti_trattamento"
+                  name="dati_aggiuntivi.n_difetti_trattamento"
                   className="text-center"
                   value={trattamento}
                   onChange={(e) => setTrattamento(e.target.value)}
@@ -249,7 +249,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
                 <Form.Control
                   type="number"
                   size="sm"
-                  name="n_difetti_altro"
+                  name="dati_aggiuntivi.n_difetti_altro"
                   className="text-center"
                   value={altro}
                   onChange={(e) => setAltro(e.target.value)}
@@ -264,7 +264,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
         </Col>
       </Row>
       <Row className="pb-4 mb-3 -mt-1 border-b-2 border-b-gray-500">
-        {['spessore_ossido', 'spessore_minimo', 'spessore_massimo', 'spessore_deviazione'].map(name => (
+        {['dati_aggiuntivi.spessore_ossido', 'dati_aggiuntivi.spessore_minimo', 'dati_aggiuntivi.spessore_massimo', 'dati_aggiuntivi.spessore_deviazione'].map(name => (
           <Col xs={3} key={name} className="text-center">
             <Input
               name={name}
@@ -286,7 +286,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
         ))}
       </Row>
       <Row className="pb-4 mb-4 border-b-2 border-b-gray-500">
-        {['temperatura_soda', 'temperatura_ossido', 'temperatura_colore', 'temperatura_fissaggio'].map(name => (
+        {['dati_aggiuntivi.temperatura_soda', 'dati_aggiuntivi.temperatura_ossido', 'dati_aggiuntivi.temperatura_colore', 'dati_aggiuntivi.temperatura_fissaggio'].map(name => (
           <Col xs={3} key={name} className="text-center">
             <Input
               name={name}

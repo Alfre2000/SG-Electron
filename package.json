@@ -2,7 +2,7 @@
   "name": "SuperGalvanica",
   "description": "Applicazione per la gestione dei processi aziendali",
   "author": "Alfredo Mauri",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": false,
   "homepage": "./",
   "dependencies": {
@@ -37,7 +37,7 @@
     "electron": "wait-on tcp:3000 && electron .",
     "watch": "electron .",
     "dev": "BROWSER=none npm start",
-    "build-el": "elecron-builder -mw",
+    "build-el": "electron-builder -mw",
     "release": "electron-builder -mw -p 'onTagOrDraft'"
   },
   "repository": "https://github.com/Alfre2000/SG-Electron",

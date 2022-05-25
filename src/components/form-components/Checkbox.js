@@ -3,7 +3,7 @@ import { Col, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../utils";
 
 function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, initialData }) {
-  const labelText = label ? label : `${capitalize(name).replace('_', ' ')}:`
+  const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = 12 - labelColumns
   return vertical ? (
