@@ -74,3 +74,6 @@ a {
 .toast-container.fixed {
   position: fixed !important;
 }
+.bs-popover-start>.popover-arrow::after {
+  border-left-color: #f0f0f0;
+}

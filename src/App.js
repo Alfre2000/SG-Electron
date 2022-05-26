@@ -8,7 +8,7 @@ import Analisi from "./pages/Analisi e Manutenzioni/Analisi/Analisi";
 import Fissaggio from "./pages/Analisi e Manutenzioni/Fissaggio/Fissaggio";
 import Manutenzione from "./pages/Analisi e Manutenzioni/Manutenzione/Manutenzione";
 import Ossido from "./pages/Analisi e Manutenzioni/Ossido/Ossido";
-import Prossime from "./pages/Analisi e Manutenzioni/Prossime";
+import Prossime from "./pages/Analisi e Manutenzioni/Prossime/Prossime";
 import Produzione from "./pages/Analisi e Manutenzioni/Produzione";
 import UserContext from "./UserContext";
 import MyToast from "./components/MyToast/MyToast";
