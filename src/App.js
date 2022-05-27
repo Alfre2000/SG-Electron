@@ -7,7 +7,6 @@ import SchedaControllo from "./pages/Analisi e Manutenzioni/SchedaControllo/Sche
 import Analisi from "./pages/Analisi e Manutenzioni/Analisi/Analisi";
 import Fissaggio from "./pages/Analisi e Manutenzioni/Fissaggio/Fissaggio";
 import Manutenzione from "./pages/Analisi e Manutenzioni/Manutenzione/Manutenzione";
-import Ossido from "./pages/Analisi e Manutenzioni/Ossido/Ossido";
 import Prossime from "./pages/Analisi e Manutenzioni/Prossime/Prossime";
 import Produzione from "./pages/Analisi e Manutenzioni/Produzione";
 import UserContext from "./UserContext";
@@ -37,7 +36,6 @@ function App() {
             <Route path="manutenzione/analisi/" element={<Analisi />}></Route>
             <Route path="manutenzione/fissaggio/" element={<Fissaggio />}></Route>
             <Route path="manutenzione/manutenzioni/" element={<Manutenzione />}></Route>
-            <Route path="manutenzione/ossido/" element={<Ossido />}></Route>
             <Route path="manutenzione/prossime/" element={<Prossime />}></Route>
             <Route path="manutenzione/produzione/" element={<Produzione />}></Route>
           </Routes>

@@ -19,7 +19,6 @@ function Wrapper({ children, defaultNav }) {
     ]},
     { title: "Manutenzioni", icon: faToolbox, links: [
         {name: 'Fissaggio', link: '/manutenzione/fissaggio/'},
-        {name: 'Ossido', link: '/manutenzione/ossido/'},
         {name: 'Manutenzioni', link: '/manutenzione/manutenzioni/'},
         {name: 'Analisi', link: '/manutenzione/analisi/'},
     ]},

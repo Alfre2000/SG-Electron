@@ -66,7 +66,6 @@ function SchedaControllo() {
             if (operazione.tipologia === "fissaggio") link = `/manutenzione/fissaggio/`;
             if (operazione.tipologia === "analisi") link = `/manutenzione/analisi/?analisi=${operazione.id}`;
             if (operazione.tipologia === "manutenzione") link = `/manutenzione/manutenzioni/?manutenzione=${operazione.id}`;
-            if (operazione.tipologia === "ossido") link = `/manutenzione/ossido/`;
             return (
             <Alert key={operazione.id} variant="danger" className="py-2 mb-2 text-left pl-[7%] inline-flex items-center">
               <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>

@@ -32,8 +32,6 @@ function InfoPopup({ placement, setPopup, operazione }) {
 
   let tipologia = operazione.tipologia
   if (tipologia === 'fissaggio') tipologia = 'analisi'
-  if (tipologia === 'ossido') tipologia = 'manutenzione'
-  console.log(operazione);
   return (
     <Popover
       ref={popupRef}

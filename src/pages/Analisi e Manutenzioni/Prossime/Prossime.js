@@ -68,7 +68,6 @@ function Prossime() {
                       if (operazione.tipologia === "fissaggio") link = `/manutenzione/fissaggio/`;
                       if (operazione.tipologia === "analisi") link = `/manutenzione/analisi/?analisi=${operazione.id}`;
                       if (operazione.tipologia === "manutenzione") link = `/manutenzione/manutenzioni/?manutenzione=${operazione.id}`;
-                      if (operazione.tipologia === "ossido") link = `/manutenzione/ossido/`;
                       const pezziDaUltima = operazione.intervallo_pezzi &&  operazione.pezzi_mancanti <= 0? -operazione.pezzi_mancanti.toLocaleString() + ' pezzi' : "-"
                       const giorniDaUltima = operazione.intervallo_giorni && operazione.giorni_mancanti <= 0? -operazione.giorni_mancanti + ' giorni' : "-"
                       const intervalloPezzi = operazione.intervallo_pezzi ? operazione.intervallo_pezzi.toLocaleString() + ' pezzi' : "-"
@@ -141,7 +140,6 @@ function Prossime() {
                       if (operazione.tipologia === "fissaggio") link = `/manutenzione/fissaggio/`;
                       if (operazione.tipologia === "analisi") link = `/manutenzione/analisi/?analisi=${operazione.id}`;
                       if (operazione.tipologia === "manutenzione") link = `/manutenzione/manutenzioni/?manutenzione=${operazione.id}`;
-                      if (operazione.tipologia === "ossido") link = `/manutenzione/ossido/?manutenzione=${operazione.id}`;
                       const pezziMancanti = operazione.intervallo_pezzi ? operazione.pezzi_mancanti.toLocaleString() + ' pezzi' : "-"
                       const giorniMancanti = operazione.intervallo_giorni ? operazione.giorni_mancanti + ' giorni' : "-"
                       const intervalloPezzi = operazione.intervallo_pezzi ? operazione.intervallo_pezzi.toLocaleString() + ' pezzi' : "-"
