@@ -167,12 +167,12 @@ function Prossime() {
                     )})}
                     {data.ok && data.ok.length === 0 && (
                       <tr>
-                        <td colSpan="6">Nessuna manutenzione in coda</td>
+                        <td colSpan="7">Nessuna manutenzione in coda</td>
                       </tr>
                     )}
                     {!data.ok && Array.from(Array(3)).map((_, idx) => (
                       <tr key={idx}>
-                        <td colSpan={6}>
+                        <td colSpan={7}>
                           <Placeholder as="p" animation="glow">
                             <Placeholder xs={12} className="rounded-md" />
                           </Placeholder>
