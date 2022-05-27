@@ -11,6 +11,7 @@ import Prossime from "./pages/Analisi e Manutenzioni/Prossime/Prossime";
 import Produzione from "./pages/Analisi e Manutenzioni/Produzione";
 import UserContext from "./UserContext";
 import MyToast from "./components/MyToast/MyToast";
+import RicercaDatabase from "./pages/Analisi e Manutenzioni/RicercaDatabase/RicercaDatabase";
 
 
 function reducer (state, userInfo) {
@@ -38,6 +39,7 @@ function App() {
             <Route path="manutenzione/manutenzioni/" element={<Manutenzione />}></Route>
             <Route path="manutenzione/prossime/" element={<Prossime />}></Route>
             <Route path="manutenzione/produzione/" element={<Produzione />}></Route>
+            <Route path="manutenzione/ricerca/" element={<RicercaDatabase />}></Route>
           </Routes>
         </HashRouter>
         {success && (

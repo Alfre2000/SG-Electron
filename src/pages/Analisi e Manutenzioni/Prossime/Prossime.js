@@ -74,7 +74,7 @@ function Prossime() {
                       const intervalloGiorni = operazione.intervallo_giorni ? operazione.intervallo_giorni + ' giorni' : "-"
                       return (
                         <tr key={operazione.id}>
-                          <td className='max-w-[40%] w-[100%]'>{operazione.nome}</td>
+                          <td className='max-w-[35%] w-[100%]'>{operazione.nome}</td>
                           <td>{intervalloPezzi}</td>
                           <td className="font-semibold" style={{color: colorePezzi}}>{pezziDaUltima}</td>
                           <td>{intervalloGiorni}</td>
@@ -146,7 +146,7 @@ function Prossime() {
                       const intervalloGiorni = operazione.intervallo_giorni ? operazione.intervallo_giorni + ' giorni' : "-"
                       return (
                         <tr key={operazione.id}>
-                          <td className="max-w-[40%] w-[100%]">{operazione.nome}</td>
+                          <td className="max-w-[35%] w-[100%]">{operazione.nome}</td>
                           <td>{intervalloPezzi}</td>
                           <td className="font-semibold" style={{color: colorePezzi}}>{pezziMancanti}</td>
                           <td>{intervalloGiorni}</td>

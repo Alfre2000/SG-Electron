@@ -23,4 +23,5 @@ export const URLS = {
     PAGINA_ANALISI: BASE_PATH + '/analisi-manutenzioni/pagina-analisi/',
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
     PAGINA_PRODUZIONE: BASE_PATH + '/analisi-manutenzioni/pagina-andamento-produzione/',
+    PAGINA_RICERCA_DATABASE: BASE_PATH + '/analisi-manutenzioni/pagina-ricerca-database/',
 }
