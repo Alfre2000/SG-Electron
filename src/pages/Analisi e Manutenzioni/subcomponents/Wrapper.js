@@ -21,7 +21,7 @@ function Wrapper({ children, defaultNav }) {
         {name: 'Fissaggio', link: '/manutenzione/fissaggio/'},
         {name: 'Manutenzioni', link: '/manutenzione/manutenzioni/'},
         {name: 'Analisi', link: '/manutenzione/analisi/'},
-        {name: 'Ricerca Database', link: '/manutenzione/ricerca/'},
+        // {name: 'Ricerca Database', link: '/manutenzione/ricerca/'},
     ]},
     { title: "Informazioni", icon: faChartLine, links: [
         {name: 'Prossime Manutenzioni', link: '/manutenzione/prossime/'},

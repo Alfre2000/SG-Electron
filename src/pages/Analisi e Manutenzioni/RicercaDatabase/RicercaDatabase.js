@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import Select from "../../../components/form-components/Select";
-import { dateToDatePicker } from "../../../utils";
+import { dateToDatePicker, findElementFromID } from "../../../utils";
 import Wrapper from "../subcomponents/Wrapper";
 import { URLS } from "../../../urls";
 import Tabella from "../subcomponents/Tabella";
@@ -38,7 +38,10 @@ function RicercaDatabase() {
       (res) => setData(prev => {return {...prev, records:res}})
     )
   }
-  const tableData = data.records ? {...data, records: data.records.results} : {}
+  const records = data.records && data.operazioni ? data.records.results.map(
+      r => {return {...r, tipologia: findElementFromID(r.operazione, data.operazioni).tipologia}}
+    ) : {}
+  const tableData = data.records ? {...data, records: records} : {}
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
