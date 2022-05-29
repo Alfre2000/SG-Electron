@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const updater = require('./updater');
 
-const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu, screen } = require('electron');
 const isDev = require('electron-is-dev');
 
 // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
@@ -35,10 +35,13 @@ function createWindow() {
   // Check for Updates after 8 seconds
   setTimeout(updater, 8000)
 
+  // Get Screen size
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().bounds
+
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1350, minWidth: 1000,
-    height: 800, minHeight: 500,
+    width: screenWidth * 0.9, minWidth: 1000,
+    height: screenHeight, minHeight: 500,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
