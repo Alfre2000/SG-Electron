@@ -16,9 +16,10 @@ module.exports = () => {
             messagge: "Una nuova versione del programma è disponibile. Vuoi installarla ora ?",
             buttons: ['Aggiorna', 'No']
         }).then(result => {
-            if (result.response === 0) {
-                 autoUpdater.downloadUpdate()
-            }
+            // if (result.response === 0) {
+            //      autoUpdater.downloadUpdate()
+            // }
+            autoUpdater.downloadUpdate()
         })  
     })
     autoUpdater.on('update-downloaded', () => {

@@ -37,8 +37,8 @@
     "electron": "wait-on tcp:3000 && electron .",
     "watch": "electron .",
     "dev": "BROWSER=none npm start",
-    "build-el": "electron-builder -mw",
-    "release": "electron-builder -mw -p 'onTagOrDraft'"
+    "build-el": "npm run build && electron-builder -mw",
+    "release": "npm run build && electron-builder -mw -p 'onTagOrDraft'"
   },
   "repository": "https://github.com/Alfre2000/SG-Electron",
   "eslintConfig": {
@@ -81,7 +81,7 @@
       "target": "dmg"
     },
     "win": {
-      "target": "zip"
+      "target": "nsis"
     },
     "files": [
       "build/**/*"
