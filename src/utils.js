@@ -12,10 +12,10 @@ export const dateToTimePicker = (date) => {
   return hour + ":" + min
 }
 
-export const getOperatoreName = (id, array) => {
+export const findElementFromID = (id, array) => {
   if (!array) return ""
   const matches = array.filter(el => el.id === id)
-  return matches.length > 0 ? matches[0].nome : ""
+  return matches.length > 0 ? matches[0] : ""
 }
 
 export const capitalize = s => (s && s[0].toUpperCase() + s.slice(1)) || ""
@@ -31,3 +31,14 @@ export const colors = [
   "#8549ba",
   "#58595b",
 ];
+
+export const updateQueryStringParameter = (uri, key, value) => {
+  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+  var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+  if (uri.match(re)) {
+    return uri.replace(re, '$1' + key + "=" + value + '$2');
+  }
+  else {
+    return uri + separator + key + "=" + value;
+  }
+}

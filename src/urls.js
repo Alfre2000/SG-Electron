@@ -15,6 +15,8 @@ export const URLS = {
     RECORD_FISSAGGIO: BASE_PATH + '/analisi-manutenzioni/record-fissaggi/',
     RECORD_MANUTENZIONE: BASE_PATH + '/analisi-manutenzioni/record-manutenzioni/',
     RECORD_ANALISI: BASE_PATH + '/analisi-manutenzioni/record-analisi/',
+    OPERAZIONI: BASE_PATH + '/analisi-manutenzioni/operazioni/',
+    OPERATORI: BASE_PATH + '/base/operatori/',
 
     // PAGINA
     PAGINA_LAVORAZIONI: BASE_PATH + '/analisi-manutenzioni/pagina-schede-controllo',

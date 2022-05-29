@@ -6,7 +6,7 @@ import ConfirmModal from "../../../components/ConfirmModal.js/ConfirmModal";
 import ModifyModal from "../../../components/ModifyModal/ModifyModal";
 import MyToast from "../../../components/MyToast/MyToast";
 import PasswordModal from "../../../components/PasswordModal/PasswordModal";
-import { getOperatoreName } from "../../../utils";
+import { findElementFromID } from "../../../utils";
 import { deleteRecord } from "../utils";
 import FormWrapper from "./FormWrapper";
 
@@ -88,9 +88,10 @@ function Tabella({ headers, data, setData, FormComponent }) {
                     let value;
                     if (header === "data") value = new Date(record.data).toLocaleDateString();
                     else if (header === "ora") value = new Date(record.data).toLocaleTimeString().slice(0, 5);
-                    else if (header === "operatore") value = getOperatoreName(record.operatore, data.operatori);
-                    else if (header === "analisi") value = data.operazioni.filter(el => el.id === record.operazione)[0]?.nome
-                    else if (header === "manutenzione") value = data.operazioni.filter(el => el.id === record.operazione)[0]?.nome
+                    else if (header === "operatore") value = findElementFromID(record.operatore, data.operatori)?.nome;
+                    else if (header === "analisi") value = findElementFromID(record.operazione, data.operazioni)?.nome;
+                    else if (header === "manutenzione") value = findElementFromID(record.operazione, data.operazioni)?.nome;
+                    else if (header === "operazione") value = findElementFromID(record.operazione, data.operazioni)?.nome;
                     else if (header === "n_pezzi") value = record['n_pezzi_dichiarati']
                     else value = record[header];
                     return <td key={value || idx}>{value || "-"}</td>

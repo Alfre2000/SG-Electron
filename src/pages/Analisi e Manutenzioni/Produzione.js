@@ -3,7 +3,7 @@ import { Card, Container, Form, Stack } from 'react-bootstrap'
 import { Bar, Pie } from 'react-chartjs-2'
 import { apiGet } from '../../api/utils'
 import { URLS } from '../../urls'
-import { colors, getOperatoreName, capitalize } from '../../utils'
+import { colors, findElementFromID, capitalize } from '../../utils'
 import Wrapper from './subcomponents/Wrapper'
 import PasswordModal from "../../components/PasswordModal/PasswordModal";
 import { useNavigate } from 'react-router-dom'
@@ -44,7 +44,7 @@ function Produzione() {
     ],
   }}
   const getPieChartData = () => {return {
-    labels: data.pezzi_per_operatore.map(el => getOperatoreName(el.operatore, data.operatori)),
+    labels: data.pezzi_per_operatore.map(el => findElementFromID(el.operatore, data.operatori)?.nome),
     datasets: [
       { 
         label: 'Produzione per operatore',

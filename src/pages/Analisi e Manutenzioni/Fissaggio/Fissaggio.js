@@ -6,6 +6,7 @@ import Tabella from "../subcomponents/Tabella";
 import FissaggioForm from "./FissaggioForm";
 import FormWrapper from "../subcomponents/FormWrapper";
 import useUpdateData from "../../../hooks/useUpdateData";
+// import useGetAPIData from "../../../hooks/useGetAPIData";
 
 function Fissaggio() {
   const parser = useCallback((response) => {
@@ -16,6 +17,10 @@ function Fissaggio() {
     return response
   }, [])
   const [data, setData] = useUpdateData(URLS.PAGINA_FISSAGGI, parser);
+  // const [data, setData] = useGetAPIData([
+  //   {nome: "operatori", url: URLS.OPERATORI},
+  //   {nome: "test", url: URLS.PAGINA_FISSAGGI, parser: parser
+  // }])
   const setParsedData = (data) => {
     setData(parser(data))
   }
