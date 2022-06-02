@@ -2,27 +2,26 @@ import React, { useCallback } from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
-import Tabella from "../subcomponents/Tabella";
 import FissaggioForm from "./FissaggioForm";
 import FormWrapper from "../subcomponents/FormWrapper";
-import useUpdateData from "../../../hooks/useUpdateData";
-// import useGetAPIData from "../../../hooks/useGetAPIData";
+import useGetAPIData from "../../../hooks/useGetAPIData";
+import Tabella from "../subcomponents/Tabella";
 
 function Fissaggio() {
   const parser = useCallback((response) => {
-    response.records = response.records.map(record => {
+    response.results = response.results.map(record => {
       record.ph = record.record_parametri[0].valore
       return record
     })
     return response
   }, [])
-  const [data, setData] = useUpdateData(URLS.PAGINA_FISSAGGI, parser);
-  // const [data, setData] = useGetAPIData([
-  //   {nome: "operatori", url: URLS.OPERATORI},
-  //   {nome: "test", url: URLS.PAGINA_FISSAGGI, parser: parser
-  // }])
-  const setParsedData = (data) => {
-    setData(parser(data))
+  const [data, setData] = useGetAPIData([
+    {nome: "operatori", url: URLS.OPERATORI},
+    {nome: "operazioni", url: URLS.FISSAGGI},
+    {nome: "records", url: URLS.RECORD_FISSAGGIO, parser: parser}
+  ])
+  const setParsedData = (newData) => {
+    setData({...data, records: parser(newData.records)})
   }
   return (
     <Wrapper>
@@ -45,7 +44,7 @@ function Fissaggio() {
                 Registra aggiunta fissaggio
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setParsedData}>
+                <FormWrapper data={data} setData={setParsedData} url={URLS.RECORD_ANALISI}>
                   <FissaggioForm data={data} />
                 </FormWrapper>
               </Card.Body>
@@ -60,10 +59,12 @@ function Fissaggio() {
               </Card.Header>
               <Card.Body>
                 <Tabella 
-                  headers={["Data", "Ora", "Operatore", "pH"]}
+                  headers={["Operatore", "pH"]}
+                  valori={['operatore__operatori', 'ph']}
                   data={data}
                   setData={setParsedData}
                   FormComponent={FissaggioForm}
+                  url={URLS.RECORD_ANALISI}
                 />
               </Card.Body>
             </Card>

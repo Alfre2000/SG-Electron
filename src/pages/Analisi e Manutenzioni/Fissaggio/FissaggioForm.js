@@ -7,8 +7,13 @@ import Checkbox from "../../../components/form-components/Checkbox";
 import Select from "../../../components/form-components/Select";
 
 function FissaggioForm({ data, initialData, errors }) {
-  const parametroID = data.operazioni ? data.operazioni[0].parametri[0].id : ""
-  const operazioneID = data.operazioni ? data.operazioni[0].id : ""
+  const operazione = data.operazioni
+    ? data.operazioni.length === 1
+      ? data.operazioni[0]
+      : data.operazioni.filter((op) => op.tipologia === "fissaggi")[0]
+    : {};
+  const parametroID = data.operazioni ? operazione?.parametri[0].id : "";
+  const operazioneID = data.operazioni ? operazione?.id : "";
   return (
     <Row className="mb-4 justify-between">
       <Col
@@ -16,15 +21,15 @@ function FissaggioForm({ data, initialData, errors }) {
         className="pr-12 border-r-2 border-r-gray-500 border-b-2 border-b-gray-500 pb-6"
       >
         <Stack gap={2} className="text-left">
-          <Form.Control defaultValue={operazioneID} name="operazione" hidden/>
-          <Input 
+          <Form.Control defaultValue={operazioneID} name="operazione" hidden />
+          <Input
             name="data"
             errors={errors}
             inputProps={{
               type: "date",
               defaultValue: dateToDatePicker(
                 initialData?.data ? new Date(initialData.data) : new Date()
-              )
+              ),
             }}
           />
           <Form.Group as={Row}>
@@ -35,10 +40,10 @@ function FissaggioForm({ data, initialData, errors }) {
               <TimeInput initialData={initialData} />
             </Col>
           </Form.Group>
-          <Select 
+          <Select
             name="operatore"
             inputProps={{ required: true }}
-            data={data?.operatori?.map(o => [o.id, o.nome])}
+            data={data?.operatori && data.operatori.map((o) => [o.id, o.nome])}
           />
         </Stack>
       </Col>
@@ -51,7 +56,7 @@ function FissaggioForm({ data, initialData, errors }) {
             labelProps={{ className: "pr-6" }}
             inputProps={{ defaultChecked: true }}
           />
-          <Input 
+          <Input
             label="pH:"
             name={`valore-${parametroID}`}
             labelCols={6}

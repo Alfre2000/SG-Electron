@@ -5,16 +5,18 @@ import Select from "../../../components/form-components/Select";
 import { dateToDatePicker, findElementFromID } from "../../../utils";
 import Wrapper from "../subcomponents/Wrapper";
 import { URLS } from "../../../urls";
-import Tabella from "../subcomponents/Tabella";
 import { apiGet } from "../../../api/utils";
 import ManutenzioneForm from "./../Manutenzione/ManutenzioneForm";
+import AnalisiForm from "./../Analisi/AnalisiForm";
+import FissaggioForm from "./../Fissaggio/FissaggioForm";
 import useGetAPIData from "../../../hooks/useGetAPIData";
 import Paginator from "../../../components/Pagination/Paginator";
+import Tabella from "../subcomponents/Tabella";
 
 function RicercaDatabase() {
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
-    {nome: "operazioni", url: URLS.OPERAZIONI},
+    {nome: "operazioni", url: URLS.OPERAZIONI_DEEP},
     {nome: "records", url: URLS.PAGINA_RICERCA_DATABASE}
   ])
   const [inizio, setInizio] = useState("")
@@ -38,10 +40,15 @@ function RicercaDatabase() {
       (res) => setData(prev => {return {...prev, records:res}})
     )
   }
-  const records = data.records && data.operazioni ? data.records.results.map(
-      r => {return {...r, tipologia: findElementFromID(r.operazione, data.operazioni).tipologia}}
-    ) : {}
-  const tableData = data.records ? {...data, records: records} : {}
+  const tabellaForms = { manutenzioni: ManutenzioneForm, analisi: AnalisiForm, fissaggi: FissaggioForm}
+  const tabellaURLs = { manutenzioni: URLS.RECORD_MANUTENZIONE, analisi: URLS.RECORD_ANALISI, fissaggi: URLS.RECORD_ANALISI}
+  const dataTabella = data.records ? {...data, records: {...data.records, results: data.records.results.map(r => {
+    const tipologia = findElementFromID(r.operazione, data.operazioni).tipologia
+    if (tipologia === 'fissaggi') {
+      r = {...r, ph: r.record_parametri[0].valore}
+    }
+    return {...r, form: tabellaForms[tipologia], url: tabellaURLs[tipologia]}
+  })}} : {}
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -139,10 +146,10 @@ function RicercaDatabase() {
               </Card.Header>
               <Card.Body className="px-5">
                 <Tabella 
-                  headers={["Data", "Ora", "Operazione", "Operatore"]}
-                  data={tableData}
+                  headers={['Operazione', 'Operatore']}
+                  valori={['operazione__operazioni', 'operatore__operatori']}
+                  data={dataTabella}
                   setData={setData}
-                  FormComponent={ManutenzioneForm}
                 />
                 <Paginator 
                   data={data.records}

@@ -2,13 +2,17 @@ import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
-import Tabella from "../subcomponents/Tabella";
 import FormWrapper from "../subcomponents/FormWrapper";
 import AnalisiForm from "./AnalisiForm";
-import useUpdateData from "../../../hooks/useUpdateData";
+import useGetAPIData from "../../../hooks/useGetAPIData";
+import Tabella from "../subcomponents/Tabella";
 
 function Analisi() {
-  const [data, setData] = useUpdateData(URLS.PAGINA_ANALISI);
+  const [data, setData] = useGetAPIData([
+    {nome: "operatori", url: URLS.OPERATORI},
+    {nome: "operazioni", url: URLS.ANALISI},
+    {nome: "records", url: URLS.RECORD_ANALISI}
+  ])
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -30,7 +34,7 @@ function Analisi() {
                 Seleziona l'analisi effettuata
               </Card.Header>
               <Card.Body className="px-5">
-              <FormWrapper data={data} setData={setData}>
+              <FormWrapper data={data} setData={setData} url={URLS.RECORD_ANALISI}>
                   <AnalisiForm data={data} />
                 </FormWrapper>
               </Card.Body>
@@ -44,11 +48,13 @@ function Analisi() {
                 Ultime analisi effettuate
               </Card.Header>
               <Card.Body>
-                <Tabella 
-                  headers={["Data", "Ora", "Analisi", "Operatore"]}
+                <Tabella
+                  headers={["Analisi", "Operatore"]}
+                  valori={['operazione__operazioni', 'operatore__operatori']}
                   data={data}
                   setData={setData}
                   FormComponent={AnalisiForm}
+                  url={URLS.RECORD_ANALISI}
                 />
               </Card.Body>
             </Card>

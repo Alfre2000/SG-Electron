@@ -42,3 +42,9 @@ export const updateQueryStringParameter = (uri, key, value) => {
     return uri + separator + key + "=" + value;
   }
 }
+
+export const isDateRecent = (date) => {
+  const recordDate = new Date(date)
+  const now = new Date()
+  return Math.abs(now - recordDate) / 36e5 < 2;
+}

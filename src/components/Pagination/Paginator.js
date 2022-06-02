@@ -6,7 +6,7 @@ import { updateQueryStringParameter } from "../../utils";
 function Paginator({ data, setData }) {
   const currentPage = data?.next
     ? parseInt(data.next.split("page=").at(-1).split('&')[0]) - 1
-    : data?.previous.includes('page=')
+    : data?.previous?.includes('page=')
     ? parseInt(data.previous.split("page=").at(-1).split('&')[0]) + 1
     : 1;
   const totalPages = data

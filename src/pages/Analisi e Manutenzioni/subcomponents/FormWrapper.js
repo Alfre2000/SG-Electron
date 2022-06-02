@@ -3,10 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../../../api/utils";
-import { URLS } from "../../../urls";
 import { dateToDatePicker } from "../../../utils";
 
-function FormWrapper({ data, setData, initialData, onSuccess, children }) {
+function FormWrapper({ data, setData, initialData, onSuccess, url, children }) {
   const formRef = useRef(null);
   const [error, setError] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -57,7 +56,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
     } else {
       let { data: date, ora, ...formData } = Object.fromEntries(new FormData(form).entries());
       formData['data'] = new Date(date + " " + ora).toISOString()
-      if (data.tipologia === 'lavorazione') {
+      if (url.toLowerCase().includes('lavorazione')) {
         formData['impianto'] = data.impianto.id
       }
       if (data.operazioni?.length === 1) {
@@ -87,13 +86,12 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
         delete formData[key]
       }
     })
-    if (data.tipologia === 'lavorazione') {
+    if (url.toLowerCase().includes('lavorazione')) {
       formData['scheda_controllo'] = data.scheda_controllo.id
     }
-    const baseUrl = URLS[`RECORD_${data.tipologia.toUpperCase()}`];
-    apiPost(baseUrl, formData).then(response => {
-      response = data.tipologia === 'lavorazione' ? parserSchedaControllo(response) : response
-      setData({...data, records: [response, ...data.records]})
+    apiPost(url, formData).then(response => {
+      response = url.toLowerCase().includes('lavorazione') ? parserSchedaControllo(response) : response
+      setData({...data, records: {...data.records,  results:[response, ...data.records.results]}})
       form.reset()
       setSuccess(true)
       setTimeout(() => setSuccess(false), 4000)
@@ -122,16 +120,15 @@ function FormWrapper({ data, setData, initialData, onSuccess, children }) {
         if (formData[el.name] === "") formData[el.name] = null
       }
     })
-    const baseUrl = URLS[`RECORD_${data.tipologia.toUpperCase()}`];
-    apiUpdate(baseUrl + initialData.id + '/', formData).then(response => {
-      const records = data.records.map(record => {
+    apiUpdate(url + initialData.id + '/', formData).then(response => {
+      const records = data.records.results.map(record => {
         if (record.id === response.id) {
-          record = data.tipologia === 'lavorazione' ? parserSchedaControllo(response) : response
+          record = url.toLowerCase().includes('lavorazione') ? parserSchedaControllo(response) : response
           return record
         }
         return record
       })
-      setData({...data, records: records})
+      setData({...data, records: {...data.records, results: records}})
       form.reset()
       onSuccess();
       if (form.querySelector('.list-group-item')) {

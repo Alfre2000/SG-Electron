@@ -74,7 +74,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
               name="articolo"
               labelProps={{ className: "pr-6" }}
               inputProps={{ required: true }}
-              data={data?.articoli?.map(o => [o.id, o.nome])}
+              data={data?.articoli && data?.articoli?.map(o => [o.id, o.nome])}
             />
             <Input 
               label="Numero Lotto:"

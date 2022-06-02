@@ -4,11 +4,17 @@ import { apiGet } from "../api/utils";
 function useGetAPIData(requests) {
   // [ { nome, url, initialData, parser }, ... ]
   const initialData = {}
-  requests.forEach(req => initialData[req.nome] = req.initialData)
+  requests.forEach(req => {
+    if (req.nome) initialData[req.nome] = req.initialData
+  })
   const [data, setData] = useState(initialData)
   const setNewData = useCallback((request, newData) => {
-    if (request.parser) setData(previousState => {return {...previousState, [request.nome]: request.parser(newData)}})
-    else setData(previousState => {return {...previousState, [request.nome]: newData}})
+    newData = request.parser ? request.parser(newData) : newData
+    if (request.nome) {
+      setData(previousState => {return {...previousState, [request.nome]: newData}})
+    } else {
+      setData(previousState => {return {...previousState, ...newData}})
+    }
   }, [])
   useEffect(() => {
     requests.forEach(req => {

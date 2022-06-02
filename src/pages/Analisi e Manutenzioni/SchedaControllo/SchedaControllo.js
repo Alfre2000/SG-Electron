@@ -3,31 +3,44 @@ import { apiGet } from "../../../api/utils";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card, Stack, Alert } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
-import Tabella from "../subcomponents/Tabella";
 import FormWrapper from "../subcomponents/FormWrapper";
 import SchedaControlloForm from "./SchedaControlloForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import useUpdateData from "../../../hooks/useUpdateData";
+import useGetAPIData from "../../../hooks/useGetAPIData";
+import Tabella from "../subcomponents/Tabella";
 
 
 function SchedaControllo() {
-  const parser = useCallback((response) => {
-    response.records.forEach((record, idx) => {
-      for (const [key, value] of Object.entries(response.records[idx].dati_aggiuntivi)) {
-        response.records[idx]['dati_aggiuntivi.' + key] =  value
+  const parserRecords = useCallback((response) => {
+    response.results.forEach((record, idx) => {
+      if (record.dati_aggiuntivi) {
+        for (const [key, value] of Object.entries(response.results[idx].dati_aggiuntivi)) {
+          response.results[idx]['dati_aggiuntivi.' + key] =  value
+        }
+        delete response.results[idx].dati_aggiuntivi
       }
-      delete response.records[idx].dati_aggiuntivi
     })
+    return response
+  }, [])
+  const parserScheda = useCallback((response) => {
     for (const [key, value] of Object.entries(response.scheda_controllo.caratteristiche)) {
       response.scheda_controllo[key] = value
     }
     delete response.scheda_controllo.caratteristiche
     return response
   }, [])
-
-  const [data, setData] = useUpdateData(URLS.PAGINA_LAVORAZIONI, parser);
+  const setParsedData = (newData) => {
+    console.log(newData);
+    setData({...data, records: parserRecords(newData.records)})
+  }
+  const [data, setData] = useGetAPIData([
+    {nome: "operatori", url: URLS.OPERATORI},
+    {nome: "articoli", url: URLS.ARTICOLI},
+    {url: URLS.SCHEDA_CONTROLLO_OSSIDO, parser: parserScheda},
+    {nome: "records", url: URLS.RECORD_LAVORAZIONI, parser: parserRecords},
+  ])
   const [avvisi, setAvvisi] = useState([]);
   useEffect(() => {
     apiGet(URLS.PAGINA_PROSSIME).then(res => {
@@ -82,7 +95,7 @@ function SchedaControllo() {
                 Aggiungi lavorazione lotto
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setData}>
+                <FormWrapper data={data} setData={setParsedData} url={URLS.RECORD_LAVORAZIONI}>
                   <SchedaControlloForm data={data} />
                 </FormWrapper>
               </Card.Body>
@@ -96,11 +109,13 @@ function SchedaControllo() {
                 Ultimi lotti lavorati
               </Card.Header>
               <Card.Body>
-                <Tabella
-                  headers={["Data", "Ora", "Lotto", "N_Pezzi", "Operatore"]}
+                <Tabella 
+                  headers={["Lotto", "N° Pezzi", "Operatore"]}
+                  valori={['lotto', 'n_pezzi_dichiarati', 'operatore__operatori']}
                   data={data}
-                  setData={setData}
+                  setData={setParsedData}
                   FormComponent={SchedaControlloForm}
+                  url={URLS.RECORD_LAVORAZIONI}
                 />
               </Card.Body>
             </Card>

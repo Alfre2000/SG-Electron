@@ -59,7 +59,7 @@ function AnalisiForm({ data, initialData, errors }) {
             <Select 
               name="operatore"
               inputProps={{ required: true }}
-              data={data?.operatori?.map(o => [o.id, o.nome])}
+              data={data?.operatori && data?.operatori?.map(o => [o.id, o.nome])}
             />
             <Select 
               label="Analisi:"
@@ -70,7 +70,7 @@ function AnalisiForm({ data, initialData, errors }) {
                 value: analisi,
                 onChange: (e) => setAnalisi(e.target.value)
               }}
-              data={data?.operazioni?.map(o => [o.id, o.nome])}
+              data={data?.operazioni && data?.operazioni?.map(o => [o.id, o.nome])}
             />
           </Stack>
         </Col>
