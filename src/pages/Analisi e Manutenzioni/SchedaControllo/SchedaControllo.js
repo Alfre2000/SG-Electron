@@ -46,8 +46,8 @@ function SchedaControllo() {
       if (!res) return;
       let parsedData = { ok: [], late: [] }
       res.operazioni.forEach(operazione => {
-        const scadutaGiorni = operazione.giorni_mancanti && operazione.giorni_mancanti <= 0
-        const scadutaPezzi = operazione.pezzi_mancanti && operazione.pezzi_mancanti <= 0
+        const scadutaGiorni = operazione.giorni_mancanti !== null && operazione.giorni_mancanti <= 0
+        const scadutaPezzi = operazione.pezzi_mancanti !== null && operazione.pezzi_mancanti <= 0
         if (scadutaGiorni || scadutaPezzi) {
           parsedData.late.push(operazione)
         } else {
