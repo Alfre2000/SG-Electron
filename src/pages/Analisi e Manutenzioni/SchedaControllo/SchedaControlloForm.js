@@ -38,9 +38,9 @@ function SchedaControlloForm({ data, initialData, errors }) {
       <Row className="mb-4 justify-between">
         <Col
           xs={6}
-          className="pr-20 pb-7 border-b-2 border-b-gray-500 border-r-2 border-r-gray-500"
+          className="pr-20 pb-3 border-b-2 border-b-gray-500 border-r-2 border-r-gray-500"
         >
-          <Stack gap={2} className="text-left">
+          <Stack gap={1} className="text-left">
             <Input 
               name="data"
               errors={errors}
@@ -66,8 +66,8 @@ function SchedaControlloForm({ data, initialData, errors }) {
             />
           </Stack>
         </Col>
-        <Col xs={6} className="pb-7 border-b-2 border-b-gray-500">
-          <Stack gap={2} className="text-right">
+        <Col xs={6} className="pb-3 border-b-2 border-b-gray-500">
+          <Stack gap={1} className="text-right">
             <Select 
               label="Modello:"
               labelCols={6}
@@ -134,22 +134,21 @@ function SchedaControlloForm({ data, initialData, errors }) {
           xs={5}
           className="py-6 mt-2 border-t-2 border-t-gray-500 border-r-2 border-r-gray-500"
         >
-          <Stack gap={2} className="text-left">
+          <Stack gap={1} className="text-left">
             {['verifiche_preliminari', 'pulizia', 'filetto_m6', 'accantonato_campione', 'master'].map(name => (
               <Checkbox 
                 key={name}
                 name={'dati_aggiuntivi.' + name}
                 initialData={initialData}
                 labelCols={7}
-                labelProps={{ className: "pr-6" }}
-                inputProps={{ className: "text-left mt-2 pl-10" }}
+                inputProps={{ className: "text-left mt-2 pl-12" }}
               />
             ))}
           </Stack>
         </Col>
         <Col xs={1}></Col>
         <Col xs={6} className="flex h-fit">
-          <Stack gap={2} className="text-left">
+          <Stack gap={1} className="text-left">
             <Form.Group as={Row}>
               <Form.Label column sm="6">
                 Valvole scarto:

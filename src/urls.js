@@ -30,10 +30,6 @@ export const URLS = {
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
 
     // PAGINA
-    PAGINA_LAVORAZIONI: BASE_PATH + '/analisi-manutenzioni/pagina-schede-controllo',
-    PAGINA_FISSAGGI: BASE_PATH + '/analisi-manutenzioni/pagina-fissaggi/',
-    PAGINA_MANUTENZIONI: BASE_PATH + '/analisi-manutenzioni/pagina-manutenzioni/',
-    PAGINA_ANALISI: BASE_PATH + '/analisi-manutenzioni/pagina-analisi/',
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
     PAGINA_PRODUZIONE: BASE_PATH + '/analisi-manutenzioni/pagina-andamento-produzione/',
     PAGINA_RICERCA_DATABASE: BASE_PATH + '/analisi-manutenzioni/pagina-ricerca-database/',
