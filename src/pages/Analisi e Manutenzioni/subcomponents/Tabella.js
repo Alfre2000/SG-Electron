@@ -5,6 +5,7 @@ import { Placeholder, Table } from 'react-bootstrap';
 import ConfirmModal from '../../../components/ConfirmModal.js/ConfirmModal';
 import ModifyModal from '../../../components/ModifyModal/ModifyModal';
 import MyToast from '../../../components/MyToast/MyToast';
+import Paginator from '../../../components/Pagination/Paginator';
 import PasswordModal from '../../../components/PasswordModal/PasswordModal';
 import { findElementFromID, isDateRecent } from '../../../utils';
 import { deleteRecord } from '../utils';
@@ -128,6 +129,10 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
           ))}
         </tbody>
       </Table>
+      <Paginator 
+        data={data.records}
+        setData={(newData) => setData({...data, records: newData})}
+      /> 
     </>
   )
 }

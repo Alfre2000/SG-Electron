@@ -10,7 +10,6 @@ import ManutenzioneForm from "./../Manutenzione/ManutenzioneForm";
 import AnalisiForm from "./../Analisi/AnalisiForm";
 import FissaggioForm from "./../Fissaggio/FissaggioForm";
 import useGetAPIData from "../../../hooks/useGetAPIData";
-import Paginator from "../../../components/Pagination/Paginator";
 import Tabella from "../subcomponents/Tabella";
 
 function RicercaDatabase() {
@@ -41,7 +40,7 @@ function RicercaDatabase() {
     )
   }
   const tabellaForms = { manutenzioni: ManutenzioneForm, analisi: AnalisiForm, fissaggi: FissaggioForm}
-  const tabellaURLs = { manutenzioni: URLS.RECORD_MANUTENZIONE, analisi: URLS.RECORD_ANALISI, fissaggi: URLS.RECORD_ANALISI}
+  const tabellaURLs = { manutenzioni: URLS.RECORD_MANUTENZIONE, analisi: URLS.RECORD_ANALISI, fissaggi: URLS.RECORD_FISSAGGIO}
   const dataTabella = data.records ? {...data, records: {...data.records, results: data.records.results.map(r => {
     const tipologia = findElementFromID(r.operazione, data.operazioni).tipologia
     if (tipologia === 'fissaggi') {
@@ -151,10 +150,6 @@ function RicercaDatabase() {
                   data={dataTabella}
                   setData={setData}
                 />
-                <Paginator 
-                  data={data.records}
-                  setData={(newData) => setData({...data, records: newData})}
-                /> 
               </Card.Body>
             </Card>
           </Col>

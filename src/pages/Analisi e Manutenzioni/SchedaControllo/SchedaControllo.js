@@ -32,7 +32,6 @@ function SchedaControllo() {
     return response
   }, [])
   const setParsedData = (newData) => {
-    console.log(newData);
     setData({...data, records: parserRecords(newData.records)})
   }
   const [data, setData] = useGetAPIData([

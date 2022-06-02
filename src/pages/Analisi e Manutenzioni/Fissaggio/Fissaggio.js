@@ -44,7 +44,7 @@ function Fissaggio() {
                 Registra aggiunta fissaggio
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setParsedData} url={URLS.RECORD_ANALISI}>
+                <FormWrapper data={data} setData={setParsedData} url={URLS.RECORD_FISSAGGIO}>
                   <FissaggioForm data={data} />
                 </FormWrapper>
               </Card.Body>
@@ -64,7 +64,7 @@ function Fissaggio() {
                   data={data}
                   setData={setParsedData}
                   FormComponent={FissaggioForm}
-                  url={URLS.RECORD_ANALISI}
+                  url={URLS.RECORD_FISSAGGIO}
                 />
               </Card.Body>
             </Card>
