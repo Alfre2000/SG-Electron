@@ -1,32 +1,19 @@
 import { faArrowCircleRight, faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { Card, Col, Container, Placeholder, Row, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import useUpdateData from '../../../hooks/useUpdateData'
+import useGetAPIData from '../../../hooks/useGetAPIData'
 import { URLS } from '../../../urls'
 import Wrapper from '../subcomponents/Wrapper'
+import { parseProssimeManutenzioni } from '../parsers'
 import InfoPopup from './InfoPopup'
 
 function Prossime() {
   const [popup, setPopup] = useState(null)
-  const parser = useCallback((res) => {
-    if (!res) return;
-    let parsedData = { ok: [], late: [] }
-    res.operazioni.forEach(operazione => {
-      const scadutaGiorni = operazione.giorni_mancanti !== null && operazione.giorni_mancanti <= 0
-      const scadutaPezzi = operazione.pezzi_mancanti !== null && operazione.pezzi_mancanti <= 0
-      if (scadutaGiorni || scadutaPezzi) {
-        parsedData.late.push(operazione)
-      } else {
-        parsedData.ok.push(operazione)
-      }
-    })
-    parsedData.ok = parsedData.ok.sort((a, b) => a.pezzi_mancanti - b.pezzi_mancanti)
-    parsedData.late = parsedData.late.sort((a, b) => a.pezzi_mancanti - b.pezzi_mancanti)
-    return parsedData
-  }, [])
-  const [data, ] = useUpdateData(URLS.PAGINA_PROSSIME, parser)
+  const [data, ] = useGetAPIData([
+    {url: URLS.PAGINA_PROSSIME, parser: parseProssimeManutenzioni}
+  ])
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

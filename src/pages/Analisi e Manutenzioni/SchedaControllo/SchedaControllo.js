@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { apiGet } from "../../../api/utils";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card, Stack, Alert } from "react-bootstrap";
@@ -10,51 +10,23 @@ import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-sol
 import { Link } from "react-router-dom";
 import useGetAPIData from "../../../hooks/useGetAPIData";
 import Tabella from "../subcomponents/Tabella";
+import { parseProssimeManutenzioni, parseRecordLavorazioni, parseSchedaLavorazione } from "../parsers";
 
 
 function SchedaControllo() {
-  const parserRecords = useCallback((response) => {
-    response.results.forEach((record, idx) => {
-      if (record.dati_aggiuntivi) {
-        for (const [key, value] of Object.entries(response.results[idx].dati_aggiuntivi)) {
-          response.results[idx]['dati_aggiuntivi.' + key] =  value
-        }
-        delete response.results[idx].dati_aggiuntivi
-      }
-    })
-    return response
-  }, [])
-  const parserScheda = useCallback((response) => {
-    for (const [key, value] of Object.entries(response.scheda_controllo.caratteristiche)) {
-      response.scheda_controllo[key] = value
-    }
-    delete response.scheda_controllo.caratteristiche
-    return response
-  }, [])
-  const setParsedData = (newData) => {
-    setData({...data, records: parserRecords(newData.records)})
-  }
+  const [avvisi, setAvvisi] = useState([]);
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "articoli", url: URLS.ARTICOLI},
-    {url: URLS.SCHEDA_CONTROLLO_OSSIDO, parser: parserScheda},
-    {nome: "records", url: URLS.RECORD_LAVORAZIONI, parser: parserRecords},
+    {url: URLS.SCHEDA_CONTROLLO_OSSIDO, parser: parseSchedaLavorazione},
+    {nome: "records", url: URLS.RECORD_LAVORAZIONI, parser: parseRecordLavorazioni},
   ])
-  const [avvisi, setAvvisi] = useState([]);
+  const setParsedData = (newData) => {
+    setData({...data, records: parseRecordLavorazioni(newData.records)})
+  }
   useEffect(() => {
     apiGet(URLS.PAGINA_PROSSIME).then(res => {
-      if (!res) return;
-      let parsedData = { ok: [], late: [] }
-      res.operazioni.forEach(operazione => {
-        const scadutaGiorni = operazione.giorni_mancanti !== null && operazione.giorni_mancanti <= 0
-        const scadutaPezzi = operazione.pezzi_mancanti !== null && operazione.pezzi_mancanti <= 0
-        if (scadutaGiorni || scadutaPezzi) {
-          parsedData.late.push(operazione)
-        } else {
-          parsedData.ok.push(operazione)
-        }
-      })
-      parsedData.ok = parsedData.ok.sort((a, b) => a.pezzi_mancanti - b.pezzi_mancanti)
+      const parsedData = parseProssimeManutenzioni(res)
       setAvvisi(parsedData.late)
     })
   }, [data.records])

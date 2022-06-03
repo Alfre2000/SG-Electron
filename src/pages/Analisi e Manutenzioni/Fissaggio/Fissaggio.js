@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../subcomponents/Wrapper";
@@ -6,22 +6,16 @@ import FissaggioForm from "./FissaggioForm";
 import FormWrapper from "../subcomponents/FormWrapper";
 import useGetAPIData from "../../../hooks/useGetAPIData";
 import Tabella from "../subcomponents/Tabella";
+import { parseRecordFissaggi } from "../parsers";
 
 function Fissaggio() {
-  const parser = useCallback((response) => {
-    response.results = response.results.map(record => {
-      record.ph = record.record_parametri[0].valore
-      return record
-    })
-    return response
-  }, [])
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "operazioni", url: URLS.FISSAGGI},
-    {nome: "records", url: URLS.RECORD_FISSAGGIO, parser: parser}
+    {nome: "records", url: URLS.RECORD_FISSAGGIO, parser: parseRecordFissaggi}
   ])
   const setParsedData = (newData) => {
-    setData({...data, records: parser(newData.records)})
+    setData({...data, records: parseRecordFissaggi(newData.records)})
   }
   return (
     <Wrapper>

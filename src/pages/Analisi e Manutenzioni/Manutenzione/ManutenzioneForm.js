@@ -10,6 +10,8 @@ function ManutenzioneForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
   const startManutenzione = initialData ? initialData.operazione : searchParams.get('manutenzione') ? searchParams.get('manutenzione') : ""
   const [manutenzione, setManutenzione] = useState(startManutenzione)
+
+  // Fai si che la manutenzione selezionata sia visibile
   const listGroupRef = useRef(null)
   useEffect(() => {
     if (!data.operazioni || !startManutenzione) return;

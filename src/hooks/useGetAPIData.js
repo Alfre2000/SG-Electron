@@ -9,6 +9,7 @@ function useGetAPIData(requests) {
   })
   const [data, setData] = useState(initialData)
   const setNewData = useCallback((request, newData) => {
+    console.log(request.nome || 'Default', 'dati aggiornati');
     newData = request.parser ? request.parser(newData) : newData
     if (request.nome) {
       setData(previousState => {return {...previousState, [request.nome]: newData}})

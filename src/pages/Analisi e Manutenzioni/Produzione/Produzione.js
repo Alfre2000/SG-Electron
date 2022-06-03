@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import { Card, Container, Form, Stack } from 'react-bootstrap'
 import { Bar, Pie } from 'react-chartjs-2'
-import { apiGet } from '../../api/utils'
-import { URLS } from '../../urls'
-import { colors, findElementFromID, capitalize } from '../../utils'
-import Wrapper from './subcomponents/Wrapper'
-import PasswordModal from "../../components/PasswordModal/PasswordModal";
+import { apiGet } from '../../../api/utils'
+import { URLS } from '../../../urls'
+import { colors, findElementFromID, capitalize } from '../../../utils'
+import Wrapper from '../subcomponents/Wrapper'
+import PasswordModal from "../../../components/PasswordModal/PasswordModal";
 import { useNavigate } from 'react-router-dom'
-import useUpdateData from '../../hooks/useUpdateData'
+import useGetAPIData from '../../../hooks/useGetAPIData'
 
 function Produzione() {
-  const [data, setData] = useUpdateData(URLS.PAGINA_PRODUZIONE);
+  const [data, setData] = useGetAPIData([{url: URLS.PAGINA_PRODUZIONE}])
   const [frequenza, setFrequenza] = useState("day")
   const [authed, setAuthed] = useState(false)
   let navigate = useNavigate();
