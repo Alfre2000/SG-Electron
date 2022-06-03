@@ -129,7 +129,6 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children }) {
         return record
       })
       setData({...data, records: {...data.records, results: records}})
-      form.reset()
       onSuccess();
       if (form.querySelector('.list-group-item')) {
         form.querySelector('.list-group-item.active').classList.remove('active')
