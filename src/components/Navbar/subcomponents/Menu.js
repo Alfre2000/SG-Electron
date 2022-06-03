@@ -2,9 +2,10 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useRef, useState } from 'react'
 import useOutsideAlerter from '../../../hooks/useOutsideAlerter';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-function Menu({title, icon, links, navOpen}) {
+function Menu({ title, icon, links, navOpen }) {
+  let navigate = useNavigate();
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef, (e) => {
@@ -12,14 +13,22 @@ function Menu({title, icon, links, navOpen}) {
       setOpen(false)
     };
   });
+  const handleClick = () => {
+    if (links.length === 1) navigate(links[0].link);
+    else setOpen(!open)
+  }
   return (
-    <div className={`mt-3 dropdown ${open ? "open" : ""} cursor-pointer`} onClick={() => setOpen(!open)}>
+    <div className={`mt-3 dropdown ${open ? "open" : ""} cursor-pointer`} onClick={handleClick}>
         <div className="flex justify-between py-2 px-4 sg-nav-link rounded-md">
             <div className="flex items-center">
               <FontAwesomeIcon icon={icon} />
               <div className="pl-4 title">{title}</div>
             </div>
-            <div className="text-right caret"><FontAwesomeIcon icon={faCaretDown} className={`caret ${open ? "up": ""}`} /></div>
+            {links.length > 1 && (
+              <div className="text-right caret">
+                <FontAwesomeIcon icon={faCaretDown} className={`caret ${open ? "up": ""}`} />
+              </div>
+            )}
         </div>
         <ul className="pl-6 pr-2 ml-[1.15em] list-disc" ref={wrapperRef}>
             {links.map(el => {
