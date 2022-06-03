@@ -57,7 +57,7 @@ function SchedaControllo() {
       parsedData.ok = parsedData.ok.sort((a, b) => a.pezzi_mancanti - b.pezzi_mancanti)
       setAvvisi(parsedData.late)
     })
-  }, [data])
+  }, [data.records])
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
