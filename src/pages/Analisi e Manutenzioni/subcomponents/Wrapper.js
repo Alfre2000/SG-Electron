@@ -39,7 +39,7 @@ function Wrapper({ children, defaultNav }) {
   return (
     <>
       <Navbar menu={navbar} navOpen={navOpen} />
-      <div className="grow flex flex-col">
+      <div className="grow flex flex-col overflow-scroll max-h-screen">
         <Header toggleNavbar={toggleNavbar} title="Analisi e Manutenzioni" />
         <div className="bg-gray-50 grow flex px-8 justify-center">
           {children}
