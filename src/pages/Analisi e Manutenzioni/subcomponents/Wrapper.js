@@ -1,41 +1,16 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import Navbar from "../../../components/Navbar/Navbar";
 import Header from "../../../components/Header/Header";
 import useCheckAuth from '../../../hooks/useCheckAuth';
-import { faComputer, faClipboardCheck, faToolbox, faChartLine } from '@fortawesome/free-solid-svg-icons'
-import UserContext from '../../../UserContext';
-import { PROGRAMMI } from '../../../programmi';
+import { NAVBAR_ITEMS } from '../navbar';
 
 function Wrapper({ children, defaultNav }) {
   useCheckAuth();
-  const { user } = useContext(UserContext)
   const [navOpen, setNavOpen] = useState(defaultNav !== undefined ? defaultNav : true)
   const toggleNavbar = () => {
     setNavOpen(!navOpen)
   }
-  const navbar = [
-    { title: "Scheda controllo", icon: faClipboardCheck, links: [
-      {name: 'Nuova Scheda', link: '/manutenzione/scheda/'},
-    ]},
-    { title: "Manutenzioni", icon: faToolbox, links: [
-        {name: 'Fissaggio', link: '/manutenzione/fissaggio/'},
-        {name: 'Manutenzioni', link: '/manutenzione/manutenzioni/'},
-        {name: 'Analisi', link: '/manutenzione/analisi/'},
-        {name: 'Ricerca Database', link: '/manutenzione/ricerca/'},
-    ]},
-    { title: "Informazioni", icon: faChartLine, links: [
-        {name: 'Prossime Manutenzioni', link: '/manutenzione/prossime/'},
-        {name: 'Andamento Produzione', link: '/manutenzione/produzione/'},
-    ]},
-  ];
-  if (user.user && user.user.programmi.length > 1) {
-    const links = user.user.programmi ? user.user.programmi.map(el => PROGRAMMI[el]) : []
-    navbar.unshift({ title: "Programmi", icon: faComputer, links: [
-      {name: 'HomePage', link: '/'},
-      ...links
-    ]})
-  }
-  
+  const navbar = [...NAVBAR_ITEMS]
   return (
     <>
       <Navbar menu={navbar} navOpen={navOpen} />

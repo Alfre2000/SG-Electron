@@ -4,11 +4,22 @@ import UserContext from '../../UserContext';
 import Icona from "./../../images/icona.png";
 import './Navbar.css'
 import Menu from './subcomponents/Menu';
+import { PROGRAMMI } from '../../programmi';
+import { faComputer } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar({ menu, navOpen }) {
   const { user } = useContext(UserContext)
   const copyright = navOpen ? "Copyright" : "©"
   const versione = navOpen ? "Versione Software" : "Versione"
+
+  // Se c'è più di un programma aggiungi il dropdown dei programmi e la possibilità di tornare alla homepage
+  if (user.user && user.user.programmi.length > 1) {
+    const links = user.user.programmi ? user.user.programmi.map(el => PROGRAMMI[el]) : []
+    menu.unshift({ title: "Programmi", icon: faComputer, links: [
+      {name: 'HomePage', link: '/'},
+      ...links
+    ]})
+  }
   return (
     <div id="navbar" className={`bg-nav-blue min-h-screen ${navOpen ? "" : "closed"} flex flex-col font-poppins text-white`} style={{maxWidth: "15rem"}}>
         <Link to="/">
