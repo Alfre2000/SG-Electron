@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Card from "./../components/Card/Card";
 import Navbar from "./../components/Navbar/Navbar";
-import { faComputer, faUserPlus, faBookOpen } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus, faBookOpen } from '@fortawesome/free-solid-svg-icons'
 import Header from "./../components/Header/Header";
 import UserContext from '../UserContext';
 import { PROGRAMMI } from '../programmi';
@@ -25,7 +25,6 @@ function HomePage(props) {
     }
   }, [navigate, user])
   const navbar = [
-    { title: "Programmi", icon: faComputer, links: programmi},
     { title: "Assistenza", icon: faBookOpen, links: [
       {name: "Email all'Assistenza", link: '#'},
       {name: 'Invia Screenshot', link: '#'},
