@@ -25,8 +25,8 @@ function Paginator({ data, setData }) {
       <div className="flex min-w-[150px]">
         {data?.previous && (
           <>
-            <Pagination.First onClick={() => updateData(firstPageURL)} />
-            <Pagination.Prev onClick={() => updateData(data.previous)}>
+            <Pagination.First className="paginator-first" onClick={() => updateData(firstPageURL)} />
+            <Pagination.Prev className="paginator-back" onClick={() => updateData(data.previous)}>
               Precedente
             </Pagination.Prev>
           </>
@@ -38,10 +38,10 @@ function Paginator({ data, setData }) {
       <div className="flex min-w-[150px]">
         {data?.next && (
           <>
-            <Pagination.Next onClick={() => updateData(data.next)}>
+            <Pagination.Next className="paginator-next" onClick={() => updateData(data.next)}>
               Successiva
             </Pagination.Next>
-            <Pagination.Last onClick={() => updateData(lastPageURL)} />
+            <Pagination.Last className="paginator-last" onClick={() => updateData(lastPageURL)} />
           </>
         )}
       </div>

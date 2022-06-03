@@ -96,6 +96,9 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children }) {
       setSuccess(true)
       setTimeout(() => setSuccess(false), 4000)
       setKey(key + 1)
+      if (document.querySelector('.paginator-first a')) {
+        document.querySelector('.paginator-first a').click()
+      }
     }).catch(err => {
       setError(err)
       setTimeout(() => setError(false), 1000 * 10)
