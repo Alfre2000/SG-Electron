@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row, Form, ListGroup } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import Input from "../../../components/form-components/Input";
@@ -10,6 +10,13 @@ function ManutenzioneForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
   const startManutenzione = initialData ? initialData.operazione : searchParams.get('manutenzione') ? searchParams.get('manutenzione') : ""
   const [manutenzione, setManutenzione] = useState(startManutenzione)
+  const listGroupRef = useRef(null)
+  useEffect(() => {
+    if (!data.operazioni || !startManutenzione) return;
+    const index = data.operazioni.findIndex(op => op.id === startManutenzione)
+    const height = listGroupRef.current.querySelector('div').offsetHeight
+    listGroupRef.current.parentElement.scrollTo(0, height * (index - 3))
+  }, [startManutenzione, data.operazioni])
   return (
     <>
       <Row>
@@ -47,7 +54,7 @@ function ManutenzioneForm({ data, initialData, errors }) {
           <Form.Label>Manutenzione effettuata:</Form.Label>
         </Col>
         <Col xs={8} className="max-h-[310px] overflow-scroll">
-          <ListGroup className="cursor-pointer">
+          <ListGroup className="cursor-pointer" ref={listGroupRef}>
             {data.operazioni &&
               data.operazioni.map((el) => (
                 <ListGroup.Item

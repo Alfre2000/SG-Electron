@@ -160,7 +160,7 @@ function Prossime() {
                                 else setPopup(null)
                                 }}/>
                           </td>
-                          <td to={link} className="cursor-pointer">
+                          <td to={link} className="cursor-pointer" onClick={() => window.scrollTo(0, 0, {behavior: 'smooth'})}>
                             <Link to={link}><FontAwesomeIcon icon={faArrowCircleRight} size="lg" /></Link>
                           </td>
                         </tr>
