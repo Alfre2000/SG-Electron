@@ -8,7 +8,7 @@ import { dateToDatePicker } from "../../../utils";
 
 function ManutenzioneForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
-  const startManutenzione = initialData ? initialData.operazione : searchParams.get('manutenzione') ? searchParams.get('manutenzione') : ""
+  const startManutenzione = initialData?.operazione || searchParams.get('manutenzione') || ""
   const [manutenzione, setManutenzione] = useState(startManutenzione)
 
   // Fai si che la manutenzione selezionata sia visibile

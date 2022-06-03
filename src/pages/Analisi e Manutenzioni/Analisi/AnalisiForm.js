@@ -11,7 +11,7 @@ import { dateToDatePicker } from "../../../utils";
 
 function AnalisiForm({ data, initialData, errors }) {
   const [searchParams,] = useSearchParams();
-  const startAnalisi = initialData ? initialData.operazione : searchParams.get('analisi') ? searchParams.get('analisi') : ""
+  const startAnalisi = initialData?.operazione || searchParams.get('analisi') || ""
   const [analisi, setAnalisi] = useState(startAnalisi)
   const [errValore, setErrValore] = useState({})
   const getParametri = (analisiID) => {
