@@ -3,9 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../../../api/utils";
+import useSetViewForm from "../../../hooks/useSetViewForm";
 import { dateToDatePicker } from "../../../utils";
 
-function FormWrapper({ data, setData, initialData, onSuccess, url, children }) {
+function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
+  const staticForm = Boolean(view)
+  useSetViewForm(staticForm)
   const formRef = useRef(null);
   const [error, setError] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -184,34 +187,37 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children }) {
       validated={validated}
       onSubmit={handleForm}
       key={key}
+      className={initialData === undefined ? "create-form" : "update-form"}
     >
-      {React.cloneElement(children, { errors: error })}
-      <Row className="mb-2 items-center">
-        <Col sx={4}></Col>
-        <Col sx={4} className="text-center">
-          <Button type="submit" className="bg-[#0d6efd] w-28 font-medium">
-            Salva
-          </Button>
-        </Col>
-        <Col sx={4}>
-          {success && (
-            <Alert className="m-0 p-2" variant="success">
-              <FontAwesomeIcon size="lg" className="mr-3" icon={faCheck} />
-              {initialData ? "Record modificato con successo !" :"Nuovo record aggiunto !"}
-            </Alert>
-          )}
-          {error && (
-            <Alert className="m-0 p-2" variant="danger">
-              <FontAwesomeIcon
-                size="lg"
-                className="mr-3"
-                icon={faCircleExclamation}
-              />
-              Si è verificato un errrore !
-            </Alert>
-          )}
-        </Col>
-      </Row>
+      {React.cloneElement(children, { errors: error, view: staticForm })}
+      {!staticForm && (
+        <Row className="mb-2 items-center">
+          <Col sx={4}></Col>
+          <Col sx={4} className="text-center">
+            <Button type="submit" className="bg-[#0d6efd] w-28 font-medium">
+              Salva
+            </Button>
+          </Col>
+          <Col sx={4}>
+            {success && (
+              <Alert className="m-0 p-2" variant="success">
+                <FontAwesomeIcon size="lg" className="mr-3" icon={faCheck} />
+                {initialData ? "Record modificato con successo !" :"Nuovo record aggiunto !"}
+              </Alert>
+            )}
+            {error && (
+              <Alert className="m-0 p-2" variant="danger">
+                <FontAwesomeIcon
+                  size="lg"
+                  className="mr-3"
+                  icon={faCircleExclamation}
+                />
+                Si è verificato un errrore !
+              </Alert>
+            )}
+          </Col>
+        </Row>
+      )}
     </Form>
   );
 }

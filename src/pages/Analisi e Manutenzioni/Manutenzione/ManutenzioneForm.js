@@ -6,11 +6,10 @@ import Select from "../../../components/form-components/Select";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker } from "../../../utils";
 
-function ManutenzioneForm({ data, initialData, errors }) {
+function ManutenzioneForm({ data, initialData, errors, view }) {
   const [searchParams,] = useSearchParams();
   const startManutenzione = initialData?.operazione || searchParams.get('manutenzione') || ""
   const [manutenzione, setManutenzione] = useState(startManutenzione)
-
   // Fai si che la manutenzione selezionata sia visibile
   const listGroupRef = useRef(null)
   useEffect(() => {
@@ -56,12 +55,13 @@ function ManutenzioneForm({ data, initialData, errors }) {
           <Form.Label>Manutenzione effettuata:</Form.Label>
         </Col>
         <Col xs={8} className="max-h-[310px] overflow-scroll">
-          <ListGroup className="cursor-pointer" ref={listGroupRef}>
+          <ListGroup className={view ? "" : "cursor-pointer"} ref={listGroupRef}>
             {data.operazioni &&
               data.operazioni.map((el) => (
                 <ListGroup.Item
                   active={manutenzione === el.id}
                   onClick={() => {
+                    if (view) return;
                     if (manutenzione === el.id) setManutenzione(null);
                     else setManutenzione(el.id);
                   }}

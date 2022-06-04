@@ -1,4 +1,4 @@
-import { faTrash, faWrench } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTrash, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import { Placeholder, Table } from 'react-bootstrap';
@@ -7,6 +7,7 @@ import ModifyModal from '../../../components/ModifyModal/ModifyModal';
 import MyToast from '../../../components/MyToast/MyToast';
 import Paginator from '../../../components/Pagination/Paginator';
 import PasswordModal from '../../../components/PasswordModal/PasswordModal';
+import ViewModal from '../../../components/ViewModal/ViewModal';
 import { findElementFromID, isDateRecent } from '../../../utils';
 import { deleteRecord } from '../utils';
 import FormWrapper from './FormWrapper';
@@ -16,6 +17,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
   const [showPasswordModifyModal, setShowPasswordModifyModal] = useState("0");
   const [showConfirmModal, setShowConfirmModal] = useState("0");
   const [showModifyModal, setShowModifyModal] = useState("0");
+  const [showViewModal, setShowViewModal] = useState("0");
   const [deletedtoast, setDeletedtoast] = useState(false)
   const [modifytoast, setModifytoast] = useState(false)
   const handleRemove = (authed, show, setShow) => {
@@ -26,10 +28,12 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
     }
     setShow("0");
   };
-  const initialData = showModifyModal !== "0" ? findElementFromID(showModifyModal, data.records.results) : {}
-  const nCols = headers.length + 4
-  FormComponent = FormComponent || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).form)
-  url = url || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).url) || (showConfirmModal !== "0" && findElementFromID(showConfirmModal, data.records.results).url)
+  const initialDataModify = showModifyModal !== "0" ? findElementFromID(showModifyModal, data.records.results) : {}
+  const initialDataView = showViewModal !== "0" ? findElementFromID(showViewModal, data.records.results) : {}
+  const nCols = headers.length + 5
+  FormComponent = FormComponent || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).form) || (showViewModal !== "0" && findElementFromID(showViewModal, data.records.results).form)
+
+  url = url || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).url) || (showConfirmModal !== "0" && findElementFromID(showConfirmModal, data.records.results).url) || (showViewModal !== "0" && findElementFromID(showViewModal, data.records.results).url) 
   return (
     <>
       {deletedtoast && <MyToast>Record eliminato con successo !</MyToast>}
@@ -58,17 +62,26 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
         show={showModifyModal !== "0"}
         handleClose={() => setShowModifyModal("0")}>
           {FormComponent && (
-            <FormWrapper data={data} setData={setData} initialData={initialData} url={url}
+            <FormWrapper data={data} setData={setData} initialData={initialDataModify} url={url}
               onSuccess={() => {
                 setShowModifyModal("0");
                 setModifytoast(true)
                 setTimeout(() => setModifytoast(false), 4000)
                 }}>
-              <FormComponent data={data} initialData={initialData} />
+              <FormComponent data={data} initialData={initialDataModify} />
             </FormWrapper>
           )}
       </ModifyModal>
-      <Table striped bordered>
+      <ViewModal 
+        show={showViewModal !== "0"}
+        handleClose={() => setShowViewModal("0")}>
+          {FormComponent && (
+            <FormWrapper data={data} setData={setData} initialData={initialDataView} url={url} view={true}>
+              <FormComponent data={data} initialData={initialDataView}/>
+            </FormWrapper>
+          )}
+      </ViewModal>
+      <Table striped bordered className="align-middle">
         <thead>
           <tr>
             <th>Data</th>
@@ -76,6 +89,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
             {headers.map((el) => (
               <th key={el}>{el}</th>
             ))}
+            <th>Vedi</th>
             <th>Modifica</th>
             <th>Elimina</th>
           </tr>
@@ -93,6 +107,9 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
                   <td key={campo || idx}>{campo || "-"}</td>
                 )
               })}
+              <td className="cursor-pointer" onClick={() => setShowViewModal(record.id)}>
+                <FontAwesomeIcon icon={faSearch} className="rotate-90" />
+              </td>
               {i === 0 && isDateRecent(record.data) ? (
                 <td className="cursor-pointer" onClick={() => setShowModifyModal(record.id)}>
                   <FontAwesomeIcon icon={faWrench} />
