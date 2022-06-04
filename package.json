@@ -78,7 +78,7 @@
     },
     "mac": {
       "category": "public.app-category.business",
-      "target": "dmg"
+      "target": "default"
     },
     "win": {
       "target": "nsis"
