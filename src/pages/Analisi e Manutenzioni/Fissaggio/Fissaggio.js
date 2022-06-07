@@ -1,12 +1,13 @@
 import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import Wrapper from "../subcomponents/Wrapper";
+import Wrapper from "../../Wrapper";
 import FissaggioForm from "./FissaggioForm";
-import FormWrapper from "../subcomponents/FormWrapper";
+import FormWrapper from "../../FormWrapper";
 import useGetAPIData from "../../../hooks/useGetAPIData";
-import Tabella from "../subcomponents/Tabella";
+import Tabella from "../../Tabella";
 import { parseRecordFissaggi } from "../parsers";
+import { NAVBAR_ITEMS } from '../navbar';
 
 function Fissaggio() {
   const [data, setData] = useGetAPIData([
@@ -18,7 +19,7 @@ function Fissaggio() {
     setData({...data, records: parseRecordFissaggi(newData.records)})
   }
   return (
-    <Wrapper>
+    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <Row className="justify-center">
           <Col xs={8} className="px-6">

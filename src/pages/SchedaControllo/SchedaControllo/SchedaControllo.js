@@ -1,42 +1,42 @@
 import React from "react";
-import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import Wrapper from "../../Wrapper";
-import FormWrapper from "../../FormWrapper";
-import AnalisiForm from "./AnalisiForm";
 import useGetAPIData from "../../../hooks/useGetAPIData";
+import { URLS } from "../../../urls";
+import FormWrapper from "../../FormWrapper";
 import Tabella from "../../Tabella";
+import Wrapper from "../../Wrapper";
 import { NAVBAR_ITEMS } from '../navbar';
+import SchedaControlloForm from "./SchedaControlloForm";
 
-function Analisi() {
+function SchedaControllo() {
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
-    {nome: "operazioni", url: URLS.ANALISI},
-    {nome: "records", url: URLS.RECORD_ANALISI}
+    {nome: "articoli", url: URLS.ARTICOLI},
+    {nome: "records", url: URLS.RECORD_LAVORAZIONI},
   ])
   return (
-    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
+    <Wrapper title="Scheda di Controllo" navItems={NAVBAR_ITEMS}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <Row className="justify-center">
           <Col xs={8} className="px-6">
             <Card className="h-full min-h-[70px]">
               <Card.Header className="h-full grid items-center border-b-0 titolo-pagina">
                 <h3 className="text-2xl text-nav-blue text-bold font-roboto">
-                  Analisi
+                  Scheda di Controllo
                 </h3>
               </Card.Header>
             </Card>
           </Col>
         </Row>
-        <Row className="mt-10">
+        <Row className="mt-6">
           <Col xs={12}>
             <Card>
               <Card.Header as="h6" className="font-semibold text-lg">
-                Seleziona l'analisi effettuata
+                Aggiungi lavorazione lotto
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setData} url={URLS.RECORD_ANALISI}>
-                  <AnalisiForm data={data} />
+                <FormWrapper data={data} setData={setData} url={URLS.RECORD_LAVORAZIONI}>
+                  <SchedaControlloForm data={data}/>
                 </FormWrapper>
               </Card.Body>
             </Card>
@@ -46,16 +46,16 @@ function Analisi() {
           <Col xs={12}>
             <Card>
               <Card.Header as="h6" className="font-semibold text-lg">
-                Ultime analisi effettuate
+                Ultimi lotti lavorati
               </Card.Header>
               <Card.Body>
-                <Tabella
-                  headers={["Analisi", "Operatore"]}
-                  valori={['operazione__operazioni', 'operatore__operatori']}
+                <Tabella 
+                  headers={["Lotto", "N° Pezzi", "Operatore"]}
+                  valori={['lotto', 'n_pezzi_dichiarati', 'operatore__operatori']}
                   data={data}
                   setData={setData}
-                  FormComponent={AnalisiForm}
-                  url={URLS.RECORD_ANALISI}
+                  FormComponent={SchedaControlloForm}
+                  url={URLS.RECORD_LAVORAZIONI}
                 />
               </Card.Body>
             </Card>
@@ -63,7 +63,7 @@ function Analisi() {
         </Row>
       </Container>
     </Wrapper>
-  )
+  );
 }
 
-export default Analisi
+export default SchedaControllo;

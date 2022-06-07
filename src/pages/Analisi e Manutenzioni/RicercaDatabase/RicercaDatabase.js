@@ -3,14 +3,15 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import Select from "../../../components/form-components/Select";
 import { dateToDatePicker, findElementFromID } from "../../../utils";
-import Wrapper from "../subcomponents/Wrapper";
+import Wrapper from "../../Wrapper";
 import { URLS } from "../../../urls";
 import { apiGet } from "../../../api/utils";
 import ManutenzioneForm from "./../Manutenzione/ManutenzioneForm";
 import AnalisiForm from "./../Analisi/AnalisiForm";
 import FissaggioForm from "./../Fissaggio/FissaggioForm";
 import useGetAPIData from "../../../hooks/useGetAPIData";
-import Tabella from "../subcomponents/Tabella";
+import { NAVBAR_ITEMS } from '../navbar';
+import Tabella from "../../Tabella";
 
 function RicercaDatabase() {
   const [data, setData] = useGetAPIData([
@@ -49,7 +50,7 @@ function RicercaDatabase() {
     return {...r, form: tabellaForms[tipologia], url: tabellaURLs[tipologia]}
   })}} : {}
   return (
-    <Wrapper>
+    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <Row className="justify-center">
           <Col xs={8} className="px-6">

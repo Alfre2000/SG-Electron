@@ -2,9 +2,9 @@ import { faCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-import { apiPost, apiUpdate } from "../../../api/utils";
-import useSetViewForm from "../../../hooks/useSetViewForm";
-import { dateToDatePicker } from "../../../utils";
+import { apiPost, apiUpdate } from "../api/utils";
+import useSetViewForm from "../hooks/useSetViewForm";
+import { dateToDatePicker } from "../utils";
 
 function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
   const staticForm = Boolean(view)

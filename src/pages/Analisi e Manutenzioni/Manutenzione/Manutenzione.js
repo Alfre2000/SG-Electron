@@ -1,11 +1,12 @@
 import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import Wrapper from "./../subcomponents/Wrapper";
-import FormWrapper from "../subcomponents/FormWrapper";
+import Wrapper from "../../Wrapper";
+import FormWrapper from "../../FormWrapper";
 import ManutenzioneForm from "./ManutenzioneForm";
 import useGetAPIData from "../../../hooks/useGetAPIData";
-import Tabella from "../subcomponents/Tabella";
+import Tabella from "../../Tabella";
+import { NAVBAR_ITEMS } from '../navbar';
 
 function Manutenzione() {
   const [data, setData] = useGetAPIData([
@@ -14,7 +15,7 @@ function Manutenzione() {
     {nome: "records", url: URLS.RECORD_MANUTENZIONE}
   ])
   return (
-    <Wrapper>
+    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <Row className="justify-center">
           <Col xs={8} className="px-6">

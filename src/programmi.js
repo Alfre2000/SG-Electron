@@ -10,5 +10,5 @@ export const PROGRAMMI = {
     "Programma 4": {name: 'Programma 4', link: '#', icon: WorkInProgress},
     "Programma 5": {name: 'Programma 5', link: '#', icon: WorkInProgress},
     "Programma 6": {name: 'Programma 6', link: '#', icon: WorkInProgress},
-    "Programma Test": {name: 'Programma Test', link: '#', icon: WorkInProgress},
+    "Programma Test": {name: 'Programma Test', link: '/scheda-controllo/', icon: WorkInProgress},
 }

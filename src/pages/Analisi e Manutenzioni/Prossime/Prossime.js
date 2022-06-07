@@ -5,9 +5,10 @@ import { Card, Col, Container, Placeholder, Row, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import useGetAPIData from '../../../hooks/useGetAPIData'
 import { URLS } from '../../../urls'
-import Wrapper from '../subcomponents/Wrapper'
+import Wrapper from '../../Wrapper'
 import { parseProssimeManutenzioni } from '../parsers'
 import InfoPopup from './InfoPopup'
+import { NAVBAR_ITEMS } from '../navbar';
 
 function Prossime() {
   const [popup, setPopup] = useState(null)
@@ -15,7 +16,7 @@ function Prossime() {
     {url: URLS.PAGINA_PROSSIME, parser: parseProssimeManutenzioni}
   ])
   return (
-    <Wrapper>
+    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <Row className="justify-center">
           <Col xs={8} className="px-6">

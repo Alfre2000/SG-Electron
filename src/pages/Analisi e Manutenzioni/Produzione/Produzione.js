@@ -4,10 +4,11 @@ import { Bar, Pie } from 'react-chartjs-2'
 import { apiGet } from '../../../api/utils'
 import { URLS } from '../../../urls'
 import { colors, findElementFromID, capitalize } from '../../../utils'
-import Wrapper from '../subcomponents/Wrapper'
+import Wrapper from '../../Wrapper'
 import PasswordModal from "../../../components/PasswordModal/PasswordModal";
 import { useNavigate } from 'react-router-dom'
 import useGetAPIData from '../../../hooks/useGetAPIData'
+import { NAVBAR_ITEMS } from '../navbar';
 
 function Produzione() {
   const [data, setData] = useGetAPIData([{url: URLS.PAGINA_PRODUZIONE}])
@@ -58,7 +59,7 @@ function Produzione() {
     apiGet(URLS.PAGINA_PRODUZIONE + `?frequenza=${freq}`).then(data => setData(data))
   }
   return (
-    <Wrapper>
+    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         {authed ? (
           <Stack gap={5}>

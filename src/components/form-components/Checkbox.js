@@ -8,7 +8,7 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
   const inputColumns = 12 - labelColumns
   return vertical ? (
     <Form.Group className="m-auto text-center">
-      <Form.Label {...labelProps}>{labelText}</Form.Label>
+      {label !== false && <Form.Label {...labelProps}>{labelText}</Form.Label>}
       <Form.Check 
         type="checkbox"
         name={name}
@@ -18,9 +18,11 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
     </Form.Group>
   ) : (
     <Form.Group as={Row}>
-      <Form.Label column sm={labelColumns} {...labelProps}>
-        {labelText}
-      </Form.Label>
+      {label !== false && (
+        <Form.Label column sm={labelColumns} {...labelProps}>
+          {labelText}
+        </Form.Label>
+      )}
       <Col sm={inputColumns}>
         <Form.Check
           type="checkbox"

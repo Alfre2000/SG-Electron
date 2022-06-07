@@ -1,4 +1,4 @@
-import { apiDelete } from "../../api/utils";
+import { apiDelete } from "../api/utils";
 
 export const deleteRecord = (recordID, data, setData, baseURL) => {
   apiDelete(`${baseURL}${recordID}/`)
