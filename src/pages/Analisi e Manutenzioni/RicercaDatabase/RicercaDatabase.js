@@ -3,15 +3,15 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import Select from "../../../components/form-components/Select";
 import { dateToDatePicker, findElementFromID } from "../../../utils";
-import Wrapper from "../../Wrapper";
+import Wrapper from "../Wrapper";
 import { URLS } from "../../../urls";
 import { apiGet } from "../../../api/utils";
 import ManutenzioneForm from "./../Manutenzione/ManutenzioneForm";
 import AnalisiForm from "./../Analisi/AnalisiForm";
 import FissaggioForm from "./../Fissaggio/FissaggioForm";
 import useGetAPIData from "../../../hooks/useGetAPIData";
-import { NAVBAR_ITEMS } from '../navbar';
 import Tabella from "../../Tabella";
+import PageTitle from "../../../components/PageTitle/PageTitle";
 
 function RicercaDatabase() {
   const [data, setData] = useGetAPIData([
@@ -50,19 +50,9 @@ function RicercaDatabase() {
     return {...r, form: tabellaForms[tipologia], url: tabellaURLs[tipologia]}
   })}} : {}
   return (
-    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
+    <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
-        <Row className="justify-center">
-          <Col xs={8} className="px-6">
-            <Card className="h-full min-h-[70px]">
-              <Card.Header className="h-full grid items-center border-b-0 titolo-pagina">
-                <h3 className="text-2xl text-nav-blue text-bold font-roboto">
-                  Ricerca nel Database
-                </h3>
-              </Card.Header>
-            </Card>
-          </Col>
-        </Row>
+        <PageTitle>Ricerca nel Database</PageTitle>
         <Row className="mt-10">
           <Col xs={12}>
             <Card>

@@ -5,10 +5,10 @@ import { Card, Col, Container, Placeholder, Row, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import useGetAPIData from '../../../hooks/useGetAPIData'
 import { URLS } from '../../../urls'
-import Wrapper from '../../Wrapper'
+import Wrapper from '../Wrapper'
 import { parseProssimeManutenzioni } from '../parsers'
 import InfoPopup from './InfoPopup'
-import { NAVBAR_ITEMS } from '../navbar';
+import PageTitle from '../../../components/PageTitle/PageTitle'
 
 function Prossime() {
   const [popup, setPopup] = useState(null)
@@ -16,19 +16,9 @@ function Prossime() {
     {url: URLS.PAGINA_PROSSIME, parser: parseProssimeManutenzioni}
   ])
   return (
-    <Wrapper title="Analisi e Manutenzioni" navItems={NAVBAR_ITEMS}>
+    <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
-        <Row className="justify-center">
-          <Col xs={8} className="px-6">
-            <Card className="h-full min-h-[70px]">
-              <Card.Header className="h-full grid items-center border-b-0 titolo-pagina">
-                <h3 className="text-2xl text-nav-blue text-bold font-roboto">
-                  Prossime Manutenzioni
-                </h3>
-              </Card.Header>
-            </Card>
-          </Col>
-        </Row>
+        <PageTitle>Prossime Manutenzioni</PageTitle>
         <Row className="mt-10">
           <Col xs={12}>
             <Card>

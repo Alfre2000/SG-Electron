@@ -1,54 +1,37 @@
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { Col, Row, Form, Stack } from "react-bootstrap";
+import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
 import Select from "../../../components/form-components/Select";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker } from "../../../utils";
-
+import { dateToDatePicker, findElementFromID } from "../../../utils";
+import SectionHeader from "./SectionHeader";
 
 function SchedaControlloForm({ data, initialData, errors }) {
-  const [materiale, setMateriale] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_materiale'] : 0)
-  const [sporco, setSporco] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_sporco'] : 0)
-  const [meccanici, setMeccanici] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_meccanici'] : 0)
-  const [trattamento, setTrattamento] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_trattamento'] : 0)
-  const [altro, setAltro] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_altro'] : 0)
-
-  const [errValore, setErrValore] = useState({})
-
-  const valvoleScarto = +materiale + +sporco + +meccanici + +trattamento + +altro
-  const handleValoreChange = (e) => {
-    if (e.target.name === 'dati_aggiuntivi.spessore_deviazione') return;
-    const name = e.target.name.includes('spessore') ? 'spessore_ossido' : e.target.name.split('.').at(-1)
-    const minimo = data.scheda_controllo[`${name}_minimo`]
-    const massimo = data.scheda_controllo[`${name}_massimo`]
-    const value = parseFloat(e.target.value)
-    if (value > massimo) {
-      setErrValore({...errValore, [e.target.name]: `Valore oltre il massimo di ${massimo} !`})
-    } else if (value < minimo) {
-      setErrValore({...errValore, [e.target.name]: `Valore sotto il minimo di ${minimo} !`})
-    } else {
-      setErrValore({...errValore, [e.target.name]: ""})
-    }
-  }
+  const [articoloID, setArticoloID] = useState(initialData?.articolo || "")
+  const initialCliente = data.articoli && initialData?.articolo 
+    ? findElementFromID(initialData?.articolo, data.articoli).cliente.nome
+    : ""
+  const [cliente, setCliente] = useState(initialCliente)
+  const [infoOpen, setInfoOpen] = useState(false)
+  const [spessoriOpen, setSpessoriOpen] = useState(false)
+  const [immaginiOpen, setImmaginiOpen] = useState(false)
+  const [controlliOpen, setControlliOpen] = useState(false)
+  const articolo = findElementFromID(articoloID, data.articoli)
+  const clienti = data.articoli ? new Set(data.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
   return (
     <>
-      <Row className="mb-4 justify-between">
-        <Col
-          xs={6}
-          className="pr-20 pb-3 border-b-2 border-b-gray-500 border-r-2 border-r-gray-500"
-        >
-          <Stack gap={1} className="text-left">
-            <Input 
+      <Row className="mb-4">
+        <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
+          <Stack gap={2} className="text-left justify-center">
+            <Input
               name="data"
               errors={errors}
               inputProps={{
                 type: "date",
                 defaultValue: dateToDatePicker(
                   initialData?.data ? new Date(initialData.data) : new Date()
-                )
+                ),
               }}
             />
             <Form.Group as={Row}>
@@ -59,260 +42,198 @@ function SchedaControlloForm({ data, initialData, errors }) {
                 <TimeInput initialData={initialData} />
               </Col>
             </Form.Group>
-            <Select 
+            <Select
               name="operatore"
               inputProps={{ required: true }}
-              data={data?.operatori?.map(o => [o.id, o.nome])}
+              data={
+                data?.operatori && data?.operatori?.map((o) => [o.id, o.nome])
+              }
             />
           </Stack>
         </Col>
-        <Col xs={6} className="pb-3 border-b-2 border-b-gray-500">
-          <Stack gap={1} className="text-right">
-            <Select 
-              label="Modello:"
-              labelCols={6}
+        <Col xs={6} className="pl-10">
+          <Stack gap={2} className="text-left">
+            <Select
+              name="cliente"
+              inputProps={{ 
+                required: true,
+                value: cliente,
+                onChange: (e) => setCliente(e.target.value)
+              }}
+              data={
+                clienti && [...clienti].map((cliente) => [cliente, cliente])
+              }
+            />
+            <Select
               name="articolo"
-              labelProps={{ className: "pr-6" }}
-              inputProps={{ required: true }}
-              data={data?.articoli && data?.articoli?.map(o => [o.id, `${o.nome} (${o.codice})`])}
+              inputProps={{
+                required: true,
+                disabled: !cliente,
+                value: articoloID,
+                onChange: (e) => setArticoloID(e.target.value),
+              }}
+              data={data?.articoli && data?.articoli?.filter(arti => arti.cliente.nome === cliente).map(o => [o.id, `${o.nome} (${o.codice})`])}
             />
             <Input 
-              label="Numero Lotto:"
               name="lotto"
               errors={errors}
-              labelCols={6}
               labelProps={{ className: "pr-6" }}
               inputProps={{ required: true }}
             />
-            <Checkbox 
-              label="Idoneità al trattamento:"
-              name="dati_aggiuntivi.idoneità"
-              labelCols={6}
-              labelProps={{ className: "pr-6" }}
-              inputProps={{ 
-                defaultChecked: initialData ? initialData['idoneità'] : true,
-                className: "text-left mt-2"
-              }}
-            />
           </Stack>
         </Col>
       </Row>
-      <Row className="mb-3 text-left">
-        <Col xs={5}>
-          <Input 
-            label="Valvole dichiarate:"
-            name="n_pezzi_dichiarati"
-            errors={errors}
-            labelCols={5}
-            labelProps={{ className: "pr-0" }}
-            inputProps={{ 
-              type: "number",
-              required: true,
-              className: "text-center w-4/5 ml-auto"
-            }}
-          />
-        </Col>
-        <Col xs={1}></Col>
-        <Col xs={6}>
-          <Input 
-            label="Valvole conformi:"
-            name="dati_aggiuntivi.n_pezzi_conformi"
-            errors={errors}
-            labelCols={5}
-            labelProps={{ className: "pr-0" }}
-            inputProps={{ 
-              type: "number",
-              required: true,
-              className: "w-[64%] text-center mx-auto"
-            }}
-            colProps={{ className: "pr-14" }}
-          />
-        </Col>
-      </Row>
-      <Row className="mb-4 border-b-2 border-b-gray-500 flex-nowrap">
-        <Col
-          xs={5}
-          className="py-6 mt-2 border-t-2 border-t-gray-500 border-r-2 border-r-gray-500"
-        >
-          <Stack gap={1} className="text-left">
-            {['verifiche_preliminari', 'pulizia', 'filetto_m6', 'accantonato_campione', 'master'].map(name => (
-              <Checkbox 
-                key={name}
-                name={'dati_aggiuntivi.' + name}
-                initialData={initialData}
-                labelCols={7}
-                inputProps={{ className: "text-left mt-2 pl-12" }}
-              />
-            ))}
-          </Stack>
-        </Col>
-        <Col xs={1}></Col>
-        <Col xs={6} className="flex h-fit">
-          <Stack gap={1} className="text-left">
-            <Form.Group as={Row}>
-              <Form.Label column sm="6">
-                Valvole scarto:
-              </Form.Label>
-              <Col sm="4">
-                <Form.Control
-                  type="number"
-                  disabled
-                  size="sm"
-                  className="text-center"
-                  value={valvoleScarto}
-                />
-              </Col>
-              <Col xs={2}>
-                <hr className="mt-3 -ml-4" />
-                <hr className="-ml-4 w-2 rotate-45 relative top-[2px]" />
-                <hr className="-ml-4 w-2 -rotate-45 relative top-[-5px]" />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="6">
-                Difetti del materiale:
-              </Form.Label>
-              <Col sm="4">
-                <Form.Control
-                  type="number"
-                  size="sm"
-                  name="dati_aggiuntivi.n_difetti_materiale"
-                  className="text-center"
-                  value={materiale}
-                  onChange={(e) => setMateriale(e.target.value)}
-                />
-              </Col>
-              <Col xs={2}>
-                <hr className="mt-3 -ml-4" />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="6">
-                Difetti da sporco:
-              </Form.Label>
-              <Col sm="4">
-                <Form.Control
-                  type="number"
-                  size="sm"
-                  name="dati_aggiuntivi.n_difetti_sporco"
-                  className="text-center"
-                  value={sporco}
-                  onChange={(e) => setSporco(e.target.value)}
-                />
-              </Col>
-              <Col xs={2}>
-                <hr className="mt-3 -ml-4" />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="6">
-                Difetti meccanici:
-              </Form.Label>
-              <Col sm="4">
-                <Form.Control
-                  type="number"
-                  size="sm"
-                  name="dati_aggiuntivi.n_difetti_meccanici"
-                  className="text-center"
-                  value={meccanici}
-                  onChange={(e) => setMeccanici(e.target.value)}
-                />
-              </Col>
-              <Col xs={2}>
-                <hr className="mt-3 -ml-4" />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="6">
-                Difetti del trattamento:
-              </Form.Label>
-              <Col sm="4">
-                <Form.Control
-                  type="number"
-                  size="sm"
-                  name="dati_aggiuntivi.n_difetti_trattamento"
-                  className="text-center"
-                  value={trattamento}
-                  onChange={(e) => setTrattamento(e.target.value)}
-                />
-              </Col>
-              <Col xs={2}>
-                <hr className="mt-3 -ml-4" />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="6">
-                Difetti altri:
-              </Form.Label>
-              <Col sm="4">
-                <Form.Control
-                  type="number"
-                  size="sm"
-                  name="dati_aggiuntivi.n_difetti_altro"
-                  className="text-center"
-                  value={altro}
-                  onChange={(e) => setAltro(e.target.value)}
-                />
-              </Col>
-              <Col xs={2}>
-                <hr className="mt-3 -ml-4" />
-              </Col>
-            </Form.Group>
-          </Stack>
-          <div className="w-[1px] mb-[1.3rem] mt-[1rem] bg-[#c8c9ca]"></div>
-        </Col>
-      </Row>
-      <Row className="pb-4 mb-3 -mt-1 border-b-2 border-b-gray-500">
-        {['dati_aggiuntivi.spessore_ossido', 'dati_aggiuntivi.spessore_minimo', 'dati_aggiuntivi.spessore_massimo', 'dati_aggiuntivi.spessore_deviazione'].map(name => (
-          <Col xs={3} key={name} className="text-center">
-            <Input
-              name={name}
-              vertical={true}
-              inputProps={{
-                className: "w-3/4 m-auto text-center",
-                step: "0.01",
-                type: "number",
-                onBlur: handleValoreChange,
-              }}
-            />
-            {errValore[name] && (
-              <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
-                  <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
-                  {errValore[name]}
-              </span>
-            )}
-          </Col>  
-        ))}
-      </Row>
-      <Row className="pb-4 mb-4 border-b-2 border-b-gray-500">
-        {['dati_aggiuntivi.temperatura_soda', 'dati_aggiuntivi.temperatura_ossido', 'dati_aggiuntivi.temperatura_colore', 'dati_aggiuntivi.temperatura_fissaggio'].map(name => (
-          <Col xs={3} key={name} className="text-center">
-            <Input
-              name={name}
-              vertical={true}
-              inputProps={{
-                className: "w-3/4 m-auto text-center",
-                step: "0.01",
-                type: "number",
-                onBlur: handleValoreChange,
-              }}
-            />
-            {errValore[name] && (
-              <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
-                  <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
-                  {errValore[name]}
-              </span>
-            )}
-          </Col>  
-        ))}
-      </Row>
-      <Form.Group>
+      {articolo && (
+        <>
+          <SectionHeader title="Informazioni Articolo" open={infoOpen} setOpen={setInfoOpen} />
+          <div className={`${infoOpen ? "" : "max-h-0 h-0 overflow-hidden"}`}>
+            <Table className="align-middle text-center" bordered>
+              <thead>
+                <tr>
+                  <th>Denominazione</th>
+                  <th>Codice articolo</th>
+                  <th>Trattamento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{articolo.nome}</td>
+                  <td>{articolo.codice}</td>
+                  <td>{articolo.richieste.map(ric => ric.lavorazione.nome).join(' - ')}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+          {articolo.richieste.some(richiesta => richiesta.spessore_minimo || richiesta.spessore_massimo) && (
+            <>
+            <SectionHeader title="Spessori Richiesti" open={spessoriOpen} setOpen={setSpessoriOpen} />
+            <div className={`${spessoriOpen ? "" : "max-h-0 h-0 overflow-hidden"}`}>
+              <Table className="align-middle text-center" bordered>
+                <thead>
+                  <tr className={`${spessoriOpen ? "" : "hidden"}`}>
+                    <th>Punto</th>
+                    {articolo.richieste.map(ric => (
+                      <th key={ric.id}>{ric.lavorazione.metallo?.nome || "-"}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className={`${spessoriOpen ? "" : "hidden"}`}>
+                  <tr>
+                    <td>1</td>
+                    {articolo.richieste.map(ric => (
+                      <th key={ric.id}>{ric.spessore_minimo} ÷ {ric.spessore_massimo} µ</th>
+                    ))}
+                  </tr>
+                </tbody>
+              </Table>
+            </div>
+            </>
+          )}
+          {(articolo.scheda_controllo?.immagine_misurazione || articolo.scheda_controllo?.immagine_aggancio) && (
+            <>
+            <SectionHeader title="Immagini di supporto" open={immaginiOpen} setOpen={setImmaginiOpen} />
+            <div className={`${immaginiOpen ? "" : "max-h-0 h-0 overflow-hidden"}`}>
+              <Table className="align-middle text-center" bordered>
+                <thead>
+                  <tr className={`${immaginiOpen ? "" : "hidden"}`}>
+                    {articolo.scheda_controllo.immagine_misurazione && (
+                      <th className="w-1/2 align-middle">Punto di misura per la verifica dello spessore del trattamento</th>
+                    )}
+                    {articolo.scheda_controllo.immagine_aggancio && (
+                      <th className="w-1/2 align-middle">Zona di aggancio</th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody className={`${immaginiOpen ? "" : "hidden"}`}>
+                  <tr>
+                    {articolo.scheda_controllo.immagine_misurazione && (
+                      <td className="w-1/2 align-middle">
+                        <img src={articolo.scheda_controllo.immagine_misurazione} alt="misurazione" />
+                      </td>
+                    )}
+                    {articolo.scheda_controllo.immagine_aggancio && (
+                      <td className="w-1/2 align-middle">
+                        <img src={articolo.scheda_controllo.immagine_aggancio} alt="aggancio" />
+                      </td>
+                    )}
+                  </tr>
+                </tbody>
+              </Table>
+            </div>
+            </>
+          )}
+          {articolo.scheda_controllo && articolo.scheda_controllo.sezioni.length > 0 && (
+            <>
+            <SectionHeader title="Controlli da effettuare" open={controlliOpen} setOpen={setControlliOpen} />
+            <div className={`${controlliOpen ? "" : "max-h-0 h-0 overflow-hidden"}`}>
+              <Table className="align-middle text-center" bordered>
+                <thead>
+                  <tr className={`${controlliOpen ? "" : "hidden"}`}>
+                    <th>Cosa</th>
+                    <th>Quanti</th>
+                    <th>Chi</th>
+                    <th>Eseguito</th>
+                  </tr>
+                </thead>
+                <tbody className={`${controlliOpen ? "" : "hidden"}`}>
+                  {articolo.scheda_controllo.sezioni.map(sezione => (
+                    <>
+                      <tr key={sezione.id}>
+                        <td colSpan="4" className="text-left uppercase font-medium text-nav-blue">{sezione.nome}</td>
+                      </tr>
+                      {sezione.controlli.map(controllo => {
+                        if (controllo.frequenza || controllo.responsabilità) {
+                          return (
+                            <tr className="text-sm" key={controllo.id}>
+                              <td className="text-left py-1.5" style={{ paddingLeft: "1.5em"}}>{controllo.nome}</td>
+                              <td className="py-1.5">{controllo.frequenza}</td>
+                              <td className="py-1.5">{controllo.responsabilità}</td>
+                              <td className="py-1.5">
+                                <Checkbox 
+                                  label={false}
+                                  name="controllo"
+                                  inputProps={{ defaultChecked: true }}
+                                  vertical={true}
+                                />
+                              </td>
+                            </tr>
+                          )
+                        } else {
+                          return (
+                            <tr className="text-sm" key={controllo.id}>
+                              <td colSpan="4" className="text-left py-1.5" style={{ paddingLeft: "1.5em"}}>• {controllo.nome}</td>
+                            </tr>
+                          )
+                        }
+                      })}
+                    </>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+            </>
+          )}
+        </>
+      )}
+      <Form.Group className="mt-8">
         <Row className="mb-4">
           <Col xs={1} className="flex items-center">
-            <Form.Label>Note:</Form.Label>
+            <Form.Label className="mt-2">Note:</Form.Label>
           </Col>
-          <Col sm={11}>
+          <Col sm={6}>
             <Form.Control as="textarea" rows={3} name="note" />
+          </Col>
+          <Col sm={5}>
+            <Input
+              label="N° Pezzi:"
+              name="n_pezzi_dichiarati"
+              vertical={true}
+              inputProps={{
+                required: true,
+                className: "w-3/4 m-auto text-center",
+                type: "number",
+              }}
+            />
           </Col>
         </Row>
       </Form.Group>
