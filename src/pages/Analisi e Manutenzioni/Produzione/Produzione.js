@@ -12,7 +12,11 @@ import UserContext from '../../../UserContext'
 
 function Produzione() {
   const { user: { user: { impianto } } } = useContext(UserContext)
-  const [data, setData] = useGetAPIData([{url: URLS.PAGINA_PRODUZIONE}])
+  const [data, setData] = useGetAPIData([
+    {nome: "produzione", url: URLS.ANDAMENTO_PRODUZIONE},
+    {nome: "pezzi_per_operatore", url: URLS.PRODUZIONE_PER_OPERATORE},
+    {nome: "operatori", url: URLS.OPERATORI},
+  ])
   const [frequenza, setFrequenza] = useState("day")
   const [authed, setAuthed] = useState(false)
   let navigate = useNavigate();
@@ -57,7 +61,8 @@ function Produzione() {
   }}
   const updateChart = (freq) => {
     setFrequenza(freq)
-    apiGet(`${URLS.PAGINA_PRODUZIONE}?frequenza=${freq}&impianto=${impianto?.id || 1000}`).then(data => setData(data))
+    const url = `${URLS.ANDAMENTO_PRODUZIONE}?frequenza=${freq}&impianto=${impianto?.id || 1000}`
+    apiGet(url).then(response => setData({...data, produzione: response}))
   }
   return (
     <Wrapper>

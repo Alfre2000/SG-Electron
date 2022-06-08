@@ -17,7 +17,6 @@ export const URLS = {
     FISSAGGI: BASE_PATH + '/analisi-manutenzioni/fissaggi/',
     MANUTENZIONI: BASE_PATH + '/analisi-manutenzioni/manutenzioni/',
     ANALISI: BASE_PATH + '/analisi-manutenzioni/analisi/',
-    OPERAZIONI: BASE_PATH + '/analisi-manutenzioni/operazioni/',
     OPERAZIONI_DEEP: BASE_PATH + '/analisi-manutenzioni/operazioni-deep/',
 
     // BASE
@@ -26,11 +25,13 @@ export const URLS = {
     IMPIANTI: BASE_PATH + '/base/impianti/',
 
     // SCHEDE CONTROLLO
-    SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
+
+    SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',
+    ANDAMENTO_PRODUZIONE: BASE_PATH + '/scheda-controllo/andamento-produzione/',
+    PRODUZIONE_PER_OPERATORE: BASE_PATH + '/scheda-controllo/produzione-per-operatore/',
 
     // PAGINA
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
-    PAGINA_PRODUZIONE: BASE_PATH + '/analisi-manutenzioni/pagina-andamento-produzione/',
     PAGINA_RICERCA_DATABASE: BASE_PATH + '/analisi-manutenzioni/pagina-ricerca-database/',
 }

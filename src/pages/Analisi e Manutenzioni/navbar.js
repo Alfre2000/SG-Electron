@@ -20,5 +20,8 @@ export const getNavItems = (user) => {
     items.splice(1, 1)
     items[1].links.splice(0, 1)
   }
+  if (!user.impianto?.nome) {
+    items = []
+  }
   return items
 } 
