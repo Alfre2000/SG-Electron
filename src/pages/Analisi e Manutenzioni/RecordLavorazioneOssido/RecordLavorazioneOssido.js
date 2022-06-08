@@ -4,7 +4,7 @@ import { URLS } from "../../../urls";
 import { Col, Container, Row, Card, Stack, Alert } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import FormWrapper from "../../FormWrapper";
-import SchedaControlloForm from "./SchedaControlloOssidoForm";
+import RecordLavorazioneOssidoForm from "./RecordLavorazioneOssidoForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
@@ -15,7 +15,7 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 import UserContext from "../../../UserContext";
 
 
-function SchedaControllo() {
+function RecordLavorazioneOssido() {
   const { user: { user: { impianto } } } = useContext(UserContext)
   const [avvisi, setAvvisi] = useState([]);
   const [data, setData] = useGetAPIData([
@@ -60,7 +60,7 @@ function SchedaControllo() {
               </Card.Header>
               <Card.Body className="px-5">
                 <FormWrapper data={data} setData={setParsedData} url={URLS.RECORD_LAVORAZIONI}>
-                  <SchedaControlloForm data={data} />
+                  <RecordLavorazioneOssidoForm data={data} />
                 </FormWrapper>
               </Card.Body>
             </Card>
@@ -78,7 +78,7 @@ function SchedaControllo() {
                   valori={['lotto', 'n_pezzi_dichiarati', 'operatore__operatori']}
                   data={data}
                   setData={setParsedData}
-                  FormComponent={SchedaControlloForm}
+                  FormComponent={RecordLavorazioneOssidoForm}
                   url={URLS.RECORD_LAVORAZIONI}
                 />
               </Card.Body>
@@ -90,4 +90,4 @@ function SchedaControllo() {
   );
 }
 
-export default SchedaControllo;
+export default RecordLavorazioneOssido;

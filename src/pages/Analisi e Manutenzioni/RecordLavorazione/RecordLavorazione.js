@@ -6,9 +6,9 @@ import { URLS } from "../../../urls";
 import FormWrapper from "../../FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
-import SchedaControlloForm from "./SchedaControlloForm";
+import RecordLavorazioneForm from "./RecordLavorazioneForm";
 
-function SchedaControllo() {
+function RecordLavorazione() {
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "articoli", url: URLS.ARTICOLI},
@@ -26,7 +26,7 @@ function SchedaControllo() {
               </Card.Header>
               <Card.Body className="px-5">
                 <FormWrapper data={data} setData={setData} url={URLS.RECORD_LAVORAZIONI}>
-                  <SchedaControlloForm data={data}/>
+                  <RecordLavorazioneForm data={data}/>
                 </FormWrapper>
               </Card.Body>
             </Card>
@@ -44,7 +44,7 @@ function SchedaControllo() {
                   valori={['lotto', 'n_pezzi_dichiarati', 'operatore__operatori']}
                   data={data}
                   setData={setData}
-                  FormComponent={SchedaControlloForm}
+                  FormComponent={RecordLavorazioneForm}
                   url={URLS.RECORD_LAVORAZIONI}
                 />
               </Card.Body>
@@ -56,4 +56,4 @@ function SchedaControllo() {
   );
 }
 
-export default SchedaControllo;
+export default RecordLavorazione;

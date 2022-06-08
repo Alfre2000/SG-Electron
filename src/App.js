@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import { useReducer, useState } from "react";
-import SchedaControlloOssido from "./pages/Analisi e Manutenzioni/SchedaControlloOssido/SchedaControlloOssido";
+import RecordLavorazioneOssido from "./pages/Analisi e Manutenzioni/RecordLavorazioneOssido/RecordLavorazioneOssido";
 import Analisi from "./pages/Analisi e Manutenzioni/Analisi/Analisi";
 import Fissaggio from "./pages/Analisi e Manutenzioni/Fissaggio/Fissaggio";
 import Manutenzione from "./pages/Analisi e Manutenzioni/Manutenzione/Manutenzione";
@@ -12,7 +12,7 @@ import Produzione from "./pages/Analisi e Manutenzioni/Produzione/Produzione";
 import UserContext from "./UserContext";
 import MyToast from "./components/MyToast/MyToast";
 import RicercaDatabase from "./pages/Analisi e Manutenzioni/RicercaDatabase/RicercaDatabase";
-import SchedaControllo from "./pages/Analisi e Manutenzioni/SchedaControllo/SchedaControllo";
+import RecordLavorazione from "./pages/Analisi e Manutenzioni/RecordLavorazione/RecordLavorazione";
 import SelezioneImpianto from "./pages/Analisi e Manutenzioni/SelezioneImpianto/SelezioneImpianto";
 
 function reducer (state, userInfo) {
@@ -28,7 +28,6 @@ function App() {
     setSuccess(true);
     setTimeout(() => setSuccess(false), 4000)
   }
-  console.log(impianto);
   return (
     <UserContext.Provider value={{ user, setUser}}>
       <div className="flex" style={{userSelect: "none"}}>
@@ -44,13 +43,14 @@ function App() {
               <Route path="prossime/" element={<Prossime />}></Route>
               <Route path="produzione/" element={<Produzione />}></Route>
               <Route path="ricerca/" element={<RicercaDatabase />}></Route>
-              <Route path="scheda/" 
+              <Route path="record-lavorazione/" 
                 element={impianto?.nome.toLowerCase().includes('ossido')
-                  ? <SchedaControlloOssido /> 
-                  : <SchedaControllo />
+                  ? <RecordLavorazioneOssido /> 
+                  : <RecordLavorazione />
                 }>
               </Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
+              {/* <Route path="/" element={<SelezioneImpianto />}></Route> */}
             </Route>
           </Routes>
         </HashRouter>

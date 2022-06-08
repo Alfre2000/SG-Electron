@@ -179,7 +179,7 @@ function Produzione() {
           <PasswordModal 
             show={authed === false}
             onSuccess={() => setAuthed(true)}
-            onFail={() => navigate('/manutenzione/scheda/')}
+            onFail={() => navigate('/manutenzione/record-lavorazione/')}
           />
         )}
       </Container>

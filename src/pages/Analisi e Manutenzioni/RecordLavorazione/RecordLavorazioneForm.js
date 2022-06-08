@@ -7,7 +7,7 @@ import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker, findElementFromID } from "../../../utils";
 import SectionHeader from "./SectionHeader";
 
-function SchedaControlloForm({ data, initialData, errors }) {
+function RecordLavorazioneForm({ data, initialData, errors }) {
   const [articoloID, setArticoloID] = useState(initialData?.articolo || "")
   const initialCliente = data.articoli && initialData?.articolo 
     ? findElementFromID(initialData?.articolo, data.articoli).cliente.nome
@@ -241,4 +241,4 @@ function SchedaControlloForm({ data, initialData, errors }) {
   );
 }
 
-export default SchedaControlloForm;
+export default RecordLavorazioneForm;

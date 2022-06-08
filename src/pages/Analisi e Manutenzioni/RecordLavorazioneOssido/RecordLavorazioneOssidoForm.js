@@ -9,7 +9,7 @@ import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker } from "../../../utils";
 
 
-function SchedaControlloForm({ data, initialData, errors }) {
+function RecordLavorazioneOssidoForm({ data, initialData, errors }) {
   const [materiale, setMateriale] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_materiale'] : 0)
   const [sporco, setSporco] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_sporco'] : 0)
   const [meccanici, setMeccanici] = useState(initialData ? initialData['dati_aggiuntivi.n_difetti_meccanici'] : 0)
@@ -320,4 +320,4 @@ function SchedaControlloForm({ data, initialData, errors }) {
   );
 }
 
-export default SchedaControlloForm;
+export default RecordLavorazioneOssidoForm;

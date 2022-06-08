@@ -19,7 +19,7 @@ function SelezioneImpianto() {
     setImpiantoID(parseInt(event.target.id))
     const impianto = findElementFromID(parseInt(event.target.id), data.impianti)
     setUser({...user, user: {...user.user, impianto: impianto}})
-    setTimeout(() => navigate('/manutenzione/scheda/'), 150)
+    setTimeout(() => navigate('/manutenzione/record-lavorazione/'), 150)
   }
   return (
    <Wrapper>

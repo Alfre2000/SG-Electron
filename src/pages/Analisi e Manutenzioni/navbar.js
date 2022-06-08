@@ -3,7 +3,7 @@ import { faClipboardCheck, faToolbox, faChartLine } from '@fortawesome/free-soli
 export const getNavItems = (user) => {
   let items = [
     { title: "Scheda controllo", icon: faClipboardCheck, links: [
-      {name: 'Nuova Scheda', link: '/manutenzione/scheda/'},
+      {name: 'Nuova Scheda', link: '/manutenzione/record-lavorazione/'},
     ]},
     { title: "Manutenzioni", icon: faToolbox, links: [
         {name: 'Fissaggio', link: '/manutenzione/fissaggio/'},
