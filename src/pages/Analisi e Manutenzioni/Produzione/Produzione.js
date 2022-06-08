@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Card, Container, Form, Stack } from 'react-bootstrap'
 import { Bar, Pie } from 'react-chartjs-2'
 import { apiGet } from '../../../api/utils'
@@ -8,8 +8,10 @@ import Wrapper from '../Wrapper'
 import PasswordModal from "../../../components/PasswordModal/PasswordModal";
 import { useNavigate } from 'react-router-dom'
 import useGetAPIData from '../../../hooks/useGetAPIData'
+import UserContext from '../../../UserContext'
 
 function Produzione() {
+  const { user: { user: { impianto } } } = useContext(UserContext)
   const [data, setData] = useGetAPIData([{url: URLS.PAGINA_PRODUZIONE}])
   const [frequenza, setFrequenza] = useState("day")
   const [authed, setAuthed] = useState(false)
@@ -55,7 +57,7 @@ function Produzione() {
   }}
   const updateChart = (freq) => {
     setFrequenza(freq)
-    apiGet(URLS.PAGINA_PRODUZIONE + `?frequenza=${freq}`).then(data => setData(data))
+    apiGet(`${URLS.PAGINA_PRODUZIONE}?frequenza=${freq}&impianto=${impianto?.id || 1000}`).then(data => setData(data))
   }
   return (
     <Wrapper>

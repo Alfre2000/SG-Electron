@@ -10,20 +10,23 @@ const electron = window.require('electron');
 
 function HomePage(props) {
   let navigate = useNavigate();
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const [navOpen, setNavOpen] = useState(true)
   const [programmi, setProgrammi] = useState([])
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem("user"))) {
+    const userStorage = JSON.parse(localStorage.getItem("user"))
+    if (!userStorage) {
       navigate('/login')
       return
+    } else if (!userStorage.user.impianto) {
+      setUser({...user, user: {...user.user, impianto: null}})
     }
     const programs =  user.user.programmi ? user.user.programmi.map(el => PROGRAMMI[el]) : []
     setProgrammi(programs)
     if (programs.length === 1) {
       navigate(programs[0].link);
     }
-  }, [navigate, user])
+  }, [navigate, user, setUser])
   const navbar = [
     { title: "Assistenza", icon: faBookOpen, links: [
       {name: "Email all'Assistenza", link: '#'},

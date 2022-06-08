@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Pagination } from "react-bootstrap";
 import { apiGet } from "../../api/utils";
+import UserContext from "../../UserContext";
 import { updateQueryStringParameter } from "../../utils";
 
 function Paginator({ data, setData }) {
+  const { user: { user: { impianto } } } = useContext(UserContext)
   const currentPage = data?.next
     ? parseInt(data.next.split("page=").at(-1).split('&')[0]) - 1
     : data?.previous?.includes('page=')
@@ -18,7 +20,7 @@ function Paginator({ data, setData }) {
   const firstPageURL = updateQueryStringParameter(baseURL, 'page', '1');
   const lastPageURL = updateQueryStringParameter(baseURL, 'page', 'last');
   const updateData = (pageLink) => {
-    apiGet(pageLink).then((res) => setData(res));
+    apiGet(`${pageLink}&impianto=${impianto?.id || 1000}`).then((res) => setData(res));
   };
   return (
     <Pagination className="flex justify-between">

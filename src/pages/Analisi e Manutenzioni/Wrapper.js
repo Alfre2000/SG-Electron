@@ -4,23 +4,25 @@ import Header from "../../components/Header/Header";
 import useCheckAuth from '../../hooks/useCheckAuth';
 import { getNavItems } from './navbar';
 import UserContext from '../../UserContext';
+import useCheckImpianto from '../../hooks/useCheckImpianto';
 
 function Wrapper({ children, defaultNav }) {
-  useCheckAuth();
+  const pendingAuth = useCheckAuth();
+  const pendingImpianto = useCheckImpianto();
   const [navOpen, setNavOpen] = useState(defaultNav !== undefined ? defaultNav : true)
   const toggleNavbar = () => {
     setNavOpen(!navOpen)
   }
   const { user } = useContext(UserContext)
   const navItems = getNavItems(user.user)
-  const title = `Gestione ${user?.user?.impianto || ""}`
+  const title = `Gestione ${user?.user?.impianto?.nome || "Impianti"}`
   return (
     <>
       <Navbar menu={[...navItems]} navOpen={navOpen} />
       <div className="grow flex flex-col overflow-scroll max-h-screen">
         <Header toggleNavbar={toggleNavbar} title={title} />
         <div className="bg-gray-50 grow flex px-8 justify-center">
-          {children}
+          {!pendingImpianto && !pendingAuth && children}
         </div>
       </div>
     </>

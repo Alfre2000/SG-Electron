@@ -1,9 +1,10 @@
 import { faCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../api/utils";
 import useSetViewForm from "../hooks/useSetViewForm";
+import UserContext from "../UserContext";
 import { dateToDatePicker } from "../utils";
 
 function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
@@ -14,6 +15,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
   const [validated, setValidated] = useState(false);
   const [success, setSuccess] = useState(false);
   const [key, setKey] = useState(1)
+  const { user } = useContext(UserContext)
   // Se vengono passati dei dati iniziali inseriscili nel form
   useEffect(() => {
     if (!initialData) return
@@ -59,8 +61,8 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     } else {
       let { data: date, ora, ...formData } = Object.fromEntries(new FormData(form).entries());
       formData['data'] = new Date(date + " " + ora).toISOString()
-      if (url.toLowerCase().includes('lavorazione')) {
-        formData['impianto'] = data.impianto.id
+      if (url.toLowerCase().includes('lavorazioni')) {
+        formData['impianto'] = user.user.impianto.id
       }
       if (data.operazioni?.length === 1) {
         formData['operazione'] = data.operazioni[0].id

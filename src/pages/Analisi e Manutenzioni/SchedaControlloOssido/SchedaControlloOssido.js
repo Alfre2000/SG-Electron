@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { apiGet } from "../../../api/utils";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card, Stack, Alert } from "react-bootstrap";
@@ -10,12 +10,13 @@ import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-sol
 import { Link } from "react-router-dom";
 import useGetAPIData from "../../../hooks/useGetAPIData";
 import Tabella from "../../Tabella";
-
 import { parseProssimeManutenzioni, parseRecordLavorazioni, parseSchedaLavorazione } from "../parsers";
 import PageTitle from "../../../components/PageTitle/PageTitle";
+import UserContext from "../../../UserContext";
 
 
 function SchedaControllo() {
+  const { user: { user: { impianto } } } = useContext(UserContext)
   const [avvisi, setAvvisi] = useState([]);
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
@@ -27,11 +28,11 @@ function SchedaControllo() {
     setData({...data, records: parseRecordLavorazioni(newData.records)})
   }
   useEffect(() => {
-    apiGet(URLS.PAGINA_PROSSIME).then(res => {
+    apiGet(`${URLS.PAGINA_PROSSIME}?impianto=${impianto?.id || 1000}`).then(res => {
       const parsedData = parseProssimeManutenzioni(res)
       setAvvisi(parsedData.late)
     })
-  }, [data.records])
+  }, [data.records, impianto])
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { apiGet } from "../api/utils";
+import UserContext from "../UserContext";
 
+// [ { nome, url, initialData, parser }, ... ]
 function useGetAPIData(requests) {
-  // [ { nome, url, initialData, parser }, ... ]
+  const { user: { user: { impianto } } } = useContext(UserContext)
   const initialData = {}
   requests.forEach(req => {
     if (req.nome) initialData[req.nome] = req.initialData
@@ -19,9 +21,9 @@ function useGetAPIData(requests) {
   }, [])
   useEffect(() => {
     requests.forEach(req => {
-      apiGet(req.url).then((response) => setNewData(req, response));
+      apiGet(`${req.url}?impianto=${impianto?.id || 1000}`).then((response) => setNewData(req, response));
     })
-  }, [setNewData,])
+  }, [setNewData, impianto])
   return [data, setData]
 }
 

@@ -23,6 +23,7 @@ export const URLS = {
     // BASE
     OPERATORI: BASE_PATH + '/base/operatori/',
     ARTICOLI: BASE_PATH + '/base/articoli/',
+    IMPIANTI: BASE_PATH + '/base/impianti/',
 
     // SCHEDE CONTROLLO
     SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',

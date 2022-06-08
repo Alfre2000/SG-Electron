@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import Select from "../../../components/form-components/Select";
@@ -12,8 +12,10 @@ import FissaggioForm from "./../Fissaggio/FissaggioForm";
 import useGetAPIData from "../../../hooks/useGetAPIData";
 import Tabella from "../../Tabella";
 import PageTitle from "../../../components/PageTitle/PageTitle";
+import UserContext from "../../../UserContext";
 
 function RicercaDatabase() {
+  const { user: { user: { impianto } } } = useContext(UserContext)
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "operazioni", url: URLS.OPERAZIONI_DEEP},
@@ -34,7 +36,7 @@ function RicercaDatabase() {
     sendForm({inizio: newDate, fine: dateToDatePicker(new Date())})
   }
   const sendForm = (moreData={}) => {
-    const formData = {...Object.fromEntries(new FormData(formRef.current).entries()), ...moreData}
+    const formData = {...Object.fromEntries(new FormData(formRef.current).entries()), ...moreData, impianto: impianto.id}
     const searchParams = new URLSearchParams(formData);
     apiGet(`${URLS.PAGINA_RICERCA_DATABASE}?${searchParams.toString()}`).then(
       (res) => setData(prev => {return {...prev, records:res}})

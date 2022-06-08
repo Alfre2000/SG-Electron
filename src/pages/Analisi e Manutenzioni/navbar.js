@@ -16,7 +16,7 @@ export const getNavItems = (user) => {
         {name: 'Andamento Produzione', link: '/manutenzione/produzione/'},
     ]},
   ];
-  if (!user.impianto.toLowerCase().includes('ossido')) {
+  if (!user.impianto?.nome.toLowerCase().includes('ossido')) {
     items.splice(1, 1)
     items[1].links.splice(0, 1)
   }
