@@ -14,6 +14,7 @@ import MyToast from "./components/MyToast/MyToast";
 import RicercaDatabase from "./pages/Analisi e Manutenzioni/RicercaDatabase/RicercaDatabase";
 import RecordLavorazione from "./pages/Analisi e Manutenzioni/RecordLavorazione/RecordLavorazione";
 import SelezioneImpianto from "./pages/Analisi e Manutenzioni/SelezioneImpianto/SelezioneImpianto";
+import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -50,7 +51,10 @@ function App() {
                 }>
               </Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
-              {/* <Route path="/" element={<SelezioneImpianto />}></Route> */}
+            </Route>
+            {/* Area Admin */}
+            <Route path="area-admin/">
+              <Route path="scheda-controllo/" element={<SchedaControllo />}></Route>
             </Route>
           </Routes>
         </HashRouter>

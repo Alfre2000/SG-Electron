@@ -20,7 +20,7 @@ function Paginator({ data, setData }) {
   const firstPageURL = updateQueryStringParameter(baseURL, 'page', '1');
   const lastPageURL = updateQueryStringParameter(baseURL, 'page', 'last');
   const updateData = (pageLink) => {
-    apiGet(`${pageLink}&impianto=${impianto?.id || 1000}`).then((res) => setData(res));
+    apiGet(`${pageLink}&${impianto?.id ? `impianto=${impianto.id}` : ""}`).then((res) => setData(res));
   };
   return (
     <Pagination className="flex justify-between">

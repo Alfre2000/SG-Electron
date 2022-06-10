@@ -28,7 +28,7 @@ function RecordLavorazioneOssido() {
     setData({...data, records: parseRecordLavorazioni(newData.records)})
   }
   useEffect(() => {
-    apiGet(`${URLS.PAGINA_PROSSIME}?impianto=${impianto?.id || 1000}`).then(res => {
+    apiGet(`${URLS.PAGINA_PROSSIME}?${impianto?.id ? `impianto=${impianto.id}` : ""}`).then(res => {
       const parsedData = parseProssimeManutenzioni(res)
       setAvvisi(parsedData.late)
     })

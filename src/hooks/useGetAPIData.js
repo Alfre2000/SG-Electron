@@ -21,7 +21,7 @@ function useGetAPIData(requests) {
   }, [])
   useEffect(() => {
     requests.forEach(req => {
-      apiGet(`${req.url}?impianto=${impianto?.id || 1000}`).then((response) => setNewData(req, response));
+      apiGet(`${req.url}?${impianto?.id ? `impianto=${impianto.id}` : ""}`).then((response) => setNewData(req, response));
     })
   }, [setNewData, impianto])
   return [data, setData]

@@ -2,6 +2,7 @@ import Budget from "./images/budget.png";
 import Inventory from "./images/inventory.png";
 import WorkInProgress from "./images/work-in-progress.png";
 import ToolBox from "./images/tool-box.png";
+import Admin from "./images/admin.png";
 
 export const PROGRAMMI = {
     "Gestione Impianto": {name: 'Gestione Impianto', link: '/manutenzione/record-lavorazione/', icon: ToolBox},
@@ -10,5 +11,5 @@ export const PROGRAMMI = {
     "Programma 4": {name: 'Programma 4', link: '#', icon: WorkInProgress},
     "Programma 5": {name: 'Programma 5', link: '#', icon: WorkInProgress},
     "Programma 6": {name: 'Programma 6', link: '#', icon: WorkInProgress},
-    "Programma Test": {name: 'Programma Test', link: '#', icon: WorkInProgress},
+    "Area Admin": {name: 'Area Admin', link: 'area-admin/scheda-controllo', icon: Admin},
 }

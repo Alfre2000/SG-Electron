@@ -61,7 +61,7 @@ function Produzione() {
   }}
   const updateChart = (freq) => {
     setFrequenza(freq)
-    const url = `${URLS.ANDAMENTO_PRODUZIONE}?frequenza=${freq}&impianto=${impianto?.id || 1000}`
+    const url = `${URLS.ANDAMENTO_PRODUZIONE}?frequenza=${freq}&${impianto?.id ? `impianto=${impianto.id}` : ""}`
     apiGet(url).then(response => setData({...data, produzione: response}))
   }
   return (
