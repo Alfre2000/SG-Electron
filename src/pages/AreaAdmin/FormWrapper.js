@@ -1,10 +1,9 @@
 import { faCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../../api/utils";
 import useSetViewForm from "../../hooks/useSetViewForm";
-import UserContext from "../../UserContext";
 import { dateToDatePicker } from "../../utils";
 
 function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
@@ -15,7 +14,6 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
   const [validated, setValidated] = useState(false);
   const [success, setSuccess] = useState(false);
   const [key, setKey] = useState(1)
-  const { user } = useContext(UserContext)
   // Se vengono passati dei dati iniziali inseriscili nel form
   useEffect(() => {
     if (!initialData) return
@@ -92,7 +90,10 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     })
     console.log(formData);
     apiPost(url, formData).then(response => {
-      setData({...data, records: {...data.records,  results:[response, ...data.records.results]}})
+      if (data.records) {
+        setData({...data, records: {...data.records,  results:[response, ...data.records.results]}})
+      }
+      if (onSuccess) onSuccess(response);
       form.reset()
       setSuccess(true)
       setTimeout(() => setSuccess(false), 4000)

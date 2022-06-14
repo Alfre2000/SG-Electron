@@ -9,7 +9,7 @@ import SearchSelect from '../../../components/form-components/SearchSelect';
 import { customStyle } from '../../../components/form-components/stylesSelect';
 import { convertPeso, findElementFromID, convertSuperficie } from '../../../utils';
 
-function ArticoloForm({ data, initialData, errors, view }) {
+function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
   const [peso, setPeso] = useState(!!initialData ? initialData.peso : "")
   const [uPeso, setUPeso] = useState({ value: "kg", label: "Kg" })
   const [superficie, setSuperficie] = useState(!!initialData ? initialData.superficie : "")
@@ -51,7 +51,7 @@ function ArticoloForm({ data, initialData, errors, view }) {
             />
           </Stack>
         </Col>
-        <Col xs={6} className="pl-10">
+        <Col xs={6} className="pl-10 flex m-auto">
           <Stack gap={2} className="text-left">
             <SearchSelect
               name="cliente" 
@@ -65,21 +65,23 @@ function ArticoloForm({ data, initialData, errors, view }) {
               }}
               options={data?.clienti?.map(cliente => ({ value: cliente.id, label: cliente.nome }))}
             />
-            <SearchSelect 
-              name="scheda_controllo"
-              labelCols={5}
-              isDisabled={view}
-              errors={errors}
-              options={data?.schede_controllo?.map(scheda => ({ value: scheda.id, label: scheda.nome }))}
-              initialData={initialData}
-              inputProps={{ isDisabled: view }}
-            />
+            {campoScheda !== false && (
+              <SearchSelect 
+                name="scheda_controllo"
+                labelCols={5}
+                isDisabled={view}
+                errors={errors}
+                options={data?.schede_controllo?.map(scheda => ({ value: scheda.id, label: scheda.nome }))}
+                initialData={initialData}
+                inputProps={{ isDisabled: view }}
+              />
+            )}
           </Stack>
         </Col>
       </Row>
       <Fieldset title="caratteristiche fisiche">
         <Row className="mb-3">
-          <Col className="flex">
+          <Col className="flex justify-center">
               <input hidden name="peso" className="hidden" value={convertPeso(uPeso.value, "kg", peso)}/>
               <Input 
                 label="Peso:"
@@ -107,7 +109,7 @@ function ArticoloForm({ data, initialData, errors, view }) {
                 }}
               />
           </Col>
-          <Col className="flex">
+          <Col className="flex justify-center">
             <input hidden name="superficie" className="hidden" value={convertSuperficie(uSuperficie.value, "dm", superficie)}/>
             <Input 
               label="Superficie:"

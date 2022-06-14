@@ -5,7 +5,7 @@ import { Col, Row, Form, Stack, Table, Button } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import ArticoliInput from "./ArticoliInput";
 
-function SchedaControlloForm({ data, initialData, errors }) {
+function SchedaControlloForm({ data, setData, initialData, errors }) {
   const getSezioneVuota = (n) => {
     const nextLetter = String.fromCharCode(65 + n)
     return { nome: `${nextLetter}. `, controlli: [
@@ -26,7 +26,7 @@ function SchedaControlloForm({ data, initialData, errors }) {
       </Row>
       <fieldset className="border-[groove] border-2 px-8 py-1 m-0 rounded-md border-blue-100" style={{ borderStyle: "groove" }}>
         <legend className="mb-2 px-3 text-left uppercase font-semibold text-nav-blue text-lg float-none w-fit">Articoli collegati alla scheda di controllo</legend>
-        <ArticoliInput data={data} />
+        <ArticoliInput data={data} setData={setData} />
       </fieldset>
       <fieldset className="mt-8 border-[groove] border-2 px-8 py-1 mx-0 rounded-md border-blue-100" style={{ borderStyle: "groove" }}>
         <legend className="mb-2 px-3 text-left uppercase font-semibold text-nav-blue text-lg float-none w-fit">Immagini di supporto</legend>

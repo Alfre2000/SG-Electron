@@ -11,6 +11,8 @@ function SchedaControllo() {
   const [data, setData] = useGetAPIData([
     {nome: "articoli", url: URLS.ARTICOLI_NESTED},
     {nome: "schede_controllo", url: URLS.SCHEDE_CONTROLLO},
+    {nome: "clienti", url: URLS.CLIENTI},
+    {nome: "lavorazioni", url: URLS.LAVORAZIONI},
   ])
   return (
     <Wrapper>
@@ -24,7 +26,7 @@ function SchedaControllo() {
               </Card.Header>
               <Card.Body className="px-5">
                 <FormWrapper data={data} setData={setData} url={URLS.SCHEDE_CONTROLLO}>
-                  <SchedaControlloForm data={data} />
+                  <SchedaControlloForm data={data} setData={setData} />
                 </FormWrapper>
               </Card.Body>
             </Card>

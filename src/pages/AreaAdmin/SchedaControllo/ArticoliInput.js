@@ -4,9 +4,14 @@ import React, { useState } from 'react'
 import { Col, Row, ListGroup } from "react-bootstrap";
 import Input from '../../../components/form-components/Input';
 import SearchSelect from '../../../components/form-components/SearchSelect';
+import ModifyModal from '../../../components/ModifyModal/ModifyModal';
+import { URLS } from '../../../urls';
 import { findElementFromID } from '../../../utils';
+import ArticoloForm from '../Articolo/ArticoloForm';
+import FormWrapper from '../FormWrapper';
 
-function ArticoliInput({ data }) {
+function ArticoliInput({ data, setData }) {
+  const [modalArticolo, setModalArticolo] = useState(false)
   const [ricerca, setRicerca] = useState("")
   const [cliente, setCliente] = useState(null)
   const [articoli, setArticoli] = useState([])
@@ -25,6 +30,20 @@ function ArticoliInput({ data }) {
   const clienti = data?.articoli ? new Set(data?.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
   return (
     <>
+      {modalArticolo && (
+        <ModifyModal 
+          show={modalArticolo}
+          handleClose={() => setModalArticolo(false)}>
+            <FormWrapper data={data} setData={setData} url={URLS.ARTICOLI}
+              onSuccess={(response) => {
+                setModalArticolo(false)
+                setData({...data, articoli: [response, ...data.articoli]})
+                setArticoli([response, ...articoli])
+              }}>
+              <ArticoloForm data={data} campoScheda={false} />
+            </FormWrapper>
+        </ModifyModal>
+      )}
       <Row className="mb-4 bg-slate-100 py-3 rounded-lg px-4">
         <Col xs={6}>
           <SearchSelect 
@@ -87,6 +106,7 @@ function ArticoliInput({ data }) {
             ))}
             <ListGroup.Item
                 className="py-1.5 cursor-pointer border-t-0 border-r-0 border-l-0 font-semibold"
+                onClick={() => setModalArticolo(true)}
               >
                 <FontAwesomeIcon icon={faPlus} size="lg" className="pr-2"/>  Nuovo Articolo
               </ListGroup.Item>
