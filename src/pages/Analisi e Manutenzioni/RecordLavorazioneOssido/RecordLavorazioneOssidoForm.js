@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Col, Row, Form, Stack } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
+import SearchSelect from "../../../components/form-components/SearchSelect";
 import Select from "../../../components/form-components/Select";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker } from "../../../utils";
@@ -76,6 +77,14 @@ function RecordLavorazioneOssidoForm({ data, initialData, errors }) {
               inputProps={{ required: true }}
               data={data?.articoli && data?.articoli?.map(o => [o.id, `${o.nome} (${o.codice})`])}
             />
+            {/* <SearchSelect 
+              label="Modello:"
+              labelCols={6}
+              name="articolo"
+              labelProps={{ className: "pr-6" }}
+              inputProps={{ required: true }}
+              options={data?.articoli && data?.articoli?.map(o => ({ value: o.id, label: `${o.nome} (${o.codice})`}))}
+            /> */}
             <Input 
               label="Numero Lotto:"
               name="lotto"

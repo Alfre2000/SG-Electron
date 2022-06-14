@@ -21,7 +21,13 @@ function useGetAPIData(requests) {
   }, [])
   useEffect(() => {
     requests.forEach(req => {
-      apiGet(`${req.url}?${impianto?.id ? `impianto=${impianto.id}` : ""}`).then((response) => setNewData(req, response));
+      let params = {}
+      if (impianto?.id) params.impianto = impianto.id
+      if (req.nome === 'records') params.page = 1
+      params = new URLSearchParams(params)
+      const url = req.url + '?' + params.toString()
+      // const url = `${req.url}?${}${impianto?.id ? `impianto=${impianto.id}` : ""}`
+      apiGet(url).then((response) => setNewData(req, response));
     })
   }, [setNewData, impianto])
   return [data, setData]

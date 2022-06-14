@@ -1,5 +1,4 @@
-import { faClipboardCheck, faToolbox, faChartLine, faUserPlus } from '@fortawesome/free-solid-svg-icons'
-const electron = window.require('electron');
+import { faClipboardCheck, faToolbox, faChartLine } from '@fortawesome/free-solid-svg-icons'
 
 export const getNavItems = (user) => {
   let items = [
@@ -16,17 +15,10 @@ export const getNavItems = (user) => {
       {name: 'Prossime Manutenzioni', link: '/manutenzione/prossime/'},
       {name: 'Andamento Produzione', link: '/manutenzione/produzione/'},
     ]},
-    { title: "Admin", icon: faUserPlus, links: [
-      {name: "Nuova Scheda Controllo", link: '/manutenzione/scheda-controllo/'},
-      {name: 'Pannello Amministratore', action: () => electron.ipcRenderer.invoke('open-admin')},
-    ]}
   ];
   if (!user.impianto?.nome.toLowerCase().includes('ossido')) {
     items.splice(1, 1)
     items[1].links.splice(0, 1)
-  }
-  if (!user.is_staff) {
-    items.pop()
   }
   if (!user.impianto?.nome) {
     items = []

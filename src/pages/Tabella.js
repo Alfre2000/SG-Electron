@@ -10,9 +10,9 @@ import PasswordModal from '../components/PasswordModal/PasswordModal';
 import ViewModal from '../components/ViewModal/ViewModal';
 import { findElementFromID, isDateRecent } from '../utils';
 import { deleteRecord } from './utils';
-import FormWrapper from './FormWrapper';
+import DefaultFormWrapper from './FormWrapper';
 
-function Tabella({ headers, valori, data, setData, FormComponent, url }) {
+function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date }) {
   const [showPasswordDeleteModal, setShowPasswordDeleteModal] = useState("0");
   const [showPasswordModifyModal, setShowPasswordModifyModal] = useState("0");
   const [showConfirmModal, setShowConfirmModal] = useState("0");
@@ -30,10 +30,12 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
   };
   const initialDataModify = showModifyModal !== "0" ? findElementFromID(showModifyModal, data.records.results) : {}
   const initialDataView = showViewModal !== "0" ? findElementFromID(showViewModal, data.records.results) : {}
-  const nCols = headers.length + 5
+  const nCols = date !== false ? headers.length + 5 : headers.length + 3
   FormComponent = FormComponent || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).form) || (showViewModal !== "0" && findElementFromID(showViewModal, data.records.results).form)
 
   url = url || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).url) || (showConfirmModal !== "0" && findElementFromID(showConfirmModal, data.records.results).url) || (showViewModal !== "0" && findElementFromID(showViewModal, data.records.results).url) 
+
+  const FormWrapperComponent = FormWrapper ? FormWrapper : DefaultFormWrapper
   return (
     <>
       {deletedtoast && <MyToast>Record eliminato con successo !</MyToast>}
@@ -62,30 +64,34 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
         show={showModifyModal !== "0"}
         handleClose={() => setShowModifyModal("0")}>
           {FormComponent && (
-            <FormWrapper data={data} setData={setData} initialData={initialDataModify} url={url}
+            <FormWrapperComponent data={data} setData={setData} initialData={initialDataModify} url={url}
               onSuccess={() => {
                 setShowModifyModal("0");
                 setModifytoast(true)
                 setTimeout(() => setModifytoast(false), 4000)
                 }}>
               <FormComponent data={data} initialData={initialDataModify} />
-            </FormWrapper>
+            </FormWrapperComponent>
           )}
       </ModifyModal>
       <ViewModal 
         show={showViewModal !== "0"}
         handleClose={() => setShowViewModal("0")}>
           {FormComponent && (
-            <FormWrapper data={data} setData={setData} initialData={initialDataView} url={url} view={true}>
+            <FormWrapperComponent data={data} setData={setData} initialData={initialDataView} url={url} view={true}>
               <FormComponent data={data} initialData={initialDataView}/>
-            </FormWrapper>
+            </FormWrapperComponent>
           )}
       </ViewModal>
       <Table striped bordered className="align-middle">
         <thead>
           <tr>
-            <th>Data</th>
-            <th>Ora</th>
+            {date !== false && (
+              <>
+                <th>Data</th>
+                <th>Ora</th>
+              </>
+            )}
             {headers.map((el) => (
               <th key={el}>{el}</th>
             ))}
@@ -97,12 +103,21 @@ function Tabella({ headers, valori, data, setData, FormComponent, url }) {
         <tbody>
           {data.records?.results && data.records.results.length > 0 && data.records.results.map((record, i) => (
             <tr key={record.id}>
-              <td>{new Date(record.data).toLocaleDateString()}</td>
-              <td>{new Date(record.data).toLocaleTimeString().slice(0, 5)}</td>
+              {date !== false && (
+                <>
+                  <td>{new Date(record.data).toLocaleDateString()}</td>
+                  <td>{new Date(record.data).toLocaleTimeString().slice(0, 5)}</td>
+                </>
+              )}
               {valori.map((value, idx) => {
-                const campo = value.includes("__")
-                ? findElementFromID(record[value.split("__")[0]], data[value.split("__")[1]]).nome
-                : record[value];
+                let campo;
+                if (value.includes("__")) {
+                  campo = findElementFromID(record[value.split("__")[0]], data[value.split("__")[1]]).nome
+                } else if (value.includes(".")) {
+                  campo = record[value.split(".")[0]][value.split(".")[1]]
+                } else {
+                  campo = record[value];
+                }
                 return (
                   <td key={campo || idx}>{campo || "-"}</td>
                 )

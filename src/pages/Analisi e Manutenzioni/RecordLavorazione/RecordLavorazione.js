@@ -11,7 +11,7 @@ import RecordLavorazioneForm from "./RecordLavorazioneForm";
 function RecordLavorazione() {
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
-    {nome: "articoli", url: URLS.ARTICOLI},
+    {nome: "articoli", url: URLS.ARTICOLI_NESTED},
     {nome: "records", url: URLS.RECORD_LAVORAZIONI},
   ])
   return (

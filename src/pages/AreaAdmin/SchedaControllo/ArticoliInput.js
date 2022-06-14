@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import { Col, Row, ListGroup } from "react-bootstrap";
 import Input from '../../../components/form-components/Input';
-import Select from '../../../components/form-components/Select';
+import SearchSelect from '../../../components/form-components/SearchSelect';
 import { findElementFromID } from '../../../utils';
 
 function ArticoliInput({ data }) {
   const [ricerca, setRicerca] = useState("")
-  const [cliente, setCliente] = useState("")
+  const [cliente, setCliente] = useState(null)
   const [articoli, setArticoli] = useState([])
   const handleAddArticolo = (event) => {
     const selectedArticolo = findElementFromID(event.target.getAttribute("value"), data.articoli)
@@ -20,20 +20,20 @@ function ArticoliInput({ data }) {
   }
   const idSelezionati = articoli.map(articolo => articolo.id)
   const articoliPossibili = data?.articoli 
-    ? data.articoli.filter(articolo => (cliente === "" || articolo.cliente.nome === cliente) && (articolo.nome.toLowerCase().includes(ricerca) || articolo.codice.toLowerCase().includes(ricerca)) && !idSelezionati.includes(articolo.id)) 
+    ? data.articoli.filter(articolo => (!cliente?.value || articolo.cliente.nome === cliente?.value) && (articolo.nome.toLowerCase().includes(ricerca) || articolo.codice.toLowerCase().includes(ricerca)) && !idSelezionati.includes(articolo.id)) 
     : []
   const clienti = data?.articoli ? new Set(data?.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
   return (
     <>
       <Row className="mb-4 bg-slate-100 py-3 rounded-lg px-4">
         <Col xs={6}>
-          <Select 
+          <SearchSelect 
             label="Filtra per cliente:"
             labelProps={{ className: "text-left" }}
             labelCols={5}
-            data={[...clienti].map(cliente => [cliente, cliente])}
+            options={[...clienti].map(cliente => ({ value: cliente, label: cliente}))}
             inputProps={{
-              onChange: (e) => setCliente(e.target.value),
+              onChange: (e) => setCliente(e),
               value: cliente,
               className: "mt-[3px]"
             }}

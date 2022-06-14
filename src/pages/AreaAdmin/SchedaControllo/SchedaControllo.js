@@ -9,10 +9,9 @@ import SchedaControlloForm from './SchedaControlloForm';
 
 function SchedaControllo() {
   const [data, setData] = useGetAPIData([
-    {nome: "articoli", url: URLS.ARTICOLI},
+    {nome: "articoli", url: URLS.ARTICOLI_NESTED},
     {nome: "schede_controllo", url: URLS.SCHEDE_CONTROLLO},
   ])
-  console.log(data);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

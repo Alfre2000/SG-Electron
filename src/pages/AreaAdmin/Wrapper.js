@@ -13,7 +13,7 @@ function Wrapper({ children, defaultNav }) {
   }
   const { user } = useContext(UserContext)
   const navItems = getNavItems(user.user)
-  const title = `Gestione ${user?.user?.impianto?.nome || "Impianti"}`
+  const title = "Area Admin"
   return (
     <>
       <Navbar menu={[...navItems]} navOpen={navOpen} />

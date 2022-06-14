@@ -20,6 +20,7 @@ function Paginator({ data, setData }) {
   const firstPageURL = updateQueryStringParameter(baseURL, 'page', '1');
   const lastPageURL = updateQueryStringParameter(baseURL, 'page', 'last');
   const updateData = (pageLink) => {
+    if (!pageLink.includes('page=')) pageLink = firstPageURL
     apiGet(`${pageLink}&${impianto?.id ? `impianto=${impianto.id}` : ""}`).then((res) => setData(res));
   };
   return (

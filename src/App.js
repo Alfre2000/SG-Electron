@@ -15,6 +15,7 @@ import RicercaDatabase from "./pages/Analisi e Manutenzioni/RicercaDatabase/Rice
 import RecordLavorazione from "./pages/Analisi e Manutenzioni/RecordLavorazione/RecordLavorazione";
 import SelezioneImpianto from "./pages/Analisi e Manutenzioni/SelezioneImpianto/SelezioneImpianto";
 import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
+import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -55,6 +56,7 @@ function App() {
             {/* Area Admin */}
             <Route path="area-admin/">
               <Route path="scheda-controllo/" element={<SchedaControllo />}></Route>
+              <Route path="articolo/" element={<Articolo />}></Route>
             </Route>
           </Routes>
         </HashRouter>
