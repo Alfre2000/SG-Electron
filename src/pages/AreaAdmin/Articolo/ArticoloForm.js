@@ -2,12 +2,18 @@ import { faCirclePlus, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import { Col, Row, Stack, Table } from "react-bootstrap";
+import Select from 'react-select';
 import Fieldset from '../../../components/form-components/Fieldset';
 import Input from '../../../components/form-components/Input';
 import SearchSelect from '../../../components/form-components/SearchSelect';
-import { findElementFromID } from '../../../utils';
+import { customStyle } from '../../../components/form-components/stylesSelect';
+import { convertPeso, findElementFromID, convertSuperficie } from '../../../utils';
 
 function ArticoloForm({ data, initialData, errors, view }) {
+  const [peso, setPeso] = useState(!!initialData ? initialData.peso : "")
+  const [uPeso, setUPeso] = useState({ value: "kg", label: "Kg" })
+  const [superficie, setSuperficie] = useState(!!initialData ? initialData.superficie : "")
+  const [uSuperficie, setUSuperficie] = useState({ value: "dm", label: "dm²" })
   const emptyRichiesta = [{ lavorazione: null, spessore_minimo: "", spessore_massimo: ""}]
   const defaultRichieste = initialData && Object.keys(initialData).length > 0 ? initialData.richieste.map(richiesta => (
     {...richiesta, lavorazione: {
@@ -16,7 +22,18 @@ function ArticoloForm({ data, initialData, errors, view }) {
       }
     })) : emptyRichiesta
   const [richieste, setRichieste] = useState(defaultRichieste)
-  console.log(richieste);
+  const inputStyle = {...customStyle,
+    control: (provided, state) => ({
+      ...provided,
+      borderColor: state.isFocused ? "#86b7fe" : "#ced4da",
+      boxShadow: state.isFocused ? "0 0 0 0.25rem rgb(13 110 253 / 25%)" : "none",
+      minHeight: "31px",
+      height: "31px",
+      borderRadius: "0px 4px 4px 0px",
+      borderLeft: "none",
+      minWidth: "75px",
+    }),
+  }
   return (
     <>
       <Row className="mb-4">
@@ -62,23 +79,61 @@ function ArticoloForm({ data, initialData, errors, view }) {
       </Row>
       <Fieldset title="caratteristiche fisiche">
         <Row className="mb-3">
-          <Col>
-            <Input 
-              name="peso"
-              label="Peso (kg):"
-              labelCols={5}
-              inputProps={{ type: "number" }}
-              errors={errors}
-            />
+          <Col className="flex">
+              <input hidden name="peso" className="hidden" value={convertPeso(uPeso.value, "kg", peso)}/>
+              <Input 
+                label="Peso:"
+                labelCols={5}
+                errors={errors}
+                inputProps={{
+                  type: "number",
+                  value: peso,
+                  onChange: (e) => setPeso(e.target.value),
+                  className: "rounded-r-none text-center"
+                }}
+              />
+              <Select
+                placeholder=""
+                noOptionsMessage={() => "Nessun risultato"}
+                isClearable={false}
+                styles={inputStyle}
+                options={[{value: "kg", label: "Kg"}, {value: "g", label: "g"}, {value: "mg", label: "mg"}]}
+                value={uPeso}
+                onChange={(selection) => {
+                  const newUnità = selection.value
+                  const oldUnità = uPeso.value
+                  setPeso(convertPeso(oldUnità, newUnità, peso))
+                  setUPeso(selection)
+                }}
+              />
           </Col>
-          <Col>
+          <Col className="flex">
+            <input hidden name="superficie" className="hidden" value={convertSuperficie(uSuperficie.value, "dm", superficie)}/>
             <Input 
-              name="superficie"
-              label="Superficie (dm²):"
+              label="Superficie:"
               labelCols={5}
-              inputProps={{ type: "number" }}
+              inputProps={{
+                type: "number",
+                value: superficie,
+                onChange: (e) => setSuperficie(e.target.value),
+                className: "rounded-r-none text-center"
+              }}
               errors={errors}
             />
+            <Select
+                placeholder=""
+                noOptionsMessage={() => "Nessun risultato"}
+                isClearable={false}
+                styles={inputStyle}
+                options={[{value: "m", label: "m²"}, { value: "dm", label: "dm²" }, {value: "cm", label: "cm²"}]}
+                value={uSuperficie}
+                onChange={(selection) => {
+                  const newUnità = selection.value
+                  const oldUnità = uSuperficie.value
+                  setSuperficie(convertSuperficie(oldUnità, newUnità, superficie))
+                  setUSuperficie(selection)
+                }}
+              />
           </Col>
         </Row>
       </Fieldset>

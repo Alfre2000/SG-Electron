@@ -48,3 +48,26 @@ export const isDateRecent = (date) => {
   const now = new Date()
   return Math.abs(now - recordDate) / 36e5 < 2;
 }
+
+export const convertPeso = (prev, current, amount) => {
+  if (prev === current) return amount;
+  let result;
+  if (current === "g" && prev === "kg") result = amount * 1000
+  if (current === "mg" && prev === "kg") result = amount * 1000 * 1000
+  if (current === "kg" && prev === "g") result = amount / 1000
+  if (current === "mg" && prev === "g") result = amount * 1000
+  if (current === "kg" && prev === "mg") result = amount / 1000 / 1000
+  if (current === "g" && prev === "mg") result = amount / 1000
+  return result
+}
+export const convertSuperficie = (prev, current, amount) => {
+  if (prev === current) return amount;
+  let result;
+  if (current === "m" && prev === "dm") result = amount / 100
+  if (current === "cm" && prev === "dm") result = amount * 100
+  if (current === "dm" && prev === "m") result = amount * 100
+  if (current === "cm" && prev === "m") result = amount * 100 * 100
+  if (current === "m" && prev === "cm") result = amount / 100 / 100
+  if (current === "dm" && prev === "cm") result = amount / 100
+  return result
+}

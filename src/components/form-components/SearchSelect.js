@@ -4,46 +4,7 @@ import { capitalize } from "../../utils";
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { parseFromAPI } from './../../pages/utils';
-
-const customStyle = {
-  option: (provided, state) => ({
-    ...provided,
-    fontSize: "0.875rem",
-    padding: "5px",
-    paddingLeft: "15px",
-    fontWeight: "400",
-    textAlign: "center",
-  }),
-  singleValue: (provided, state) => ({
-    ...provided,
-    fontSize: "0.875rem",
-  }),
-  clearIndicator: (provided, state) => ({
-    ...provided,
-    display: "none",
-  }),
-  control: (provided, state) => ({
-    ...provided,
-    borderColor: state.isFocused ? "#86b7fe" : "#ced4da",
-    boxShadow: state.isFocused ? "0 0 0 0.25rem rgb(13 110 253 / 25%)" : "none",
-    minHeight: "31px",
-    height: "31px",
-  }),
-  input: (provided, state) => ({
-    ...provided, 
-    padding: "0px",
-    margin: "0px",
-  }),
-  valueContainer: (provided, state) => ({
-    ...provided,
-    paddingTop: "0px",
-    paddingBottom: "0px",
-  }),
-  dropdownIndicator: (provided, state) => ({
-    ...provided,
-    padding: "0px 5px"
-  })
-}
+import { customStyle } from "./stylesSelect";
 
 function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors }) {
   const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
