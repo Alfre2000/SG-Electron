@@ -1,38 +1,27 @@
-import { faCirclePlus, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import { Col, Row, Stack, Table } from "react-bootstrap";
-import Select from 'react-select';
 import Fieldset from '../../../components/form-components/Fieldset';
 import Input from '../../../components/form-components/Input';
+import InputMisura from '../../../components/form-components/InputMisura';
 import SearchSelect from '../../../components/form-components/SearchSelect';
-import { customStyle } from '../../../components/form-components/stylesSelect';
+import MinusIcon from '../../../components/Icons/MinusIcon';
+import PlusIcon from '../../../components/Icons/PlusIcon';
 import { convertPeso, findElementFromID, convertSuperficie } from '../../../utils';
 
 function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
-  const [peso, setPeso] = useState(!!initialData ? initialData.peso : "")
-  const [uPeso, setUPeso] = useState({ value: "kg", label: "Kg" })
-  const [superficie, setSuperficie] = useState(!!initialData ? initialData.superficie : "")
-  const [uSuperficie, setUSuperficie] = useState({ value: "dm", label: "dm²" })
-  const emptyRichiesta = [{ lavorazione: null, spessore_minimo: "", spessore_massimo: ""}]
+  const emptyRichiesta = { lavorazione: null, spessore_minimo: "", spessore_massimo: ""}
   const defaultRichieste = initialData && Object.keys(initialData).length > 0 ? initialData.richieste.map(richiesta => (
     {...richiesta, lavorazione: {
        value: richiesta.lavorazione,
        label: findElementFromID(richiesta.lavorazione, data.lavorazioni).nome
       }
-    })) : emptyRichiesta
+    })) : [emptyRichiesta]
   const [richieste, setRichieste] = useState(defaultRichieste)
-  const inputStyle = {...customStyle,
-    control: (provided, state) => ({
-      ...provided,
-      borderColor: state.isFocused ? "#86b7fe" : "#ced4da",
-      boxShadow: state.isFocused ? "0 0 0 0.25rem rgb(13 110 253 / 25%)" : "none",
-      minHeight: "31px",
-      height: "31px",
-      borderRadius: "0px 4px 4px 0px",
-      borderLeft: "none",
-      minWidth: "75px",
-    }),
+
+  const handleModifyRichiesta = (newValue, idxRichiesta, campo) => {
+    let newRichieste = [...richieste]
+    newRichieste[idxRichiesta][campo] = newValue
+    setRichieste(newRichieste)
   }
   return (
     <>
@@ -82,60 +71,22 @@ function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
       <Fieldset title="caratteristiche fisiche">
         <Row className="mb-3">
           <Col className="flex justify-center">
-              <input hidden name="peso" className="hidden" value={convertPeso(uPeso.value, "kg", peso)}/>
-              <Input 
-                label="Peso:"
-                labelCols={5}
-                errors={errors}
-                inputProps={{
-                  type: "number",
-                  value: peso,
-                  onChange: (e) => setPeso(e.target.value),
-                  className: "rounded-r-none text-center"
-                }}
-              />
-              <Select
-                placeholder=""
-                noOptionsMessage={() => "Nessun risultato"}
-                isClearable={false}
-                styles={inputStyle}
-                options={[{value: "kg", label: "Kg"}, {value: "g", label: "g"}, {value: "mg", label: "mg"}]}
-                value={uPeso}
-                onChange={(selection) => {
-                  const newUnità = selection.value
-                  const oldUnità = uPeso.value
-                  setPeso(convertPeso(oldUnità, newUnità, peso))
-                  setUPeso(selection)
-                }}
-              />
-          </Col>
-          <Col className="flex justify-center">
-            <input hidden name="superficie" className="hidden" value={convertSuperficie(uSuperficie.value, "dm", superficie)}/>
-            <Input 
-              label="Superficie:"
-              labelCols={5}
-              inputProps={{
-                type: "number",
-                value: superficie,
-                onChange: (e) => setSuperficie(e.target.value),
-                className: "rounded-r-none text-center"
-              }}
+            <InputMisura 
+              name="peso"
+              options={[{value: "kg", label: "Kg"}, {value: "g", label: "g"}, {value: "mg", label: "mg"}]}
+              convFunction={convertPeso}
+              initialData={{ value: initialData?.peso, u: { value: "kg", label: "kg" } }}
               errors={errors}
             />
-            <Select
-                placeholder=""
-                noOptionsMessage={() => "Nessun risultato"}
-                isClearable={false}
-                styles={inputStyle}
-                options={[{value: "m", label: "m²"}, { value: "dm", label: "dm²" }, {value: "cm", label: "cm²"}]}
-                value={uSuperficie}
-                onChange={(selection) => {
-                  const newUnità = selection.value
-                  const oldUnità = uSuperficie.value
-                  setSuperficie(convertSuperficie(oldUnità, newUnità, superficie))
-                  setUSuperficie(selection)
-                }}
-              />
+          </Col>
+          <Col className="flex justify-center">
+            <InputMisura 
+              name="superficie"
+              options={[{value: "m", label: "m²"}, { value: "dm", label: "dm²" }, {value: "cm", label: "cm²"}]}
+              convFunction={convertSuperficie}
+              initialData={{ value: initialData?.superficie, u: { value: "dm", label: "dm²" } }}
+              errors={errors}
+            />
           </Col>
         </Row>
       </Fieldset>
@@ -165,11 +116,8 @@ function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
                     initialData={initialData}
                     inputProps={{
                       onChange: (newValue) => {
-                        newValue.value = parseInt(newValue.value)
-                        let newRichieste = [...richieste]
-                        newRichieste[idx].lavorazione = newValue
-                        setRichieste(newRichieste)
-                      }, 
+                        handleModifyRichiesta({...newValue, value: parseInt(newValue.value)}, idx, "lavorazione")
+                      },
                       value: richiesta.lavorazione,
                       isDisabled: view
                     }}
@@ -182,11 +130,7 @@ function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
                     errors={errors}
                     inputProps={{
                       type: "number",
-                      onChange: (event) => {
-                        let newRichieste = [...richieste]
-                        newRichieste[idx].spessore_minimo = event.target.value
-                        setRichieste(newRichieste)
-                      }, 
+                      onChange: (event) => handleModifyRichiesta(event.target.value, idx, "spessore_minimo"),
                       value: richiesta.spessore_minimo
                     }}
                   />
@@ -198,31 +142,25 @@ function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
                     errors={errors}
                     inputProps={{
                       type: "number",
-                      onChange: (event) => {
-                        let newRichieste = [...richieste]
-                        newRichieste[idx].spessore_massimo = event.target.value
-                        setRichieste(newRichieste)
-                      }, 
+                      onChange: (event) => handleModifyRichiesta(event.target.value, idx, "spessore_massimo"),
                       value: richiesta.spessore_massimo
                     }}
                   />
                 </td>
                 <td>
-                  <FontAwesomeIcon
-                    icon={faMinusCircle}
-                    size="lg"
-                    className={`${view ? "cursor-not-allowed" : "cursor-pointer"} text-nav-blue hover:text-blue-800`}
-                    onClick={() => !view && setRichieste(richieste.filter((r, i) => i !== idx))}/>
+                  <MinusIcon 
+                    disabled={view}
+                    onClick={() => setRichieste(richieste.filter((_, i) => i !== idx))}
+                  />
                 </td>
               </tr>
             ))}
             <tr>
               <td colSpan={4}>
-                <FontAwesomeIcon
-                  icon={faCirclePlus}
-                  size="lg"
-                  className={`${view ? "cursor-not-allowed" : "cursor-pointer"} text-nav-blue hover:text-blue-800`}
-                  onClick={() => !view && setRichieste([...richieste, { lavorazione: null, minimo: "", massimo: "" }])}/>
+                <PlusIcon
+                  disabled={view}
+                  onClick={() => setRichieste([...richieste, emptyRichiesta])}
+                />
               </td>
             </tr>
           </tbody>

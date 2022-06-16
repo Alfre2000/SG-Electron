@@ -1,35 +1,36 @@
-import { faCirclePlus, faMinusCircle, faPlus, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Col, Row, Form, Stack, Table, Button } from "react-bootstrap";
+import Fieldset from "../../../components/form-components/Fieldset";
 import Input from "../../../components/form-components/Input";
+import MinusIcon from "../../../components/Icons/MinusIcon";
+import PlusIcon from "../../../components/Icons/PlusIcon";
 import ArticoliInput from "./ArticoliInput";
+import { addToNestedArray, modifyNestedObject, removeFromNestedArray } from "../../utils";
 
-function SchedaControlloForm({ data, setData, initialData, errors }) {
+function SchedaControlloForm({ data, setData, initialData, errors, view }) {
+  const emptyControllo = { nome: "", frequenza: "", responsabilità: ""}
   const getSezioneVuota = (n) => {
     const nextLetter = String.fromCharCode(65 + n)
-    return { nome: `${nextLetter}. `, controlli: [
-      { nome: "", frequenza: "", responsabilità: ""}, { nome: "", frequenza: "", responsabilità: ""}
-    ]}
+    return { nome: `${nextLetter}. `, controlli: [ emptyControllo ]}
   }
   const [sezioni, setSezioni] = useState(!!initialData ? initialData.sezioni : [getSezioneVuota(0)])
   return (
     <>
       <Row className="mb-4 mt-2">
         <Input
-          label="Nome Scheda di Controllo:"
+          label="Nome scheda di controllo:"
           labelProps={{ className: "text-left" }}
           name="nome"
           errors={errors}
           inputProps={{ className: "text-left px-3", required: true }}
         />
       </Row>
-      <fieldset className="border-[groove] border-2 px-8 py-1 m-0 rounded-md border-blue-100" style={{ borderStyle: "groove" }}>
-        <legend className="mb-2 px-3 text-left uppercase font-semibold text-nav-blue text-lg float-none w-fit">Articoli collegati alla scheda di controllo</legend>
+      <Fieldset title="Articoli collegati alla scheda di controllo">
         <ArticoliInput data={data} setData={setData} initialData={initialData} />
-      </fieldset>
-      <fieldset className="mt-8 border-[groove] border-2 px-8 py-1 mx-0 rounded-md border-blue-100" style={{ borderStyle: "groove" }}>
-        <legend className="mb-2 px-3 text-left uppercase font-semibold text-nav-blue text-lg float-none w-fit">Immagini di supporto</legend>
+      </Fieldset>
+      <Fieldset title="Immagini di supporto">
         <Stack gap={2} className="mb-2">
           <Input
             label="Misurazione spessore del trattamento:"
@@ -48,9 +49,8 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
             inputProps={{ className: "text-left px-3", type: "file" }}
           />
         </Stack>
-      </fieldset>
-      <fieldset className="my-8 border-[groove] border-2 px-8 py-1 mx-0 rounded-md border-blue-100" style={{ borderStyle: "groove" }}>
-        <legend className="mb-4 px-3 text-left uppercase font-semibold text-nav-blue text-lg float-none w-fit">Controlli da effettuare</legend>
+      </Fieldset>
+      <Fieldset title="Controlli da effettuare">
         {sezioni.map((sezione, idxSezione) => (
           <div key={idxSezione} className="mb-8">
             <div className="py-2 text-sm border-t-0 border-r-0 border-l-0 font-semibold  text-white bg-nav-blue rounded-t-md px-4">
@@ -68,13 +68,7 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
                     inputProps={{ 
                       className: "text-left px-3",
                       value: sezione.nome,
-                      onChange: (event) => {
-                        let newSezioni = [...sezioni]
-                        let changedSezione = {...sezioni[idxSezione]}
-                        changedSezione.nome = event.target.value
-                        newSezioni[idxSezione] = changedSezione
-                        setSezioni(newSezioni)
-                      }
+                      onChange: (e) => setSezioni(modifyNestedObject(sezioni, `${idxSezione}__nome`, e.target.value))
                     }}
                   />
                 </Col>
@@ -97,80 +91,56 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
                 </tr>
               </thead>
               <tbody>
-                {sezione.controlli.map((controllo, idxControllo) => (
+                {sezione.controlli.map((controllo, idxControllo) => {
+                  const richiestePath = `${idxSezione}__controlli__${idxControllo}`
+                  const basePath = `sezioni__${richiestePath}`
+                  return (
                   <tr key={idxControllo}>
                     <td>
                       {initialData && (
-                        <input hidden name={`sezioni__${idxSezione}__controlli__${idxControllo}__id`} className="hidden" defaultValue={controllo.id || undefined}/>
+                        <input hidden name={`${basePath}__id`} className="hidden" defaultValue={controllo.id || undefined}/>
                       )}
                       <Form.Control
                         size="sm"
                         as="textarea"
                         rows={1}
-                        name={`sezioni__${idxSezione}__controlli__${idxControllo}__nome`}
+                        name={`${basePath}__nome`}
                         value={controllo.nome}
-                        onChange= {(event) => {
-                          let newSezioni = [...sezioni]
-                          let changedSezione = {...sezioni[idxSezione]}
-                          changedSezione.controlli[idxControllo].nome = event.target.value
-                          newSezioni[idxSezione] = changedSezione
-                          setSezioni(newSezioni)
-                        }} />
+                        onChange={(e) => setSezioni(modifyNestedObject(sezioni, `${richiestePath}__nome`, e.target.value))}
+                        />
                     </td>
                     <td>
                       <Form.Control
                         size="sm"
-                        name={`sezioni__${idxSezione}__controlli__${idxControllo}__frequenza`}
+                        name={`${basePath}__frequenza`}
                         value={controllo.frequenza}
-                        onChange= {(event) => {
-                          let newSezioni = [...sezioni]
-                          let changedSezione = {...sezioni[idxSezione]}
-                          changedSezione.controlli[idxControllo].frequenza = event.target.value
-                          newSezioni[idxSezione] = changedSezione
-                          setSezioni(newSezioni)
-                        }} />
+                        onChange={(e) => setSezioni(modifyNestedObject(sezioni, `${richiestePath}__frequenza`, e.target.value))}
+                        />
                     </td>
                     <td>
                       <Form.Control
                         size="sm"
-                        name={`sezioni__${idxSezione}__controlli__${idxControllo}__responsabilità`}
+                        name={`${basePath}__responsabilità`}
                         value={controllo.responsabilità}
-                        onChange= {(event) => {
-                          let newSezioni = [...sezioni]
-                          let changedSezione = {...sezioni[idxSezione]}
-                          changedSezione.controlli[idxControllo].responsabilità = event.target.value
-                          newSezioni[idxSezione] = changedSezione
-                          setSezioni(newSezioni)
-                        }} />
+                        onChange={(e) => setSezioni(
+                          modifyNestedObject(sezioni, `${richiestePath}__responsabilità`, e.target.value)
+                        )}
+                        />
                     </td>
                     <td>
-                      <FontAwesomeIcon
-                        icon={faMinusCircle}
-                        size="lg"
-                        className="cursor-pointer text-nav-blue hover:text-blue-800"
-                        onClick={() => {
-                          let newSezioni = [...sezioni]
-                          let changedSezione = {...sezioni[idxSezione]}
-                          changedSezione.controlli.splice(idxControllo, 1)
-                          newSezioni[idxSezione] = changedSezione
-                          setSezioni(newSezioni)
-                        }}/>
+                      <MinusIcon 
+                        disabled={view}
+                        onClick={() => setSezioni(removeFromNestedArray(sezioni, `${idxSezione}__controlli`, idxControllo))}
+                      />
                     </td>
                   </tr>
-                ))}
-                <tr className="">
-                  <td colSpan={4} className="">
-                    <FontAwesomeIcon 
-                      icon={faCirclePlus}
-                      size="lg"
-                      className="cursor-pointer text-nav-blue hover:text-blue-800" 
-                      onClick={() => {
-                        let newSezioni = [...sezioni]
-                        let changedSezione = {...sezioni[idxSezione]}
-                        changedSezione.controlli.push({ nome: "", frequenza: "", responsabilità: ""})
-                        newSezioni[idxSezione] = changedSezione
-                        setSezioni(newSezioni)
-                      }}/>
+                )})}
+                <tr>
+                  <td colSpan={4}>
+                    <PlusIcon 
+                      disabled={view}
+                      onClick={() => setSezioni(addToNestedArray(sezioni, `${idxSezione}__controlli`, emptyControllo))}
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -186,7 +156,7 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
             Sezione
           </Button>
         </div>
-      </fieldset>
+      </Fieldset>
     </>
   );
 }

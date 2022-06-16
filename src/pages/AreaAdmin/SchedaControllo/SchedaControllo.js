@@ -1,20 +1,27 @@
-import React from 'react'
+import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from '../../../components/PageTitle/PageTitle'
-import useGetAPIData from '../../../hooks/useGetAPIData';
-import { URLS } from '../../../urls';
-import FormWrapper from '../FormWrapper';
-import Wrapper from '../../AreaAdmin/Wrapper'
-import SchedaControlloForm from './SchedaControlloForm';
-import Tabella from '../../Tabella';
+import PageTitle from "../../../components/PageTitle/PageTitle";
+import useGetAPIData from "../../../hooks/useGetAPIData";
+import { URLS } from "../../../urls";
+import FormWrapper from "../FormWrapper";
+import Wrapper from "../../AreaAdmin/Wrapper";
+import SchedaControlloForm from "./SchedaControlloForm";
+import { apiGet } from "../../../api/utils";
+import Tabella from "../../Tabella";
 
 function SchedaControllo() {
   const [data, setData] = useGetAPIData([
-    {nome: "articoli", url: URLS.ARTICOLI_NESTED},
-    {nome: "records", url: URLS.SCHEDE_CONTROLLO},
-    {nome: "clienti", url: URLS.CLIENTI},
-    {nome: "lavorazioni", url: URLS.LAVORAZIONI},
-  ])
+    { nome: "articoli", url: URLS.ARTICOLI_NESTED },
+    { nome: "records", url: URLS.SCHEDE_CONTROLLO },
+    { nome: "clienti", url: URLS.CLIENTI },
+    { nome: "lavorazioni", url: URLS.LAVORAZIONI },
+  ]);
+
+  const updateData = (data) => {
+    apiGet(URLS.ARTICOLI_NESTED).then((resArticoli) => {
+      setData({ ...data, articoli: resArticoli });
+    });
+  };
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -26,7 +33,12 @@ function SchedaControllo() {
                 Nuova Scheda di Controllo
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setData} url={URLS.SCHEDE_CONTROLLO}>
+                <FormWrapper
+                  data={data}
+                  setData={setData}
+                  url={URLS.SCHEDE_CONTROLLO}
+                  onSuccess={updateData}
+                >
                   <SchedaControlloForm data={data} setData={setData} />
                 </FormWrapper>
               </Card.Body>
@@ -43,12 +55,13 @@ function SchedaControllo() {
                 <Tabella
                   date={false}
                   headers={["Nome"]}
-                  valori={['nome']}
+                  valori={["nome"]}
                   data={data}
                   setData={setData}
                   FormComponent={SchedaControlloForm}
                   url={URLS.SCHEDE_CONTROLLO}
                   FormWrapper={FormWrapper}
+                  onSuccess={updateData}
                 />
               </Card.Body>
             </Card>
@@ -56,7 +69,7 @@ function SchedaControllo() {
         </Row>
       </Container>
     </Wrapper>
-  )
+  );
 }
 
-export default SchedaControllo
+export default SchedaControllo;

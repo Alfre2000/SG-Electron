@@ -12,7 +12,7 @@ import { findElementFromID, isDateRecent } from '../utils';
 import { deleteRecord } from './utils';
 import DefaultFormWrapper from './FormWrapper';
 
-function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date }) {
+function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess }) {
   const [showPasswordDeleteModal, setShowPasswordDeleteModal] = useState("0");
   const [showPasswordModifyModal, setShowPasswordModifyModal] = useState("0");
   const [showConfirmModal, setShowConfirmModal] = useState("0");
@@ -22,7 +22,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
   const [modifytoast, setModifytoast] = useState(false)
   const handleRemove = (authed, show, setShow) => {
     if (authed) {
-      deleteRecord(show, data, setData, url);
+      deleteRecord(show, data, setData, url, onSuccess);
       setDeletedtoast(true)
       setTimeout(() => setDeletedtoast(false), 4000)
     }
@@ -65,8 +65,10 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
         handleClose={() => setShowModifyModal("0")}>
           {FormComponent && (
             <FormWrapperComponent data={data} setData={setData} initialData={initialDataModify} url={url}
-              onSuccess={() => {
+              onSuccess={(newData) => {
                 setShowModifyModal("0");
+                if (!onSuccess && newData) setData(newData);
+                else if (onSuccess) onSuccess(newData);
                 setModifytoast(true)
                 setTimeout(() => setModifytoast(false), 4000)
                 }}>

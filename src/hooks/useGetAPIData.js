@@ -27,6 +27,7 @@ function useGetAPIData(requests) {
       params = new URLSearchParams(params)
       const url = req.url + '?' + params.toString()
       // const url = `${req.url}?${}${impianto?.id ? `impianto=${impianto.id}` : ""}`
+      console.log(url);
       apiGet(url).then((response) => setNewData(req, response));
     })
   }, [setNewData, impianto])

@@ -25,7 +25,14 @@ function ArticoliInput({ data, setData, initialData }) {
   }
   const idSelezionati = articoli.map(articolo => articolo.id)
   const articoliPossibili = data?.articoli 
-    ? data.articoli.filter(articolo => articolo.scheda_controllo === null && (!cliente?.value || articolo.cliente.nome === cliente?.value) && (articolo.nome.toLowerCase().includes(ricerca) || articolo.codice.toLowerCase().includes(ricerca)) && !idSelezionati.includes(articolo.id)) 
+    ? data.articoli.filter(articolo => {
+      const noScheda = articolo.scheda_controllo === null
+      const tolto = initialData && initialData.id === articolo.scheda_controllo?.id
+      const nonSelezionato = !idSelezionati.includes(articolo.id)
+      const clienteFilter = !cliente?.value || articolo.cliente.nome === cliente?.value
+      const articoloNomeFilter = articolo.nome.toLowerCase().includes(ricerca) || articolo.codice.toLowerCase().includes(ricerca)
+      return (noScheda || tolto) && nonSelezionato && clienteFilter &&  articoloNomeFilter
+    }) 
     : []
   const clienti = data?.articoli ? new Set(data?.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
   return (

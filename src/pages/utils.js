@@ -1,13 +1,14 @@
 import { apiDelete } from "../api/utils";
-import { traverse } from "../utils";
 
-export const deleteRecord = (recordID, data, setData, baseURL) => {
+export const deleteRecord = (recordID, data, setData, baseURL, onDelete) => {
   apiDelete(`${baseURL}${recordID}/`)
     .then((res) => {
-      setData({
+      const newData = {
         ...data,
         records: {...data.records, results: data.records.results.filter(el => el.id !== recordID)},
-      });
+      }
+      if (onDelete) onDelete(newData);
+      else setData(newData);
     })
     .catch((err) => console.log(err));
 };
@@ -68,4 +69,33 @@ const parseNestedObject = (name, formData, initialFormData) => {
       }
     }
   }
+}
+
+const findNestedElement = (obj, path) => {
+  let stack = path.split('__');
+  while(stack.length > 1){
+    obj = obj[stack.shift()];
+  }
+  return obj[stack.shift()]
+}
+
+export const modifyNestedObject = (obj, path, newValue) => {
+  obj = Array.isArray(obj) ? [...obj] : {...obj}
+  let startObj = obj
+  let stack = path.split('__');
+  while(stack.length > 1){
+    obj = obj[stack.shift()];
+  }
+  obj[stack.shift()] = newValue;
+  return startObj
+}
+
+export const addToNestedArray = (obj, path, element) => {
+  let newValue = [...findNestedElement(obj, path), element]
+  return modifyNestedObject(obj, path, newValue)
+} 
+
+export const removeFromNestedArray = (obj, path, idx) => {
+  let newValue = [...findNestedElement(obj, path)].filter((_, i) => idx !== i)
+  return modifyNestedObject(obj, path, newValue)
 }
