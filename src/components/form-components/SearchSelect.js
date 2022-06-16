@@ -31,6 +31,7 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
           options={options}
           defaultValue={defaultValue ? options.filter(o => o.value === defaultValue || o.label === defaultValue)[0] : null}
           {...inputProps}
+          errors={errorsValue}
         />
         {errorsValue && (
           <p type="invalid" className="text-xs text-center pt-1 text-red-700">

@@ -28,8 +28,8 @@ export const parseFromAPI = (data, name) => {
 export const parseFormData = (formData, update) => {
   const formDataCopy = {...formData}
   Object.keys(formDataCopy).forEach(key => {
-    if ((update !== true || key.endsWith('id')) && formData[key] === "") delete formData[key]
-    else if (formData[key]?.constructor.name === "File" && formData[key].name === "" && formData[key].size === 0) delete formData[key];
+    // if ((update !== true || key.endsWith('id')) && formData[key] === "") delete formData[key]
+    if (formData[key]?.constructor.name === "File" && formData[key].name === "" && formData[key].size === 0) delete formData[key];
     else if (key.split('__').length >= 3) { 
       parseNestedObject(key, formData, formDataCopy)
     }
@@ -107,7 +107,7 @@ const cleanObj = (obj) => {
       obj[key] = obj[key].filter(el => el !== undefined)
     } else if (typeof obj[key] === 'object' && obj[key] !== null) {
       cleanObj(obj[key])
-    } else if (obj[key] === undefined) {
+    } else if (obj[key] === undefined || obj[key] === null || obj[key] === "") {
       delete obj[key]
     }
   })
