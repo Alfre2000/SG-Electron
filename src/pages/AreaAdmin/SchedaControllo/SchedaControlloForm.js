@@ -103,7 +103,7 @@ function SchedaControlloForm({ data, setData, initialData, errors, view }) {
                       <Form.Control
                         size="sm"
                         as="textarea"
-                        rows={1}
+                        rows={initialData ? 2 : 1}
                         name={`${basePath}__nome`}
                         value={controllo.nome}
                         onChange={(e) => setSezioni(modifyNestedObject(sezioni, `${richiestePath}__nome`, e.target.value))}

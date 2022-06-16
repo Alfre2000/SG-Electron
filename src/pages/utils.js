@@ -34,6 +34,7 @@ export const parseFormData = (formData, update) => {
       parseNestedObject(key, formData, formDataCopy)
     }
   })
+  cleanObj(formData)
 }
 
 const parseNestedObject = (name, formData, initialFormData) => {
@@ -98,4 +99,16 @@ export const addToNestedArray = (obj, path, element) => {
 export const removeFromNestedArray = (obj, path, idx) => {
   let newValue = [...findNestedElement(obj, path)].filter((_, i) => idx !== i)
   return modifyNestedObject(obj, path, newValue)
+}
+
+const cleanObj = (obj) => {
+  Object.keys(obj).forEach(key => {
+    if (Array.isArray(obj[key])) {
+      obj[key] = obj[key].filter(el => el !== undefined)
+    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+      cleanObj(obj[key])
+    } else if (obj[key] === undefined) {
+      delete obj[key]
+    }
+  })
 }

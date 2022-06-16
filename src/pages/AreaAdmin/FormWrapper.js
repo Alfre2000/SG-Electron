@@ -102,7 +102,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
       }
     })
     parseFormData(formData, true)
-    console.log(formData);
+    console.log({...formData});
     apiUpdate(url + initialData.id + '/', formData).then(response => {
       const records = data.records.results.map(record => {
         if (record.id === response.id) {
