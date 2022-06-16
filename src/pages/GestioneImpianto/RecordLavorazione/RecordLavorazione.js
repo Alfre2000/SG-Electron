@@ -13,7 +13,7 @@ function RecordLavorazione() {
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "articoli", url: URLS.ARTICOLI_NESTED},
     {nome: "records", url: URLS.RECORD_LAVORAZIONI},
-  ])
+  ], true)
   return (
     <Wrapper title="Scheda di Controllo">
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
