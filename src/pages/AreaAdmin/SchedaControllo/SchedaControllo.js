@@ -3,14 +3,15 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import PageTitle from '../../../components/PageTitle/PageTitle'
 import useGetAPIData from '../../../hooks/useGetAPIData';
 import { URLS } from '../../../urls';
-import FormWrapper from '../../FormWrapper';
+import FormWrapper from '../FormWrapper';
 import Wrapper from '../../AreaAdmin/Wrapper'
 import SchedaControlloForm from './SchedaControlloForm';
+import Tabella from '../../Tabella';
 
 function SchedaControllo() {
   const [data, setData] = useGetAPIData([
     {nome: "articoli", url: URLS.ARTICOLI_NESTED},
-    {nome: "schede_controllo", url: URLS.SCHEDE_CONTROLLO},
+    {nome: "records", url: URLS.SCHEDE_CONTROLLO},
     {nome: "clienti", url: URLS.CLIENTI},
     {nome: "lavorazioni", url: URLS.LAVORAZIONI},
   ])
@@ -28,6 +29,27 @@ function SchedaControllo() {
                 <FormWrapper data={data} setData={setData} url={URLS.SCHEDE_CONTROLLO}>
                   <SchedaControlloForm data={data} setData={setData} />
                 </FormWrapper>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row className="mt-10">
+          <Col xs={12}>
+            <Card>
+              <Card.Header as="h6" className="font-semibold text-lg">
+                Ultimi schede controllo create
+              </Card.Header>
+              <Card.Body>
+                <Tabella
+                  date={false}
+                  headers={["Nome"]}
+                  valori={['nome']}
+                  data={data}
+                  setData={setData}
+                  FormComponent={SchedaControlloForm}
+                  url={URLS.SCHEDE_CONTROLLO}
+                  FormWrapper={FormWrapper}
+                />
               </Card.Body>
             </Card>
           </Col>

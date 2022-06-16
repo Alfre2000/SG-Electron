@@ -12,7 +12,7 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
       { nome: "", frequenza: "", responsabilità: ""}, { nome: "", frequenza: "", responsabilità: ""}
     ]}
   }
-  const [sezioni, setSezioni] = useState([getSezioneVuota(0), getSezioneVuota(1)])
+  const [sezioni, setSezioni] = useState(!!initialData ? initialData.sezioni : [getSezioneVuota(0)])
   return (
     <>
       <Row className="mb-4 mt-2">
@@ -26,7 +26,7 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
       </Row>
       <fieldset className="border-[groove] border-2 px-8 py-1 m-0 rounded-md border-blue-100" style={{ borderStyle: "groove" }}>
         <legend className="mb-2 px-3 text-left uppercase font-semibold text-nav-blue text-lg float-none w-fit">Articoli collegati alla scheda di controllo</legend>
-        <ArticoliInput data={data} setData={setData} />
+        <ArticoliInput data={data} setData={setData} initialData={initialData} />
       </fieldset>
       <fieldset className="mt-8 border-[groove] border-2 px-8 py-1 mx-0 rounded-md border-blue-100" style={{ borderStyle: "groove" }}>
         <legend className="mb-2 px-3 text-left uppercase font-semibold text-nav-blue text-lg float-none w-fit">Immagini di supporto</legend>
@@ -56,12 +56,15 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
             <div className="py-2 text-sm border-t-0 border-r-0 border-l-0 font-semibold  text-white bg-nav-blue rounded-t-md px-4">
               <Row>
                 <Col xs={11}>
+                  {initialData && (
+                    <input hidden name={`sezioni__${idxSezione}__id`} className="hidden" defaultValue={sezione.id || undefined}/>
+                  )}
                   <Input 
                     label="Nome sezione:"
                     labelCols={3}
                     labelProps={{ className: "text-left" }}
                     errors={errors}
-                    name="sezione-"
+                    name={`sezioni__${idxSezione}__nome`}
                     inputProps={{ 
                       className: "text-left px-3",
                       value: sezione.nome,
@@ -84,7 +87,7 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
                 </Col>
               </Row>
             </div>
-            <Table bordered className="align-middle text-sm">
+            <Table bordered className="align-middle text-sm text-center">
               <thead>
                 <tr className="uppercase">
                   <th className="w-[45%]">nome</th>
@@ -97,11 +100,14 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
                 {sezione.controlli.map((controllo, idxControllo) => (
                   <tr key={idxControllo}>
                     <td>
+                      {initialData && (
+                        <input hidden name={`sezioni__${idxSezione}__controlli__${idxControllo}__id`} className="hidden" defaultValue={controllo.id || undefined}/>
+                      )}
                       <Form.Control
                         size="sm"
                         as="textarea"
                         rows={1}
-                        name="nome-"
+                        name={`sezioni__${idxSezione}__controlli__${idxControllo}__nome`}
                         value={controllo.nome}
                         onChange= {(event) => {
                           let newSezioni = [...sezioni]
@@ -114,7 +120,7 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
                     <td>
                       <Form.Control
                         size="sm"
-                        name="frequenza"
+                        name={`sezioni__${idxSezione}__controlli__${idxControllo}__frequenza`}
                         value={controllo.frequenza}
                         onChange= {(event) => {
                           let newSezioni = [...sezioni]
@@ -127,7 +133,7 @@ function SchedaControlloForm({ data, setData, initialData, errors }) {
                     <td>
                       <Form.Control
                         size="sm"
-                        name="responsabilità"
+                        name={`sezioni__${idxSezione}__controlli__${idxControllo}__responsabilità`}
                         value={controllo.responsabilità}
                         onChange= {(event) => {
                           let newSezioni = [...sezioni]

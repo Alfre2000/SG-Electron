@@ -10,11 +10,11 @@ import { findElementFromID } from '../../../utils';
 import ArticoloForm from '../Articolo/ArticoloForm';
 import FormWrapper from '../FormWrapper';
 
-function ArticoliInput({ data, setData }) {
+function ArticoliInput({ data, setData, initialData }) {
   const [modalArticolo, setModalArticolo] = useState(false)
   const [ricerca, setRicerca] = useState("")
   const [cliente, setCliente] = useState(null)
-  const [articoli, setArticoli] = useState([])
+  const [articoli, setArticoli] = useState(!!initialData ? data.articoli.filter(a => a.scheda_controllo?.id === initialData.id): [])
   const handleAddArticolo = (event) => {
     const selectedArticolo = findElementFromID(event.target.getAttribute("value"), data.articoli)
     setArticoli([...articoli, selectedArticolo])
@@ -25,7 +25,7 @@ function ArticoliInput({ data, setData }) {
   }
   const idSelezionati = articoli.map(articolo => articolo.id)
   const articoliPossibili = data?.articoli 
-    ? data.articoli.filter(articolo => (!cliente?.value || articolo.cliente.nome === cliente?.value) && (articolo.nome.toLowerCase().includes(ricerca) || articolo.codice.toLowerCase().includes(ricerca)) && !idSelezionati.includes(articolo.id)) 
+    ? data.articoli.filter(articolo => articolo.scheda_controllo === null && (!cliente?.value || articolo.cliente.nome === cliente?.value) && (articolo.nome.toLowerCase().includes(ricerca) || articolo.codice.toLowerCase().includes(ricerca)) && !idSelezionati.includes(articolo.id)) 
     : []
   const clienti = data?.articoli ? new Set(data?.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
   return (
@@ -70,7 +70,7 @@ function ArticoliInput({ data, setData }) {
           />
         </Col>
       </Row>
-      <Row className="mb-4">
+      <Row className="mb-4 text-center">
         <Col xs={5}>
           <div className="py-2 text-sm border-t-0 border-r-0 border-l-0 font-semibold uppercase text-white bg-nav-blue rounded-t-md">
             Articoli Selezionabili
@@ -112,7 +112,7 @@ function ArticoliInput({ data, setData }) {
               </ListGroup.Item>
           </ListGroup>
         </Col>
-        <select type="hidden" name="articoli" multiple className="hidden">
+        <select type="hidden" name="lista_articoli" multiple className="hidden">
           {articoli && articoli.map((articolo) => (
             <option key={articolo.id} value={articolo.id} selected={true}></option>
           ))}

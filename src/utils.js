@@ -71,3 +71,14 @@ export const convertSuperficie = (prev, current, amount) => {
   if (current === "dm" && prev === "cm") result = amount / 100
   return result
 }
+
+// export const traverse = (o, path, func) =>  {
+//   for (var i in o) {
+//       func.apply(this, [i, o[i], path]);  
+//       if (o[i] !== null && typeof(o[i]) == "object") {
+//           //going one step down in the object tree!!
+//           path = path !== "" ? path + '__' + i.toString() : path + i.toString() 
+//           traverse(o[i], path, func);
+//       }
+//   }
+// }
