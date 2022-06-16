@@ -7,7 +7,7 @@ import Input from "../../../components/form-components/Input";
 import MinusIcon from "../../../components/Icons/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon";
 import ArticoliInput from "./ArticoliInput";
-import { addToNestedArray, modifyNestedObject, removeFromNestedArray } from "../../utils";
+import { addToNestedArray, findNestedElement, modifyNestedObject, removeFromNestedArray } from "../../utils";
 
 function SchedaControlloForm({ data, setData, initialData, errors, view }) {
   const emptyControllo = { nome: "", frequenza: "", responsabilità: ""}
@@ -94,6 +94,8 @@ function SchedaControlloForm({ data, setData, initialData, errors, view }) {
                 {sezione.controlli.map((controllo, idxControllo) => {
                   const richiestePath = `${idxSezione}__controlli__${idxControllo}`
                   const basePath = `sezioni__${richiestePath}`
+                  const nomeErrors = errors ? findNestedElement(errors, `${basePath}__nome`)?.join(' - ') : undefined
+                  console.log(nomeErrors, errors, `${basePath}__nome`);
                   return (
                   <tr key={idxControllo}>
                     <td>
@@ -107,7 +109,12 @@ function SchedaControlloForm({ data, setData, initialData, errors, view }) {
                         name={`${basePath}__nome`}
                         value={controllo.nome}
                         onChange={(e) => setSezioni(modifyNestedObject(sezioni, `${richiestePath}__nome`, e.target.value))}
-                        />
+                        isInvalid={errors && Boolean(nomeErrors)}
+                      />
+                      <Form.Control.Feedback type="invalid" className="text-xs text-center">
+                        {errors && nomeErrors}
+                      </Form.Control.Feedback>
+                      
                     </td>
                     <td>
                       <Form.Control

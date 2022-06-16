@@ -3,7 +3,7 @@ import { Col, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../utils";
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { parseFromAPI } from './../../pages/utils';
+import { findNestedElement } from './../../pages/utils';
 import { customStyle } from "./stylesSelect";
 
 function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors }) {
@@ -11,8 +11,8 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label !== false ? 12 - labelColumns : 12
   const SelectComponent = createTable ? CreatableSelect : Select
-  const defaultValue = !!initialData && Object.keys(initialData).length > 0 ? parseFromAPI(initialData, name) : undefined
-  const errorsValue = errors ? parseFromAPI(errors, name)?.join(' - ') : undefined
+  const defaultValue = !!initialData && Object.keys(initialData).length > 0 ? findNestedElement(initialData, name) : undefined
+  const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
   return (
     <Form.Group as={Row}>
       {label !== false && (

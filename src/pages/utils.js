@@ -13,22 +13,9 @@ export const deleteRecord = (recordID, data, setData, baseURL, onDelete) => {
     .catch((err) => console.log(err));
 };
 
-export const parseFromAPI = (data, name) => {
-  if (name.split('__').length === 3) {
-      const [ chiave, index, campo ] = name.split('__')
-      if (data[chiave] && data[chiave][index] && campo in data[chiave][index]) {
-        return data[chiave][index][campo]
-      } 
-      return null
-  } else {
-      return data[name]
-  }
-}
-
-export const parseFormData = (formData, update) => {
+export const parseFormData = (formData) => {
   const formDataCopy = {...formData}
   Object.keys(formDataCopy).forEach(key => {
-    // if ((update !== true || key.endsWith('id')) && formData[key] === "") delete formData[key]
     if (formData[key]?.constructor.name === "File" && formData[key].name === "" && formData[key].size === 0) delete formData[key];
     else if (key.split('__').length >= 3) { 
       parseNestedObject(key, formData, formDataCopy)
@@ -72,12 +59,17 @@ const parseNestedObject = (name, formData, initialFormData) => {
   }
 }
 
-const findNestedElement = (obj, path) => {
+export const findNestedElement = (obj, path) => {
+  if (typeof obj !== "object" || !path) return null
   let stack = path.split('__');
-  while(stack.length > 1){
-    obj = obj[stack.shift()];
+  while(stack.length > 1) {
+    const key = stack.shift()
+    if (!(key in obj)) return null
+    obj = obj[key];
   }
-  return obj[stack.shift()]
+  const key = stack.shift()
+  if (!(key in obj)) return null
+  return obj[key]
 }
 
 export const modifyNestedObject = (obj, path, newValue) => {
@@ -103,12 +95,21 @@ export const removeFromNestedArray = (obj, path, idx) => {
 
 const cleanObj = (obj) => {
   Object.keys(obj).forEach(key => {
-    if (Array.isArray(obj[key])) {
-      obj[key] = obj[key].filter(el => el !== undefined)
-    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+    const isArray = Array.isArray(obj[key])
+    const isEmpty = obj[key] === undefined || obj[key] === null || obj[key] === ""
+    const isEmptyObj = typeof obj[key] === 'object' && obj[key] !== null && Object.keys(obj[key]).length === 0
+    const isObject = typeof obj[key] === 'object' && obj[key] !== null
+    if (isArray) {
+      obj[key] = obj[key].filter(el => el !== undefined && !(typeof el === 'object' && (Object.keys(el).length === 0 || Object.values(el).every(value => value === undefined || value === null || value === ""))))
       cleanObj(obj[key])
-    } else if (obj[key] === undefined || obj[key] === null || obj[key] === "") {
+    } else if (isEmpty || isEmptyObj) {
       delete obj[key]
-    }
+    } else if (isObject) {
+      if (Object.values(obj[key]).every(value => value === undefined || value === null || value === "")) {
+        delete obj[key]
+      } else {
+        cleanObj(obj[key])
+      }
+    } 
   })
 }

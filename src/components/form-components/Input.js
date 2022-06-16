@@ -1,11 +1,13 @@
 import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
+import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
 function Input({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols, datalist }) {
   const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label === false ? 12 : inputCols ? inputCols : 12 - labelColumns
+  const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
   if (datalist) {
     inputProps = inputProps || {};
     inputProps.list = labelText + "list"
@@ -18,7 +20,7 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
         name={name}
         className="text-center"
         {...inputProps}
-        isInvalid={errors && Boolean(errors[name])}
+        isInvalid={errors && Boolean(errorsValue)}
       />
       {datalist && (
         <datalist id={labelText + "list"}>
@@ -28,7 +30,7 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
         </datalist>
       )}
       <Form.Control.Feedback type="invalid" className="text-xs text-center">
-        {errors && errors[name]}
+        {errors && errorsValue}
       </Form.Control.Feedback>
     </Form.Group>
   ) : (
@@ -44,7 +46,7 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
           name={name}
           className="text-center"
           {...inputProps}
-          isInvalid={errors && Boolean(errors[name])}
+          isInvalid={errors && Boolean(errorsValue)}
         />
         {datalist && (
           <datalist id={labelText + "list"}>
@@ -54,7 +56,7 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
           </datalist>
         )}
         <Form.Control.Feedback type="invalid" className="text-xs text-center">
-          {errors && errors[name]}
+          {errors && errorsValue}
         </Form.Control.Feedback>
       </Col>
     </Form.Group>

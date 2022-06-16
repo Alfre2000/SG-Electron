@@ -19,8 +19,8 @@ export const customStyle = {
     console.log(state);
     return {
     ...provided,
-    borderColor: state.isFocused ? "#86b7fe" : state.selectProps.errors ? "#cb444b" : "#ced4da",
-    boxShadow: state.isFocused ? "0 0 0 0.25rem rgb(13 110 253 / 25%)" : state.selectProps.errors ? "0 0 0 0.25rem rgb(203 68 74 / 25%)" : "none",
+    borderColor: state.selectProps.errors ? "#cb444b" : state.isFocused ? "#86b7fe" : "#ced4da",
+    boxShadow: state.isFocused && state.selectProps.errors ? "0 0 0 0.25rem rgb(203 68 74 / 25%)" : state.isFocused ? "0 0 0 0.25rem rgb(13 110 253 / 25%)" : "none",
     minHeight: "31px",
     height: "31px",
   }},
