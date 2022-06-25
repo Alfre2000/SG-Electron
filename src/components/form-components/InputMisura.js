@@ -29,6 +29,7 @@ function InputMisura({ label, name, initialData, convFunction, errors, options }
         name={name}
         className="hidden"
         value={convFunction(uMisura.value, initialData.u.value, value)}
+        onChange={() => {}}
       />
       <Input
         label={labelText}

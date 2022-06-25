@@ -87,7 +87,7 @@ function RecordLavorazioneOssidoForm({ data, initialData, errors }) {
             /> */}
             <Input 
               label="Numero Lotto:"
-              name="lotto"
+              name="n_lotto_cliente"
               errors={errors}
               labelCols={6}
               labelProps={{ className: "pr-6" }}
@@ -325,6 +325,8 @@ function RecordLavorazioneOssidoForm({ data, initialData, errors }) {
           </Col>
         </Row>
       </Form.Group>
+      <input hidden value={valvoleScarto} className="hidden" name="n_pezzi_scartati" />
+      <input hidden value={true} className="hidden" name="completata" />
     </>
   );
 }

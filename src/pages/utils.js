@@ -14,6 +14,10 @@ export const deleteRecord = (recordID, data, setData, baseURL, onDelete) => {
 };
 
 export const parseFormData = (formData) => {
+  if ('data' in formData && 'ora' in formData) {
+    formData['data'] = new Date(formData['data'] + " " + formData['ora']).toISOString()
+    delete formData['ora']
+  }
   const formDataCopy = {...formData}
   Object.keys(formDataCopy).forEach(key => {
     if (formData[key]?.constructor.name === "File" && formData[key].name === "" && formData[key].size === 0) delete formData[key];
@@ -37,6 +41,7 @@ const parseNestedObject = (name, formData, initialFormData) => {
         initial[key] = value
       }
     }
+    if (formData[chiave][index] === undefined) formData[chiave][index] = {}
     parseNestedObject(campo.join('__'), formData[chiave][index], initial)
     delete formData[name]
   } else {
@@ -95,6 +100,7 @@ export const removeFromNestedArray = (obj, path, idx) => {
 
 const cleanObj = (obj) => {
   Object.keys(obj).forEach(key => {
+    if (obj[key]?.constructor.name === "File") return;
     const isArray = Array.isArray(obj[key])
     const isEmpty = obj[key] === undefined || obj[key] === null || obj[key] === ""
     const isEmptyObj = typeof obj[key] === 'object' && obj[key] !== null && Object.keys(obj[key]).length === 0
@@ -113,3 +119,10 @@ const cleanObj = (obj) => {
     } 
   })
 }
+
+export const getBase64 = file => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = error => reject(error);
+});

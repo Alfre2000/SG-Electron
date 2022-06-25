@@ -75,7 +75,7 @@ function RecordLavorazioneOssido() {
               <Card.Body>
                 <Tabella 
                   headers={["Lotto", "N° Pezzi", "Operatore"]}
-                  valori={['lotto', 'n_pezzi_dichiarati', 'operatore__operatori']}
+                  valori={['n_lotto_cliente', 'n_pezzi_dichiarati', 'operatore__operatori']}
                   data={data}
                   setData={setParsedData}
                   FormComponent={RecordLavorazioneOssidoForm}

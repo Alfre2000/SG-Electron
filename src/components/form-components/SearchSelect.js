@@ -5,12 +5,13 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { findNestedElement } from './../../pages/utils';
 import { customStyle } from "./stylesSelect";
+import RequiredSelect from "./RequiredSelect";
 
-function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors }) {
+function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors, colProps }) {
   const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label !== false ? 12 - labelColumns : 12
-  const SelectComponent = createTable ? CreatableSelect : Select
+  const SelectComponent = createTable ? CreatableSelect : RequiredSelect
   const defaultValue = !!initialData && Object.keys(initialData).length > 0 ? findNestedElement(initialData, name) : undefined
   const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
   return (
@@ -20,8 +21,10 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
           {labelText}
         </Form.Label>
       )}
-      <Col sm={inputColumns}>
+      <Col sm={inputColumns} {...colProps}>
         <SelectComponent
+          className="react-select"
+          SelectComponent={Select}
           placeholder=""
           noOptionsMessage={() => "Nessun risultato"}
           isClearable={true}

@@ -47,14 +47,25 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
       setError(true)
       setTimeout(() => setError(false), 4000)
       setValidated(true);
-      setTimeout(() => setValidated(false), 1000 * 10)
+      setTimeout(() => setValidated(false), 1000 * 10);
+      [...document.querySelectorAll('.react-select')].forEach(el => {
+        const isRequired = el.nextSibling?.hasAttribute('required')
+        const isEmpty = [...el.children].find(el => el.tagName === 'INPUT').value === ""
+        if (isRequired && isEmpty) {
+          el.querySelector('div').classList.add('input-error')
+          setTimeout(() => el.querySelector('div').classList.remove('input-error'), 1000 * 10)
+        } else {
+          el.querySelector('div').classList.add('input-success')
+          setTimeout(() => el.querySelector('div').classList.remove('input-success'), 1000 * 10)
+        }
+      })
     } else {
       let formData = Object.fromEntries(new FormData(form).entries());
       [...form.elements].forEach(el => {
         if (el.hasAttribute('multiple')) {
           formData[el.name] = [...el.selectedOptions].map(op => op.value)
         }
-      })
+      });
       if (initialData) {
         updateRecord(formData, form);
       } else {
@@ -66,7 +77,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
   // Funzione che gestisce la creazione di un nuovo record
   const createRecord = (formData, form) => {
     parseFormData(formData)
-    console.log(formData);
+    console.log({...formData});
     apiPost(url, formData).then(response => {
       if (data.records) {
         const newData = {...data, records: {...data.records,  results:[response, ...data.records.results]}}

@@ -22,11 +22,9 @@ function useGetAPIData(requests, neeedsImpianto) {
   useEffect(() => {
     if (neeedsImpianto && !impianto) return
     requests.forEach(req => {
-      let params = {}
-      if (impianto?.id) params.impianto = impianto.id
-      if (req.nome === 'records') params.page = 1
-      params = new URLSearchParams(params)
-      const url = req.url + '?' + params.toString()
+      let url = new URL(req.url)
+      if (impianto?.id) url.searchParams.append('impianto', impianto.id)
+      if (req.nome === 'records') url.searchParams.append('page', 1)
       apiGet(url).then((response) => setNewData(req, response));
     })
   }, [setNewData, impianto])

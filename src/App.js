@@ -16,6 +16,7 @@ import RecordLavorazione from "./pages/GestioneImpianto/RecordLavorazione/Record
 import SelezioneImpianto from "./pages/GestioneImpianto/SelezioneImpianto/SelezioneImpianto";
 import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
+import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -51,6 +52,7 @@ function App() {
                   : <RecordLavorazione />
                 }>
               </Route>
+              <Route path="record-lavorazione-in-sospeso" element={<LavorazioniInSospeso />}></Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
             </Route>
             {/* Area Admin */}

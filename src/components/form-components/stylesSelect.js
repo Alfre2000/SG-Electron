@@ -16,7 +16,6 @@ export const customStyle = {
     display: "none",
   }),
   control: (provided, state) => {
-    console.log(state);
     return {
     ...provided,
     borderColor: state.selectProps.errors ? "#cb444b" : state.isFocused ? "#86b7fe" : "#ced4da",
@@ -24,11 +23,12 @@ export const customStyle = {
     minHeight: "31px",
     height: "31px",
   }},
-  input: (provided, state) => ({
+  input: (provided, state) => {
+    return {
     ...provided,
     padding: "0px",
     margin: "0px",
-  }),
+  }},
   valueContainer: (provided, state) => ({
     ...provided,
     paddingTop: "0px",

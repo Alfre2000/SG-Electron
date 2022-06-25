@@ -5,7 +5,7 @@ function useSetViewForm(staticForm) {
     if (!staticForm) return;
     const form = document.querySelector('.update-form')
     if (!form) return;
-    [...form.elements].forEach(element => element.setAttribute('disabled', true))
+    [...form.elements].forEach(element => element.type !== "button" && element.setAttribute('disabled', true))
   }, [staticForm])
 }
 
