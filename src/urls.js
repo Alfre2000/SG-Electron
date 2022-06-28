@@ -37,6 +37,10 @@ export const URLS = {
     ANDAMENTO_PRODUZIONE: BASE_PATH + '/scheda-controllo/andamento-produzione/',
     PRODUZIONE_PER_OPERATORE: BASE_PATH + '/scheda-controllo/produzione-per-operatore/',
 
+    // SCHEDE IMPIANTO
+    SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/schede-impianti/',
+    RECORD_SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/record-schede-impianti/',
+
     // PAGINA
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
     PAGINA_RICERCA_DATABASE: BASE_PATH + '/analisi-manutenzioni/pagina-ricerca-database/',

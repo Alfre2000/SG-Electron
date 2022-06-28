@@ -72,13 +72,10 @@ export const convertSuperficie = (prev, current, amount) => {
   return result
 }
 
-// export const traverse = (o, path, func) =>  {
-//   for (var i in o) {
-//       func.apply(this, [i, o[i], path]);  
-//       if (o[i] !== null && typeof(o[i]) == "object") {
-//           //going one step down in the object tree!!
-//           path = path !== "" ? path + '__' + i.toString() : path + i.toString() 
-//           traverse(o[i], path, func);
-//       }
-//   }
-// }
+export const toTableArray = (array) => {
+  let resArray = []
+  for (let i = 0; i < array.length; i += 2) {
+    resArray.push([array[i], array[i + 1]])
+  }
+  return resArray
+}

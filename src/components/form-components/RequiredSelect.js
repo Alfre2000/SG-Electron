@@ -22,6 +22,7 @@ class RequiredSelect extends React.Component {
 
   getValue = () => {
     if (this.props.value != undefined) return this.props.value;
+    if (this.props.defaultValue != undefined) return this.props.defaultValue;
     return this.state.value || "";
   };
 

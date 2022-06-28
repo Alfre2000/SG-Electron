@@ -4,7 +4,7 @@ import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
 function Input({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols, datalist }) {
-  const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
+  const labelText = label ? label : name ? `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label === false ? 12 : inputCols ? inputCols : 12 - labelColumns
   const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined

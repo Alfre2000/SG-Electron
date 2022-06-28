@@ -25,6 +25,7 @@ function useGetAPIData(requests, neeedsImpianto) {
       let url = new URL(req.url)
       if (impianto?.id) url.searchParams.append('impianto', impianto.id)
       if (req.nome === 'records') url.searchParams.append('page', 1)
+      // console.log(url.toString());
       apiGet(url).then((response) => setNewData(req, response));
     })
   }, [setNewData, impianto])
