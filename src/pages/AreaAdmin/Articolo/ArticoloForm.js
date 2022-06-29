@@ -4,8 +4,8 @@ import Fieldset from '../../../components/form-components/Fieldset';
 import Input from '../../../components/form-components/Input';
 import InputMisura from '../../../components/form-components/InputMisura';
 import SearchSelect from '../../../components/form-components/SearchSelect';
-import MinusIcon from '../../../components/Icons/MinusIcon';
-import PlusIcon from '../../../components/Icons/PlusIcon';
+import MinusIcon from '../../../components/Icons/MinusIcon/MinusIcon';
+import PlusIcon from '../../../components/Icons/PlusIcon/PlusIcon';
 import { convertPeso, findElementFromID, convertSuperficie } from '../../../utils';
 
 function ArticoloForm({ data, initialData, errors, view, campoScheda }) {

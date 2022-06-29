@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Col, Row, ListGroup } from "react-bootstrap";
 import Input from '../../../components/form-components/Input';
 import SearchSelect from '../../../components/form-components/SearchSelect';
-import ModifyModal from '../../../components/ModifyModal/ModifyModal';
+import ModifyModal from '../../../components/Modals/ModifyModal/ModifyModal';
 import { URLS } from '../../../urls';
 import { findElementFromID } from '../../../utils';
 import ArticoloForm from '../Articolo/ArticoloForm';

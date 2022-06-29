@@ -6,8 +6,8 @@ import { dateToDatePicker, dateToTimePicker, toTableArray } from "../../../utils
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Fieldset from "../../../components/form-components/Fieldset";
-import MinusIcon from "../../../components/Icons/MinusIcon";
-import PlusIcon from "../../../components/Icons/PlusIcon";
+import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
+import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import { modifyNestedObject } from "../../utils";
 
 function SchedaImpiantoForm({ data, initialData, errors, view }) {

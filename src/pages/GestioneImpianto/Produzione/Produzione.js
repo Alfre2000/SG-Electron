@@ -5,7 +5,7 @@ import { apiGet } from '../../../api/utils'
 import { URLS } from '../../../urls'
 import { colors, findElementFromID, capitalize } from '../../../utils'
 import Wrapper from '../Wrapper'
-import PasswordModal from "../../../components/PasswordModal/PasswordModal";
+import PasswordModal from "../../../components/Modals/PasswordModal/PasswordModal";
 import { useNavigate } from 'react-router-dom'
 import useGetAPIData from '../../../hooks/useGetAPIData'
 import UserContext from '../../../UserContext'

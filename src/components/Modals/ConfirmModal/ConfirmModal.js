@@ -15,7 +15,11 @@ function ConfirmModal({ show, handleClose }) {
         >
           Chiudi
         </Button>
-        <Button variant="danger" onClick={() => handleClose(true)} className="bg-[#cb444b]">
+        <Button
+          variant="danger"
+          onClick={() => handleClose(true)}
+          className="bg-[#cb444b]"
+        >
           Elimina
         </Button>
       </Modal.Footer>

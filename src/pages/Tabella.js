@@ -2,11 +2,11 @@ import { faSearch, faTrash, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import { Placeholder, Table } from 'react-bootstrap';
-import ConfirmModal from '../components/ConfirmModal.js/ConfirmModal';
-import ModifyModal from '../components/ModifyModal/ModifyModal';
+import ConfirmModal from '../components/Modals/ConfirmModal/ConfirmModal';
+import ModifyModal from '../components/Modals/ModifyModal/ModifyModal';
 import MyToast from '../components/MyToast/MyToast';
 import Paginator from '../components/Pagination/Paginator';
-import PasswordModal from '../components/PasswordModal/PasswordModal';
+import PasswordModal from '../components/Modals/PasswordModal/PasswordModal';
 import ViewModal from '../components/ViewModal/ViewModal';
 import { findElementFromID, isDateRecent } from '../utils';
 import { deleteRecord } from './utils';

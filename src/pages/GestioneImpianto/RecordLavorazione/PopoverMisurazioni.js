@@ -2,8 +2,8 @@ import { faPlus, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import { Button, Form, Popover, Table } from "react-bootstrap";
-import MinusIcon from "../../../components/Icons/MinusIcon";
-import PlusIcon from "../../../components/Icons/PlusIcon";
+import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
+import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import useOutsideAlerter from "../../../hooks/useOutsideAlerter";
 import { modifyNestedObject } from "../../utils";
 

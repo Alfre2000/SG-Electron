@@ -14,8 +14,7 @@ export const dateToTimePicker = (date) => {
 
 export const findElementFromID = (id, array) => {
   if (!array) return ""
-  const matches = array.filter(el => el.id === id)
-  return matches.length > 0 ? matches[0] : ""
+  return array.find(el => el.id === id) || ""
 }
 
 export const capitalize = s => (s && s[0].toUpperCase() + s.slice(1)) || ""
