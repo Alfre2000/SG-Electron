@@ -6,6 +6,8 @@ export const getNavItems = (user) => {
       {name: 'Scheda controllo', link: '/area-admin/scheda-controllo/'},
       {name: 'Articolo', link: '/area-admin/articolo/'},
       {name: 'Scheda impianto', link: '/area-admin/scheda-impianto/'},
+      {name: 'Analisi', link: '/area-admin/analisi/'},
+      {name: 'Manutenzione', link: '/area-admin/manutenzione/'},
     ]},
   ];
   return items

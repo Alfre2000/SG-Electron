@@ -24,7 +24,7 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
       )}
       <Col sm={inputColumns} {...colProps}>
         <SelectComponent
-          className="react-select"
+          className="react-select text-center"
           SelectComponent={Select}
           placeholder=""
           noOptionsMessage={() => "Nessun risultato"}

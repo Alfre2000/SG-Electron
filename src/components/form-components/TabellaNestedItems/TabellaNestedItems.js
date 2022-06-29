@@ -69,6 +69,7 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                   />
                 ) : (
                   <Form.Control
+                    type={colonna.type || "text"}
                     className="text-center"
                     size="sm"
                     name={`${name}__${idx + startIndex}__${colonna.name}`}
@@ -119,7 +120,7 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
           </tr>
         ))}
         <tr>
-          <td colSpan={4}>
+          <td colSpan={colonne.length + 1}>
             <PlusIcon
               disabled={view}
               onClick={() => setItems([...items, emptyItem])}
