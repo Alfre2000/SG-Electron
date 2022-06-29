@@ -3,17 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../../api/utils";
+import ViewModal from "../../components/ViewModal/ViewModal";
 import useSetViewForm from "../../hooks/useSetViewForm";
 import { dateToDatePicker } from "../../utils";
 import { parseFormData } from "../utils";
 
-function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
+function FormWrapper({ data, setData, initialData, onSuccess, url, children, view, preview = false }) {
   const staticForm = Boolean(view)
   useSetViewForm(staticForm)
   const formRef = useRef(null);
   const [error, setError] = useState(false);
   const [validated, setValidated] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showPreview, setShowPreview] = useState(false)
   const [key, setKey] = useState(1)
   // Se vengono passati dei dati iniziali inseriscili nel form
   useEffect(() => {
@@ -133,7 +135,21 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
       console.log(err);
     })
   }
+  const PreviewComponent = preview ? preview.FormComponent : "div"
+  let formData;
+  if (preview?.data && showPreview) {
+    formData = Object.fromEntries(new FormData(formRef.current).entries());
+    parseFormData(formData)
+    console.log({...formData});
+  } else { formData = {}}
+  const previewData = preview?.data ? {...preview.data, [preview.itemKey]: formData } : {}
   return (
+    <>
+    {showPreview && (
+      <ViewModal show={true} handleClose={() => setShowPreview(false)}>
+        <PreviewComponent data={previewData} />
+      </ViewModal>
+    )}
     <Form
       ref={formRef}
       noValidate
@@ -150,6 +166,11 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
             <Button type="submit" className="bg-[#0d6efd] w-28 font-medium">
               Salva
             </Button>
+            {preview && (
+              <Button variant="secondary" className="bg-gray-500" onClick={() => setShowPreview(true)}>
+                Anteprima
+              </Button>
+            )}
           </Col>
           <Col sx={4}>
             {success && (
@@ -172,6 +193,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
         </Row>
       )}
     </Form>
+    </>
   );
 }
 

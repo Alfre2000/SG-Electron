@@ -27,6 +27,7 @@ export const URLS = {
     IMPIANTI: BASE_PATH + '/base/impianti/',
     CLIENTI: BASE_PATH + '/base/clienti/',
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',
+    MATERIALI: BASE_PATH + '/base/materiali/',
 
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',

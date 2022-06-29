@@ -17,7 +17,8 @@ import SelezioneImpianto from "./pages/GestioneImpianto/SelezioneImpianto/Selezi
 import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
-import SchedaImpianto from "./pages/GestioneImpianto/SchedaImpianto/SchedaImpianto";
+import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
+import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -55,12 +56,13 @@ function App() {
               </Route>
               <Route path="record-lavorazione-in-sospeso/" element={<LavorazioniInSospeso />}></Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
-              <Route path="record-scheda-impianto/" element={<SchedaImpianto />}></Route>
+              <Route path="record-scheda-impianto/" element={<RecordSchedaImpianto />}></Route>
             </Route>
             {/* Area Admin */}
             <Route path="area-admin/">
               <Route path="scheda-controllo/" element={<SchedaControllo />}></Route>
               <Route path="articolo/" element={<Articolo />}></Route>
+              <Route path="scheda-impianto/" element={<SchedaImpianto />}></Route>
             </Route>
           </Routes>
         </HashRouter>

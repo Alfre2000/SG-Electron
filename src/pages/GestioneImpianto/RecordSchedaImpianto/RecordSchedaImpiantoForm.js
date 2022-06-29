@@ -10,14 +10,15 @@ import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import { modifyNestedObject } from "../../utils";
 
-function SchedaImpiantoForm({ data, initialData, errors, view }) {
-  const schedaImpianto = data.schede_impianto[0]
-  const groupedVerifiche = toTableArray(schedaImpianto.verifica_iniziali)
+function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
+  console.log(data);
+  const schedaImpianto = Array.isArray(data.schede_impianto) ? data.schede_impianto[0] : data.schede_impianto
+  const groupedVerifiche = toTableArray(schedaImpianto.verifiche_iniziali)
   const groupedAggiunte = toTableArray(schedaImpianto.aggiunte.filter(el => el.iniziale === true))
   const aggiunteSuccessive = schedaImpianto.aggiunte.filter(agg => agg.iniziale === false)
   const emptyAggiunta = { data: dateToDatePicker(new Date()), ora: dateToTimePicker(new Date()), aggiunta: "" }
   const defaultAggiunte = initialData?.record_aggiunte ? initialData.record_aggiunte.filter(agg => !agg.iniziale).map(record => (
-      {...record, ora: dateToTimePicker(new Date(record.data)), data: dateToDatePicker(new Date(record.data)), aggiunta: { value: record.aggiunta, label: schedaImpianto.aggiunte.find(a => a.id === record.aggiunta).materiale.nome}}
+      {...record, ora: dateToTimePicker(new Date(record.data)), data: dateToDatePicker(new Date(record.data)), aggiunta: { value: record.aggiunta, label: schedaImpianto.aggiunte.find(a => a.id === record.aggiunta).materiale}}
     )) : [emptyAggiunta]
   const [aggiunte, setAggiunte] = useState(defaultAggiunte)
   return (
@@ -69,36 +70,40 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
                       hidden
                       className="hidden"
                       defaultValue={row[0].id}
-                      name={`record_verifica_iniziali__${idx * 2}__verifica_iniziale`}
+                      name={`record_verifiche_iniziali__${idx * 2}__verifica_iniziale`}
                     />
                     <Checkbox
-                      name={`record_verifica_iniziali__${idx * 2}__eseguito`}
+                      name={`record_verifiche_iniziali__${idx * 2}__eseguito`}
                       label={false}
                       inputProps={{
-                        defaultChecked: initialData?.record_verifica_iniziali ? initialData.record_verifica_iniziali[idx * 2].eseguito : false,
+                        defaultChecked: initialData?.record_verifiche_iniziali ? initialData.record_verifiche_iniziali[idx * 2].eseguito : false,
                         className: "bigger-checkbox"
                       }}
                       vertical={true}
                     />
                   </td>
-                  <td className="w-[42%]">{row[1].nome}</td>
-                  <td>
-                    <input
-                      hidden
-                      className="hidden"
-                      defaultValue={row[1].id}
-                      name={`record_verifica_iniziali__${idx * 2 + 1}__verifica_iniziale`}
-                    />
-                    <Checkbox 
-                      name={`record_verifica_iniziali__${idx * 2 + 1}__eseguito`}
-                      label={false}
-                      inputProps={{
-                        defaultChecked: initialData?.record_verifica_iniziali ? initialData.record_verifica_iniziali[idx * 2 + 1].eseguito : false,
-                        className: "bigger-checkbox"
-                      }}
-                      vertical={true}
-                    />
-                  </td>
+                  {row[1] && (
+                    <>
+                      <td className="w-[42%]">{row[1].nome}</td>
+                      <td>
+                        <input
+                          hidden
+                          className="hidden"
+                          defaultValue={row[1].id}
+                          name={`record_verifiche_iniziali__${idx * 2 + 1}__verifica_iniziale`}
+                        />
+                        <Checkbox 
+                          name={`record_verifiche_iniziali__${idx * 2 + 1}__eseguito`}
+                          label={false}
+                          inputProps={{
+                            defaultChecked: initialData?.record_verifiche_iniziali ? initialData.record_verifiche_iniziali[idx * 2 + 1].eseguito : false,
+                            className: "bigger-checkbox"
+                          }}
+                          vertical={true}
+                        />
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -111,7 +116,7 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
             <tbody>
               {groupedAggiunte.map((row, idx) => (
                 <tr key={row[0].id}>
-                  <td className="w-[42%]">{row[0].materiale.nome}</td>
+                  <td className="w-[42%]">{row[0].materiale}</td>
                   <td>
                     <input
                       hidden
@@ -135,30 +140,34 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
                       vertical={true}
                     />
                   </td>
-                  <td className="w-[42%]">{row[1].materiale.nome}</td>
-                  <td>
-                    <input
-                      hidden
-                      className="hidden"
-                      defaultValue={row[1].id}
-                      name={`record_aggiunte__${idx * 2 + 1}__aggiunta`}
-                    />
-                    <input
-                      hidden
-                      className="hidden"
-                      defaultValue={true}
-                      name={`record_aggiunte__${idx * 2 + 1}__iniziale`}
-                    />
-                    <Checkbox 
-                      name={`record_aggiunte__${idx * 2 + 1}__eseguito`}
-                      label={false}
-                      inputProps={{
-                        defaultChecked: initialData?.record_aggiunte ? initialData.record_aggiunte[idx * 2 + 1].eseguito : false,
-                        className: "bigger-checkbox"
-                      }}
-                      vertical={true}
-                    />
-                  </td>
+                  {row[1] && (
+                    <>
+                      <td className="w-[42%]">{row[1].materiale}</td>
+                      <td>
+                        <input
+                          hidden
+                          className="hidden"
+                          defaultValue={row[1].id}
+                          name={`record_aggiunte__${idx * 2 + 1}__aggiunta`}
+                        />
+                        <input
+                          hidden
+                          className="hidden"
+                          defaultValue={true}
+                          name={`record_aggiunte__${idx * 2 + 1}__iniziale`}
+                        />
+                        <Checkbox 
+                          name={`record_aggiunte__${idx * 2 + 1}__eseguito`}
+                          label={false}
+                          inputProps={{
+                            defaultChecked: initialData?.record_aggiunte ? initialData.record_aggiunte[idx * 2 + 1].eseguito : false,
+                            className: "bigger-checkbox"
+                          }}
+                          vertical={true}
+                        />
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -223,7 +232,7 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
                     <SearchSelect 
                       name={`record_aggiunte__${index}__aggiunta`}
                       label={false}
-                      options={aggiunteSuccessive.map(agg => ({ value: agg.id, label: agg.materiale.nome }))}
+                      options={aggiunteSuccessive.map(agg => ({ value: agg.id, label: agg.materiale }))}
                       errors={errors}
                       isDisabled={view}
                       initialData={initialData}
@@ -272,4 +281,4 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
   )
 }
 
-export default SchedaImpiantoForm
+export default RecordSchedaImpiantoForm

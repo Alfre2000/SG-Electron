@@ -78,3 +78,14 @@ export const toTableArray = (array) => {
   }
   return resArray
 }
+
+export const searchOptions = (array, labelKey, same = false) => {
+  if (same) return array?.map((el) => ({ value: el[labelKey], label: el[labelKey] }));
+  return array?.map((el) => ({ value: el.id, label: el[labelKey] }));
+}
+
+export const isNumeric = (str) => {
+  if (typeof str != "string") return false // we only process strings!  
+  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+}

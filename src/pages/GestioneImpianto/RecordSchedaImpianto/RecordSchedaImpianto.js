@@ -8,9 +8,9 @@ import { URLS } from "../../../urls";
 import FormWrapper from "../../AreaAdmin/FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
-import SchedaImpiantoForm from "./SchedaImpiantoForm";
+import RecordSchedaImpiantoForm from "./RecordSchedaImpiantoForm";
 
-function SchedaImpianto() {
+function RecordSchedaImpianto() {
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "schede_impianto", url: URLS.SCHEDE_IMPIANTO},
@@ -35,7 +35,7 @@ function SchedaImpianto() {
                 </Card.Header>
                 <Card.Body className="px-5">
                   <FormWrapper data={data} setData={setData} url={URLS.RECORD_SCHEDE_IMPIANTO}>
-                    <SchedaImpiantoForm data={data} />
+                    <RecordSchedaImpiantoForm data={data} />
                   </FormWrapper>
                 </Card.Body>
               </Card>
@@ -53,7 +53,7 @@ function SchedaImpianto() {
                     valori={['operatore__operatori']}
                     data={data}
                     setData={setData}
-                    FormComponent={SchedaImpiantoForm}
+                    FormComponent={RecordSchedaImpiantoForm}
                     url={URLS.RECORD_SCHEDE_IMPIANTO}
                     FormWrapper={FormWrapper}
                   />
@@ -68,4 +68,4 @@ function SchedaImpianto() {
   )
 }
 
-export default SchedaImpianto
+export default RecordSchedaImpianto

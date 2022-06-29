@@ -12,10 +12,11 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label !== false ? 12 - labelColumns : 12
   const SelectComponent = createTable ? CreatableSelect : RequiredSelect
-  const defaultValue = !!initialData && Object.keys(initialData).length > 0 ? findNestedElement(initialData, name) : undefined
+  let defaultValue = !!initialData && Object.keys(initialData).length > 0 ? findNestedElement(initialData, name) : undefined
+  defaultValue =  typeof defaultValue === "object" ? defaultValue?.id : defaultValue
   const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
   return (
-    <Form.Group as={Row}>
+    <Form.Group as={Row} className="items-center">
       {label !== false && (
         <Form.Label column sm={labelColumns} {...labelProps}>
           {labelText}
