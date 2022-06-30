@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
+import { apiGet } from "../../../api/utils";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData";
 import { URLS } from "../../../urls";
+import UserContext from "../../../UserContext";
 import FormWrapper from "../../AreaAdmin/FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordLavorazioneForm from "./../RecordLavorazione/RecordLavorazioneForm";
 
 function LavorazioniInSospeso() {
+  const { user: { user } } = useContext(UserContext)
   const [data, setData] = useGetAPIData([
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "articoli", url: URLS.ARTICOLI_NESTED},
     {nome: "records", url: URLS.RECORD_LAVORAZIONI_IN_SOSPESO},
   ])
-  // console.log(data);
+  const updateRecords = () => {
+    let url = new URL(URLS.RECORD_LAVORAZIONI_IN_SOSPESO)
+    url.searchParams.append('impianto', user.impianto.id)
+    url.searchParams.append('page', 1)
+    apiGet(url).then((res) => setData({...data, records: res}))
+  }
   return (
     <Wrapper title="Scheda di Controllo">
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -34,6 +42,7 @@ function LavorazioniInSospeso() {
                   FormComponent={RecordLavorazioneForm}
                   url={URLS.RECORD_LAVORAZIONI}
                   FormWrapper={FormWrapper}
+                  onSuccess={updateRecords}
                 />
               </Card.Body>
             </Card>
