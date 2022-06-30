@@ -6,7 +6,7 @@ function MinusIcon({ disabled, onClick }) {
   return (
     <FontAwesomeIcon
       icon={faCircleMinus}
-      data-testid="icon"
+      data-testid="icon-minus"
       size="lg"
       className={`${
         disabled ? "cursor-not-allowed" : "cursor-pointer"

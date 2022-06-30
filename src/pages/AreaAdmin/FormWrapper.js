@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../../api/utils";
-import ViewModal from "../../components/ViewModal/ViewModal";
+import ViewModal from "../../components/Modals/ViewModal/ViewModal";
 import useSetViewForm from "../../hooks/useSetViewForm";
 import { dateToDatePicker } from "../../utils";
 import { parseFormData } from "../utils";

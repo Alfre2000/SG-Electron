@@ -6,7 +6,7 @@ function PlusIcon({ disabled, onClick }) {
   return (
     <FontAwesomeIcon
       icon={faCirclePlus}
-      data-testid="icon"
+      data-testid="icon-plus"
       size="lg"
       className={`${
         disabled ? "cursor-not-allowed" : "cursor-pointer"

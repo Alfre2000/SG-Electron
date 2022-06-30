@@ -7,7 +7,7 @@ import ModifyModal from '../components/Modals/ModifyModal/ModifyModal';
 import MyToast from '../components/MyToast/MyToast';
 import Paginator from '../components/Pagination/Paginator';
 import PasswordModal from '../components/Modals/PasswordModal/PasswordModal';
-import ViewModal from '../components/ViewModal/ViewModal';
+import ViewModal from '../components/Modals/ViewModal/ViewModal';
 import { findElementFromID, isDateRecent } from '../utils';
 import { deleteRecord } from './utils';
 import DefaultFormWrapper from './FormWrapper';

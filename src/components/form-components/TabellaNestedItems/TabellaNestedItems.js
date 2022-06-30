@@ -94,6 +94,7 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                   name={`${name}__${idx + startIndex}__id`}
                   className="hidden"
                   defaultValue={item.id || undefined}
+                  data-testid="hidden-id"
                 />
               )}
               {hiddenCols.map(colonna => (
@@ -102,7 +103,8 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                   hidden
                   name={`${name}__${idx + startIndex}__${colonna.name}`}
                   className="hidden"
-                  defaultValue={colonna.value || undefined}
+                  defaultValue={item[colonna.name] || undefined}
+                  data-testid="hidden-input"
                 />
               ))}
               <MinusIcon

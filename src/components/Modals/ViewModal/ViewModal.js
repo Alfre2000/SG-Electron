@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
 function ViewModal({ show, handleClose, children }) {
@@ -7,9 +7,7 @@ function ViewModal({ show, handleClose, children }) {
       <Modal.Header closeButton>
         <Modal.Title>Visualizza il record</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="px-5">
-          {children}
-      </Modal.Body>
+      <Modal.Body className="px-5">{children}</Modal.Body>
       <Modal.Footer>
         <Button
           variant="secondary"
@@ -20,7 +18,7 @@ function ViewModal({ show, handleClose, children }) {
         </Button>
       </Modal.Footer>
     </Modal>
-  )
+  );
 }
 
-export default ViewModal
+export default ViewModal;
