@@ -42,10 +42,10 @@ export const updateQueryStringParameter = (uri, key, value) => {
   }
 }
 
-export const isDateRecent = (date) => {
+export const isDateRecent = (date, hours) => {
   const recordDate = new Date(date)
   const now = new Date()
-  return Math.abs(now - recordDate) / 36e5 < 2;
+  return Math.abs(now - recordDate) / 36e5 < hours;
 }
 
 export const convertPeso = (prev, current, amount) => {

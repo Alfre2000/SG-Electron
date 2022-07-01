@@ -13,6 +13,7 @@ import Tabella from "../../Tabella";
 import { parseProssimeManutenzioni, parseRecordLavorazioni, parseSchedaLavorazione } from "../parsers";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import UserContext from "../../../UserContext";
+import { isDateRecent } from "../../../utils";
 
 
 function RecordLavorazioneOssido() {
@@ -23,6 +24,7 @@ function RecordLavorazioneOssido() {
     {nome: "articoli", url: URLS.ARTICOLI},
     {url: URLS.SCHEDA_CONTROLLO_OSSIDO, parser: parseSchedaLavorazione},
     {nome: "records", url: URLS.RECORD_LAVORAZIONI, parser: parseRecordLavorazioni},
+    {nome: "scheda_impianto", url: URLS.ULTIMA_SCHEDA_IMPIANTO},
   ])
   const setParsedData = (newData) => {
     setData({...data, records: parseRecordLavorazioni(newData.records)})
@@ -33,11 +35,20 @@ function RecordLavorazioneOssido() {
       setAvvisi(parsedData.late)
     })
   }, [data.records, impianto])
+  const isSchedaImpiantoOld = data?.scheda_impianto?.id && !isDateRecent(data.scheda_impianto.data, 8)
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <PageTitle>Scheda di Controllo</PageTitle>
         <Stack className="pt-8" gap={0}>
+          {isSchedaImpiantoOld && (
+            <Alert variant="danger" className="py-2 mb-2 text-left pl-[7%] inline-flex items-center">
+              <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
+              <div className="w-[30%]">Attenzione:</div>
+              <b className="pl-4 w-[55%]"> Compilare la scheda dell'impianto !</b>
+              <Link to="/manutenzione/record-scheda-impianto/"><FontAwesomeIcon icon={faArrowCircleRight} size="lg" /></Link>
+            </Alert>
+          )}
           {avvisi && avvisi.map(operazione => {
             let link = "/";
             if (operazione.tipologia === "fissaggio") link = `/manutenzione/fissaggio/`;

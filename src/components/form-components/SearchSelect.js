@@ -29,7 +29,6 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
           placeholder=""
           noOptionsMessage={() => "Nessun risultato"}
           isClearable={true}
-          required={true}
           styles={customStyle}
           name={name}
           options={options}

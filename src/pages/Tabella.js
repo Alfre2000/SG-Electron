@@ -127,7 +127,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
               <td className="cursor-pointer" onClick={() => setShowViewModal(record.id)}>
                 <FontAwesomeIcon icon={faSearch} className="rotate-90" />
               </td>
-              {i === 0 && isDateRecent(record.data) ? (
+              {i === 0 && isDateRecent(record.data, 2) ? (
                 <td className="cursor-pointer" onClick={() => setShowModifyModal(record.id)}>
                   <FontAwesomeIcon icon={faWrench} />
                 </td>
@@ -136,7 +136,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
                   <FontAwesomeIcon icon={faWrench} />
                 </td>
               )}
-              {i === 0 && isDateRecent(record.data) ? (
+              {i === 0 && isDateRecent(record.data, 2) ? (
                 <td className="cursor-pointer" onClick={() => setShowConfirmModal(record.id)}>
                   <FontAwesomeIcon icon={faTrash} className="text-red-800" />
                 </td>

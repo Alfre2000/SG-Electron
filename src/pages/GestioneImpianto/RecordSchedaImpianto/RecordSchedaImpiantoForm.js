@@ -11,7 +11,6 @@ import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import { modifyNestedObject } from "../../utils";
 
 function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
-  console.log(data);
   const schedaImpianto = Array.isArray(data.schede_impianto) ? data.schede_impianto[0] : data.schede_impianto
   const groupedVerifiche = toTableArray(schedaImpianto.verifiche_iniziali)
   const groupedAggiunte = toTableArray(schedaImpianto.aggiunte.filter(el => el.iniziale === true))
@@ -19,7 +18,7 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
   const emptyAggiunta = { data: dateToDatePicker(new Date()), ora: dateToTimePicker(new Date()), aggiunta: "" }
   const defaultAggiunte = initialData?.record_aggiunte ? initialData.record_aggiunte.filter(agg => !agg.iniziale).map(record => (
       {...record, ora: dateToTimePicker(new Date(record.data)), data: dateToDatePicker(new Date(record.data)), aggiunta: { value: record.aggiunta, label: schedaImpianto.aggiunte.find(a => a.id === record.aggiunta).materiale}}
-    )) : [emptyAggiunta]
+    )) : []
   const [aggiunte, setAggiunte] = useState(defaultAggiunte)
   return (
     <>
@@ -237,7 +236,6 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                       isDisabled={view}
                       initialData={initialData}
                       inputProps={{
-                        required: true,
                         onChange: (e) => setAggiunte(
                           modifyNestedObject(aggiunte, `${idx}__aggiunta`, e)
                         ),

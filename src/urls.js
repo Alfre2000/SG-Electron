@@ -41,6 +41,7 @@ export const URLS = {
     // SCHEDE IMPIANTO
     SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/schede-impianti/',
     RECORD_SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/record-schede-impianti/',
+    ULTIMA_SCHEDA_IMPIANTO: BASE_PATH + '/scheda-impianto/ultima-scheda-impianto/',
 
     // PAGINA
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
