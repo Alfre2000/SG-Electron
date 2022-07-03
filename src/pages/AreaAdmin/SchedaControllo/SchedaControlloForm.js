@@ -18,9 +18,9 @@ function SchedaControlloForm({ data, setData, initialData, errors, view }) {
     const nextLetter = String.fromCharCode(65 + n)
     return { nome: `${nextLetter}. `, controlli: [ emptyControllo ]}
   }
-  const [sezioni, setSezioni] = useState(!!initialData ? initialData.sezioni : [getSezioneVuota(0)])
-  const [immagini, setImmagini] = useState(!!initialData ? initialData.immagini_supporto : [emptyImmagine])
-  const [documenti, setDocumenti] = useState(!!initialData ? initialData.documenti_supporto : [emptyDocumento])
+  const [sezioni, setSezioni] = useState(!!initialData ? initialData.sezioni || [] : [getSezioneVuota(0)])
+  const [immagini, setImmagini] = useState(!!initialData ? initialData.immagini_supporto || [] : [emptyImmagine])
+  const [documenti, setDocumenti] = useState(!!initialData ? initialData.documenti_supporto || [] : [emptyDocumento])
   return (
     <>
       <Row className="mb-4 mt-2">
@@ -64,7 +64,7 @@ function SchedaControlloForm({ data, setData, initialData, errors, view }) {
                     <Form.Control
                       size="sm"
                       name={`${basePath}__immagine`}
-                      value={immagine.immagine}
+                      value={!initialData ? immagine.immagine : ""}
                       type="file"
                       onChange={(e) => setImmagini(
                         modifyNestedObject(immagini, `${idxImmagine}__immagine`, e.target.value)
@@ -119,7 +119,7 @@ function SchedaControlloForm({ data, setData, initialData, errors, view }) {
                     <Form.Control
                       size="sm"
                       name={`${basePath}__documento`}
-                      value={documento.documento}
+                      value={!initialData ? documento.documento : ""}
                       type="file"
                       onChange={(e) => setDocumenti(
                         modifyNestedObject(documenti, `${idxDocumento}__documento`, e.target.value)
@@ -209,7 +209,6 @@ function SchedaControlloForm({ data, setData, initialData, errors, view }) {
                       <Form.Control.Feedback type="invalid" className="text-xs text-center">
                         {errors && nomeErrors}
                       </Form.Control.Feedback>
-                      
                     </td>
                     <td>
                       <Form.Control

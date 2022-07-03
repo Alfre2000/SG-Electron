@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Table } from "react-bootstrap";
-import { modifyNestedObject, objectsEqual } from "../../../pages/utils";
+import { findNestedElement, modifyNestedObject, objectsEqual } from "../../../pages/utils";
 import { capitalize } from "../../../utils";
 import MinusIcon from "../../Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../Icons/PlusIcon/PlusIcon";
@@ -37,15 +37,17 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
       <tbody>
         {items?.map((item, idx) => (
           <tr key={idx}>
-            {colonne.map((colonna) => (
+            {colonne.map((colonna) => {
+              const inputName = `${name}__${idx + startIndex}__${colonna.name}`
+              return (
               <td key={colonna.name}>
                 {colonna.input ? (
                   React.cloneElement(colonna.input, {
-                    name: `${name}__${idx + startIndex}__${colonna.name}`,
+                    name: inputName,
                   })
                 ) : colonna.type === "select" ? (
                   <SearchSelect
-                    name={`${name}__${idx + startIndex}__${colonna.name}`}
+                    name={inputName}
                     label={false}
                     initialData={initialData}
                     createTable={colonna.createTable || false}
@@ -72,7 +74,7 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                     type={colonna.type || "text"}
                     className="text-center"
                     size="sm"
-                    name={`${name}__${idx + startIndex}__${colonna.name}`}
+                    name={inputName}
                     value={item[colonna.name]}
                     onChange={(e) =>
                       setItems(
@@ -85,8 +87,13 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                     }
                   />
                 )}
+                {errors && (
+                  <Form.Control.Feedback type="invalid" className="block text-xs text-center">
+                    {findNestedElement(errors, inputName)?.join(' - ')}
+                  </Form.Control.Feedback>
+                )}
               </td>
-            ))}
+            )})}
             <td>
               {initialData && (
                 <input
@@ -103,7 +110,7 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                   hidden
                   name={`${name}__${idx + startIndex}__${colonna.name}`}
                   className="hidden"
-                  defaultValue={item[colonna.name] || undefined}
+                  defaultValue={colonna.value || undefined}
                   data-testid="hidden-input"
                 />
               ))}

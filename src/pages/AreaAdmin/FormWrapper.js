@@ -24,6 +24,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
       let defaultValue;
       defaultValue = initialData[el.name]
       if (defaultValue !== undefined && defaultValue !== null) {
+        if (el.type === "file") return;
         if (el.tagName === 'SELECT') {
           if (el.querySelector(`option[value="${defaultValue}"]`)) {
             el.querySelector(`option[value="${defaultValue}"]`).setAttribute('selected', 'selected')
@@ -79,8 +80,9 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
   // Funzione che gestisce la creazione di un nuovo record
   const createRecord = (formData, form) => {
     parseFormData(formData)
-    console.log({...formData});
-    apiPost(url, formData).then(response => {
+    const finalFormData = new FormData()
+    Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
+    apiPost(url, finalFormData).then(response => {
       if (data.records) {
         const newData = {...data, records: {...data.records,  results:[response, ...data.records.results]}}
         if (onSuccess) {
@@ -115,8 +117,9 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
       }
     })
     parseFormData(formData)
-    console.log({...formData});
-    apiUpdate(url + initialData.id + '/', formData).then(response => {
+    const finalFormData = new FormData()
+    Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
+    apiUpdate(url + initialData.id + '/', finalFormData).then(response => {
       const records = data.records.results.map(record => {
         if (record.id === response.id) {
           return response

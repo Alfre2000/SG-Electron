@@ -37,6 +37,7 @@ function AnalisiForm({ data, initialData, errors, view }) {
         <TabellaNestedItems 
           name="parametri"
           initialData={initialData}
+          errors={errors}
           view={view}
           colonne={[
             { name: "nome",},

@@ -30,6 +30,7 @@ function ManutenzioneForm({ data, initialData, errors, view }) {
             <Input name="intervallo_giorni" inputProps={{ type: "number" }} />
           </Stack>
         </Col>
+        <input hidden className="hidden" name="attiva" defaultValue={true} />
       </Row>
     </>
   )

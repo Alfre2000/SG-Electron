@@ -63,7 +63,7 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
               createTable: true,
               options: searchOptions(data?.materiali, "nome", true),
             },
-            { name: "iniziale", type: "hidden", value: false },
+            { name: "iniziale", type: "hidden", value: "off" },
           ]}
         />
       </Fieldset>

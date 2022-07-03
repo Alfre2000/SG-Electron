@@ -18,50 +18,6 @@ export const parseFormData = (formData) => {
     formData['data'] = new Date(formData['data'] + " " + formData['ora']).toISOString()
     delete formData['ora']
   }
-  const formDataCopy = {...formData}
-  Object.keys(formDataCopy).forEach(key => {
-    if (formData[key]?.constructor.name === "File" && formData[key].name === "" && formData[key].size === 0) delete formData[key];
-    else if (key.split('__').length >= 3) { 
-      parseNestedObject(key, formData, formDataCopy)
-    }
-  })
-  cleanObj(formData)
-}
-
-const parseNestedObject = (name, formData, initialFormData) => {
-  let [ chiave, index, ...campo ] = name.split('__')
-  if (campo.length >= 3 && formData[chiave]) {
-    let initial = {}
-    for (const [key, value] of Object.entries({...initialFormData})) {
-      if (key.startsWith(`${chiave}__`)) {
-        if (key.startsWith(`${chiave}__${index}`)) {
-          initial[key.split('__').slice(2).join('__')] = value
-        }
-      } else {
-        initial[key] = value
-      }
-    }
-    if (formData[chiave][index] === undefined) formData[chiave][index] = {}
-    parseNestedObject(campo.join('__'), formData[chiave][index], initial)
-    delete formData[name]
-  } else {
-    const nElementiPerRiga = Object.keys(initialFormData).filter(k => k.startsWith(chiave + '__0')).length || Object.keys(initialFormData).filter(k => k.startsWith(chiave + '__1')).length
-    if (!(chiave in formData)) {
-      const nElementi = Object.keys(initialFormData).filter(k => k.startsWith(chiave + '__')).length
-      formData[chiave] = Array.from(Array(Math.floor(nElementi / nElementiPerRiga)))
-    }
-    if (!formData[chiave][index]) formData[chiave][index] = {}
-    if (formData[name] !== "") {
-      formData[chiave][index][campo[0]] = initialFormData[name]
-    }
-    delete formData[name]
-    // Se il record è completo elimina la riga se è vuota
-    if (Object.keys(formData[chiave][index]).length + 1 === nElementiPerRiga) {
-      if (Object.values(formData[chiave][index]).every(value => !value)) {
-        formData[chiave].splice(index, 1)
-      }
-    }
-  }
 }
 
 export const findNestedElement = (obj, path) => {
@@ -98,27 +54,6 @@ export const removeFromNestedArray = (obj, path, idx) => {
   return modifyNestedObject(obj, path, newValue)
 }
 
-const cleanObj = (obj) => {
-  Object.keys(obj).forEach(key => {
-    if (obj[key]?.constructor.name === "File") return;
-    const isArray = Array.isArray(obj[key])
-    const isEmpty = obj[key] === undefined || obj[key] === null || obj[key] === ""
-    const isEmptyObj = typeof obj[key] === 'object' && obj[key] !== null && Object.keys(obj[key]).length === 0
-    const isObject = typeof obj[key] === 'object' && obj[key] !== null
-    if (isArray) {
-      obj[key] = obj[key].filter(el => el !== undefined && !(typeof el === 'object' && (Object.keys(el).length === 0 || Object.values(el).every(value => value === undefined || value === null || value === ""))))
-      cleanObj(obj[key])
-    } else if (isEmpty || isEmptyObj) {
-      delete obj[key]
-    } else if (isObject) {
-      if (Object.values(obj[key]).every(value => value === undefined || value === null || value === "")) {
-        delete obj[key]
-      } else {
-        cleanObj(obj[key])
-      }
-    } 
-  })
-}
 
 export const getBase64 = file => new Promise((resolve, reject) => {
   const reader = new FileReader();

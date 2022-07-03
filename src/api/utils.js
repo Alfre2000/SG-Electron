@@ -53,7 +53,7 @@ export const apiUpdate = async (url, body) => {
 
 export const getHeaders = (auth = true) => {
     const headers = {
-        "Content-type": "application/json",
+        // "Content-type": "multipart/form-data",
     }
     if (auth) {
         const authToken = JSON.parse(localStorage.getItem("user")).key
