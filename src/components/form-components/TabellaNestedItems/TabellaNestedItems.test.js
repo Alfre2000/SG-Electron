@@ -66,7 +66,7 @@ describe("TabellaNestedItems", () => {
       colonne: [
         { name: "nome" },
         { name: "tipo_colore", type: "number" },
-        { name: "finito", type: "hidden" },
+        { name: "finito", type: "hidden", value: true },
       ],
     };
     render(<TabellaNestedItems {...props} />);
