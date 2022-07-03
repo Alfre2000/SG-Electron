@@ -30,11 +30,11 @@ function ArticoliInput({ data, setData, initialData }) {
       const tolto = initialData && initialData.id === articolo.scheda_controllo?.id
       const nonSelezionato = !idSelezionati.includes(articolo.id)
       const clienteFilter = !cliente?.value || articolo.cliente.nome === cliente?.value
-      const articoloNomeFilter = articolo.nome.toLowerCase().includes(ricerca) || articolo.codice.toLowerCase().includes(ricerca)
+      const articoloNomeFilter = articolo?.nome?.toLowerCase()?.includes(ricerca) || articolo?.codice?.toLowerCase()?.includes(ricerca)
       return (noScheda || tolto) && nonSelezionato && clienteFilter &&  articoloNomeFilter
     }) 
     : []
-  const clienti = data?.articoli ? new Set(data?.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
+  const clienti = data?.articoli ? new Set(data?.articoli.map(articolo => articolo.cliente?.nome)) : new Set([]);
   return (
     <>
       {modalArticolo && (
@@ -42,10 +42,12 @@ function ArticoliInput({ data, setData, initialData }) {
           show={modalArticolo}
           handleClose={() => setModalArticolo(false)}>
             <FormWrapper data={data} setData={setData} url={URLS.ARTICOLI}
-              onSuccess={(response) => {
+              onSuccess={(newData) => {
+                const articolo = newData.records.results.shift()
+                newData.articoli.push(articolo)
                 setModalArticolo(false)
-                setData({...data, articoli: [response, ...data.articoli]})
-                setArticoli([response, ...articoli])
+                setData(newData)
+                setArticoli([articolo, ...articoli])
               }}>
               <ArticoloForm data={data} campoScheda={false} />
             </FormWrapper>
