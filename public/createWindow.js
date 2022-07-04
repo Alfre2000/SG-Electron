@@ -1,7 +1,9 @@
-const { screen, BrowserWindow } = require("electron");
+const { screen, BrowserWindow, Menu } = require("electron");
 const updater = require("./updater");
 const isDev = require("electron-is-dev");
 const path = require("path");
+
+const contextMenu = Menu.buildFromTemplate(require("./contextMenu"));
 
 module.exports = function createWindow() {
   // Check for Updates after 8 seconds
@@ -38,4 +40,7 @@ module.exports = function createWindow() {
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
   }
+  win.webContents.on('context-menu', e => {
+    contextMenu.popup();
+  })
 };
