@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { Button, Form, Popover, Table } from "react-bootstrap";
 import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
-import useOutsideAlerter from "../../../hooks/useOutsideAlerter";
+import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { modifyNestedObject } from "../../utils";
 
 function PopoverMisurazioni({ controllo, idxControllo, initialData, view, articolo }) {

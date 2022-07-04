@@ -4,7 +4,7 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import FissaggioForm from "./FissaggioForm";
 import FormWrapper from "../../FormWrapper";
-import useGetAPIData from "../../../hooks/useGetAPIData";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import Tabella from "../../Tabella";
 import { parseRecordFissaggi } from "../parsers";
 import PageTitle from "../../../components/PageTitle/PageTitle";

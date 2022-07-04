@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import { apiGet } from "../../../api/utils";
 import PageTitle from "../../../components/PageTitle/PageTitle";
-import useGetAPIData from "../../../hooks/useGetAPIData";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
 import UserContext from "../../../UserContext";
 import FormWrapper from "../../AreaAdmin/FormWrapper";

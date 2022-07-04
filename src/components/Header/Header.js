@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../api/users";
-import useOutsideAlerter from "../../hooks/useOutsideAlerter";
+import useOutsideAlerter from "../../hooks/useOutsideAlerter/useOutsideAlerter";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -52,7 +52,7 @@ function Header({ title, toggleNavbar }) {
             <FontAwesomeIcon size="lg" icon={faExpand} />
           </Nav.Link>
         </Nav>
-        <h1 className="font-roboto text-white font-normal m-0 text-[2.125rem]">
+        <h1 className="font-roboto text-white font-normal text-center m-0 text-[2.125rem]">
           {title}
         </h1>
         <Nav>

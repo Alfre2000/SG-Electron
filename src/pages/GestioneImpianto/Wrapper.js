@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
 import Navbar from "../../components/Navbar/Navbar";
 import Header from "../../components/Header/Header";
-import useCheckAuth from '../../hooks/useCheckAuth';
+import useCheckAuth from '../../hooks/useCheckAuth/useCheckAuth';
 import { getNavItems } from './navbar';
 import UserContext from '../../UserContext';
-import useCheckImpianto from '../../hooks/useCheckImpianto';
+import useCheckImpianto from '../../hooks/useCheckImpianto/useCheckImpianto';
 
 function Wrapper({ children, defaultNav }) {
   const pendingAuth = useCheckAuth();

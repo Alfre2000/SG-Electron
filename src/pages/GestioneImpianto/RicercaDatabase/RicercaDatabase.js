@@ -9,7 +9,7 @@ import { apiGet } from "../../../api/utils";
 import ManutenzioneForm from "./../Manutenzione/ManutenzioneForm";
 import AnalisiForm from "./../Analisi/AnalisiForm";
 import FissaggioForm from "./../Fissaggio/FissaggioForm";
-import useGetAPIData from "../../../hooks/useGetAPIData";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import Tabella from "../../Tabella";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import UserContext from "../../../UserContext";

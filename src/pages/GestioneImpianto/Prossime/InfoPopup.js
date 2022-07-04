@@ -2,7 +2,7 @@ import { faCircleCheck, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef } from "react";
 import { Popover } from "react-bootstrap";
-import useOutsideAlerter from "../../../hooks/useOutsideAlerter";
+import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
 
 function InfoPopup({ placement, setPopup, operazione }) {
   const popupRef = useRef(null);

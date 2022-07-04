@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Col, Container, Row, Card, Alert } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
-import useGetAPIData from "../../../hooks/useGetAPIData";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
 import FormWrapper from "../../AreaAdmin/FormWrapper";
 import Tabella from "../../Tabella";

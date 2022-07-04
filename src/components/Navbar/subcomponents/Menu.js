@@ -1,7 +1,7 @@
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
-import useOutsideAlerter from "../../../hooks/useOutsideAlerter";
+import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { Link, useNavigate } from "react-router-dom";
 
 function Menu({ title, icon, links, navOpen }) {

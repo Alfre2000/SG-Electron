@@ -7,7 +7,7 @@ import { colors, findElementFromID, capitalize } from '../../../utils'
 import Wrapper from '../Wrapper'
 import PasswordModal from "../../../components/Modals/PasswordModal/PasswordModal";
 import { useNavigate } from 'react-router-dom'
-import useGetAPIData from '../../../hooks/useGetAPIData'
+import useGetAPIData from '../../../hooks/useGetAPIData/useGetAPIData'
 import UserContext from '../../../UserContext'
 
 function Produzione() {

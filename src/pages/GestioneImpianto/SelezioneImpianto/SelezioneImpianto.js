@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Alert, Container, ListGroup } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import PageTitle from "../../../components/PageTitle/PageTitle";
-import useGetAPIData from "../../../hooks/useGetAPIData";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
 import { findElementFromID } from "../../../utils";
 import { useNavigate } from "react-router-dom";

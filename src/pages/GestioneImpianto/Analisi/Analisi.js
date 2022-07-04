@@ -4,7 +4,7 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import FormWrapper from "../../FormWrapper";
 import AnalisiForm from "./AnalisiForm";
-import useGetAPIData from "../../../hooks/useGetAPIData";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import Tabella from "../../Tabella";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 
