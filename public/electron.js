@@ -1,77 +1,17 @@
-const path = require('path');
 const fs = require('fs');
-const updater = require('./updater');
 
-const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('electron');
 const isDev = require('electron-is-dev');
-
-// process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-const mainMenuTemplate = [
-  { 
-    label: "Finestre",
-    submenu: [
-      { label: "Nuova Finestra", click: () => createWindow() },
-      { label: "Apri DevTools", click: () => {
-        const win = BrowserWindow.getFocusedWindow()
-        win.webContents.openDevTools({ mode: 'detach' });
-      }}
-    ],
-  },
-  {
-    label: "File",
-    submenu: [
-      { label: "Upload File" },
-      { label: "Preferences" },
-      { label: "Exit" },
-    ],
-  },
-  { label: "Tools" },
-  { label: "Edit" },
-];
-
-
-function createWindow() {
-
-  // Check for Updates after 8 seconds
-  setTimeout(updater, 8000)
-
-  // Get Screen size
-  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().bounds
-
-  // Create the browser window.
-  const win = new BrowserWindow({
-    width: screenWidth * 0.9, minWidth: 1000,
-    height: screenHeight, minHeight: 500,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      enableRemoteModule: true,
-    },
-    show: false,
-  });
-
-  win.once('ready-to-show', win.show)
-
-  // and load the index.html of the app.
-  // win.loadFile("index.html");
-  win.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
-  // Open the DevTools.
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
-}
+const mainMenu = require('./mainMenu');
+const createWindow = require('./createWindow');
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
-  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-  Menu.setApplicationMenu(mainMenu);
+  const menu = Menu.buildFromTemplate(mainMenu);
+  Menu.setApplicationMenu(menu);
   ipcMain.handle('toggle-fullscreen', () => {
     const win = BrowserWindow.getFocusedWindow()
     win.setFullScreen(!win.isFullScreen())  

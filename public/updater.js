@@ -30,6 +30,7 @@ module.exports = () => {
             buttons: ['Si', 'Più tardi']
         }).then(result => {
             if (result.response === 0) {
+                localStorage.removeItem("user")
                 autoUpdater.quitAndInstall(false, true)
            }
         })

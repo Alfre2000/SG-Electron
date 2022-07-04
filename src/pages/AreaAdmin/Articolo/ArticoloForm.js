@@ -1,28 +1,13 @@
-import React, { useState } from 'react'
-import { Col, Row, Stack, Table } from "react-bootstrap";
+import React from 'react'
+import { Col, Row, Stack } from "react-bootstrap";
 import Fieldset from '../../../components/form-components/Fieldset';
 import Input from '../../../components/form-components/Input';
 import InputMisura from '../../../components/form-components/InputMisura';
 import SearchSelect from '../../../components/form-components/SearchSelect';
-import MinusIcon from '../../../components/Icons/MinusIcon/MinusIcon';
-import PlusIcon from '../../../components/Icons/PlusIcon/PlusIcon';
-import { convertPeso, findElementFromID, convertSuperficie } from '../../../utils';
+import { convertPeso, convertSuperficie, searchOptions } from '../../../utils';
+import TabellaNestedItems from '../../../components/form-components/TabellaNestedItems/TabellaNestedItems';
 
 function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
-  const emptyRichiesta = { lavorazione: null, spessore_minimo: "", spessore_massimo: ""}
-  const defaultRichieste = initialData && Object.keys(initialData).length > 0 ? initialData.richieste.map(richiesta => (
-    {...richiesta, lavorazione: {
-       value: richiesta.lavorazione,
-       label: findElementFromID(richiesta.lavorazione, data.lavorazioni).nome
-      }
-    })) : [emptyRichiesta]
-  const [richieste, setRichieste] = useState(defaultRichieste)
-
-  const handleModifyRichiesta = (newValue, idxRichiesta, campo) => {
-    let newRichieste = [...richieste]
-    newRichieste[idxRichiesta][campo] = newValue
-    setRichieste(newRichieste)
-  }
   return (
     <>
       <Row className="mb-4">
@@ -91,80 +76,17 @@ function ArticoloForm({ data, initialData, errors, view, campoScheda }) {
         </Row>
       </Fieldset>
       <Fieldset title="lavorazioni richieste">
-        <Table bordered className="text-center align-middle">
-          <thead>
-            <tr>
-              <th className="w-[39%]">Lavorazione</th>
-              <th className="w-[28%]">Spessore minimo (µm)</th>
-              <th className="w-[28%]">Spessore massimo (µm)</th>
-              <th className="w-[5%]"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {richieste.map((richiesta, idx) => (
-              <tr key={idx}>
-                <td>
-                  {initialData && (
-                    <input hidden name={`richieste__${idx}__id`} className="hidden" defaultValue={richiesta.id || undefined}/>
-                  )}
-                  <SearchSelect 
-                    name={`richieste__${idx}__lavorazione`}
-                    label={false}
-                    options={data?.lavorazioni?.map(lavorazione => ({ value: parseInt(lavorazione.id), label: lavorazione.nome }))}
-                    errors={errors}
-                    isDisabled={view}
-                    initialData={initialData}
-                    inputProps={{
-                      onChange: (newValue) => {
-                        handleModifyRichiesta({...newValue, value: parseInt(newValue.value)}, idx, "lavorazione")
-                      },
-                      value: richiesta.lavorazione,
-                      isDisabled: view
-                    }}
-                  />
-                </td>
-                <td>
-                  <Input 
-                    name={`richieste__${idx}__spessore_minimo`}
-                    label={false}
-                    errors={errors}
-                    inputProps={{
-                      type: "number",
-                      onChange: (event) => handleModifyRichiesta(event.target.value, idx, "spessore_minimo"),
-                      value: richiesta.spessore_minimo
-                    }}
-                  />
-                </td>
-                <td>
-                  <Input 
-                    name={`richieste__${idx}__spessore_massimo`}
-                    label={false}
-                    errors={errors}
-                    inputProps={{
-                      type: "number",
-                      onChange: (event) => handleModifyRichiesta(event.target.value, idx, "spessore_massimo"),
-                      value: richiesta.spessore_massimo
-                    }}
-                  />
-                </td>
-                <td>
-                  <MinusIcon 
-                    disabled={view}
-                    onClick={() => setRichieste(richieste.filter((_, i) => i !== idx))}
-                  />
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td colSpan={4}>
-                <PlusIcon
-                  disabled={view}
-                  onClick={() => setRichieste([...richieste, emptyRichiesta])}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </Table>
+        <TabellaNestedItems 
+          name="richieste"
+          initialData={initialData}
+          errors={errors}
+          view={view}
+          colonne={[
+            { name: "lavorazione", type: "select", options: searchOptions(data?.lavorazioni, "nome") },
+            { name: "spessore_minimo", type: "number", label: "Spessore minimo (µm)" },
+            { name: "spessore_massimo", type: "number", label: "Spessore massimo (µm)" },
+          ]}
+        />
       </Fieldset>
     </>
   )

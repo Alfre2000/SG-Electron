@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Row, Stack } from "react-bootstrap";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { searchOptions } from "../../../utils";
@@ -30,7 +31,7 @@ function ManutenzioneForm({ data, initialData, errors, view }) {
             <Input name="intervallo_giorni" inputProps={{ type: "number" }} />
           </Stack>
         </Col>
-        <input hidden className="hidden" name="attiva" defaultValue={true} />
+        <Hidden name="attiva" defaultValue={true} />
       </Row>
     </>
   )

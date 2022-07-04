@@ -4,6 +4,7 @@ import { findNestedElement, modifyNestedObject, objectsEqual } from "../../../pa
 import { capitalize } from "../../../utils";
 import MinusIcon from "../../Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../Icons/PlusIcon/PlusIcon";
+import Hidden from "../../form-components/Hidden/Hidden";
 import SearchSelect from "../SearchSelect";
 
 function TabellaNestedItems({ name, initialData, view, colonne, errors, startIndex = 0 }) {
@@ -21,7 +22,7 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
   const [items, setItems] = useState(
     !!initialData ? initialData[name] : [emptyItem]
   );
-  const colWidth = 90 / colonne.length;
+  const colWidth = 95 / colonne.length;
   return (
     <Table bordered className="align-middle text-sm text-center">
       <thead>
@@ -31,7 +32,7 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
               {colonna.label}
             </th>
           ))}
-          <th className="w-1/10"></th>
+          <th className="w-1/20"></th>
         </tr>
       </thead>
       <tbody>
@@ -96,20 +97,16 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
             )})}
             <td>
               {initialData && (
-                <input
-                  hidden
+                <Hidden
                   name={`${name}__${idx + startIndex}__id`}
-                  className="hidden"
                   defaultValue={item.id || undefined}
                   data-testid="hidden-id"
                 />
               )}
               {hiddenCols.map(colonna => (
-                <input
+                <Hidden
                   key={colonna.name}
-                  hidden
                   name={`${name}__${idx + startIndex}__${colonna.name}`}
-                  className="hidden"
                   defaultValue={colonna.value || undefined}
                   data-testid="hidden-input"
                 />

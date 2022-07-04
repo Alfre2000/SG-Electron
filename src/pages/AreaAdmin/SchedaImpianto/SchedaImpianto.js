@@ -7,7 +7,6 @@ import FormWrapper from '../FormWrapper';
 import Wrapper from '../../AreaAdmin/Wrapper'
 import SchedaImpiantoForm from './SchedaImpiantoForm';
 import Tabella from '../../Tabella';
-import RecordSchedaImpiantoForm from '../../GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpiantoForm'
 
 function SchedaImpianto() {
   const [data, setData] = useGetAPIData([
