@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { apiGet } from "../../api/utils";
+import { apiGet } from "../../api/api";
 import UserContext from "../../UserContext";
 import useGetAPIData from "./useGetAPIData";
-jest.mock("../../api/utils", () => ({ apiGet: jest.fn() }));
+jest.mock("../../api/api", () => ({ apiGet: jest.fn() }));
 
 const TestComponent = ({ requests, needsImpianto = false }) => {
   const [data] = useGetAPIData(requests, needsImpianto);

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { apiGet } from "../../../api/utils";
+import { apiGet } from "../../../api/api";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card, Stack, Alert } from "react-bootstrap";
 import Wrapper from "../Wrapper";

@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { apiGet } from "../../api/utils";
+import { apiGet } from "../../api/api";
 import UserContext from "../../UserContext";
 
 // [ { nome, url, parser }, ... ]

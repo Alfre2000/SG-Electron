@@ -1,6 +1,6 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
-import { apiGet } from "../../api/utils";
+import { apiGet } from "../../api/api";
 import { updateQueryStringParameter } from "../../utils";
 
 function Paginator({ data, setData }) {

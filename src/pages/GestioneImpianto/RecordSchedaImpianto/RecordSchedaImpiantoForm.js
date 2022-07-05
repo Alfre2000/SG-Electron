@@ -115,7 +115,7 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
             <tbody>
               {groupedAggiunte.map((row, idx) => (
                 <tr key={row[0].id}>
-                  <td className="w-[42%]">{row[0].materiale}</td>
+                  <td className="w-[42%] uppercase">{row[0].materiale}</td>
                   <td>
                     <input
                       hidden
@@ -141,7 +141,7 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                   </td>
                   {row[1] && (
                     <>
-                      <td className="w-[42%]">{row[1].materiale}</td>
+                      <td className="w-[42%] uppercase">{row[1].materiale}</td>
                       <td>
                         <input
                           hidden

@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import Paginator from "./Paginator";
-import { apiGet } from "../../api/utils";
+import { apiGet } from "../../api/api";
 import { act } from "react-dom/test-utils";
-jest.mock("../../api/utils", () => ({ apiGet: jest.fn() }));
+jest.mock("../../api/api", () => ({ apiGet: jest.fn() }));
 
 const data = {
   count: 1000,

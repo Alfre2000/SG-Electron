@@ -6,7 +6,7 @@ import { URLS } from "../../../urls";
 import FormWrapper from "../FormWrapper";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import SchedaControlloForm from "./SchedaControlloForm";
-import { apiGet } from "../../../api/utils";
+import { apiGet } from "../../../api/api";
 import Tabella from "../../Tabella";
 
 function SchedaControllo() {

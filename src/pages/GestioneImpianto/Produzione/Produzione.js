@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { Card, Container, Form, Stack } from 'react-bootstrap'
 import { Bar, Pie } from 'react-chartjs-2'
-import { apiGet } from '../../../api/utils'
+import { apiGet } from '../../../api/api'
 import { URLS } from '../../../urls'
 import { colors, findElementFromID, capitalize } from '../../../utils'
 import Wrapper from '../Wrapper'

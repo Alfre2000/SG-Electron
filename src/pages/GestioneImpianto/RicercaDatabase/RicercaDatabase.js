@@ -5,7 +5,7 @@ import Select from "../../../components/form-components/Select";
 import { dateToDatePicker, findElementFromID } from "../../../utils";
 import Wrapper from "../Wrapper";
 import { URLS } from "../../../urls";
-import { apiGet } from "../../../api/utils";
+import { apiGet } from "../../../api/api";
 import ManutenzioneForm from "./../Manutenzione/ManutenzioneForm";
 import AnalisiForm from "./../Analisi/AnalisiForm";
 import FissaggioForm from "./../Fissaggio/FissaggioForm";
