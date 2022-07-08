@@ -1,13 +1,14 @@
 import { faPlus, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
-import { Button, Form, Popover, Table } from "react-bootstrap";
+import { Button, Popover, Table } from "react-bootstrap";
+import Input from "../../../components/form-components/Input";
 import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { modifyNestedObject } from "../../utils";
 
-function PopoverMisurazioni({ controllo, idxControllo, initialData, view, articolo }) {
+function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) {
   const [misurazioni, setMisurazioni] = useState(initialData?.misurazioni ? initialData.misurazioni : [{ valore: "" }])
   const [open, setOpen] = useState(false)
   const popupRef = useRef(null);
@@ -64,15 +65,17 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, view, artico
                         {initialData && (
                           <input hidden name={`${basePath}__id`} className="hidden" defaultValue={misurazione.id || undefined}/>
                         )}
-                        <Form.Control
-                          size="sm"
-                          className="text-center pl-5"
+                        <Input
+                          label={false}
                           name={`${basePath}__valore`}
-                          value={misurazione.valore}
-                          type="number"
-                          onChange={(e) => setMisurazioni(
-                            modifyNestedObject(misurazioni, `${idxMisurazione}__valore`, e.target.value)
-                          )}
+                          inputProps={{
+                            className: "text-center pl-5",
+                            value: misurazione.valore,
+                            type: "number",
+                            onChange: (e) => setMisurazioni(
+                              modifyNestedObject(misurazioni, `${idxMisurazione}__valore`, e.target.value)
+                            )
+                          }}
                         />
                         {misurazione.valore !== "" && (sopraMassimo || sottoMinimo)  && (
                           <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
@@ -83,7 +86,6 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, view, artico
                       </td>
                       <td>
                         <MinusIcon 
-                          disabled={view}
                           onClick={() => setMisurazioni(misurazioni.filter((_, idx) => idx !== idxMisurazione))}
                         />
                       </td>
@@ -93,7 +95,6 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, view, artico
                 <tr>
                   <td colSpan={4}>
                     <PlusIcon 
-                      disabled={view}
                       onClick={() => setMisurazioni([...misurazioni, { valore: "" }])}
                     />
                   </td>

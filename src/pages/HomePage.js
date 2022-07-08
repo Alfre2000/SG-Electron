@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Card from "./../components/Card/Card";
 import Navbar from "./../components/Navbar/Navbar";
-import { faUserPlus, faBookOpen } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import Header from "./../components/Header/Header";
 import UserContext from '../UserContext';
 import { PROGRAMMI } from '../programmi';
@@ -27,17 +27,10 @@ function HomePage(props) {
       navigate(programs[0].link);
     }
   }, [navigate, user, setUser])
-  const navbar = [
-    { title: "Assistenza", icon: faBookOpen, links: [
-      {name: "Email all'Assistenza", link: '#'},
-      {name: 'Invia Screenshot', link: '#'},
-    ] },
-  ];
+  const navbar = [];
   if (user.user && user.user.is_staff) {
     navbar.push({ title: "Admin", icon: faUserPlus, links: [
       {name: 'Pannello Amministratore', action: () => electron.ipcRenderer.invoke('open-admin')},
-      {name: 'Riepilogo Programmi', link: '#'},
-      {name: 'Analisi Anomalie', link: '#'},
     ]})
   }
 

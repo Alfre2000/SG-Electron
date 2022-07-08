@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
+import { useFormContext } from "../../contexts/FormContext";
+import { findNestedElement } from "../../pages/utils";
 import { dateToTimePicker } from "../../utils";
 
 function TimeInput({ initialData }) {
+  const formData = useFormContext()
+  initialData = initialData !== undefined ? initialData : formData.initialData;
+  const errorsValue = formData.errors ? findNestedElement(formData.errors, "ora")?.join(' - ') : undefined
   const [time, setTime] = useState(
     dateToTimePicker(
       initialData?.data ? new Date(initialData.data) : new Date()
@@ -23,6 +28,8 @@ function TimeInput({ initialData }) {
       onChange={(e) => setTime(e.target.value)}
       name="ora"
       placeholder="Ora"
+      isInvalid={formData.errors && Boolean(errorsValue)}
+      isValid={!errorsValue && !! formData.errors}
     />
   );
 }

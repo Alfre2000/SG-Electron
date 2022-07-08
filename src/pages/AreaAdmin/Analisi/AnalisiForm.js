@@ -6,23 +6,19 @@ import SearchSelect from "../../../components/form-components/SearchSelect";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
 import { searchOptions } from "../../../utils";
 
-function AnalisiForm({ data, initialData, errors, view }) {
-  const impiantoOssido = data?.impianti?.find((impianto) =>
-    impianto.nome.includes("Ossido")
-  );
+function AnalisiForm({ data }) {
+  // const impiantoOssido = data?.impianti?.find((impianto) =>
+  //   impianto.nome.includes("Ossido")
+  // );
   return (
     <>
       <Row className="mb-4 mt-2">
         <Col xs={6} className="pr-6 border-r-2 border-r-gray-500">
           <Stack gap={1}>
-            <Input name="nome" inputProps={{ required: true }} />
+            <Input name="nome" />
             <SearchSelect
               name="impianto"
-              initialData={initialData}
-              inputProps={{
-                isDisabled: view,
-              }}
-              options={searchOptions(impiantoOssido && [impiantoOssido], "nome")}
+              options={searchOptions(data?.impianti, "nome")}
             />
           </Stack>
         </Col>
@@ -34,13 +30,10 @@ function AnalisiForm({ data, initialData, errors, view }) {
         </Col>
       </Row>
       <Fieldset title="Parametri">
-        <TabellaNestedItems 
+        <TabellaNestedItems
           name="parametri"
-          initialData={initialData}
-          errors={errors}
-          view={view}
           colonne={[
-            { name: "nome",},
+            { name: "nome" },
             { name: "minimo", type: "number" },
             { name: "ottimo", type: "number" },
             { name: "massimo", type: "number" },

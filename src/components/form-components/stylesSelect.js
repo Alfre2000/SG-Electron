@@ -18,8 +18,8 @@ export const customStyle = {
   control: (provided, state) => {
     return {
     ...provided,
-    borderColor: state.selectProps.errors ? "#cb444b" : state.isFocused ? "#86b7fe" : "#ced4da",
-    boxShadow: state.isFocused && state.selectProps.errors ? "0 0 0 0.25rem rgb(203 68 74 / 25%)" : state.isFocused ? "0 0 0 0.25rem rgb(13 110 253 / 25%)" : "none",
+    borderColor: state.selectProps.error ? "#cb444b" : state.isFocused ? "#86b7fe" : "#ced4da",
+    boxShadow: state.isFocused && state.selectProps.error ? "0 0 0 0.25rem rgb(203 68 74 / 25%)" : state.isFocused && state.selectProps.errors ? "0 0 0 0.25rem rgb(25 135 84 / 25%)" : state.isFocused ? "0 0 0 0.25rem rgb(13 110 253 / 25%)" : "none",
     minHeight: "31px",
     height: "31px",
   }},
@@ -37,5 +37,6 @@ export const customStyle = {
   dropdownIndicator: (provided, state) => ({
     ...provided,
     padding: "0px 5px",
+    color: state.selectProps.error ? "#cb444b" : state.selectProps.errors ? "#198754" : "hsl(0, 0%, 80%)"
   }),
 };

@@ -5,12 +5,14 @@ import { Col, Row, ListGroup } from "react-bootstrap";
 import Input from '../../../components/form-components/Input';
 import SearchSelect from '../../../components/form-components/SearchSelect';
 import ModifyModal from '../../../components/Modals/ModifyModal/ModifyModal';
+import { useFormContext } from '../../../contexts/FormContext';
 import { URLS } from '../../../urls';
 import { findElementFromID } from '../../../utils';
 import ArticoloForm from '../Articolo/ArticoloForm';
 import FormWrapper from '../FormWrapper';
 
-function ArticoliInput({ data, setData, initialData }) {
+function ArticoliInput({ data, setData }) {
+  const { initialData } = useFormContext()
   const [modalArticolo, setModalArticolo] = useState(false)
   const [ricerca, setRicerca] = useState("")
   const [cliente, setCliente] = useState(null)

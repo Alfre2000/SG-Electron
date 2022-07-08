@@ -14,8 +14,15 @@ function Menu({ title, icon, links, navOpen }) {
     }
   });
   const handleClick = () => {
-    if (links.length === 1) navigate(links[0].link);
-    else setOpen(!open);
+    if (links.length === 1) {
+      if (links[0].link) {
+        navigate(links[0].link);
+      } else {
+        links[0].action();
+      }
+    } else {
+      setOpen(!open);
+    }
   };
   return (
     <div

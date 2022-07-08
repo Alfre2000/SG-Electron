@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { Form, Table } from "react-bootstrap";
-import { findNestedElement, modifyNestedObject, objectsEqual } from "../../../pages/utils";
+import { Table } from "react-bootstrap";
+import { modifyNestedObject, objectsEqual } from "../../../pages/utils";
 import { capitalize } from "../../../utils";
 import MinusIcon from "../../Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../Icons/PlusIcon/PlusIcon";
 import Hidden from "../../form-components/Hidden/Hidden";
 import SearchSelect from "../SearchSelect";
+import Input from "../Input";
+import { useFormContext } from "../../../contexts/FormContext";
 
-function TabellaNestedItems({ name, initialData, view, colonne, errors, startIndex = 0 }) {
+function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
+  const formData = useFormContext()
+  initialData = initialData !== undefined ? initialData : formData.initialData;
   const hiddenCols = colonne.filter(col => col.type === "hidden")
   colonne = colonne.filter(col => col.type !== "hidden")
   colonne = colonne.map((colonna) => {
@@ -50,11 +54,8 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                   <SearchSelect
                     name={inputName}
                     label={false}
-                    initialData={initialData}
                     createTable={colonna.createTable || false}
-                    errors={errors}
                     inputProps={{
-                      isDisabled: view,
                       onChange: (e) => {
                         setItems(
                           modifyNestedObject(
@@ -71,27 +72,23 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                     options={colonna.options}
                   />
                 ) : (
-                  <Form.Control
-                    type={colonna.type || "text"}
-                    className="text-center"
-                    size="sm"
+                  <Input 
                     name={inputName}
-                    value={item[colonna.name]}
-                    onChange={(e) =>
-                      setItems(
-                        modifyNestedObject(
-                          items,
-                          `${idx}__${colonna.name}`,
-                          e.target.value
+                    label={false}
+                    inputProps={{
+                      type: colonna.type || 'text',
+                      value: item[colonna.name],
+                      onChange: (e) =>
+                        setItems(
+                          modifyNestedObject(
+                            items,
+                            `${idx}__${colonna.name}`,
+                            e.target.value
+                          )
                         )
-                      )
+                      }
                     }
                   />
-                )}
-                {errors && (
-                  <Form.Control.Feedback type="invalid" className="block text-xs text-center">
-                    {findNestedElement(errors, inputName)?.join(' - ')}
-                  </Form.Control.Feedback>
                 )}
               </td>
             )})}
@@ -112,7 +109,6 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
                 />
               ))}
               <MinusIcon
-                disabled={view}
                 onClick={() => {
                   let newItems = items.filter((el) => !objectsEqual(el, item));
                   if (newItems.length === items.length - 1) {
@@ -128,7 +124,6 @@ function TabellaNestedItems({ name, initialData, view, colonne, errors, startInd
         <tr>
           <td colSpan={colonne.length + 1}>
             <PlusIcon
-              disabled={view}
               onClick={() => setItems([...items, emptyItem])}
             />
           </td>

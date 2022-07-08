@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
+import { useFormContext } from "../../contexts/FormContext";
 import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
@@ -7,7 +8,11 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
   const labelText = label ? label : name ? `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label === false ? 12 : inputCols ? inputCols : 12 - labelColumns
+  const formData = useFormContext()
+  errors = errors !== undefined ? errors : formData.errors
   const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
+  const defaultValue = formData?.initialData ? findNestedElement(formData?.initialData, name) : null
+  const disabled = formData?.view === true ? true : null
   if (datalist) {
     inputProps = inputProps || {};
     inputProps.list = labelText + "list"
@@ -19,8 +24,11 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
         size="sm"
         name={name}
         className="text-center"
+        defaultValue={defaultValue}
+        disabled={disabled}
         {...inputProps}
         isInvalid={errors && Boolean(errorsValue)}
+        isValid={!errorsValue && !! errors}
       />
       {datalist && (
         <datalist id={labelText + "list"}>
@@ -45,8 +53,11 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
           size="sm"
           name={name}
           className="text-center"
+          defaultValue={defaultValue}
+          disabled={disabled}
           {...inputProps}
           isInvalid={errors && Boolean(errorsValue)}
+          isValid={!errorsValue && !! errors}
         />
         {datalist && (
           <datalist id={labelText + "list"}>

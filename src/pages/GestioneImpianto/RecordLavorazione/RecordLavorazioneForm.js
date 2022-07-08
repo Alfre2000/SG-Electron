@@ -32,7 +32,6 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
           <Stack gap={2} className="text-left justify-center">
             <Input
               name="data"
-              errors={errors}
               inputProps={{
                 type: "date",
                 defaultValue: dateToDatePicker(
@@ -45,7 +44,7 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
                 Ora:
               </Form.Label>
               <Col sm="8">
-                <TimeInput initialData={initialData} />
+                <TimeInput />
               </Col>
             </Form.Group>
             <SearchSelect

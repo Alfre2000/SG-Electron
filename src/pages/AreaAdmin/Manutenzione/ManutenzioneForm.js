@@ -5,23 +5,19 @@ import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { searchOptions } from "../../../utils";
 
-function ManutenzioneForm({ data, initialData, errors, view }) {
-  const impiantoOssido = data?.impianti?.find((impianto) =>
-    impianto.nome.includes("Ossido")
-  );
+function ManutenzioneForm({ data }) {
+  // const impiantoOssido = data?.impianti?.find((impianto) =>
+  //   impianto.nome.includes("Ossido")
+  // );
   return (
     <>
       <Row className="mb-4 mt-2">
         <Col xs={6} className="pr-6 border-r-2 border-r-gray-500">
           <Stack gap={1}>
-            <Input name="nome" inputProps={{ required: true }} />
+            <Input name="nome" />
             <SearchSelect
               name="impianto"
-              initialData={initialData}
-              inputProps={{
-                isDisabled: view,
-              }}
-              options={searchOptions(impiantoOssido && [impiantoOssido], "nome")}
+              options={searchOptions(data?.impianti, "nome")}
             />
           </Stack>
         </Col>
@@ -34,7 +30,7 @@ function ManutenzioneForm({ data, initialData, errors, view }) {
         <Hidden name="attiva" defaultValue={true} />
       </Row>
     </>
-  )
+  );
 }
 
-export default ManutenzioneForm
+export default ManutenzioneForm;

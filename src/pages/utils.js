@@ -20,6 +20,20 @@ export const parseFormData = (formData) => {
   }
 }
 
+export const focusErrorInput = (form, errors) => {
+  for (const el of form.elements) {
+    const hasError = findNestedElement(errors, el.name) !== null
+    if (hasError) {
+      if (el.type === "hidden" && el.parentElement.classList.contains("react-select")) {
+        el.previousSibling.querySelector('input').focus()
+      } else {
+        el.focus()
+      }
+      return el
+    }
+  }
+}
+
 export const findNestedElement = (obj, path) => {
   if (typeof obj !== "object" || !path) return null
   let stack = path.split('__');

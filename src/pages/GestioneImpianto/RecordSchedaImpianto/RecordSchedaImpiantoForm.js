@@ -9,8 +9,9 @@ import Fieldset from "../../../components/form-components/Fieldset";
 import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import { modifyNestedObject } from "../../utils";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
 
-function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
+function RecordSchedaImpiantoForm({ data, initialData }) {
   const schedaImpianto = Array.isArray(data.schede_impianto) ? data.schede_impianto[0] : data.schede_impianto
   const groupedVerifiche = toTableArray(schedaImpianto.verifiche_iniziali)
   const groupedAggiunte = toTableArray(schedaImpianto.aggiunte.filter(el => el.iniziale === true))
@@ -23,11 +24,10 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
   return (
     <>
       <Row className="mb-4 mt-4">
-        <input hidden className="hidden" name="scheda_impianto" defaultValue={schedaImpianto.id} />
+        <Hidden name="scheda_impianto" defaultValue={schedaImpianto.id} />
         <Col xs={4}>
           <Input
             name="data"
-            errors={errors}
             inputProps={{
               type: "date",
               defaultValue: dateToDatePicker(
@@ -42,16 +42,13 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
               Ora:
             </Form.Label>
             <Col sm="8">
-              <TimeInput initialData={initialData} />
+              <TimeInput />
             </Col>
           </Form.Group>
         </Col>
         <Col xs={5}>
           <SearchSelect
             name="operatore" 
-            initialData={initialData}
-            errors={errors}
-            inputProps={{ required: true, isDisabled: view }}
             colProps={{ className: "text-center" }}
             options={data?.operatori?.map(o => ({ value: o.id, label: o.nome }))}
           />
@@ -65,9 +62,7 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                 <tr key={row[0].id}>
                   <td className="w-[42%]">{row[0].nome}</td>
                   <td>
-                    <input
-                      hidden
-                      className="hidden"
+                    <Hidden
                       defaultValue={row[0].id}
                       name={`record_verifiche_iniziali__${idx * 2}__verifica_iniziale`}
                     />
@@ -85,9 +80,7 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                     <>
                       <td className="w-[42%]">{row[1].nome}</td>
                       <td>
-                        <input
-                          hidden
-                          className="hidden"
+                        <Hidden
                           defaultValue={row[1].id}
                           name={`record_verifiche_iniziali__${idx * 2 + 1}__verifica_iniziale`}
                         />
@@ -117,15 +110,11 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                 <tr key={row[0].id}>
                   <td className="w-[42%] uppercase">{row[0].materiale}</td>
                   <td>
-                    <input
-                      hidden
-                      className="hidden"
+                    <Hidden
                       defaultValue={row[0].id}
                       name={`record_aggiunte__${idx * 2}__aggiunta`}
                     />
-                    <input
-                      hidden
-                      className="hidden"
+                    <Hidden
                       defaultValue={true}
                       name={`record_aggiunte__${idx * 2}__iniziale`}
                     />
@@ -143,15 +132,11 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                     <>
                       <td className="w-[42%] uppercase">{row[1].materiale}</td>
                       <td>
-                        <input
-                          hidden
-                          className="hidden"
+                        <Hidden
                           defaultValue={row[1].id}
                           name={`record_aggiunte__${idx * 2 + 1}__aggiunta`}
                         />
-                        <input
-                          hidden
-                          className="hidden"
+                        <Hidden
                           defaultValue={true}
                           name={`record_aggiunte__${idx * 2 + 1}__iniziale`}
                         />
@@ -190,23 +175,18 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                 <tr key={idx}>
                   <td>
                     {initialData && (
-                      <input hidden name={`record_aggiunte__${index}__id`} className="hidden" defaultValue={aggiunta.id || undefined}/>
+                      <Hidden name={`record_aggiunte__${index}__id`} defaultValue={aggiunta.id || undefined}/>
                     )}
-                    <input
-                      hidden
+                    <Hidden
                       name={`record_aggiunte__${index}__data`}
-                      className="hidden"
                       defaultValue={new Date(aggiunta.data + " " + aggiunta.ora).toISOString()}
                     />
-                    <input
-                      hidden
+                    <Hidden
                       name={`record_aggiunte__${index}__eseguito`}
-                      className="hidden"
                       defaultValue={true}
                     />
                     <Input
                       label={false}
-                      errors={errors}
                       inputProps={{
                         type: "date",
                         value: aggiunta.data,
@@ -232,21 +212,16 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
                       name={`record_aggiunte__${index}__aggiunta`}
                       label={false}
                       options={aggiunteSuccessive.map(agg => ({ value: agg.id, label: agg.materiale }))}
-                      errors={errors}
-                      isDisabled={view}
-                      initialData={initialData}
                       inputProps={{
                         onChange: (e) => setAggiunte(
                           modifyNestedObject(aggiunte, `${idx}__aggiunta`, e)
                         ),
                         value: aggiunta.aggiunta,
-                        isDisabled: view
                       }}
                     />
                   </td>
                   <td>
                     <MinusIcon 
-                      disabled={view}
                       onClick={() => setAggiunte(aggiunte.filter((_, i) => i !== idx))}
                     />
                   </td>
@@ -255,7 +230,6 @@ function RecordSchedaImpiantoForm({ data, initialData, errors, view }) {
             <tr>
               <td colSpan={4}>
                 <PlusIcon
-                  disabled={view}
                   onClick={() => setAggiunte([...aggiunte, emptyAggiunta])}
                 />
               </td>

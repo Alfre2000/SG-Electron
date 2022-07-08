@@ -3,9 +3,11 @@ import { Row } from "react-bootstrap";
 import Fieldset from "../../../components/form-components/Fieldset";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
+import { useFormContext } from "../../../contexts/FormContext";
 import { searchOptions } from "../../../utils";
 
-function SchedaImpiantoForm({ data, initialData, errors, view }) {
+function SchedaImpiantoForm({ data }) {
+  const { initialData } = useFormContext();
   const impiantiSchede = data?.records
     ? data.records.results.map((el) => el.impianto)
     : [];
@@ -16,29 +18,36 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
           (!!initialData && impianto.id === initialData.impianto)
       )
     : [];
+  const aggiunteIniziali = initialData?.aggiunte
+    ? {
+        ...initialData,
+        aggiunte: initialData.aggiunte.filter((a) => a.iniziale),
+      }
+    : initialData;
+  const aggiunteSuccessive = initialData?.aggiunte
+    ? {
+        ...initialData,
+        aggiunte: initialData.aggiunte.filter((a) => !a.iniziale),
+      }
+    : initialData;
   return (
     <>
       <Row className="mb-4 mx-auto w-3/5">
         <SearchSelect
           name="impianto"
-          initialData={initialData}
-          inputProps={{ required: true, isDisabled: view }}
           options={searchOptions(freeImpianti, "nome")}
         />
       </Row>
       <Fieldset title="verifiche iniziali">
         <TabellaNestedItems
           name="verifiche_iniziali"
-          view={view}
-          initialData={initialData}
           colonne={[{ name: "nome" }]}
         />
       </Fieldset>
       <Fieldset title="aggiunte iniziali">
         <TabellaNestedItems
           name="aggiunte"
-          view={view}
-          initialData={initialData?.aggiunte ? {...initialData, aggiunte: initialData.aggiunte.filter(a => a.iniziale)} : initialData}
+          initialData={aggiunteIniziali}
           colonne={[
             {
               name: "materiale",
@@ -53,8 +62,7 @@ function SchedaImpiantoForm({ data, initialData, errors, view }) {
       <Fieldset title="possibili aggiunte successive">
         <TabellaNestedItems
           name="aggiunte"
-          view={view}
-          initialData={initialData?.aggiunte ? {...initialData, aggiunte: initialData.aggiunte.filter(a => !a.iniziale)} : initialData}
+          initialData={aggiunteSuccessive}
           startIndex={20}
           colonne={[
             {

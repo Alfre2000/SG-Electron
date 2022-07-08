@@ -1,17 +1,19 @@
 import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useFormContext } from "../../../contexts/FormContext";
 
-function MinusIcon({ disabled, onClick }) {
+function MinusIcon({ onClick }) {
+  const { view } = useFormContext();
   return (
     <FontAwesomeIcon
       icon={faCircleMinus}
       data-testid="icon-minus"
       size="lg"
       className={`${
-        disabled ? "cursor-not-allowed" : "cursor-pointer"
+        view ? "cursor-not-allowed" : "cursor-pointer"
       } text-nav-blue hover:text-blue-800`}
-      onClick={() => !disabled && onClick()}
+      onClick={() => !view && onClick()}
     />
   );
 }

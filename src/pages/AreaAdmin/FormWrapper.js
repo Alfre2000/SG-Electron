@@ -1,79 +1,33 @@
 import { faCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../../api/api";
-import ViewModal from "../../components/Modals/ViewModal/ViewModal";
-import useSetViewForm from "../../hooks/useSetViewForm/useSetViewForm";
-import { dateToDatePicker } from "../../utils";
-import { parseFormData } from "../utils";
+import FormContext from "../../contexts/FormContext";
+import { focusErrorInput, parseFormData } from "../utils";
 
-function FormWrapper({ data, setData, initialData, onSuccess, url, children, view, preview = false }) {
+function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
   const staticForm = Boolean(view)
-  useSetViewForm(staticForm)
   const formRef = useRef(null);
   const [error, setError] = useState(false);
-  const [validated, setValidated] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [showPreview, setShowPreview] = useState(false)
   const [key, setKey] = useState(1)
-  // Se vengono passati dei dati iniziali inseriscili nel form
-  useEffect(() => {
-    if (!initialData) return
-    [...formRef.current.elements].forEach(el => {
-      let defaultValue;
-      defaultValue = initialData[el.name]
-      if (defaultValue !== undefined && defaultValue !== null) {
-        if (el.type === "file") return;
-        if (el.tagName === 'SELECT') {
-          if (el.querySelector(`option[value="${defaultValue}"]`)) {
-            el.querySelector(`option[value="${defaultValue}"]`).setAttribute('selected', 'selected')
-          }
-        } else if (el.type === "checkbox") {
-          el.setAttribute('checked', defaultValue)
-        } else if (el.type === "date") {
-          el.defaultValue = dateToDatePicker(new Date(defaultValue)) 
-        } else {
-          el.defaultValue = defaultValue
-        }
-      }
-    })
-  }, [initialData])
 
   // Funzione che gestisce la validazione del form
   const handleForm = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    if (form.checkValidity() === false) {
-      form.reportValidity()
-      setError(true)
-      setTimeout(() => setError(false), 4000)
-      setValidated(true);
-      setTimeout(() => setValidated(false), 1000 * 10);
-      [...document.querySelectorAll('.react-select')].forEach(el => {
-        const isRequired = el.nextSibling?.hasAttribute('required')
-        const isEmpty = [...el.children].find(el => el.tagName === 'INPUT').value === ""
-        if (isRequired && isEmpty) {
-          el.querySelector('div').classList.add('input-error')
-          setTimeout(() => el.querySelector('div').classList.remove('input-error'), 1000 * 10)
-        } else {
-          el.querySelector('div').classList.add('input-success')
-          setTimeout(() => el.querySelector('div').classList.remove('input-success'), 1000 * 10)
-        }
-      })
-    } else {
-      let formData = Object.fromEntries(new FormData(form).entries());
-      [...form.elements].forEach(el => {
-        if (el.hasAttribute('multiple')) {
-          formData[el.name] = [...el.selectedOptions].map(op => op.value)
-        }
-      });
-      if (initialData) {
-        updateRecord(formData, form);
-      } else {
-        createRecord(formData, form)
+    let formData = Object.fromEntries(new FormData(form).entries());
+    [...form.elements].forEach(el => {
+      if (el.hasAttribute('multiple')) {
+        formData[el.name] = [...el.selectedOptions].map(op => op.value)
       }
+    });
+    if (initialData) {
+      updateRecord(formData, form);
+    } else {
+      createRecord(formData, form)
     }
   };
 
@@ -103,6 +57,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     }).catch(err => {
       setError(err)
       setTimeout(() => setError(false), 1000 * 10)
+      focusErrorInput(form, err)
       console.log(err);
     })
   }
@@ -110,7 +65,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
   // Funzione che gestisce la modifica di un record già esistente
   const updateRecord = (formData, form) => {
     [...form.elements].forEach(el => {
-      if (el.type ===  'checkbox' && !el.checked) {
+      if (el.type === 'checkbox' && !el.checked) {
         formData[el.name] = "false"
       } else if (el.type !== 'text') {
         if (formData[el.name] === "") formData[el.name] = null
@@ -135,28 +90,15 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     }).catch(err => {
       setError(err)
       setTimeout(() => setError(false), 1000 * 10)
+      focusErrorInput(form, err)
       console.log(err);
     })
   }
-  const PreviewComponent = preview ? preview.FormComponent : "div"
-  let formData;
-  if (preview?.data && showPreview) {
-    formData = Object.fromEntries(new FormData(formRef.current).entries());
-    parseFormData(formData)
-    console.log({...formData});
-  } else { formData = {}}
-  const previewData = preview?.data ? {...preview.data, [preview.itemKey]: formData } : {}
   return (
-    <>
-    {showPreview && (
-      <ViewModal show={true} handleClose={() => setShowPreview(false)}>
-        <PreviewComponent data={previewData} />
-      </ViewModal>
-    )}
+    <FormContext initialData={initialData} errors={error} view={view}>
     <Form
       ref={formRef}
       noValidate
-      validated={validated}
       onSubmit={handleForm}
       key={key}
       className={initialData === undefined ? "create-form" : "update-form"}
@@ -169,11 +111,6 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
             <Button type="submit" className="bg-[#0d6efd] w-28 font-medium">
               Salva
             </Button>
-            {preview && (
-              <Button variant="secondary" className="bg-gray-500" onClick={() => setShowPreview(true)}>
-                Anteprima
-              </Button>
-            )}
           </Col>
           <Col sx={4}>
             {success && (
@@ -196,7 +133,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
         </Row>
       )}
     </Form>
-    </>
+    </FormContext>
   );
 }
 
