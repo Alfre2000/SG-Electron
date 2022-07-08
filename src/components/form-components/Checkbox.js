@@ -8,7 +8,7 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = 12 - labelColumns
   const formData = useFormContext()
-  initialData = initialData !== undefined ? initialData : formData.initialData
+  initialData = initialData !== undefined ? initialData : formData?.initialData
   return vertical ? (
     <Form.Group className="m-auto text-center">
       {label !== false && <Form.Label {...labelProps}>{labelText}</Form.Label>}

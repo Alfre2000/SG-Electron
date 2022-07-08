@@ -9,7 +9,7 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label === false ? 12 : inputCols ? inputCols : 12 - labelColumns
   const formData = useFormContext()
-  errors = errors !== undefined ? errors : formData.errors
+  errors = errors !== undefined ? errors : formData?.errors
   const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
   const defaultValue = formData?.initialData ? findNestedElement(formData?.initialData, name) : null
   const disabled = formData?.view === true ? true : null
