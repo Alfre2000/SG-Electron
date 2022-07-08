@@ -1,19 +1,22 @@
-import { Col, Row, Form, Stack } from "react-bootstrap";
+import { Col, Row, Stack } from "react-bootstrap";
 import React from "react";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker } from "../../../utils";
+import { searchOptions } from "../../../utils";
 import Input from "../../../components/form-components/Input";
 import Checkbox from "../../../components/form-components/Checkbox";
-import Select from "../../../components/form-components/Select";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
+import DateInput from "../../../components/form-components/DateInput/DateInput";
+import SearchSelect from "../../../components/form-components/SearchSelect";
+import { useFormContext } from "../../../contexts/FormContext";
 
-function FissaggioForm({ data, initialData, errors }) {
+function FissaggioForm({ data }) {
+  const { initialData } = useFormContext();
   const operazione = data.operazioni
     ? data.operazioni.length === 1
       ? data.operazioni[0]
       : data.operazioni.filter((op) => op.tipologia === "fissaggi")[0]
     : {};
   const parametroID = data.operazioni ? operazione?.parametri[0].id : "";
-  const operazioneID = data.operazioni ? operazione?.id : "";
   return (
     <Row className="mb-4 justify-between">
       <Col
@@ -21,51 +24,41 @@ function FissaggioForm({ data, initialData, errors }) {
         className="pr-12 border-r-2 border-r-gray-500 border-b-2 border-b-gray-500 pb-6"
       >
         <Stack gap={2} className="text-left">
-          <Form.Control defaultValue={operazioneID} name="operazione" hidden />
-          <Input
-            name="data"
-            errors={errors}
-            inputProps={{
-              type: "date",
-              defaultValue: dateToDatePicker(
-                initialData?.data ? new Date(initialData.data) : new Date()
-              ),
-            }}
-          />
-          <Form.Group as={Row}>
-            <Form.Label column sm="4">
-              Ora:
-            </Form.Label>
-            <Col sm="8">
-              <TimeInput initialData={initialData} />
-            </Col>
-          </Form.Group>
-          <Select
+          <Hidden defaultValue={operazione?.id} name="operazione" />
+          <DateInput />
+          <TimeInput />
+          <SearchSelect
             name="operatore"
-            inputProps={{ required: true }}
-            data={data?.operatori && data.operatori.map((o) => [o.id, o.nome])}
+            options={searchOptions(data?.operatori, "nome")}
           />
         </Stack>
       </Col>
       <Col xs={6} className="flex border-b-2 border-b-gray-500 pb-6">
         <Stack gap={2} className="text-right justify-center">
+          {initialData?.record_parametri && (
+            <Hidden
+              name={`record_parametri__0__id`}
+              defaultValue={initialData.record_parametri[0].id}
+            />
+          )}
+          <Hidden
+            defaultValue={parametroID}
+            name="record_parametri__0__parametro"
+          />
           <Checkbox
             label="Aggiunta eseguita:"
-            name="aggiunto_fissaggio"
             labelCols={6}
             labelProps={{ className: "pr-6" }}
             inputProps={{ defaultChecked: true }}
           />
           <Input
             label="pH:"
-            name={`valore-${parametroID}`}
+            name="record_parametri__0__valore"
             labelCols={6}
-            errors={errors}
             labelProps={{ className: "pr-6" }}
             inputProps={{
               step: "0.01",
               type: "number",
-              required: true,
               className: "text-center w-2/3 m-auto",
             }}
           />

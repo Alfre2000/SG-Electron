@@ -7,9 +7,6 @@ import TabellaNestedItems from "../../../components/form-components/TabellaNeste
 import { searchOptions } from "../../../utils";
 
 function AnalisiForm({ data }) {
-  // const impiantoOssido = data?.impianti?.find((impianto) =>
-  //   impianto.nome.includes("Ossido")
-  // );
   return (
     <>
       <Row className="mb-4 mt-2">

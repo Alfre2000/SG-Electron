@@ -50,6 +50,7 @@ function Fissaggio() {
                   setData={setParsedData}
                   FormComponent={FissaggioForm}
                   url={URLS.RECORD_FISSAGGIO}
+                  
                 />
               </Card.Body>
             </Card>

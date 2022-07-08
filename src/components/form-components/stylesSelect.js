@@ -39,4 +39,8 @@ export const customStyle = {
     padding: "0px 5px",
     color: state.selectProps.error ? "#cb444b" : state.selectProps.errors ? "#198754" : "hsl(0, 0%, 80%)"
   }),
+  menu: (provided, state) => ({
+    ...provided,
+    zIndex: 10000,
+  }),
 };

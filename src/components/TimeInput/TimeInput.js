@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import { useFormContext } from "../../contexts/FormContext";
 import { findNestedElement } from "../../pages/utils";
 import { dateToTimePicker } from "../../utils";
 
-function TimeInput({ initialData }) {
-  const formData = useFormContext()
+function TimeInput({ initialData, view, vertical = false }) {
+  const formData = useFormContext();
   initialData = initialData !== undefined ? initialData : formData?.initialData;
-  const errorsValue = formData?.errors ? findNestedElement(formData?.errors, "ora")?.join(' - ') : undefined
+  view = view !== undefined ? view : formData?.view;
+  const errorsValue = formData?.errors
+    ? findNestedElement(formData?.errors, "ora")?.join(" - ")
+    : undefined;
   const [time, setTime] = useState(
     dateToTimePicker(
       initialData?.data ? new Date(initialData.data) : new Date()
@@ -19,7 +22,7 @@ function TimeInput({ initialData }) {
     }
   }, 1000 * 60);
 
-  return (
+  const Input = (
     <Form.Control
       size="sm"
       className="text-center"
@@ -29,8 +32,22 @@ function TimeInput({ initialData }) {
       name="ora"
       placeholder="Ora"
       isInvalid={formData?.errors && Boolean(errorsValue)}
-      isValid={!errorsValue && !! formData?.errors}
+      isValid={!errorsValue && !!formData?.errors}
+      disabled={view}
     />
+  );
+  return vertical ? (
+    <Form.Group className="text-center">
+      <Form.Label>Ora:</Form.Label>
+      {Input}
+    </Form.Group>
+  ) : (
+    <Form.Group as={Row}>
+      <Form.Label column sm="4">
+        Ora:
+      </Form.Label>
+      <Col sm="8">{Input}</Col>
+    </Form.Group>
   );
 }
 

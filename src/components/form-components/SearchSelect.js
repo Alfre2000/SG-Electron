@@ -9,13 +9,13 @@ import RequiredSelect from "./RequiredSelect";
 import { useFormContext } from "../../contexts/FormContext";
 
 function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors, colProps }) {
-  const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
+  const labelText = label ? label : name ? `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label !== false ? 12 - labelColumns : 12
   const SelectComponent = createTable ? CreatableSelect : RequiredSelect
   const formData = useFormContext()
-  errors = errors !== undefined ? errors : formData.errors
-  initialData = initialData !== undefined ? initialData : formData.initialData
+  errors = errors !== undefined ? errors : formData?.errors
+  initialData = initialData !== undefined ? initialData : formData?.initialData
   const disabled = formData?.view === true ? true : null
   let defaultValue = !!initialData && Object.keys(initialData).length > 0 ? findNestedElement(initialData, name) : undefined
   defaultValue =  typeof defaultValue === "object" ? defaultValue?.id : defaultValue

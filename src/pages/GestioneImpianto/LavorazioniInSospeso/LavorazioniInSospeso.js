@@ -5,7 +5,6 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
 import UserContext from "../../../UserContext";
-import FormWrapper from "../../AreaAdmin/FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordLavorazioneForm from "./../RecordLavorazione/RecordLavorazioneForm";
@@ -41,7 +40,6 @@ function LavorazioniInSospeso() {
                   setData={setData}
                   FormComponent={RecordLavorazioneForm}
                   url={URLS.RECORD_LAVORAZIONI}
-                  FormWrapper={FormWrapper}
                   onSuccess={updateRecords}
                 />
               </Card.Body>

@@ -9,7 +9,7 @@ import { useFormContext } from '../../../contexts/FormContext';
 import { URLS } from '../../../urls';
 import { findElementFromID } from '../../../utils';
 import ArticoloForm from '../Articolo/ArticoloForm';
-import FormWrapper from '../FormWrapper';
+import FormWrapper from '../../FormWrapper';
 
 function ArticoliInput({ data, setData }) {
   const { initialData } = useFormContext()

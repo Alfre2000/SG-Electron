@@ -10,9 +10,10 @@ import ArticoliInput from "./ArticoliInput";
 import { addToNestedArray, modifyNestedObject, removeFromNestedArray } from "../../utils";
 import Checkbox from "../../../components/form-components/Checkbox";
 import { useFormContext } from "../../../contexts/FormContext";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
 
 function SchedaControlloForm({ data, setData }) {
-  const {initialData} = useFormContext()
+  const { initialData } = useFormContext()
   const emptyControllo = { nome: "", frequenza: "", responsabilità: "", misurazioni: false }
   const getSezioneVuota = (n) => {
     const nextLetter = String.fromCharCode(65 + n)
@@ -39,7 +40,7 @@ function SchedaControlloForm({ data, setData }) {
               <Row>
                 <Col xs={11}>
                   {initialData && (
-                    <input hidden name={`sezioni__${idxSezione}__id`} className="hidden" defaultValue={sezione.id || undefined}/>
+                    <Hidden name={`sezioni__${idxSezione}__id`} defaultValue={sezione.id || undefined}/>
                   )}
                   <Input 
                     label="Nome sezione:"
@@ -80,7 +81,7 @@ function SchedaControlloForm({ data, setData }) {
                   <tr key={idxControllo}>
                     <td>
                       {initialData && (
-                        <input hidden name={`${basePath}__id`} className="hidden" defaultValue={controllo.id || undefined}/>
+                        <Hidden name={`${basePath}__id`} defaultValue={controllo.id || undefined}/>
                       )}
                       <Input
                         label={false}

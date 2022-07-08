@@ -1,10 +1,11 @@
 import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useFormContext } from "../../contexts/FormContext";
+import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
 function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, initialData }) {
-  const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
+  const labelText = label ? label : `${capitalize(name.split('__').at(-1)).replace('_', ' ')}:`
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = 12 - labelColumns
   const formData = useFormContext()
@@ -15,7 +16,7 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
       <Form.Check 
         type="checkbox"
         name={name}
-        defaultChecked={initialData ? initialData[name] : true}
+        defaultChecked={initialData ? findNestedElement(initialData, name) : true}
         {...inputProps}
       />
     </Form.Group>
@@ -31,7 +32,7 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
           type="checkbox"
           className="text-center mt-2"
           name={name}
-          defaultChecked={initialData ? initialData[name] : true}
+          defaultChecked={initialData ? findNestedElement(initialData, name) : true}
           {...inputProps}
         />
       </Col>

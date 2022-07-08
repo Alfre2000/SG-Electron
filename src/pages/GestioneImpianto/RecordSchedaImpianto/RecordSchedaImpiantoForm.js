@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Col, Row, Form, Table } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker, dateToTimePicker, toTableArray } from "../../../utils";
+import { dateToDatePicker, dateToTimePicker, searchOptions, toTableArray } from "../../../utils";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Fieldset from "../../../components/form-components/Fieldset";
@@ -10,6 +10,7 @@ import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import { modifyNestedObject } from "../../utils";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
+import DateInput from "../../../components/form-components/DateInput/DateInput";
 
 function RecordSchedaImpiantoForm({ data, initialData }) {
   const schedaImpianto = Array.isArray(data.schede_impianto) ? data.schede_impianto[0] : data.schede_impianto
@@ -26,31 +27,15 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
       <Row className="mb-4 mt-4">
         <Hidden name="scheda_impianto" defaultValue={schedaImpianto.id} />
         <Col xs={4}>
-          <Input
-            name="data"
-            inputProps={{
-              type: "date",
-              defaultValue: dateToDatePicker(
-                initialData?.data ? new Date(initialData.data) : new Date()
-              ),
-            }}
-          />
+          <DateInput />
         </Col>
         <Col xs={3}>
-          <Form.Group as={Row}>
-            <Form.Label column sm="4">
-              Ora:
-            </Form.Label>
-            <Col sm="8">
-              <TimeInput />
-            </Col>
-          </Form.Group>
+          <TimeInput />
         </Col>
         <Col xs={5}>
           <SearchSelect
             name="operatore" 
-            colProps={{ className: "text-center" }}
-            options={data?.operatori?.map(o => ({ value: o.id, label: o.nome }))}
+            options={searchOptions(data?.operatori, "nome")}
           />
         </Col>
       </Row>
@@ -240,13 +225,22 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
       <Row className="mb-4 text-left">
         <Form.Group>
           <Form.Label className="mt-2">Operazioni straordinarie:</Form.Label>
-          <Form.Control as="textarea" rows={3} name="malfunzionamenti" />
+          <Input
+            label={false}
+            inputProps={{ as: "textarea", rows: 3, className: "text-left" }}
+            name="malfunzionamenti"
+          />
         </Form.Group>
       </Row>
       <Row className="mb-4 text-left">
+        
         <Form.Group>
           <Form.Label className="mt-2">Eventuali malfunzionamenti - fermi linea - non conformità prodotti:</Form.Label>
-          <Form.Control as="textarea" rows={3} name="operazioni_straordinarie" />
+          <Input
+            label={false}
+            inputProps={{ as: "textarea", rows: 3, className: "text-left" }}
+            name="operazioni_straordinarie"
+          />
         </Form.Group>
       </Row>
     </>

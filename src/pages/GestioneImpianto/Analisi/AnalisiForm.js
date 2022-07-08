@@ -4,73 +4,67 @@ import React, { useState } from "react";
 import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import Checkbox from "../../../components/form-components/Checkbox";
+import DateInput from "../../../components/form-components/DateInput/DateInput";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
-import Select from "../../../components/form-components/Select";
+import SearchSelect from "../../../components/form-components/SearchSelect";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker } from "../../../utils";
+import { findElementFromID, searchOptions } from "../../../utils";
 
-function AnalisiForm({ data, initialData, errors }) {
-  const [searchParams,] = useSearchParams();
-  const startAnalisi = initialData?.operazione || searchParams.get('analisi') || ""
-  const [analisi, setAnalisi] = useState(startAnalisi)
-  const [errValore, setErrValore] = useState({})
-  const getParametri = (analisiID) => {
-    return data.operazioni.filter(el => el.id === analisiID)[0].parametri
-  }
+function AnalisiForm({ data, initialData }) {
+  const [searchParams] = useSearchParams();
+  const startAnalisi =
+    findElementFromID(initialData?.operazione, data?.operazioni) ||
+    findElementFromID(searchParams.get("analisi"), data?.operazioni) ||
+    "";
+  const [analisi, setAnalisi] = useState(startAnalisi);
+  const [errValore, setErrValore] = useState({});
+
   const handleValoreChange = (e) => {
-    const parametroID = e.target.name.split('valore-').at(-1)
-    const value = parseFloat(e.target.value)
-    const parametro = getParametri(analisi).filter(el => el.id === parametroID)[0]
+    const parametroIdx = e.target.name.split("__").at(1);
+    const value = parseFloat(e.target.value);
+    const parametro = analisi.parametri[parametroIdx];
     if (value > parametro.massimo) {
-      setErrValore({...errValore, [`valore-${parametroID}`]: 'Valore oltre il massimo !'})
+      setErrValore({
+        ...errValore,
+        [e.target.name]: "Valore oltre il massimo !",
+      });
     } else if (value < parametro.minimo) {
-      setErrValore({...errValore, [`valore-${parametroID}`]: 'Valore sotto il minimo !'})
+      setErrValore({
+        ...errValore,
+        [e.target.name]: "Valore sotto il minimo !",
+      });
     } else {
-      setErrValore({...errValore, [`valore-${parametroID}`]: ""})
+      setErrValore({ ...errValore, [e.target.name]: "" });
     }
-  }
+  };
   return (
     <>
       <Row className="mb-4">
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">
-            <Input 
-              name="data"
-              errors={errors}
-              inputProps={{
-                type: "date",
-                defaultValue: dateToDatePicker(
-                  initialData?.data ? new Date(initialData.data) : new Date()
-                )
-              }}
-            />
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                Ora:
-              </Form.Label>
-              <Col sm="8">
-                <TimeInput initialData={initialData} />
-              </Col>
-            </Form.Group>
+            <DateInput />
+            <TimeInput />
           </Stack>
         </Col>
         <Col xs={6} className="pl-10">
           <Stack gap={2} className="text-left">
-            <Select 
+            <SearchSelect
               name="operatore"
-              inputProps={{ required: true }}
-              data={data?.operatori && data?.operatori?.map(o => [o.id, o.nome])}
+              options={searchOptions(data?.operatori, "nome")}
             />
-            <Select 
+            <SearchSelect
               label="Analisi:"
               name="operazione"
-              inputProps={{ 
-                required: true,
-                disabled: !!initialData,
-                value: analisi,
-                onChange: (e) => setAnalisi(e.target.value)
+              inputProps={{
+                isDisabled: !!initialData,
+                value: { value: analisi.id, label: analisi.nome },
+                onChange: (newValue) =>
+                  setAnalisi(
+                    findElementFromID(newValue?.value, data?.operazioni) || ""
+                  ),
               }}
-              data={data?.operazioni && data?.operazioni?.map(o => [o.id, o.nome])}
+              options={searchOptions(data?.operazioni, "nome")}
             />
           </Stack>
         </Col>
@@ -89,32 +83,58 @@ function AnalisiForm({ data, initialData, errors }) {
             </thead>
             <tbody>
               {data.operazioni &&
-                getParametri(analisi).map((parametro, idx) => (
+                analisi.parametri.map((parametro, idx) => (
                   <tr key={parametro.id} className="align-middle text-center">
                     <td className="text-left">{parametro.nome}</td>
                     <td>
-                      <Form.Control
-                        type="number"
-                        step="0.01"
-                        size="sm"
-                        className="w-2/3 m-auto text-center"
-                        name={`valore-${parametro.id}`}
-                        onBlur={handleValoreChange}
+                      {initialData?.record_parametri && (
+                        <Hidden
+                          name={`record_parametri__${idx}__id`}
+                          defaultValue={
+                            initialData.record_parametri.find(
+                              (el) => el.parametro === parametro.id
+                            ).id
+                          }
+                        />
+                      )}
+                      <Hidden
+                        name={`record_parametri__${idx}__parametro`}
+                        defaultValue={parametro.id}
                       />
-                      {errValore[`valore-${parametro.id}`] && (
-                        <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
-                            <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
-                            {errValore[`valore-${parametro.id}`]}
+                      <Input
+                        label={false}
+                        inputProps={{
+                          type: "number",
+                          step: "0.01",
+                          className: "w-2/3 m-auto text-center",
+                          onBlur: handleValoreChange,
+                        }}
+                        size="sm"
+                        name={`record_parametri__${idx}__valore`}
+                      />
+                      {errValore[`record_parametri__${idx}__valore`] && (
+                        <span
+                          type="invalid"
+                          className="text-xs font-semibold text-center text-[#d48208]"
+                        >
+                          <FontAwesomeIcon
+                            icon={faTriangleExclamation}
+                            className="mr-1"
+                          />
+                          {errValore[`record_parametri__${idx}__valore`]}
                         </span>
                       )}
-                      </td>
+                    </td>
                     <td>
-                      <Form.Control
-                        type="number"
-                        step="0.01"
+                      <Input
+                        label={false}
+                        inputProps={{
+                          type: "number",
+                          step: "0.01",
+                          className: "w-2/3 m-auto text-center",
+                        }}
                         size="sm"
-                        className="w-2/3 m-auto text-center"
-                        name={`aggiunte-${parametro.id}`}
+                        name={`record_parametri__${idx}__aggiunte`}
                       />
                     </td>
                     <td>{parametro.minimo}</td>
@@ -133,16 +153,19 @@ function AnalisiForm({ data, initialData, errors }) {
                 <Form.Label>Note:</Form.Label>
               </Col>
               <Col sm={10}>
-                <Form.Control as="textarea" rows={3} name="note" />
+                <Input
+                  label={false}
+                  inputProps={{ as: "textarea", rows: 3, className: "text-left" }}
+                  name="note"
+                />
               </Col>
             </Row>
           </Form.Group>
         </Col>
         <Col xs={3} className="flex">
-          <Checkbox 
+          <Checkbox
             label="Controanalisi:"
             name="contro_analisi"
-            inputProps={{ defaultChecked: initialData ? initialData.contro_analisi : true }}
             vertical={true}
           />
         </Col>

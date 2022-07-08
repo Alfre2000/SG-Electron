@@ -3,7 +3,7 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
-import FormWrapper from "../FormWrapper";
+import FormWrapper from "../../FormWrapper";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import SchedaControlloForm from "./SchedaControlloForm";
 import { apiGet } from "../../../api/api";
@@ -60,7 +60,6 @@ function SchedaControllo() {
                   setData={setData}
                   FormComponent={SchedaControlloForm}
                   url={URLS.SCHEDE_CONTROLLO}
-                  FormWrapper={FormWrapper}
                   onSuccess={updateData}
                 />
               </Card.Body>

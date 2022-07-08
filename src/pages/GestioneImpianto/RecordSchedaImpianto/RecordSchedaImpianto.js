@@ -5,7 +5,7 @@ import { Col, Container, Row, Card, Alert } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
-import FormWrapper from "../../AreaAdmin/FormWrapper";
+import FormWrapper from "../../FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordSchedaImpiantoForm from "./RecordSchedaImpiantoForm";
@@ -55,7 +55,6 @@ function RecordSchedaImpianto() {
                     setData={setData}
                     FormComponent={RecordSchedaImpiantoForm}
                     url={URLS.RECORD_SCHEDE_IMPIANTO}
-                    FormWrapper={FormWrapper}
                   />
                 </Card.Body>
               </Card>

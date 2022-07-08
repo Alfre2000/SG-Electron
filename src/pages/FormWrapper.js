@@ -1,102 +1,52 @@
 import { faCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { apiPost, apiUpdate } from "../api/api";
-import useSetViewForm from "../hooks/useSetViewForm/useSetViewForm";
-import UserContext from "../UserContext";
-import { dateToDatePicker } from "../utils";
+import FormContext from "../contexts/FormContext";
+import { focusErrorInput, parseFormData } from "./utils";
 
 function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
   const staticForm = Boolean(view)
-  useSetViewForm(staticForm)
   const formRef = useRef(null);
   const [error, setError] = useState(false);
-  const [validated, setValidated] = useState(false);
   const [success, setSuccess] = useState(false);
   const [key, setKey] = useState(1)
-  const { user } = useContext(UserContext)
-  // Se vengono passati dei dati iniziali inseriscili nel form
-  useEffect(() => {
-    if (!initialData) return
-    [...formRef.current.elements].forEach(el => {
-      let defaultValue;
-      if (el.name.startsWith('valore-') && initialData.record_parametri) {
-        const paramID = el.name.split('valore-').at(-1)
-        defaultValue = initialData.record_parametri.filter(pm => pm.parametro === paramID)[0].valore
-      } else if (el.name.startsWith('aggiunte-') && initialData.record_parametri) {
-        const paramID = el.name.split('aggiunte-').at(-1)
-        defaultValue = initialData.record_parametri.filter(pm => pm.parametro === paramID)[0].aggiunte
-      } else {
-        defaultValue = initialData[el.name]
-      }
-      if (defaultValue !== undefined && defaultValue !== null) {
-        if (el.tagName === 'SELECT') {
-          if (el.querySelector(`option[value="${defaultValue}"]`)) {
-            el.querySelector(`option[value="${defaultValue}"]`).setAttribute('selected', 'selected')
-          }
-        } else if (el.type === "checkbox") {
-          el.setAttribute('checked', defaultValue)
-        } else if (el.type === "date") {
-          el.defaultValue = dateToDatePicker(new Date(defaultValue)) 
-        } else {
-          el.defaultValue = defaultValue
-        }
-      }
-    })
-  }, [initialData])
 
   // Funzione che gestisce la validazione del form
   const handleForm = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    const manutenzioneSelected = form.querySelector('.list-group-item') && !form.querySelector('.list-group-item.active')
-    if (form.checkValidity() === false || manutenzioneSelected) {
-      form.reportValidity()
-      setError(true)
-      setTimeout(() => setError(false), 4000)
-      setValidated(true);
-      setTimeout(() => setValidated(false), 1000 * 10)
+    let formData = Object.fromEntries(new FormData(form).entries());
+    [...form.elements].forEach(el => {
+      if (el.hasAttribute('multiple')) {
+        formData[el.name] = [...el.selectedOptions].map(op => op.value)
+      }
+    });
+    if (initialData) {
+      updateRecord(formData, form);
     } else {
-      let { data: date, ora, ...formData } = Object.fromEntries(new FormData(form).entries());
-      formData['data'] = new Date(date + " " + ora).toISOString()
-      if (url.toLowerCase().includes('lavorazioni')) {
-        formData['impianto'] = user.user.impianto.id
-      }
-      if (data.operazioni?.length === 1) {
-        formData['operazione'] = data.operazioni[0].id
-      } else if (form.querySelector('.list-group-item')) {
-        formData['operazione'] = form.querySelector('.list-group-item.active').getAttribute('value')
-      }
-      if ([...form.elements].filter(el => el.getAttribute('name') === 'operazione').length > 0) {
-        formData = addParametri(formData)
-      }
-      if (initialData) {
-        updateRecord(formData, form);
-      } else {
-        createRecord(formData, form)
-      }
+      createRecord(formData, form)
     }
   };
 
   // Funzione che gestisce la creazione di un nuovo record
   const createRecord = (formData, form) => {
-    Object.keys(formData).forEach(key => {
-      if (formData[key] === "") delete formData[key]
-      if (key.includes('.')) {
-        let [parent_obj, child_key] = key.split('.')
-        if (formData[parent_obj] === undefined) formData[parent_obj] = {};
-        formData[parent_obj][child_key] = formData[key]
-        delete formData[key]
+    parseFormData(form, formData)
+    const finalFormData = new FormData()
+    Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
+    apiPost(url, finalFormData).then(response => {
+      if (data.records) {
+        const newData = {...data, records: {...data.records,  results:[response, ...data.records.results]}}
+        if (onSuccess) {
+          onSuccess(newData);
+        } else {
+          setData(newData);
+        } 
+      } else if (onSuccess) {
+        onSuccess(response)
       }
-    })
-    if (url.toLowerCase().includes('lavorazione')) {
-      formData['scheda_controllo'] = data.scheda_controllo.id
-    }
-    apiPost(url, formData).then(response => {
-      response = url.toLowerCase().includes('lavorazione') ? parserSchedaControllo(response) : response
-      setData({...data, records: {...data.records,  results:[response, ...data.records.results]}})
       form.reset()
       setSuccess(true)
       setTimeout(() => setSuccess(false), 4000)
@@ -107,86 +57,41 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     }).catch(err => {
       setError(err)
       setTimeout(() => setError(false), 1000 * 10)
+      focusErrorInput(form, err)
       console.log(err);
     })
   }
 
   // Funzione che gestisce la modifica di un record già esistente
   const updateRecord = (formData, form) => {
-    Object.keys(formData).forEach(key => {
-      if (key.includes('.')) {
-        let [parent_obj, child_key] = key.split('.')
-        if (formData[parent_obj] === undefined) formData[parent_obj] = {};
-        formData[parent_obj][child_key] = formData[key]
-        delete formData[key]
-      }
-    });
-    [...form.elements].forEach(el => {
-      if (el.type ===  'checkbox' && !el.checked) {
-        formData[el.name] = "false"
-      } else if (el.type !== 'text') {
-        if (formData[el.name] === "") formData[el.name] = null
-      }
-    })
-    apiUpdate(url + initialData.id + '/', formData).then(response => {
+    parseFormData(form, formData)
+    const finalFormData = new FormData()
+    Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
+    apiUpdate(url + initialData.id + '/', finalFormData).then(response => {
       const records = data.records.results.map(record => {
         if (record.id === response.id) {
-          record = url.toLowerCase().includes('lavorazione') ? parserSchedaControllo(response) : response
-          return record
+          return response
         }
         return record
       })
-      setData({...data, records: {...data.records, results: records}})
-      onSuccess();
-      if (form.querySelector('.list-group-item')) {
-        form.querySelector('.list-group-item.active').classList.remove('active')
-      }
-      
+      const newData = {...data, records: {...data.records, results: records}}
+      if (onSuccess) {
+        onSuccess(newData);
+      } else {
+        setData(newData);
+      } 
     }).catch(err => {
       setError(err)
       setTimeout(() => setError(false), 1000 * 10)
+      focusErrorInput(form, err)
       console.log(err);
     })
   }
-
-  const addParametri = (formData) => {
-    let record_parametri = []
-    Object.keys(formData).forEach(key => {
-      const ids = record_parametri.map(el => el.parametro)
-      if (key.startsWith('aggiunte-')) {
-        const parametroId = key.split('aggiunte-').at(-1)
-        const idx = ids.indexOf(parametroId)
-        if (idx !== -1) record_parametri[idx].aggiunte = formData[key]
-        else record_parametri.push({parametro: parametroId, aggiunte: formData[key]})
-        delete formData[key]
-      } else if (key.startsWith('valore-')) {
-        const parametroId = key.split('valore-').at(-1)
-        const idx = ids.indexOf(parametroId)
-        if (idx !== -1) record_parametri[idx].valore = formData[key]
-        else record_parametri.push({parametro: parametroId, valore: formData[key]})
-        delete formData[key]
-      }
-    })
-    formData['record_parametri'] = record_parametri
-    formData['record_parametri'].forEach((parametro, idx) => {
-      Object.keys(parametro).forEach(key => {
-        if (formData['record_parametri'][idx][key] === "") formData['record_parametri'][idx][key] = null
-      })
-    })
-    return formData
-  }
-  const parserSchedaControllo = useCallback((record) => {
-    for (const [key, value] of Object.entries(record.dati_aggiuntivi)) {
-      record['dati_aggiuntivi.' + key] =  value
-    }
-    delete record.dati_aggiuntivi
-    return record
-  }, [])
   return (
+    <FormContext initialData={initialData} errors={error} view={view}>
     <Form
       ref={formRef}
       noValidate
-      validated={validated}
       onSubmit={handleForm}
       key={key}
       className={initialData === undefined ? "create-form" : "update-form"}
@@ -221,6 +126,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
         </Row>
       )}
     </Form>
+    </FormContext>
   );
 }
 

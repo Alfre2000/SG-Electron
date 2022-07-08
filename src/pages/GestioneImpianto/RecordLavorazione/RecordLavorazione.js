@@ -7,7 +7,7 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
 import { isDateRecent } from "../../../utils";
-import FormWrapper from "../../AreaAdmin/FormWrapper";
+import FormWrapper from "../../FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordLavorazioneForm from "./RecordLavorazioneForm";
@@ -63,7 +63,7 @@ function RecordLavorazione() {
                   setData={setData}
                   FormComponent={RecordLavorazioneForm}
                   url={URLS.RECORD_LAVORAZIONI}
-                  FormWrapper={FormWrapper}
+                  
                 />
               </Card.Body>
             </Card>

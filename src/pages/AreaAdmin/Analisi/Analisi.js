@@ -1,18 +1,18 @@
-import React from 'react'
+import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from '../../../components/PageTitle/PageTitle'
-import useGetAPIData from '../../../hooks/useGetAPIData/useGetAPIData';
-import { URLS } from '../../../urls';
-import FormWrapper from '../FormWrapper';
-import Wrapper from '../../AreaAdmin/Wrapper'
-import AnalisiForm from './AnalisiForm';
-import Tabella from '../../Tabella';
+import PageTitle from "../../../components/PageTitle/PageTitle";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
+import { URLS } from "../../../urls";
+import FormWrapper from "../../FormWrapper";
+import Wrapper from "../../AreaAdmin/Wrapper";
+import AnalisiForm from "./AnalisiForm";
+import Tabella from "../../Tabella";
 
 function Analisi() {
   const [data, setData] = useGetAPIData([
-    {nome: "impianti", url: URLS.IMPIANTI},
-    {nome: "records", url: URLS.ANALISI},
-  ])
+    { nome: "impianti", url: URLS.IMPIANTI },
+    { nome: "records", url: URLS.ANALISI },
+  ]);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -30,7 +30,7 @@ function Analisi() {
               </Card.Body>
             </Card>
           </Col>
-        </Row>  
+        </Row>
         <Row className="mt-10">
           <Col xs={12}>
             <Card>
@@ -41,12 +41,11 @@ function Analisi() {
                 <Tabella
                   date={false}
                   headers={["Nome", "Intervallo pezzi", "Intervallo giorni"]}
-                  valori={['nome', 'intervallo_pezzi', 'intervallo_giorni']}
+                  valori={["nome", "intervallo_pezzi", "intervallo_giorni"]}
                   data={data}
                   setData={setData}
                   FormComponent={AnalisiForm}
                   url={URLS.ANALISI}
-                  FormWrapper={FormWrapper}
                 />
               </Card.Body>
             </Card>
@@ -54,7 +53,7 @@ function Analisi() {
         </Row>
       </Container>
     </Wrapper>
-  )
+  );
 }
 
-export default Analisi
+export default Analisi;

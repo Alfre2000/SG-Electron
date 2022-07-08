@@ -6,9 +6,6 @@ import SearchSelect from "../../../components/form-components/SearchSelect";
 import { searchOptions } from "../../../utils";
 
 function ManutenzioneForm({ data }) {
-  // const impiantoOssido = data?.impianti?.find((impianto) =>
-  //   impianto.nome.includes("Ossido")
-  // );
   return (
     <>
       <Row className="mb-4 mt-2">

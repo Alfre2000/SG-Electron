@@ -1,8 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
-import { Col, Container, Row, Card } from "react-bootstrap";
+import { Col, Container, Row, Card, Form } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
-import Select from "../../../components/form-components/Select";
-import { dateToDatePicker, findElementFromID } from "../../../utils";
+import { dateToDatePicker, findElementFromID, searchOptions } from "../../../utils";
 import Wrapper from "../Wrapper";
 import { URLS } from "../../../urls";
 import { apiGet } from "../../../api/api";
@@ -13,6 +12,7 @@ import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import Tabella from "../../Tabella";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import UserContext from "../../../UserContext";
+import SearchSelect from "../../../components/form-components/SearchSelect";
 
 function RicercaDatabase() {
   const { user: { user: { impianto } } } = useContext(UserContext)
@@ -26,9 +26,9 @@ function RicercaDatabase() {
   const formRef = useRef(null)
   const handleHelpChange = (e) => {
     let timeframe;
-    if (e.target.value === 'week') timeframe = 7
-    else if (e.target.value === 'month') timeframe = 31
-    else if (e.target.value === 'year') timeframe = 365
+    if (e.value === 'week') timeframe = 7
+    else if (e.value === 'month') timeframe = 31
+    else if (e.value === 'year') timeframe = 365
     else return
     const newDate = dateToDatePicker(new Date(Date.now() - timeframe * 24 * 60 * 60 * 1000))
     setInizio(newDate)
@@ -39,16 +39,13 @@ function RicercaDatabase() {
     const formData = {...Object.fromEntries(new FormData(formRef.current).entries()), ...moreData, impianto: impianto.id}
     const searchParams = new URLSearchParams(formData);
     apiGet(`${URLS.PAGINA_RICERCA_DATABASE}?${searchParams.toString()}`).then(
-      (res) => setData(prev => {return {...prev, records:res}})
+      (res) => setData(prev => ({...prev, records:res}))
     )
   }
-  const tabellaForms = { manutenzioni: ManutenzioneForm, analisi: AnalisiForm, fissaggi: FissaggioForm}
+  const tabellaForms = { manutenzioni: ManutenzioneForm, analisi: AnalisiForm, fissaggi: FissaggioForm }
   const tabellaURLs = { manutenzioni: URLS.RECORD_MANUTENZIONE, analisi: URLS.RECORD_ANALISI, fissaggi: URLS.RECORD_FISSAGGIO}
   const dataTabella = data.records ? {...data, records: {...data.records, results: data.records.results.map(r => {
     const tipologia = findElementFromID(r.operazione, data.operazioni).tipologia
-    if (tipologia === 'fissaggi') {
-      r = {...r, ph: r.record_parametri[0].valore}
-    }
     return {...r, form: tabellaForms[tipologia], url: tabellaURLs[tipologia]}
   })}} : {}
   return (
@@ -93,10 +90,10 @@ function RicercaDatabase() {
                       />
                     </Col>
                     <Col xs={4}>
-                      <Select
-                        label="Help:"
-                        vertical={true}
-                        data={[['week', 'Ultima Settimana'], ['month', 'Ultimo Mese'], ['year', 'Ultimo Anno']]}
+                      <Form.Label>Help:</Form.Label>
+                      <SearchSelect
+                        label={false}
+                        options={[{value: 'week', label: 'Ultima Settimana'}, { value: 'month', label: 'Ultimo Mese'}, { value: 'year', label: 'Ultimo Anno'}]}
                         inputProps={{
                           onChange: (e) => {
                             handleHelpChange(e);
@@ -108,19 +105,21 @@ function RicercaDatabase() {
                   <Row className="my-8">
                     <Col xs={1}></Col>
                     <Col xs={5}>
-                      <Select
+                      <Form.Label>Operatore:</Form.Label>
+                      <SearchSelect
+                        label={false}
                         name="operatore"
-                        vertical={true}
-                        data={data.operatori && data.operatori.map(op => [op.id, op.nome])}
-                        inputProps={{ onChange: sendForm }}
+                        options={searchOptions(data?.operatori, "nome")}
+                        inputProps={{ onChange: (e) => sendForm({ operatore: e?.value || "" }) }}
                       />
                     </Col>
                     <Col xs={5}>
-                      <Select
+                      <Form.Label>Operazione:</Form.Label>
+                      <SearchSelect
+                        label={false}
                         name="operazione"
-                        vertical={true}
-                        data={data.operazioni && data.operazioni.map(op => [op.id, op.nome])}
-                        inputProps={{ onChange: sendForm }}
+                        options={searchOptions(data?.operazioni, "nome")}
+                        inputProps={{ onChange: (e) => sendForm({ operazione: e?.value || "" }) }}
                       />
                     </Col>
                     <Col xs={1}></Col>

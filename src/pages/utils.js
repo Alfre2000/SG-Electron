@@ -13,7 +13,14 @@ export const deleteRecord = (recordID, data, setData, baseURL, onDelete) => {
     .catch((err) => console.log(err));
 };
 
-export const parseFormData = (formData) => {
+export const parseFormData = (form, formData) => {
+  [...form.elements].forEach(el => {
+    if (el.type === 'checkbox' && !el.checked) {
+      formData[el.name] = "false"
+    } else if (el.type !== 'text') {
+      if (formData[el.name] === "") formData[el.name] = null
+    }
+  })
   if ('data' in formData && 'ora' in formData) {
     formData['data'] = new Date(formData['data'] + " " + formData['ora']).toISOString()
     delete formData['ora']

@@ -10,14 +10,14 @@ import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-sol
 import { Link } from "react-router-dom";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import Tabella from "../../Tabella";
-import { parseProssimeManutenzioni, parseRecordLavorazioni, parseSchedaLavorazione } from "../parsers";
+import { parseProssimeManutenzioni, parseSchedaLavorazione } from "../parsers";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import UserContext from "../../../UserContext";
 import { isDateRecent } from "../../../utils";
 const { motion } = require("framer-motion");
 
 const alert = {
-  hidden: { opacity: 0 , scale: 0.8 }, 
+  hidden: { opacity: 0 , scale: 0.85 }, 
   show: { opacity: 1, scale: 1 }
 }
 const alerts = {
@@ -25,7 +25,7 @@ const alerts = {
   show: {
     opacity: 1,
     transition: { 
-      staggerChildren: 0.2,
+      staggerChildren: 0.1,
     }
   }
 }
@@ -37,12 +37,9 @@ function RecordLavorazioneOssido() {
     {nome: "operatori", url: URLS.OPERATORI},
     {nome: "articoli", url: URLS.ARTICOLI},
     {url: URLS.SCHEDA_CONTROLLO_OSSIDO, parser: parseSchedaLavorazione},
-    {nome: "records", url: URLS.RECORD_LAVORAZIONI, parser: parseRecordLavorazioni},
+    {nome: "records", url: URLS.RECORD_LAVORAZIONI},
     {nome: "scheda_impianto", url: URLS.ULTIMA_SCHEDA_IMPIANTO},
   ])
-  const setParsedData = (newData) => {
-    setData({...data, records: parseRecordLavorazioni(newData.records)})
-  }
   useEffect(() => {
     apiGet(`${URLS.PAGINA_PROSSIME}?${impianto?.id ? `impianto=${impianto.id}` : ""}`).then(res => {
       const parsedData = parseProssimeManutenzioni(res)
@@ -92,7 +89,7 @@ function RecordLavorazioneOssido() {
                 Aggiungi lavorazione lotto
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setParsedData} url={URLS.RECORD_LAVORAZIONI}>
+                <FormWrapper data={data} setData={setData} url={URLS.RECORD_LAVORAZIONI}>
                   <RecordLavorazioneOssidoForm data={data} />
                 </FormWrapper>
               </Card.Body>
@@ -110,9 +107,10 @@ function RecordLavorazioneOssido() {
                   headers={["Lotto", "N° Pezzi", "Operatore"]}
                   valori={['n_lotto_cliente', 'n_pezzi_dichiarati', 'operatore__operatori']}
                   data={data}
-                  setData={setParsedData}
+                  setData={setData}
                   FormComponent={RecordLavorazioneOssidoForm}
                   url={URLS.RECORD_LAVORAZIONI}
+                  
                 />
               </Card.Body>
             </Card>

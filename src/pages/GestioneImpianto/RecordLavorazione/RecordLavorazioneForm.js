@@ -3,12 +3,14 @@ import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import { dateToDatePicker, findElementFromID } from "../../../utils";
+import { findElementFromID, searchOptions } from "../../../utils";
 import SectionHeader from "./SectionHeader";
 import Fieldset from "../../../components/form-components/Fieldset";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import UserContext from "../../../UserContext";
 import PopoverMisurazioni from "./PopoverMisurazioni";
+import DateInput from "../../../components/form-components/DateInput/DateInput";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
 
 function RecordLavorazioneForm({ data, initialData, errors, view }) {
   const initialCliente = data.articoli && initialData?.articolo 
@@ -30,30 +32,11 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
         <input hidden className="hidden" name="impianto" defaultValue={user.user.impianto.id}/>
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">
-            <Input
-              name="data"
-              inputProps={{
-                type: "date",
-                defaultValue: dateToDatePicker(
-                  initialData?.data ? new Date(initialData.data) : new Date()
-                ),
-              }}
-            />
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                Ora:
-              </Form.Label>
-              <Col sm="8">
-                <TimeInput />
-              </Col>
-            </Form.Group>
+            <DateInput />
+            <TimeInput />
             <SearchSelect
               name="operatore" 
-              initialData={initialData}
-              errors={errors}
-              inputProps={{ required: true, isDisabled: view }}
-              colProps={{ className: "text-center" }}
-              options={data?.operatori?.map(o => ({ value: o.id, label: o.nome }))}
+              options={searchOptions(data?.operatori, "nome")}
             />
           </Stack>
         </Col>
@@ -61,26 +44,19 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
           <Stack gap={3} className="text-left justify-center">
             <SearchSelect
               name="cliente" 
-              errors={errors}
               inputProps={{ 
-                required: true,
-                isDisabled: view,
                 value: cliente,
                 onChange: (e) => setCliente(e)
               }}
-              colProps={{ className: "text-center" }}
               options={clienti && [...clienti].map(cliente => ({ value: cliente, label: cliente }))}
             />
             <SearchSelect
               name="articolo" 
-              errors={errors}
               inputProps={{ 
-                required: true,
                 isDisabled: !cliente || view,
                 value: articolo ? { value: articolo.id, label: `${articolo.nome} (${articolo.codice})` } : null,
                 onChange: (e) => setArticoloID(e?.value ? e.value : null),
               }}
-              colProps={{ className: "text-center" }}
               options={data?.articoli?.filter(arti => arti.cliente.nome === cliente?.value).map(a => ({ value: a.id, label: `${a.nome} (${a.codice})` }))}
             />
           </Stack>
@@ -94,7 +70,6 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
               name="n_lotto_cliente"
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
-              errors={errors}
             />
           </Col>
           <Col xs={6} className="pl-0">
@@ -103,7 +78,6 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
               name="n_lotto_super"
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
-              errors={errors}
             />
           </Col>
         </Row>
@@ -115,7 +89,6 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
               inputProps={{
-                required: true,
                 type: "number",
               }}
             />
@@ -127,7 +100,6 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
               inputProps={{
-                required: true,
                 defaultValue: initialData?.n_pezzi_scartati || 0,
                 type: "number",
               }}
@@ -258,16 +230,12 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
                                 <td className="py-1.5">{controllo.responsabilità}</td>
                                 <td className="py-1.5">
                                   {initialData?.record_controlli && (
-                                    <input
-                                      hidden
+                                    <Hidden
                                       name={`record_controlli__${indexControllo}__id`}
-                                      className="hidden"
                                       defaultValue={initialData.record_controlli[indexControllo]?.id || undefined}
                                     />
                                   )}
-                                  <input
-                                    hidden
-                                    className="hidden"
+                                  <Hidden
                                     defaultValue={controllo.id}
                                     name={`record_controlli__${indexControllo}__controllo`}
                                   />
@@ -306,14 +274,17 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
             <Form.Label className="mt-2">Note:</Form.Label>
           </Col>
           <Col sm={8}>
-            <Form.Control as="textarea" rows={3} name="note" />
+            <Input
+              label={false}
+              inputProps={{ as: "textarea", rows: 3, className: "text-left" }}
+              name="note"
+            />
           </Col>
           <Col xs={3} className="flex">
             <Checkbox 
               vertical={true}
               name="completata"
               inputProps={{
-                defaultChecked: initialData ? initialData.completata : false,
                 className: "bigger-checkbox",
               }}
             />

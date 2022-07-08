@@ -1,20 +1,20 @@
-import React from 'react'
+import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from '../../../components/PageTitle/PageTitle'
-import useGetAPIData from '../../../hooks/useGetAPIData/useGetAPIData';
-import { URLS } from '../../../urls';
-import FormWrapper from '../FormWrapper';
-import Wrapper from '../../AreaAdmin/Wrapper'
-import ArticoloForm from './ArticoloForm';
-import Tabella from '../../Tabella';
+import PageTitle from "../../../components/PageTitle/PageTitle";
+import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
+import { URLS } from "../../../urls";
+import FormWrapper from "../../FormWrapper";
+import Wrapper from "../../AreaAdmin/Wrapper";
+import ArticoloForm from "./ArticoloForm";
+import Tabella from "../../Tabella";
 
 function Articolo() {
   const [data, setData] = useGetAPIData([
-    {nome: "records", url: URLS.ARTICOLI},
-    {nome: "clienti", url: URLS.CLIENTI},
-    {nome: "lavorazioni", url: URLS.LAVORAZIONI},
-    {nome: "schede_controllo", url: URLS.SCHEDE_CONTROLLO},
-  ])
+    { nome: "records", url: URLS.ARTICOLI },
+    { nome: "clienti", url: URLS.CLIENTI },
+    { nome: "lavorazioni", url: URLS.LAVORAZIONI },
+    { nome: "schede_controllo", url: URLS.SCHEDE_CONTROLLO },
+  ]);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -32,7 +32,7 @@ function Articolo() {
               </Card.Body>
             </Card>
           </Col>
-        </Row>  
+        </Row>
         <Row className="mt-10">
           <Col xs={12}>
             <Card>
@@ -43,12 +43,11 @@ function Articolo() {
                 <Tabella
                   date={false}
                   headers={["Nome", "Codice", "Cliente"]}
-                  valori={['nome', 'codice', 'cliente']}
+                  valori={["nome", "codice", "cliente"]}
                   data={data}
                   setData={setData}
                   FormComponent={ArticoloForm}
                   url={URLS.ARTICOLI}
-                  FormWrapper={FormWrapper}
                 />
               </Card.Body>
             </Card>
@@ -56,7 +55,7 @@ function Articolo() {
         </Row>
       </Container>
     </Wrapper>
-  )
+  );
 }
 
-export default Articolo
+export default Articolo;
