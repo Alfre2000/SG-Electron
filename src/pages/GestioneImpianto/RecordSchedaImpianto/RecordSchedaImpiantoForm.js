@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Row, Form, Table } from "react-bootstrap";
+import { Col, Row, Form, Table, Alert } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { dateToDatePicker, dateToTimePicker, searchOptions, toTableArray } from "../../../utils";
@@ -11,8 +11,10 @@ import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import { modifyNestedObject } from "../../utils";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
-function RecordSchedaImpiantoForm({ data, initialData }) {
+function RecordSchedaImpiantoForm({ data, initialData, warning }) {
   const schedaImpianto = Array.isArray(data.schede_impianto) ? data.schede_impianto[0] : data.schede_impianto
   const groupedVerifiche = toTableArray(schedaImpianto.verifiche_iniziali)
   const groupedAggiunte = toTableArray(schedaImpianto.aggiunte.filter(el => el.iniziale === true))
@@ -25,7 +27,7 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
   return (
     <>
       <Row className="mb-4 mt-4">
-        <Hidden name="scheda_impianto" defaultValue={schedaImpianto.id} />
+        <Hidden name="scheda_impianto" value={schedaImpianto.id} />
         <Col xs={4}>
           <DateInput />
         </Col>
@@ -48,7 +50,7 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
                   <td className="w-[42%]">{row[0].nome}</td>
                   <td>
                     <Hidden
-                      defaultValue={row[0].id}
+                      value={row[0].id}
                       name={`record_verifiche_iniziali__${idx * 2}__verifica_iniziale`}
                     />
                     <Checkbox
@@ -66,7 +68,7 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
                       <td className="w-[42%]">{row[1].nome}</td>
                       <td>
                         <Hidden
-                          defaultValue={row[1].id}
+                          value={row[1].id}
                           name={`record_verifiche_iniziali__${idx * 2 + 1}__verifica_iniziale`}
                         />
                         <Checkbox 
@@ -86,6 +88,12 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
             </tbody>
           </Table>
         </Fieldset>
+        {warning && (
+          <Alert variant="warning" className="py-2 w-[60%] m-auto font-semibold">
+            <FontAwesomeIcon icon={faTriangleExclamation} size="lg" className="mr-4" />
+            Non sono state completate tutte le verifiche iniziali
+          </Alert>
+        )}
       </Row>
       <Row className="mb-4">
         <Fieldset title="Aggiunte Iniziali">
@@ -96,11 +104,11 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
                   <td className="w-[42%] uppercase">{row[0].materiale}</td>
                   <td>
                     <Hidden
-                      defaultValue={row[0].id}
+                      value={row[0].id}
                       name={`record_aggiunte__${idx * 2}__aggiunta`}
                     />
                     <Hidden
-                      defaultValue={true}
+                      value={true}
                       name={`record_aggiunte__${idx * 2}__iniziale`}
                     />
                     <Checkbox
@@ -118,11 +126,11 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
                       <td className="w-[42%] uppercase">{row[1].materiale}</td>
                       <td>
                         <Hidden
-                          defaultValue={row[1].id}
+                          value={row[1].id}
                           name={`record_aggiunte__${idx * 2 + 1}__aggiunta`}
                         />
                         <Hidden
-                          defaultValue={true}
+                          value={true}
                           name={`record_aggiunte__${idx * 2 + 1}__iniziale`}
                         />
                         <Checkbox 
@@ -160,15 +168,15 @@ function RecordSchedaImpiantoForm({ data, initialData }) {
                 <tr key={idx}>
                   <td>
                     {initialData && (
-                      <Hidden name={`record_aggiunte__${index}__id`} defaultValue={aggiunta.id || undefined}/>
+                      <Hidden name={`record_aggiunte__${index}__id`} value={aggiunta.id || undefined}/>
                     )}
                     <Hidden
                       name={`record_aggiunte__${index}__data`}
-                      defaultValue={new Date(aggiunta.data + " " + aggiunta.ora).toISOString()}
+                      value={new Date(aggiunta.data + " " + aggiunta.ora).toISOString()}
                     />
                     <Hidden
                       name={`record_aggiunte__${index}__eseguito`}
-                      defaultValue={true}
+                      value={true}
                     />
                     <Input
                       label={false}

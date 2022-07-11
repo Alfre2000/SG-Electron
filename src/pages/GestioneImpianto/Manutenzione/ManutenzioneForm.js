@@ -37,7 +37,7 @@ function ManutenzioneForm({ data, initialData }) {
         <Col xs={8} className="max-h-[310px] overflow-scroll">
           <ListGroupInput
             options={searchOptions(data?.operazioni, "nome")}
-            defaultValue={startManutenzione}
+            value={startManutenzione}
             name="operazione"
           />
         </Col>

@@ -24,7 +24,7 @@ function FissaggioForm({ data }) {
         className="pr-12 border-r-2 border-r-gray-500 border-b-2 border-b-gray-500 pb-6"
       >
         <Stack gap={2} className="text-left">
-          <Hidden defaultValue={operazione?.id} name="operazione" />
+          <Hidden value={operazione?.id} name="operazione" />
           <DateInput />
           <TimeInput />
           <SearchSelect
@@ -38,11 +38,11 @@ function FissaggioForm({ data }) {
           {initialData?.record_parametri && (
             <Hidden
               name={`record_parametri__0__id`}
-              defaultValue={initialData.record_parametri[0].id}
+              value={initialData.record_parametri[0].id}
             />
           )}
           <Hidden
-            defaultValue={parametroID}
+            value={parametroID}
             name="record_parametri__0__parametro"
           />
           <Checkbox

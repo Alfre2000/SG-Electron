@@ -6,7 +6,7 @@ import { apiPost, apiUpdate } from "../api/api";
 import FormContext from "../contexts/FormContext";
 import { focusErrorInput, parseFormData } from "./utils";
 
-function FormWrapper({ data, setData, initialData, onSuccess, url, children, view }) {
+function FormWrapper({ data, setData, initialData, onSuccess, url, children, view, validator }) {
   const staticForm = Boolean(view)
   const formRef = useRef(null);
   const [error, setError] = useState(false);
@@ -18,25 +18,29 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
+    if (validator) {
+      const res = validator(form);
+      if (res === false) return;
+    }
     let formData = Object.fromEntries(new FormData(form).entries());
     [...form.elements].forEach(el => {
       if (el.hasAttribute('multiple')) {
         formData[el.name] = [...el.selectedOptions].map(op => op.value)
       }
     });
+    parseFormData(form, formData)
+    const finalFormData = new FormData()
+    Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
     if (initialData) {
-      updateRecord(formData, form);
+      updateRecord(finalFormData, form);
     } else {
-      createRecord(formData, form)
+      createRecord(finalFormData, form)
     }
   };
 
   // Funzione che gestisce la creazione di un nuovo record
   const createRecord = (formData, form) => {
-    parseFormData(form, formData)
-    const finalFormData = new FormData()
-    Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
-    apiPost(url, finalFormData).then(response => {
+    apiPost(url, formData).then(response => {
       if (data.records) {
         const newData = {...data, records: {...data.records,  results:[response, ...data.records.results]}}
         if (onSuccess) {
@@ -64,10 +68,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
 
   // Funzione che gestisce la modifica di un record già esistente
   const updateRecord = (formData, form) => {
-    parseFormData(form, formData)
-    const finalFormData = new FormData()
-    Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
-    apiUpdate(url + initialData.id + '/', finalFormData).then(response => {
+    apiUpdate(url + initialData.id + '/', formData).then(response => {
       const records = data.records.results.map(record => {
         if (record.id === response.id) {
           return response

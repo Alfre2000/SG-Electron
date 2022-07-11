@@ -40,7 +40,7 @@ function SchedaControlloForm({ data, setData }) {
               <Row>
                 <Col xs={11}>
                   {initialData && (
-                    <Hidden name={`sezioni__${idxSezione}__id`} defaultValue={sezione.id || undefined}/>
+                    <Hidden name={`sezioni__${idxSezione}__id`} value={sezione.id || undefined}/>
                   )}
                   <Input 
                     label="Nome sezione:"
@@ -81,7 +81,7 @@ function SchedaControlloForm({ data, setData }) {
                   <tr key={idxControllo}>
                     <td>
                       {initialData && (
-                        <Hidden name={`${basePath}__id`} defaultValue={controllo.id || undefined}/>
+                        <Hidden name={`${basePath}__id`} value={controllo.id || undefined}/>
                       )}
                       <Input
                         label={false}

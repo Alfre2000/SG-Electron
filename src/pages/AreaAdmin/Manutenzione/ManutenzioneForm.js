@@ -24,7 +24,7 @@ function ManutenzioneForm({ data }) {
             <Input name="intervallo_giorni" inputProps={{ type: "number" }} />
           </Stack>
         </Col>
-        <Hidden name="attiva" defaultValue={true} />
+        <Hidden name="attiva" value={true} />
       </Row>
     </>
   );

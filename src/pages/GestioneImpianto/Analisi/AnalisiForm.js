@@ -90,7 +90,7 @@ function AnalisiForm({ data, initialData }) {
                       {initialData?.record_parametri && (
                         <Hidden
                           name={`record_parametri__${idx}__id`}
-                          defaultValue={
+                          value={
                             initialData.record_parametri.find(
                               (el) => el.parametro === parametro.id
                             ).id
@@ -99,7 +99,7 @@ function AnalisiForm({ data, initialData }) {
                       )}
                       <Hidden
                         name={`record_parametri__${idx}__parametro`}
-                        defaultValue={parametro.id}
+                        value={parametro.id}
                       />
                       <Input
                         label={false}

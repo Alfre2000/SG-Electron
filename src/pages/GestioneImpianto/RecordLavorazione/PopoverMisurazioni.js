@@ -2,6 +2,7 @@ import { faPlus, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import { Button, Popover, Table } from "react-bootstrap";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
@@ -63,7 +64,7 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
                       <td className="font-semibold">{idxMisurazione + 1}</td>
                       <td>
                         {initialData && (
-                          <input hidden name={`${basePath}__id`} className="hidden" defaultValue={misurazione.id || undefined}/>
+                          <Hidden name={`${basePath}__id`} value={misurazione.id || undefined}/>
                         )}
                         <Input
                           label={false}

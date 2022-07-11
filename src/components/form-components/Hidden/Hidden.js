@@ -2,7 +2,7 @@ import React from "react";
 
 function Hidden(props) {
   return (
-    <input hidden className="hidden" data-testid="input-hidden" {...props} />
+    <input readOnly hidden className="hidden" data-testid="input-hidden" {...props} />
   );
 }
 

@@ -18,6 +18,7 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
     : ""
   const [cliente, setCliente] = useState(initialCliente ? { value: initialCliente, label: initialCliente } : null)
   const [articoloID, setArticoloID] = useState(initialData?.articolo || "")
+  const [lavorazione, setLavorazione] = useState(initialData?.lavorazione || null)
   const [infoOpen, setInfoOpen] = useState(false)
   const [spessoriOpen, setSpessoriOpen] = useState(false)
   const [immaginiOpen, setImmaginiOpen] = useState(false)
@@ -26,10 +27,18 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
   const clienti = data.articoli ? new Set(data.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
   let indexControllo = -1
   const { user } = useContext(UserContext)
+  let lavorazioni = user?.user?.impianto?.lavorazioni
+  if (lavorazioni && articolo) {
+    let lavorazioniRichieste = articolo.richieste.map(ric => ric.lavorazione.id)
+    lavorazioni = lavorazioni.filter(lav => lavorazioniRichieste.includes(lav.id))
+  }
+  if (lavorazioni.length === 1 && lavorazioni[0]?.id !== lavorazione?.value) {
+    setLavorazione({ value: lavorazioni[0].id, label: lavorazioni[0].nome })
+  }
   return (
     <>
       <Row className="mb-4">
-        <input hidden className="hidden" name="impianto" defaultValue={user.user.impianto.id}/>
+        <Hidden name="impianto" value={user.user.impianto.id}/>
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">
             <DateInput />
@@ -41,12 +50,12 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
           </Stack>
         </Col>
         <Col xs={6} className="pl-10 flex">
-          <Stack gap={3} className="text-left justify-center">
+          <Stack gap={2} className="text-left justify-center">
             <SearchSelect
               name="cliente" 
               inputProps={{ 
                 value: cliente,
-                onChange: (e) => setCliente(e)
+                onChange: (e) => setCliente(e) || setArticoloID(null) || setLavorazione(null)
               }}
               options={clienti && [...clienti].map(cliente => ({ value: cliente, label: cliente }))}
             />
@@ -55,9 +64,18 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
               inputProps={{ 
                 isDisabled: !cliente || view,
                 value: articolo ? { value: articolo.id, label: `${articolo.nome} (${articolo.codice})` } : null,
-                onChange: (e) => setArticoloID(e?.value ? e.value : null),
+                onChange: (e) => setArticoloID(e?.value ? e.value : null) || setLavorazione(null),
               }}
               options={data?.articoli?.filter(arti => arti.cliente.nome === cliente?.value).map(a => ({ value: a.id, label: `${a.nome} (${a.codice})` }))}
+            />
+            <SearchSelect
+              name="lavorazione"
+              options={searchOptions(lavorazioni, "nome")}
+              inputProps={{ 
+                isDisabled: !articolo || view,
+                value: lavorazione,
+                onChange: (e) => setLavorazione(e),
+              }}
             />
           </Stack>
         </Col>
@@ -232,11 +250,11 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
                                   {initialData?.record_controlli && (
                                     <Hidden
                                       name={`record_controlli__${indexControllo}__id`}
-                                      defaultValue={initialData.record_controlli[indexControllo]?.id || undefined}
+                                      value={initialData.record_controlli[indexControllo]?.id || undefined}
                                     />
                                   )}
                                   <Hidden
-                                    defaultValue={controllo.id}
+                                    value={controllo.id}
                                     name={`record_controlli__${indexControllo}__controllo`}
                                   />
                                   <Checkbox 

@@ -19,6 +19,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
   const [trattamento, setTrattamento] = useState(initialData?.dati_aggiuntivi?.n_difetti_trattamento || 0)
   const [altro, setAltro] = useState(initialData?.dati_aggiuntivi?.n_difetti_altro || 0)
   
+  const lavorazione = data?.records?.results?.at(0)?.lavorazione
 
   const [errValore, setErrValore] = useState({})
   const valvoleScarto = +materiale + +sporco + +meccanici + +trattamento + +altro
@@ -310,9 +311,10 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
           </Col>
         </Row>
       </Form.Group>
-      <Hidden defaultValue={valvoleScarto} name="n_pezzi_scartati" />
-      <Hidden defaultValue={true} name="completata" />
-      <Hidden defaultValue={impianto?.id} name="impianto" />
+      <Hidden readOnly value={valvoleScarto} name="n_pezzi_scartati" />
+      <Hidden readOnly value={true} name="completata" />
+      <Hidden readOnly value={impianto?.id} name="impianto" />
+      <Hidden readOnly value={lavorazione} name="lavorazione" />
     </>
   );
 }

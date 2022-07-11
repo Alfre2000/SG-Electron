@@ -12,7 +12,7 @@ import { findElementFromID, isDateRecent } from '../utils';
 import { deleteRecord } from './utils';
 import DefaultFormWrapper from './FormWrapper';
 
-function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess }) {
+function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess, hoursModify = 2 }) {
   const [showPasswordDeleteModal, setShowPasswordDeleteModal] = useState("0");
   const [showPasswordModifyModal, setShowPasswordModifyModal] = useState("0");
   const [showConfirmModal, setShowConfirmModal] = useState("0");
@@ -127,7 +127,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
               <td className="cursor-pointer" onClick={() => setShowViewModal(record.id)}>
                 <FontAwesomeIcon icon={faSearch} className="rotate-90" />
               </td>
-              {i === 0 && isDateRecent(record.data, 2) ? (
+              {i === 0 && isDateRecent(record.data, hoursModify) ? (
                 <td className="cursor-pointer" onClick={() => setShowModifyModal(record.id)}>
                   <FontAwesomeIcon icon={faWrench} />
                 </td>
@@ -136,7 +136,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
                   <FontAwesomeIcon icon={faWrench} />
                 </td>
               )}
-              {i === 0 && isDateRecent(record.data, 2) ? (
+              {i === 0 && isDateRecent(record.data, hoursModify) ? (
                 <td className="cursor-pointer" onClick={() => setShowConfirmModal(record.id)}>
                   <FontAwesomeIcon icon={faTrash} className="text-red-800" />
                 </td>

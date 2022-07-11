@@ -17,6 +17,7 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
         type="checkbox"
         name={name}
         defaultChecked={initialData ? findNestedElement(initialData, name) : true}
+        disabled={formData?.view}
         {...inputProps}
       />
     </Form.Group>

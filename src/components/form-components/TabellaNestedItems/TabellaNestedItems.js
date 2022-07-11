@@ -96,7 +96,7 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
               {initialData && (
                 <Hidden
                   name={`${name}__${idx + startIndex}__id`}
-                  defaultValue={item.id || undefined}
+                  value={item.id || undefined}
                   data-testid="hidden-id"
                 />
               )}
@@ -104,7 +104,7 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
                 <Hidden
                   key={colonna.name}
                   name={`${name}__${idx + startIndex}__${colonna.name}`}
-                  defaultValue={colonna.value || undefined}
+                  value={colonna.value || undefined}
                   data-testid="hidden-input"
                 />
               ))}
