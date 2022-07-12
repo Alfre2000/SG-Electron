@@ -41,6 +41,7 @@ function LavorazioniInSospeso() {
                   FormComponent={RecordLavorazioneForm}
                   url={URLS.RECORD_LAVORAZIONI}
                   onSuccess={updateRecords}
+                  hoursModify={24}
                 />
               </Card.Body>
             </Card>
