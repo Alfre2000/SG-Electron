@@ -148,12 +148,12 @@ function Produzione() {
                     </Card.Header>
                     <Card.Body className="px-5">
                       <Form.Group className="w-1/2 m-auto">
-                        <Form.Label>Arco temporale:</Form.Label>
+                        <Form.Label>Frequenza:</Form.Label>
                         <Form.Select required size="sm" className="text-center" value={frequenza} onChange={(e) => updateChart(e.target.value)} >
-                          <option value="day">Ultimo Mese</option>  
-                          <option value="week">Ultimi 6 Mesi</option>  
-                          <option value="month">Ultimi 3 anni</option>  
-                          <option value="year">Da sempre</option>  
+                          <option value="day">Giornaliera</option>  
+                          <option value="week">Settimanale</option>  
+                          <option value="month">Mensile</option>  
+                          <option value="year">Annuale</option>  
                         </Form.Select>
                       </Form.Group>
                     </Card.Body>

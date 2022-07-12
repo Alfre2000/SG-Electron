@@ -1,6 +1,6 @@
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import Checkbox from "../../../components/form-components/Checkbox";
@@ -16,8 +16,14 @@ function AnalisiForm({ data, initialData }) {
   const startAnalisi =
     findElementFromID(initialData?.operazione, data?.operazioni) ||
     findElementFromID(searchParams.get("analisi"), data?.operazioni) ||
-    "";
+    null;
   const [analisi, setAnalisi] = useState(startAnalisi);
+  useEffect(() => {
+    if (analisi === null && data?.operazioni && searchParams.get("analisi") && !initialData?.operazione) {
+      setAnalisi(findElementFromID(searchParams.get("analisi"), data?.operazioni))
+    }
+  }, [analisi, data?.operazioni, searchParams, initialData?.operazione])
+
   const [errValore, setErrValore] = useState({});
 
   const handleValoreChange = (e) => {
@@ -58,7 +64,7 @@ function AnalisiForm({ data, initialData }) {
               name="operazione"
               inputProps={{
                 isDisabled: !!initialData,
-                value: { value: analisi.id, label: analisi.nome },
+                value: { value: analisi?.id, label: analisi?.nome },
                 onChange: (newValue) =>
                   setAnalisi(
                     findElementFromID(newValue?.value, data?.operazioni) || ""

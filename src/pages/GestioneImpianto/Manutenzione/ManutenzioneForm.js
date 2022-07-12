@@ -11,6 +11,7 @@ function ManutenzioneForm({ data, initialData }) {
   const [searchParams] = useSearchParams();
   const startManutenzione =
     initialData?.operazione || searchParams.get("manutenzione") || "";
+  console.log(startManutenzione);
   return (
     <>
       <Row>
@@ -37,7 +38,7 @@ function ManutenzioneForm({ data, initialData }) {
         <Col xs={8} className="max-h-[310px] overflow-scroll">
           <ListGroupInput
             options={searchOptions(data?.operazioni, "nome")}
-            value={startManutenzione}
+            defaultValue={startManutenzione}
             name="operazione"
           />
         </Col>
