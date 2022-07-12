@@ -11,8 +11,10 @@ import UserContext from "../../../UserContext";
 import PopoverMisurazioni from "./PopoverMisurazioni";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
+import ImageModal from "../../../components/Modals/ImageModal/ImageModal";
+const electron = window?.require ? window.require("electron") : null;
 
-function RecordLavorazioneForm({ data, initialData, errors, view }) {
+function RecordLavorazioneForm({ data, initialData, view }) {
   const initialCliente = data.articoli && initialData?.articolo 
     ? findElementFromID(initialData?.articolo, data.articoli).cliente.nome
     : ""
@@ -21,7 +23,7 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
   const [lavorazione, setLavorazione] = useState(initialData?.lavorazione || null)
   const [infoOpen, setInfoOpen] = useState(false)
   const [spessoriOpen, setSpessoriOpen] = useState(false)
-  const [immaginiOpen, setImmaginiOpen] = useState(false)
+  const [documentiOpen, setDocumentiOpen] = useState(false)
   const [controlliOpen, setControlliOpen] = useState(false)
   const articolo = findElementFromID(articoloID, data.articoli)
   const clienti = data.articoli ? new Set(data.articoli.map(articolo => articolo.cliente.nome)) : new Set([]);
@@ -35,6 +37,8 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
   if (lavorazioni.length === 1 && lavorazioni[0]?.id !== lavorazione?.value) {
     setLavorazione({ value: lavorazioni[0].id, label: lavorazioni[0].nome })
   }
+  const [modalImg, setModalImg] = useState(false)
+  const docs = [...(articolo?.immagini_supporto || []), ...(articolo?.documenti_supporto || [])]
   return (
     <>
       <Row className="mb-4">
@@ -63,10 +67,10 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
               name="articolo" 
               inputProps={{ 
                 isDisabled: !cliente || view,
-                value: articolo ? { value: articolo.id, label: `${articolo.nome} (${articolo.codice})` } : null,
+                value: articolo ? { value: articolo.id, label: `${articolo.nome} (${articolo.codice || "-"})` } : null,
                 onChange: (e) => setArticoloID(e?.value ? e.value : null) || setLavorazione(null),
               }}
-              options={data?.articoli?.filter(arti => arti.cliente.nome === cliente?.value).map(a => ({ value: a.id, label: `${a.nome} (${a.codice})` }))}
+              options={data?.articoli?.filter(arti => arti.cliente.nome === cliente?.value).map(a => ({ value: a.id, label: `${a.nome} (${a.codice || "-"})` }))}
             />
             <SearchSelect
               name="lavorazione"
@@ -171,34 +175,51 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
             </div>
             </>
           )}
-          {(articolo.scheda_controllo?.immagine_misurazione || articolo.scheda_controllo?.immagine_aggancio) && (
+          {(docs.length > 0) && (
             <>
-            <SectionHeader title="Immagini di supporto" open={immaginiOpen} setOpen={setImmaginiOpen} />
-            <div className={`${immaginiOpen ? "" : "max-h-0 h-0 overflow-hidden"}`}>
+            <SectionHeader title="Immagini e Documenti di supporto" open={documentiOpen} setOpen={setDocumentiOpen} />
+            <div className={`${documentiOpen ? "" : "max-h-0 h-0 overflow-hidden"}`}>
               <Table className="align-middle text-center" bordered>
                 <thead>
-                  <tr className={`${immaginiOpen ? "" : "hidden"}`}>
-                    {/* {articolo.scheda_controllo.immagine_misurazione && (
-                      <th className="w-1/2 align-middle">Punto di misura per la verifica dello spessore del trattamento</th>
-                    )}
-                    {articolo.scheda_controllo.immagine_aggancio && (
-                      <th className="w-1/2 align-middle">Zona di aggancio</th>
-                    )} */}
+                  <tr className={`${documentiOpen ? "" : "hidden"}`}>
+                    <th>Titolo</th>
+                    <th>Documento</th>
                   </tr>
                 </thead>
-                <tbody className={`${immaginiOpen ? "" : "hidden"}`}>
-                  <tr>
-                    {articolo.scheda_controllo.immagine_misurazione && (
-                      <td className="w-1/2 align-middle">
-                        <img src={articolo.scheda_controllo.immagine_misurazione} alt="misurazione" />
+                <tbody className={`${documentiOpen ? "" : "hidden"}`}>
+                  {docs.map(documento => (
+                    <tr key={documento.id}>
+                      <td 
+                        className="hover:underline hover:cursor-pointer w-[50%]"
+                        onClick={() => {
+                          if (documento.immagine) {
+                            setModalImg(documento.id)
+                          } else {
+                            electron.ipcRenderer.invoke("open-file", documento.documento);
+                          }
+                          }}>
+                          {documento.titolo}
                       </td>
-                    )}
-                    {articolo.scheda_controllo.immagine_aggancio && (
-                      <td className="w-1/2 align-middle">
-                        <img src={articolo.scheda_controllo.immagine_aggancio} alt="aggancio" />
-                      </td>
-                    )}
-                  </tr>
+                      {documento.immagine ? (
+                        <td className="">
+                          <img
+                            className="m-auto max-w-xs hover:cursor-pointer"
+                            alt={documento.titolo}
+                            src={documento.immagine} 
+                            onClick={() => setModalImg(documento.id)}
+                          />
+                          {documento.id === modalImg && (
+                            <ImageModal setShow={setModalImg} url={documento.immagine} titolo={documento.titolo} />
+                          )}
+                        </td>
+                        ) : (
+                          <td className="max-w-xs hover:cursor-pointer italic hover:underline hover:underline-offset-1" onClick={() => electron.ipcRenderer.invoke("open-file", documento.documento)}>
+                            Apri documento
+                          </td>
+                        )
+                      }
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </div>
@@ -303,6 +324,7 @@ function RecordLavorazioneForm({ data, initialData, errors, view }) {
               vertical={true}
               name="completata"
               inputProps={{
+                defaultChecked: initialData ? initialData.completata : false,
                 className: "bigger-checkbox",
               }}
             />

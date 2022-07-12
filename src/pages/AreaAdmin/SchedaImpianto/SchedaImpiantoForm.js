@@ -75,6 +75,12 @@ function SchedaImpiantoForm({ data }) {
           ]}
         />
       </Fieldset>
+      <Fieldset title="documenti di supporto">
+        <TabellaNestedItems
+          name="documenti_supporto"
+          colonne={[{ name: "titolo" }, { name: "documento", type: "file" }]}
+        />
+      </Fieldset>
     </>
   );
 }

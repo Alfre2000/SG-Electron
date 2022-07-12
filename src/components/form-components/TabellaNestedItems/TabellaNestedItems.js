@@ -8,6 +8,7 @@ import Hidden from "../../form-components/Hidden/Hidden";
 import SearchSelect from "../SearchSelect";
 import Input from "../Input";
 import { useFormContext } from "../../../contexts/FormContext";
+import FileField from "../FileField/FileField";
 
 function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
   const formData = useFormContext()
@@ -71,6 +72,8 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
                     }}
                     options={colonna.options}
                   />
+                ) : colonna.type === "file" ? (
+                  <FileField name={inputName} />
                 ) : (
                   <Input 
                     name={inputName}

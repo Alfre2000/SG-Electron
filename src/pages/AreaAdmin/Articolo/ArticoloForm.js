@@ -93,6 +93,18 @@ function ArticoloForm({ data, campoScheda }) {
           ]}
         />
       </Fieldset>
+      <Fieldset title="immagini di supporto">
+        <TabellaNestedItems
+          name="immagini_supporto"
+          colonne={[{ name: "titolo" }, { name: "immagine", type: "file" }]}
+        />
+      </Fieldset>
+      <Fieldset title="documenti di supporto">
+        <TabellaNestedItems
+          name="documenti_supporto"
+          colonne={[{ name: "titolo" }, { name: "documento", type: "file" }]}
+        />
+      </Fieldset>
     </>
   );
 }

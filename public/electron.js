@@ -1,4 +1,5 @@
 const fs = require('fs');
+const http = require('http');
 
 const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('electron');
 const isDev = require('electron-is-dev');
@@ -54,6 +55,37 @@ app.whenReady().then(() => {
   })
   ipcMain.handle('open-admin', () => {
     openAdminSite()
+  })
+  ipcMain.handle('save-img', (_, link) => {
+    const win = BrowserWindow.getFocusedWindow()
+    const fileName = link.split('/')[link.split('/').length - 1]
+    const defaultPath = app.getPath('desktop') + '/' + fileName
+    dialog.showSaveDialog(win, { 
+      title: "Salva Schreenshot",
+      defaultPath: defaultPath,
+      properties: ['openFile', 'openDirectory', 'createDirectory'],
+    }).then((path => {
+        if (!path.canceled) {
+          const file = fs.createWriteStream(path.filePath.toString());
+          http.get(link, response => {
+            response.pipe(file)
+          });
+        }
+    }))
+  })
+  ipcMain.handle('open-file', (_, link) => {
+    const win = new BrowserWindow({
+      width: 700, minWidth: 700,
+      height: 800, minHeight: 500,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: false,
+        enableRemoteModule: false,
+      },
+      show: false,
+    });
+    win.once('ready-to-show', win.show)
+    win.loadURL(link)
   })
 });
 

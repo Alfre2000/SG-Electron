@@ -12,7 +12,8 @@ import { modifyNestedObject } from "../../utils";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faFilePdf, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+const electron = window?.require ? window.require("electron") : null;
 
 function RecordSchedaImpiantoForm({ data, initialData, warning }) {
   const schedaImpianto = Array.isArray(data.schede_impianto) ? data.schede_impianto[0] : data.schede_impianto
@@ -241,7 +242,6 @@ function RecordSchedaImpiantoForm({ data, initialData, warning }) {
         </Form.Group>
       </Row>
       <Row className="mb-4 text-left">
-        
         <Form.Group>
           <Form.Label className="mt-2">Eventuali malfunzionamenti - fermi linea - non conformità prodotti:</Form.Label>
           <Input
@@ -250,6 +250,15 @@ function RecordSchedaImpiantoForm({ data, initialData, warning }) {
             name="operazioni_straordinarie"
           />
         </Form.Group>
+      </Row>
+      <Row className="mb-4 text-left">
+        <p className="uppercase font-semibold text-nav-blue text-lg">Documenti di supporto</p>
+        <hr className="h-4 w-28 ml-3 pt-px pb-0.5 bg-nav-blue opacity-90"/>
+        <ul className="ml-4 mt-2.5">
+          {schedaImpianto?.documenti_supporto?.map(documento => (
+            <li key={documento.id} className="list-disc italic cursor-pointer hover:underline hover:underline-offset-1" onClick={() => electron.ipcRenderer.invoke("open-file", documento.documento)}>{documento.titolo} <FontAwesomeIcon icon={faFilePdf} className="ml-1 text-nav-blue"/></li>
+          ))}
+        </ul>
       </Row>
     </>
   )

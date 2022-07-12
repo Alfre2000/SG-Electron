@@ -31,6 +31,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     parseFormData(form, formData)
     const finalFormData = new FormData()
     Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
+    console.log(formData);
     if (initialData) {
       updateRecord(finalFormData, form);
     } else {
