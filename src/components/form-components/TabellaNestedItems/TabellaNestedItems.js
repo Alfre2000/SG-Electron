@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Table } from "react-bootstrap";
 import { modifyNestedObject, objectsEqual } from "../../../pages/utils";
-import { capitalize } from "../../../utils";
+import { capitalize, dateToDatePicker, dateToTimePicker } from "../../../utils";
 import MinusIcon from "../../Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../Icons/PlusIcon/PlusIcon";
 import Hidden from "../../form-components/Hidden/Hidden";
@@ -13,6 +13,13 @@ import FileField from "../FileField/FileField";
 function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
   const formData = useFormContext()
   initialData = initialData !== undefined ? initialData : formData.initialData;
+  if (initialData !== undefined && initialData[name]?.length > 0 && "data" in initialData[name][0]) {
+    initialData[name] = initialData[name].map(el => ({
+      ...el, 
+      data: dateToDatePicker(new Date(el.data)),
+      ora: dateToTimePicker(new Date(el.data))
+    }))
+  }
   const hiddenCols = colonne.filter(col => col.type === "hidden")
   colonne = colonne.filter(col => col.type !== "hidden")
   colonne = colonne.map((colonna) => {
@@ -22,18 +29,29 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
     }
     return colonna;
   });
-  let emptyItem = {};
-  colonne.forEach((colonna) => (emptyItem[colonna.name] = ""));
+  const emptyItem = () => {
+    let empty = {};
+    colonne.forEach((colonna) => {
+      const defaultValue = colonna.type === "date" ? 
+        dateToDatePicker(new Date())
+        : colonna.type === 'time' 
+        ? dateToTimePicker(new Date()) 
+      : ""
+      empty[colonna.name] = defaultValue
+    });
+    return empty
+  }
   const [items, setItems] = useState(
-    !!initialData ? initialData[name] : [emptyItem]
+    !!initialData ? initialData[name] : [emptyItem()]
   );
   const colWidth = 95 / colonne.length;
+  const hasDatetime = colonne.some(c => c.type === "date") && colonne.some(c => c.type === "time")
   return (
     <Table bordered className="align-middle text-sm text-center">
       <thead>
         <tr>
           {colonne.map((colonna) => (
-            <th key={colonna.name} style={{ width: `${colWidth}%` }}>
+            <th key={colonna.label} style={{ width: `${colWidth}%` }}>
               {colonna.label}
             </th>
           ))}
@@ -62,12 +80,12 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
                           modifyNestedObject(
                             items,
                             `${idx}__${colonna.name}`,
-                            e.label
+                            e?.value
                           )
                         )
                       },
                       value: colonna?.options?.find(
-                        (el) => el.label === item[colonna.name]
+                        (el) => el.value === item[colonna.name]
                       ),
                     }}
                     options={colonna.options}
@@ -111,6 +129,12 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
                   data-testid="hidden-input"
                 />
               ))}
+              {hasDatetime && (
+                <Hidden
+                  name={`${name}__${idx + startIndex}__data`}
+                  value={new Date(item.data + " " + item.ora).toISOString()}
+                />
+              )}
               <MinusIcon
                 onClick={() => {
                   let newItems = items.filter((el) => !objectsEqual(el, item));
@@ -127,7 +151,7 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
         <tr>
           <td colSpan={colonne.length + 1}>
             <PlusIcon
-              onClick={() => setItems([...items, emptyItem])}
+              onClick={() => setItems([...items, emptyItem()])}
             />
           </td>
         </tr>

@@ -28,11 +28,7 @@ function RecordSchedaImpianto() {
     );
     if (!checkboxes.every((el) => el.checked) && warning === false) {
       setWarning(true);
-      pageRef.current.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      });
+      pageRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       return false;
     }
     setWarning(false);

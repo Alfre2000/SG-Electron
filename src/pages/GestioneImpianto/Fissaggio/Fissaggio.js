@@ -6,18 +6,14 @@ import FissaggioForm from "./FissaggioForm";
 import FormWrapper from "../../FormWrapper";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import Tabella from "../../Tabella";
-import { parseRecordFissaggi } from "../parsers";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 
 function Fissaggio() {
   const [data, setData] = useGetAPIData([
-    {nome: "operatori", url: URLS.OPERATORI},
-    {nome: "operazioni", url: URLS.FISSAGGI},
-    {nome: "records", url: URLS.RECORD_FISSAGGIO, parser: parseRecordFissaggi}
-  ])
-  const setParsedData = (newData) => {
-    setData({...data, records: parseRecordFissaggi(newData.records)})
-  }
+    { nome: "operatori", url: URLS.OPERATORI },
+    { nome: "operazioni", url: URLS.FISSAGGI },
+    { nome: "records", url: URLS.RECORD_FISSAGGIO },
+  ]);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -29,7 +25,11 @@ function Fissaggio() {
                 Registra aggiunta fissaggio
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setParsedData} url={URLS.RECORD_FISSAGGIO}>
+                <FormWrapper
+                  data={data}
+                  setData={setData}
+                  url={URLS.RECORD_FISSAGGIO}
+                >
                   <FissaggioForm data={data} />
                 </FormWrapper>
               </Card.Body>
@@ -43,14 +43,16 @@ function Fissaggio() {
                 Ultime aggiunte eseguite
               </Card.Header>
               <Card.Body>
-                <Tabella 
+                <Tabella
                   headers={["Operatore", "pH"]}
-                  valori={['operatore__operatori', 'ph']}
+                  valori={[
+                    "operatore__operatori",
+                    "record_parametri__0__valore",
+                  ]}
                   data={data}
-                  setData={setParsedData}
+                  setData={setData}
                   FormComponent={FissaggioForm}
                   url={URLS.RECORD_FISSAGGIO}
-                  
                 />
               </Card.Body>
             </Card>

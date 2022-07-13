@@ -1,4 +1,7 @@
-import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowCircleRight,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Col, Container, Row, Card, Alert } from "react-bootstrap";
@@ -14,24 +17,43 @@ import RecordLavorazioneForm from "./RecordLavorazioneForm";
 const { motion } = require("framer-motion");
 
 function RecordLavorazione() {
-  const [data, setData] = useGetAPIData([
-    {nome: "operatori", url: URLS.OPERATORI},
-    {nome: "articoli", url: URLS.ARTICOLI_NESTED},
-    {nome: "records", url: URLS.RECORD_LAVORAZIONI},
-    {nome: "scheda_impianto", url: URLS.ULTIMA_SCHEDA_IMPIANTO},
-  ], true)
-  const isSchedaImpiantoOld = data?.scheda_impianto?.id && !isDateRecent(data.scheda_impianto.data, 8)
+  const [data, setData] = useGetAPIData(
+    [
+      { nome: "operatori", url: URLS.OPERATORI },
+      { nome: "articoli", url: URLS.ARTICOLI_NESTED },
+      { nome: "records", url: URLS.RECORD_LAVORAZIONI },
+      { nome: "scheda_impianto", url: URLS.ULTIMA_SCHEDA_IMPIANTO },
+    ],
+    true
+  );
+  const isSchedaImpiantoOld =
+    data?.scheda_impianto?.id && !isDateRecent(data.scheda_impianto.data, 8);
   return (
     <Wrapper title="Scheda di Controllo">
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <PageTitle>Scheda di Controllo</PageTitle>
         {isSchedaImpiantoOld && (
-          <motion.div initial={{ opacity: 0 , scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-            <Alert variant="danger" className="mt-8 -mb-2 py-2 px-20 text-left inline-flex items-center">
-              <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
-              <b className="">Attenzione:</b>
-              <div className="pl-2 pr-16"> compilare la scheda dell'impianto !</div>
-              <Link to="/manutenzione/record-scheda-impianto/"><FontAwesomeIcon icon={faArrowCircleRight} size="lg" /></Link>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Alert
+              variant="danger"
+              className="mt-8 -mb-2 py-2 px-20 text-left inline-flex items-center"
+            >
+              <FontAwesomeIcon
+                icon={faTriangleExclamation}
+                className="mr-10"
+              ></FontAwesomeIcon>
+              <b>Attenzione:</b>
+              <div className="pl-2 pr-16">
+                {" "}
+                compilare la scheda dell'impianto !
+              </div>
+              <Link to="/manutenzione/record-scheda-impianto/">
+                <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
+              </Link>
             </Alert>
           </motion.div>
         )}
@@ -42,8 +64,12 @@ function RecordLavorazione() {
                 Aggiungi lavorazione lotto
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setData} url={URLS.RECORD_LAVORAZIONI}>
-                  <RecordLavorazioneForm data={data}/>
+                <FormWrapper
+                  data={data}
+                  setData={setData}
+                  url={URLS.RECORD_LAVORAZIONI}
+                >
+                  <RecordLavorazioneForm data={data} />
                 </FormWrapper>
               </Card.Body>
             </Card>
@@ -56,14 +82,17 @@ function RecordLavorazione() {
                 Ultimi lotti lavorati
               </Card.Header>
               <Card.Body>
-                <Tabella 
+                <Tabella
                   headers={["Lotto", "N° Pezzi", "Operatore"]}
-                  valori={['n_lotto_cliente', 'n_pezzi_dichiarati', 'operatore__operatori']}
+                  valori={[
+                    "n_lotto_cliente",
+                    "n_pezzi_dichiarati",
+                    "operatore__operatori",
+                  ]}
                   data={data}
                   setData={setData}
                   FormComponent={RecordLavorazioneForm}
                   url={URLS.RECORD_LAVORAZIONI}
-                  
                 />
               </Card.Body>
             </Card>

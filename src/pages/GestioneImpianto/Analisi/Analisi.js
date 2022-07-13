@@ -10,10 +10,10 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 
 function Analisi() {
   const [data, setData] = useGetAPIData([
-    {nome: "operatori", url: URLS.OPERATORI},
-    {nome: "operazioni", url: URLS.ANALISI},
-    {nome: "records", url: URLS.RECORD_ANALISI}
-  ])
+    { nome: "operatori", url: URLS.OPERATORI },
+    { nome: "operazioni", url: URLS.ANALISI },
+    { nome: "records", url: URLS.RECORD_ANALISI },
+  ]);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -25,7 +25,11 @@ function Analisi() {
                 Seleziona l'analisi effettuata
               </Card.Header>
               <Card.Body className="px-5">
-                <FormWrapper data={data} setData={setData} url={URLS.RECORD_ANALISI}>
+                <FormWrapper
+                  data={data}
+                  setData={setData}
+                  url={URLS.RECORD_ANALISI}
+                >
                   <AnalisiForm data={data} />
                 </FormWrapper>
               </Card.Body>
@@ -41,7 +45,7 @@ function Analisi() {
               <Card.Body>
                 <Tabella
                   headers={["Analisi", "Operatore"]}
-                  valori={['operazione__operazioni', 'operatore__operatori']}
+                  valori={["operazione__operazioni", "operatore__operatori"]}
                   data={data}
                   setData={setData}
                   FormComponent={AnalisiForm}
@@ -53,7 +57,7 @@ function Analisi() {
         </Row>
       </Container>
     </Wrapper>
-  )
+  );
 }
 
-export default Analisi
+export default Analisi;

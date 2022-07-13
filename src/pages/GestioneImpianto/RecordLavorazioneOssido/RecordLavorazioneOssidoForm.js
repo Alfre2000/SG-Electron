@@ -1,6 +1,6 @@
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Col, Row, Form, Stack } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
@@ -8,35 +8,41 @@ import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import TimeInput from "../../../components/TimeInput/TimeInput";
-import UserContext from "../../../UserContext";
+import { useFormContext } from "../../../contexts/FormContext";
+import { useUserContext } from "../../../UserContext";
 import { searchOptions } from "../../../utils";
 
-function RecordLavorazioneOssidoForm({ data, initialData }) {
-  const { user: { user: { impianto } } } = useContext(UserContext);
-  const [materiale, setMateriale] = useState(initialData?.dati_aggiuntivi?.n_difetti_materiale || 0)
-  const [sporco, setSporco] = useState(initialData?.dati_aggiuntivi?.n_difetti_sporco || 0)
-  const [meccanici, setMeccanici] = useState(initialData?.dati_aggiuntivi?.n_difetti_meccanici || 0)
-  const [trattamento, setTrattamento] = useState(initialData?.dati_aggiuntivi?.n_difetti_trattamento || 0)
-  const [altro, setAltro] = useState(initialData?.dati_aggiuntivi?.n_difetti_altro || 0)
-  
-  const lavorazione = data?.records?.results?.at(0)?.lavorazione
+function RecordLavorazioneOssidoForm({ data }) {
+  const { user } = useUserContext();
+  const { initialData } = useFormContext();
+  const info = initialData?.dati_aggiuntivi;
+  const [materiale, setMateriale] = useState(info?.n_difetti_materiale || 0);
+  const [sporco, setSporco] = useState(info?.n_difetti_sporco || 0);
+  const [meccanici, setMeccanici] = useState(info?.n_difetti_meccanici || 0);
+  const [trattamento, setTrattamento] = useState(
+    info?.n_difetti_trattamento || 0
+  );
+  const [altro, setAltro] = useState(info?.n_difetti_altro || 0);
 
-  const [errValore, setErrValore] = useState({})
-  const valvoleScarto = +materiale + +sporco + +meccanici + +trattamento + +altro
+  const valvoleScarto =
+    +materiale + +sporco + +meccanici + +trattamento + +altro;
+
+  const lavorazione = data?.records?.results?.at(0)?.lavorazione;
+
+  const [errValore, setErrValore] = useState({});
   const handleValoreChange = (e) => {
-    if (e.target.name === 'dati_aggiuntivi__spessore_deviazione') return;
-    const name = e.target.name.includes('spessore') ? 'spessore_ossido' : e.target.name.split('__').at(-1)
-    const minimo = data.scheda_controllo[`${name}_minimo`]
-    const massimo = data.scheda_controllo[`${name}_massimo`]
-    const value = parseFloat(e.target.value)
-    if (value > massimo) {
-      setErrValore({...errValore, [e.target.name]: `Valore oltre il massimo di ${massimo} !`})
-    } else if (value < minimo) {
-      setErrValore({...errValore, [e.target.name]: `Valore sotto il minimo di ${minimo} !`})
-    } else {
-      setErrValore({...errValore, [e.target.name]: ""})
-    }
-  }
+    if (e.target.name === "dati_aggiuntivi__spessore_deviazione") return;
+    const name = e.target.name.includes("spessore")
+      ? "spessore_ossido"
+      : e.target.name.split("__").at(-1);
+    const minimo = data.scheda_controllo[`${name}_minimo`];
+    const massimo = data.scheda_controllo[`${name}_massimo`];
+    const value = parseFloat(e.target.value);
+    let errMsg = "";
+    if (value > massimo) errMsg = `Valore oltre il massimo di ${massimo} !`;
+    else if (value < minimo) errMsg = `Valore sotto il minimo di ${minimo} !`;
+    setErrValore({ ...errValore, [e.target.name]: errMsg });
+  };
   return (
     <>
       <Row className="mb-4 justify-between">
@@ -47,7 +53,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
           <Stack gap={1} className="text-left">
             <DateInput />
             <TimeInput />
-            <SearchSelect 
+            <SearchSelect
               name="operatore"
               options={searchOptions(data?.operatori, "nome")}
             />
@@ -55,26 +61,32 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
         </Col>
         <Col xs={6} className="pb-3 border-b-2 border-b-gray-500">
           <Stack gap={1} className="text-right">
-            <SearchSelect 
+            <SearchSelect
               label="Modello:"
               labelCols={6}
               name="articolo"
               labelProps={{ className: "pr-6" }}
-              options={data?.articoli && data?.articoli?.map(o => ({ value: o.id, label: `${o.nome} (${o.codice})`}))}
+              options={
+                data?.articoli &&
+                data?.articoli?.map((o) => ({
+                  value: o.id,
+                  label: `${o.nome} (${o.codice})`,
+                }))
+              }
             />
-            <Input 
+            <Input
               label="Numero Lotto:"
               name="n_lotto_cliente"
               labelCols={6}
               labelProps={{ className: "pr-6" }}
             />
-            <Checkbox 
+            <Checkbox
               label="Idoneità al trattamento:"
               name="dati_aggiuntivi__idoneità"
               labelCols={6}
               labelProps={{ className: "pr-6" }}
-              inputProps={{ 
-                className: "text-left mt-2"
+              inputProps={{
+                className: "text-left mt-2",
               }}
             />
           </Stack>
@@ -82,27 +94,27 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
       </Row>
       <Row className="mb-3 text-left">
         <Col xs={5}>
-          <Input 
+          <Input
             label="Valvole dichiarate:"
             name="n_pezzi_dichiarati"
             labelCols={5}
             labelProps={{ className: "pr-0" }}
-            inputProps={{ 
+            inputProps={{
               type: "number",
-              className: "text-center w-4/5 ml-auto"
+              className: "text-center w-4/5 ml-auto",
             }}
           />
         </Col>
         <Col xs={1}></Col>
         <Col xs={6}>
-          <Input 
+          <Input
             label="Valvole conformi:"
             name="dati_aggiuntivi__n_pezzi_conformi"
             labelCols={5}
             labelProps={{ className: "pr-0" }}
-            inputProps={{ 
+            inputProps={{
               type: "number",
-              className: "w-[64%] text-center mx-auto"
+              className: "w-[64%] text-center mx-auto",
             }}
             colProps={{ className: "pr-14" }}
           />
@@ -114,8 +126,14 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
           className="py-6 mt-2 border-t-2 border-t-gray-500 border-r-2 border-r-gray-500"
         >
           <Stack gap={1} className="text-left">
-            {['verifiche_preliminari', 'pulizia', 'filetto_m6', 'accantonato_campione', 'master'].map(name => (
-              <Checkbox 
+            {[
+              "verifiche_preliminari",
+              "pulizia",
+              "filetto_m6",
+              "accantonato_campione",
+              "master",
+            ].map((name) => (
+              <Checkbox
                 key={name}
                 name={`dati_aggiuntivi__${name}`}
                 labelCols={7}
@@ -139,7 +157,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
                     className: "text-center",
                     disabled: true,
                     value: valvoleScarto,
-                    readOnly: true
+                    readOnly: true,
                   }}
                 />
               </Col>
@@ -161,7 +179,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
                     type: "number",
                     className: "text-center",
                     value: materiale,
-                    onChange: (e) => setMateriale(e.target.value)
+                    onChange: (e) => setMateriale(e.target.value),
                   }}
                 />
               </Col>
@@ -181,7 +199,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
                     type: "number",
                     className: "text-center",
                     value: sporco,
-                    onChange: (e) => setSporco(e.target.value)
+                    onChange: (e) => setSporco(e.target.value),
                   }}
                 />
               </Col>
@@ -201,7 +219,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
                     type: "number",
                     className: "text-center",
                     value: meccanici,
-                    onChange: (e) => setMeccanici(e.target.value)
+                    onChange: (e) => setMeccanici(e.target.value),
                   }}
                 />
               </Col>
@@ -221,7 +239,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
                     type: "number",
                     className: "text-center",
                     value: trattamento,
-                    onChange: (e) => setTrattamento(e.target.value)
+                    onChange: (e) => setTrattamento(e.target.value),
                   }}
                 />
               </Col>
@@ -241,7 +259,7 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
                     type: "number",
                     className: "text-center",
                     value: altro,
-                    onChange: (e) => setAltro(e.target.value)
+                    onChange: (e) => setAltro(e.target.value),
                   }}
                 />
               </Col>
@@ -254,7 +272,12 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
         </Col>
       </Row>
       <Row className="pb-4 mb-3 -mt-1 border-b-2 border-b-gray-500">
-        {['dati_aggiuntivi__spessore_ossido', 'dati_aggiuntivi__spessore_minimo', 'dati_aggiuntivi__spessore_massimo', 'dati_aggiuntivi__spessore_deviazione'].map(name => (
+        {[
+          "dati_aggiuntivi__spessore_ossido",
+          "dati_aggiuntivi__spessore_minimo",
+          "dati_aggiuntivi__spessore_massimo",
+          "dati_aggiuntivi__spessore_deviazione",
+        ].map((name) => (
           <Col xs={3} key={name} className="text-center">
             <Input
               name={name}
@@ -267,16 +290,27 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
               }}
             />
             {errValore[name] && (
-              <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
-                  <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
-                  {errValore[name]}
+              <span
+                type="invalid"
+                className="text-xs font-semibold text-center text-[#d48208]"
+              >
+                <FontAwesomeIcon
+                  icon={faTriangleExclamation}
+                  className="mr-1"
+                />
+                {errValore[name]}
               </span>
             )}
-          </Col>  
+          </Col>
         ))}
       </Row>
       <Row className="pb-4 mb-4 border-b-2 border-b-gray-500">
-        {['dati_aggiuntivi__temperatura_soda', 'dati_aggiuntivi__temperatura_ossido', 'dati_aggiuntivi__temperatura_colore', 'dati_aggiuntivi__temperatura_fissaggio'].map(name => (
+        {[
+          "dati_aggiuntivi__temperatura_soda",
+          "dati_aggiuntivi__temperatura_ossido",
+          "dati_aggiuntivi__temperatura_colore",
+          "dati_aggiuntivi__temperatura_fissaggio",
+        ].map((name) => (
           <Col xs={3} key={name} className="text-center">
             <Input
               name={name}
@@ -289,12 +323,18 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
               }}
             />
             {errValore[name] && (
-              <span type="invalid" className="text-xs font-semibold text-center text-[#d48208]">
-                  <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" /> 
-                  {errValore[name]}
+              <span
+                type="invalid"
+                className="text-xs font-semibold text-center text-[#d48208]"
+              >
+                <FontAwesomeIcon
+                  icon={faTriangleExclamation}
+                  className="mr-1"
+                />
+                {errValore[name]}
               </span>
             )}
-          </Col>  
+          </Col>
         ))}
       </Row>
       <Form.Group>
@@ -311,10 +351,10 @@ function RecordLavorazioneOssidoForm({ data, initialData }) {
           </Col>
         </Row>
       </Form.Group>
-      <Hidden readOnly value={valvoleScarto} name="n_pezzi_scartati" />
-      <Hidden readOnly value={true} name="completata" />
-      <Hidden readOnly value={impianto?.id} name="impianto" />
-      <Hidden readOnly value={lavorazione} name="lavorazione" />
+      <Hidden value={valvoleScarto} name="n_pezzi_scartati" />
+      <Hidden value={true} name="completata" />
+      <Hidden value={user?.user?.impianto?.id} name="impianto" />
+      <Hidden value={lavorazione} name="lavorazione" />
     </>
   );
 }

@@ -9,6 +9,7 @@ import RequiredSelect from "./RequiredSelect";
 import { useFormContext } from "../../contexts/FormContext";
 
 function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors, colProps }) {
+  if (label === undefined &&  name === undefined) label = false; 
   const labelText = label ? label : name ? `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label !== false ? 12 - labelColumns : 12

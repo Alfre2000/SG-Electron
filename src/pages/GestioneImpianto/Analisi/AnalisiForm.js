@@ -1,6 +1,6 @@
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import Checkbox from "../../../components/form-components/Checkbox";
@@ -9,40 +9,28 @@ import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import TimeInput from "../../../components/TimeInput/TimeInput";
+import { useFormContext } from "../../../contexts/FormContext";
 import { findElementFromID, searchOptions } from "../../../utils";
 
-function AnalisiForm({ data, initialData }) {
+function AnalisiForm({ data }) {
   const [searchParams] = useSearchParams();
-  const startAnalisi =
-    findElementFromID(initialData?.operazione, data?.operazioni) ||
-    findElementFromID(searchParams.get("analisi"), data?.operazioni) ||
-    null;
-  const [analisi, setAnalisi] = useState(startAnalisi);
-  useEffect(() => {
-    if (analisi === null && data?.operazioni && searchParams.get("analisi") && !initialData?.operazione) {
-      setAnalisi(findElementFromID(searchParams.get("analisi"), data?.operazioni))
-    }
-  }, [analisi, data?.operazioni, searchParams, initialData?.operazione])
-
+  const { initialData } = useFormContext();
+  const [analisiID, setAnalisiID] = useState(
+    initialData?.operazione || searchParams.get("analisi") || ""
+  );
+  const analisi = useMemo(
+    () => findElementFromID(analisiID, data?.operazioni),
+    [analisiID, data?.operazioni]
+  );
   const [errValore, setErrValore] = useState({});
 
   const handleValoreChange = (e) => {
-    const parametroIdx = e.target.name.split("__").at(1);
+    const parametro = analisi.parametri[e.target.name.split("__").at(1)];
     const value = parseFloat(e.target.value);
-    const parametro = analisi.parametri[parametroIdx];
-    if (value > parametro.massimo) {
-      setErrValore({
-        ...errValore,
-        [e.target.name]: "Valore oltre il massimo !",
-      });
-    } else if (value < parametro.minimo) {
-      setErrValore({
-        ...errValore,
-        [e.target.name]: "Valore sotto il minimo !",
-      });
-    } else {
-      setErrValore({ ...errValore, [e.target.name]: "" });
-    }
+    let errMsg = "";
+    if (value > parametro.massimo) errMsg = "Valore oltre il massimo !";
+    else if (value < parametro.minimo) errMsg = "Valore sotto il minimo !";
+    setErrValore({ ...errValore, [e.target.name]: errMsg });
   };
   return (
     <>
@@ -65,10 +53,7 @@ function AnalisiForm({ data, initialData }) {
               inputProps={{
                 isDisabled: !!initialData,
                 value: { value: analisi?.id, label: analisi?.nome },
-                onChange: (newValue) =>
-                  setAnalisi(
-                    findElementFromID(newValue?.value, data?.operazioni) || ""
-                  ),
+                onChange: (newValue) => setAnalisiID(newValue.value),
               }}
               options={searchOptions(data?.operazioni, "nome")}
             />
@@ -161,7 +146,11 @@ function AnalisiForm({ data, initialData }) {
               <Col sm={10}>
                 <Input
                   label={false}
-                  inputProps={{ as: "textarea", rows: 3, className: "text-left" }}
+                  inputProps={{
+                    as: "textarea",
+                    rows: 3,
+                    className: "text-left",
+                  }}
                   name="note"
                 />
               </Col>

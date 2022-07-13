@@ -7,6 +7,7 @@ import Input from "../../../components/form-components/Input";
 import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
+import { max, mean, min } from "../../../utils";
 import { modifyNestedObject } from "../../utils";
 
 function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) {
@@ -19,9 +20,6 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
     }
   });
   const misurazioniCompilate = misurazioni ? misurazioni.filter(el => !!el.valore).map(el => el.valore) : 0
-  const minimo = misurazioniCompilate.length > 0 ? Math.min(...misurazioniCompilate).toFixed(2) : "-"
-  const media = misurazioniCompilate.length > 0 ? (misurazioniCompilate.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / misurazioniCompilate.length).toFixed(2) : "-"
-  const massimo = misurazioniCompilate.length > 0 ? Math.max(...misurazioniCompilate).toFixed(2) : "-"
   return (
     <>
       <Button 
@@ -104,9 +102,9 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
             </Table>
           </Popover.Body>
           <div className="text-center py-[13px] bg-[#f0f0f0] mt-2" style={{ borderTop: "1px solid rgba(0,0,0,0.2)", borderBottomLeftRadius: "5px", borderBottomRightRadius: "5px"}}>
-            <span>Minimo: <b>{minimo}</b></span>
-            <span className="mx-3">Media: <b>{media}</b></span>
-            <span>Massimo: <b>{massimo}</b></span>
+            <span>Minimo: <b>{min(misurazioniCompilate)}</b></span>
+            <span className="mx-3">Media: <b>{mean(misurazioniCompilate)}</b></span>
+            <span>Massimo: <b>{max(misurazioniCompilate)}</b></span>
           </div>
         </Popover>
       </div>

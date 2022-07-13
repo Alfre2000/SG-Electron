@@ -1,5 +1,5 @@
 import { Col, Row, Stack } from "react-bootstrap";
-import React from "react";
+import React, { useMemo } from "react";
 import TimeInput from "../../../components/TimeInput/TimeInput";
 import { searchOptions } from "../../../utils";
 import Input from "../../../components/form-components/Input";
@@ -11,12 +11,16 @@ import { useFormContext } from "../../../contexts/FormContext";
 
 function FissaggioForm({ data }) {
   const { initialData } = useFormContext();
-  const operazione = data.operazioni
-    ? data.operazioni.length === 1
-      ? data.operazioni[0]
-      : data.operazioni.filter((op) => op.tipologia === "fissaggi")[0]
-    : {};
-  const parametroID = data.operazioni ? operazione?.parametri[0].id : "";
+  const operazione = useMemo(
+    () =>
+      data.operazioni
+        ? data.operazioni.length === 1
+          ? data.operazioni[0]
+          : data.operazioni.filter((op) => op.tipologia === "fissaggi")[0]
+        : {},
+    [data.operazioni]
+  );
+  const parametroID = operazione?.parametri?.at(0)?.id || "";
   return (
     <Row className="mb-4 justify-between">
       <Col
@@ -41,10 +45,7 @@ function FissaggioForm({ data }) {
               value={initialData.record_parametri[0].id}
             />
           )}
-          <Hidden
-            value={parametroID}
-            name="record_parametri__0__parametro"
-          />
+          <Hidden value={parametroID} name="record_parametri__0__parametro" />
           <Checkbox
             label="Aggiunta eseguita:"
             labelCols={6}

@@ -9,7 +9,7 @@ import Paginator from '../components/Pagination/Paginator';
 import PasswordModal from '../components/Modals/PasswordModal/PasswordModal';
 import ViewModal from '../components/Modals/ViewModal/ViewModal';
 import { findElementFromID, isDateRecent } from '../utils';
-import { deleteRecord } from './utils';
+import { deleteRecord, findNestedElement } from './utils';
 import DefaultFormWrapper from './FormWrapper';
 
 function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess, hoursModify = 2 }) {
@@ -113,12 +113,10 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
               )}
               {valori.map((value, idx) => {
                 let campo;
-                if (value.includes("__")) {
+                if (value.split('__').length === 2) {
                   campo = findElementFromID(record[value.split("__")[0]], data[value.split("__")[1]]).nome
-                } else if (value.includes(".")) {
-                  campo = record[value.split(".")[0]][value.split(".")[1]]
                 } else {
-                  campo = record[value];
+                  campo = findNestedElement(record, value)
                 }
                 return (
                   <td key={campo || idx}>{campo || "-"}</td>

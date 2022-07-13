@@ -5,13 +5,14 @@ import DateInput from "../../../components/form-components/DateInput/DateInput";
 import ListGroupInput from "../../../components/form-components/ListGroupInput/ListGroupInput";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import TimeInput from "../../../components/TimeInput/TimeInput";
+import { useFormContext } from "../../../contexts/FormContext";
 import { searchOptions } from "../../../utils";
 
-function ManutenzioneForm({ data, initialData }) {
+function ManutenzioneForm({ data }) {
+  const { initialData } = useFormContext();
   const [searchParams] = useSearchParams();
   const startManutenzione =
     initialData?.operazione || searchParams.get("manutenzione") || "";
-  console.log(startManutenzione);
   return (
     <>
       <Row>
@@ -27,7 +28,6 @@ function ManutenzioneForm({ data, initialData }) {
             label={false}
             name="operatore"
             options={searchOptions(data?.operatori, "nome")}
-            vertical={true}
           />
         </Col>
       </Row>
