@@ -7,6 +7,7 @@ import FormWrapper from "../../FormWrapper";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import SchedaImpiantoForm from "./SchedaImpiantoForm";
 import Tabella from "../../Tabella";
+import { apiGet } from "../../../api/api";
 
 function SchedaImpianto() {
   const [data, setData] = useGetAPIData([
@@ -14,6 +15,10 @@ function SchedaImpianto() {
     { nome: "materiali", url: URLS.MATERIALI },
     { nome: "records", url: URLS.SCHEDE_IMPIANTO },
   ]);
+  const onSuccess = async (res) => {
+    const data = await apiGet(URLS.MATERIALI);
+    setData({ ...res, materiali: data });
+  };
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -29,6 +34,7 @@ function SchedaImpianto() {
                   data={data}
                   setData={setData}
                   url={URLS.SCHEDE_IMPIANTO}
+                  onSuccess={onSuccess}
                 >
                   <SchedaImpiantoForm data={data} />
                 </FormWrapper>
@@ -51,6 +57,7 @@ function SchedaImpianto() {
                   setData={setData}
                   FormComponent={SchedaImpiantoForm}
                   url={URLS.SCHEDE_IMPIANTO}
+                  onSuccess={onSuccess}
                 />
               </Card.Body>
             </Card>

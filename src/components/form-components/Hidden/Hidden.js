@@ -1,9 +1,9 @@
 import React from "react";
 
-function Hidden(props) {
+const Hidden = React.forwardRef((props, ref) => {
   return (
-    <input readOnly hidden className="hidden" data-testid="input-hidden" {...props} />
+    <input readOnly hidden className="hidden" data-testid="input-hidden" {...props} ref={ref} />
   );
-}
+})
 
 export default Hidden;

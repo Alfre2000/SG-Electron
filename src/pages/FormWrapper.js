@@ -98,7 +98,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
       key={key}
       className={initialData === undefined ? "create-form" : "update-form"}
     >
-      {React.cloneElement(children, { errors: error, view: staticForm })}
+      {React.cloneElement(children)}
       {!staticForm && (
         <Row className="mb-2 items-center">
           <Col sx={4}></Col>
