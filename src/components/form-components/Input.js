@@ -5,7 +5,8 @@ import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
 function Input({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols }) {
-  const labelText = label ? label : name ? `${capitalize(name.split('__').at(-1)).replace('_', ' ')}:` : ""
+  const lastName = name.split('__')[name.split('__').length - 1];
+  const labelText = label ? label : name ? `${capitalize(lastName).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label === false ? 12 : inputCols ? inputCols : 12 - labelColumns
   const formData = useFormContext()

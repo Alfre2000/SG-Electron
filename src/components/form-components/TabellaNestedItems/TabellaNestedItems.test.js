@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import FormContext from "../../../contexts/FormContext";
 import TabellaNestedItems from "./TabellaNestedItems";
 
 describe("TabellaNestedItems", () => {
@@ -8,7 +9,11 @@ describe("TabellaNestedItems", () => {
       view: false,
       colonne: [{ name: "nome" }, { name: "tipo_colore", type: "number" }],
     };
-    render(<TabellaNestedItems {...props} />);
+    render(
+      <FormContext view={false}>
+        <TabellaNestedItems {...props} />
+      </FormContext>
+    );
     expect(screen.getByText("Nome")).toBeInTheDocument();
     expect(screen.getByText("Tipo colore")).toBeInTheDocument();
     expect(screen.getAllByRole("columnheader").length).toBe(3);
@@ -69,7 +74,11 @@ describe("TabellaNestedItems", () => {
         { name: "finito", type: "hidden", value: true },
       ],
     };
-    render(<TabellaNestedItems {...props} />);
+    render(
+      <FormContext view={false}>
+        <TabellaNestedItems {...props} />
+      </FormContext>
+    );
     expect(screen.getAllByRole("row").length).toBe(4);
     expect(screen.getAllByTestId("hidden-id")[0]).toHaveValue("1234");
     expect(screen.getAllByTestId("hidden-id")[1]).toHaveValue("1235");

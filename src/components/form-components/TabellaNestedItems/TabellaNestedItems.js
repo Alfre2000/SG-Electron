@@ -12,7 +12,7 @@ import FileField from "../FileField/FileField";
 
 function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
   const formData = useFormContext()
-  initialData = initialData !== undefined ? initialData : formData.initialData;
+  initialData = initialData !== undefined ? initialData : formData?.initialData;
   if (initialData !== undefined && initialData[name]?.length > 0 && "data" in initialData[name][0]) {
     initialData[name] = initialData[name].map(el => ({
       ...el, 
