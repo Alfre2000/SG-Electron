@@ -157,7 +157,7 @@ function RecordLavorazioneForm({ data, initialData, view }) {
           <SezioneInformazioniArticolo articolo={articolo} />
           <SezioneSpessori articolo={articolo} />
           <SezioneDocumenti articolo={articolo} />
-          <SezioneControlli articolo={articolo} />
+          <SezioneControlli data={data} articolo={articolo} />
         </>
       )}
       <Form.Group className="mt-8">

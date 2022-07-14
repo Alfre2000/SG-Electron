@@ -19,6 +19,10 @@ export const parseFormData = (form, formData) => {
       formData[el.name] = "false"
     } else if (el.type !== 'text') {
       if (formData[el.name] === "") formData[el.name] = null
+      if (el.parentElement.parentElement.classList.contains('react-select')) {
+        const name = el.name
+        formData[name] = [...el.parentElement.children].map(el => el.value).join(',')
+      }
     }
   })
   if ('data' in formData && 'ora' in formData) {
@@ -61,7 +65,8 @@ export const modifyNestedObject = (obj, path, newValue) => {
   while(stack.length > 1){
     obj = obj[stack.shift()];
   }
-  obj[stack.shift()] = newValue;
+  let r = stack.shift()
+  obj[r] = newValue;
   return startObj
 }
 

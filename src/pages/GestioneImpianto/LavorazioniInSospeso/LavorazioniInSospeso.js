@@ -10,9 +10,10 @@ import Wrapper from "../Wrapper";
 import RecordLavorazioneForm from "./../RecordLavorazione/RecordLavorazioneForm";
 
 function LavorazioniInSospeso() {
-  const user = useUserContext();
+  const { user } = useUserContext();
   const [data, setData] = useGetAPIData([
     { nome: "operatori", url: URLS.OPERATORI },
+    { nome: "lavorazioni", url: URLS.LAVORAZIONI },
     { nome: "articoli", url: URLS.ARTICOLI_NESTED },
     { nome: "records", url: URLS.RECORD_LAVORAZIONI_IN_SOSPESO },
   ]);

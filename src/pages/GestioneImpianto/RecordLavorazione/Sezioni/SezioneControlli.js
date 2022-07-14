@@ -6,7 +6,7 @@ import { useFormContext } from "../../../../contexts/FormContext";
 import PopoverMisurazioni from "../PopoverMisurazioni";
 import Sezione from "./Sezione";
 
-function SezioneControlli({ articolo }) {
+function SezioneControlli({ data, articolo }) {
   const { initialData, view } = useFormContext();
   let indexControllo = -1
   if (!articolo?.scheda_controllo?.sezioni?.length > 0) {
@@ -36,6 +36,7 @@ function SezioneControlli({ articolo }) {
                 </tr>
                 {sezione.controlli.map((controllo) => {
                   indexControllo += 1;
+                  const record = initialData?.record_controlli?.find(rec => rec.controllo === controllo.id)
                   if (controllo.frequenza || controllo.responsabilità) {
                     return (
                       <tr className="text-sm" key={controllo.id}>
@@ -47,18 +48,14 @@ function SezioneControlli({ articolo }) {
                         </td>
                         <td className="py-1.5">
                           {controllo.frequenza}
-                          {controllo.misurazioni && (
+                          {controllo.misurazioni.length > 0 && (
                             <>
                               <br />
                               <PopoverMisurazioni
+                                data={data}
                                 idxControllo={indexControllo}
                                 controllo={controllo}
-                                initialData={
-                                  initialData?.record_controlli &&
-                                  initialData.record_controlli.find(
-                                    (el) => el.controllo === controllo.id
-                                  )
-                                }
+                                initialData={record}
                                 view={view}
                                 articolo={articolo}
                               />
@@ -70,10 +67,7 @@ function SezioneControlli({ articolo }) {
                           {initialData?.record_controlli && (
                             <Hidden
                               name={`record_controlli__${indexControllo}__id`}
-                              value={
-                                initialData.record_controlli[indexControllo]
-                                  ?.id || undefined
-                              }
+                              value={record?.id || undefined}
                             />
                           )}
                           <Hidden
@@ -85,10 +79,7 @@ function SezioneControlli({ articolo }) {
                             name={`record_controlli__${indexControllo}__eseguito`}
                             inputProps={{
                               className: "bigger-checkbox",
-                              defaultChecked: initialData?.record_controlli
-                                ? initialData?.record_controlli[indexControllo]
-                                    ?.eseguito
-                                : false,
+                              defaultChecked: record ? record?.eseguito : false
                             }}
                             vertical={true}
                           />

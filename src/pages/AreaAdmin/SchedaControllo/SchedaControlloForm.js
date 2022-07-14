@@ -8,18 +8,19 @@ import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
 import ArticoliInput from "./ArticoliInput";
 import { addToNestedArray, modifyNestedObject, removeFromNestedArray } from "../../utils";
-import Checkbox from "../../../components/form-components/Checkbox";
 import { useFormContext } from "../../../contexts/FormContext";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
+import SearchSelect from "../../../components/form-components/SearchSelect";
+import { findElementFromID, searchOptions } from "../../../utils";
 
 function SchedaControlloForm({ data, setData }) {
   const { initialData } = useFormContext()
-  const emptyControllo = { nome: "", frequenza: "", responsabilità: "", misurazioni: false }
+  const emptyControllo = { nome: "", frequenza: "", responsabilità: "", misurazioni: null }
   const getSezioneVuota = (n) => {
     const nextLetter = String.fromCharCode(65 + n)
     return { nome: `${nextLetter}. `, controlli: [ emptyControllo ]}
   }
-  const [sezioni, setSezioni] = useState(!!initialData ? initialData.sezioni || [] : [getSezioneVuota(0)])
+  const [sezioni, setSezioni] = useState(!!initialData ? initialData?.sezioni?.map(sez => ({...sez, controlli: sez.controlli.map(con => ({...con, misurazioni: con.misurazioni.map(mis => ({ value: mis, label: findElementFromID(mis, data?.lavorazioni).nome }))}))})) || [] : [getSezioneVuota(0)])
   return (
     <>
       <Row className="mb-4 mt-2">
@@ -66,9 +67,9 @@ function SchedaControlloForm({ data, setData }) {
             <Table bordered className="align-middle text-sm text-center">
               <thead>
                 <tr className="uppercase">
-                  <th className="w-[45%]">nome</th>
-                  <th className="w-[25%]">frequenza</th>
-                  <th className="w-[25%]">responsabilità</th>
+                  <th className="w-[30%]">nome</th>
+                  <th className="w-[20%]">frequenza</th>
+                  <th className="w-[20%]">responsabilità</th>
                   <th className="w-[25%]">misurazioni</th>
                   <th className="w-[5%]"></th>
                 </tr>
@@ -120,7 +121,7 @@ function SchedaControlloForm({ data, setData }) {
                         />
                     </td>
                     <td>
-                      <Checkbox 
+                      {/* <Checkbox 
                         label={false}
                         name={`${basePath}__misurazioni`}
                         inputProps={{ 
@@ -130,6 +131,19 @@ function SchedaControlloForm({ data, setData }) {
                           )
                          }}
                         vertical={true}
+                      /> */}
+                      <SearchSelect
+                        label={false}
+                        name={`${basePath}__misurazioni`}
+                        options={searchOptions(data?.lavorazioni, "nome")}
+                        inputProps={{
+                          isMulti: true,
+                          value: controllo.misurazioni,
+                          onChange: (e, a) => {
+                            setSezioni(
+                            modifyNestedObject(sezioni, `${richiestePath}__misurazioni`, e)
+                          )}
+                        }}
                       />
                     </td>
                     <td>
