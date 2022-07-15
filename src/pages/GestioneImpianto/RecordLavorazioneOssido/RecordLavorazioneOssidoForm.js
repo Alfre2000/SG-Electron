@@ -1,6 +1,6 @@
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Col, Row, Form, Stack } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
@@ -30,19 +30,45 @@ function RecordLavorazioneOssidoForm({ data }) {
   const lavorazione = data?.records?.results?.at(0)?.lavorazione;
 
   const [errValore, setErrValore] = useState({});
-  const handleValoreChange = (e) => {
-    if (e.target.name === "dati_aggiuntivi__spessore_deviazione") return;
-    const name = e.target.name.includes("spessore")
-      ? "spessore_ossido"
-      : e.target.name.split("__").at(-1);
-    const minimo = data.scheda_controllo[`${name}_minimo`];
-    const massimo = data.scheda_controllo[`${name}_massimo`];
-    const value = parseFloat(e.target.value);
-    let errMsg = "";
-    if (value > massimo) errMsg = `Valore oltre il massimo di ${massimo} !`;
-    else if (value < minimo) errMsg = `Valore sotto il minimo di ${minimo} !`;
-    setErrValore({ ...errValore, [e.target.name]: errMsg });
-  };
+  const handleValoreChange = useCallback(
+    (e) => {
+      if (e.target.name === "dati_aggiuntivi__spessore_deviazione") return;
+      const name = e.target.name.includes("spessore")
+        ? "spessore_ossido"
+        : e.target.name.split("__").at(-1);
+      const minimo = data.scheda_controllo[`${name}_minimo`];
+      const massimo = data.scheda_controllo[`${name}_massimo`];
+      const value = parseFloat(e.target.value);
+      let errMsg = "";
+      if (value > massimo) errMsg = `Valore oltre il massimo di ${massimo} !`;
+      else if (value < minimo) errMsg = `Valore sotto il minimo di ${minimo} !`;
+      setErrValore((oldErr) => ({ ...oldErr, [e.target.name]: errMsg }));
+    },
+    [data.scheda_controllo]
+  );
+
+  useEffect(() => {
+    if (initialData?.dati_aggiuntivi) {
+      const inputChecks = [
+        "spessore_ossido",
+        "spessore_minimo",
+        "spessore_massimo",
+        "temperatura_soda",
+        "temperatura_ossido",
+        "temperatura_colore",
+        "temperatura_fissaggio",
+      ];
+      inputChecks.forEach((name) => {
+        const evento = {
+          target: {
+            name: `dati_aggiuntivi__${name}`,
+            value: initialData.dati_aggiuntivi[name],
+          },
+        };
+        handleValoreChange(evento);
+      });
+    }
+  }, [initialData, handleValoreChange]);
   return (
     <>
       <Row className="mb-4 justify-between">

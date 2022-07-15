@@ -1,6 +1,7 @@
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useCallback } from "react";
 import { Col, Row, Form, Stack, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import Checkbox from "../../../components/form-components/Checkbox";
@@ -24,14 +25,31 @@ function AnalisiForm({ data }) {
   );
   const [errValore, setErrValore] = useState({});
 
-  const handleValoreChange = (e) => {
-    const parametro = analisi.parametri[e.target.name.split("__").at(1)];
-    const value = parseFloat(e.target.value);
-    let errMsg = "";
-    if (value > parametro.massimo) errMsg = "Valore oltre il massimo !";
-    else if (value < parametro.minimo) errMsg = "Valore sotto il minimo !";
-    setErrValore({ ...errValore, [e.target.name]: errMsg });
-  };
+  const handleValoreChange = useCallback(
+    (e) => {
+      const parametro = analisi.parametri[e.target.name.split("__").at(1)];
+      const value = parseFloat(e.target.value);
+      let errMsg = "";
+      if (value > parametro.massimo) errMsg = "Valore oltre il massimo !";
+      else if (value < parametro.minimo) errMsg = "Valore sotto il minimo !";
+      setErrValore((oldErr) => ({ ...oldErr, [e.target.name]: errMsg }));
+    },
+    [analisi.parametri]
+  );
+
+  useEffect(() => {
+    if (initialData?.record_parametri) {
+      initialData.record_parametri.forEach((record, idx) => {
+        const evento = {
+          target: {
+            name: `record_parametri__${idx}__valore`,
+            value: record.valore,
+          },
+        };
+        handleValoreChange(evento);
+      });
+    }
+  }, [initialData, handleValoreChange]);
   return (
     <>
       <Row className="mb-4">
@@ -84,7 +102,7 @@ function AnalisiForm({ data }) {
                           value={
                             initialData.record_parametri.find(
                               (el) => el.parametro === parametro.id
-                            ).id
+                            )?.id
                           }
                         />
                       )}
