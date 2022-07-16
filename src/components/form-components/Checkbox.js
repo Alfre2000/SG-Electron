@@ -10,13 +10,15 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
   const inputColumns = 12 - labelColumns
   const formData = useFormContext()
   initialData = initialData !== undefined ? initialData : formData?.initialData
+  let defaultValue = initialData ? findNestedElement(initialData, name) : true
+  defaultValue = defaultValue === "false" ? false : defaultValue
   return vertical ? (
     <Form.Group className="m-auto text-center">
       {label !== false && <Form.Label {...labelProps}>{labelText}</Form.Label>}
       <Form.Check 
         type="checkbox"
         name={name}
-        defaultChecked={initialData ? findNestedElement(initialData, name) : true}
+        defaultChecked={defaultValue}
         disabled={formData?.view}
         {...inputProps}
       />
@@ -33,7 +35,8 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
           type="checkbox"
           className="text-center mt-2"
           name={name}
-          defaultChecked={initialData ? findNestedElement(initialData, name) : true}
+          defaultChecked={defaultValue}
+          disabled={formData?.view}
           {...inputProps}
         />
       </Col>

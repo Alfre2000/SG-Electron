@@ -40,8 +40,8 @@ function Analisi() {
               <Card.Body>
                 <Tabella
                   date={false}
-                  headers={["Nome", "Intervallo pezzi", "Intervallo giorni"]}
-                  valori={["nome", "intervallo_pezzi", "intervallo_giorni"]}
+                  headers={["Impianto", "Nome", "Intervallo pezzi", "Intervallo giorni"]}
+                  valori={["impianto__impianti", "nome", "intervallo_pezzi", "intervallo_giorni"]}
                   data={data}
                   setData={setData}
                   FormComponent={AnalisiForm}

@@ -22,6 +22,11 @@ function ListGroupInput({ options, defaultValue, name }) {
   return (
     <>
       <ListGroup className={view ? "" : "cursor-pointer"} ref={listGroupRef}>
+        {errorsValue && (
+          <Form.Control.Feedback type="invalid" className="text-xs text-center block">
+            {errorsValue}
+          </Form.Control.Feedback>
+        )}
         {options &&
           options.map((el) => (
             <ListGroup.Item
@@ -39,11 +44,6 @@ function ListGroupInput({ options, defaultValue, name }) {
           ))}
       </ListGroup>
       <Hidden value={selectedOption} name={name} readOnly={true} />
-      {errorsValue && (
-        <Form.Control.Feedback type="invalid" className="text-xs text-center">
-          {errorsValue}
-        </Form.Control.Feedback>
-      )}
     </>
   );
 }

@@ -140,12 +140,9 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
               </tbody>
             </Table>
           </Popover.Body>
-          {misurazioni[0].length === 1 && (
+          {misurazioni?.[0]?.length === 1 && (
             <RiassuntoDati misurazioni={misurazioni} lavorazione={lavorazioni[0]} index={0} />
           )}
-          {/* {lavorazioni.map((lav, idx) => (
-            <RiassuntoDati misurazioni={misurazioni} lavorazione={lav} index={idx} />
-          ))} */}
         </Popover>
       </div>
     </>

@@ -89,7 +89,7 @@ function RecordLavorazioneOssidoForm({ data }) {
           <Stack gap={1} className="text-right">
             <SearchSelect
               label="Modello:"
-              labelCols={6}
+              labelCols={5}
               name="articolo"
               labelProps={{ className: "pr-6" }}
               options={
@@ -103,13 +103,13 @@ function RecordLavorazioneOssidoForm({ data }) {
             <Input
               label="Numero Lotto:"
               name="n_lotto_cliente"
-              labelCols={6}
+              labelCols={5}
               labelProps={{ className: "pr-6" }}
             />
             <Checkbox
-              label="Idoneità al trattamento:"
+              label="Idoneità:"
               name="dati_aggiuntivi__idoneità"
-              labelCols={6}
+              labelCols={5}
               labelProps={{ className: "pr-6" }}
               inputProps={{
                 className: "text-left mt-2",
