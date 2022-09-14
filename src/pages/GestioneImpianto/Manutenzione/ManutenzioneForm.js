@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
 import ListGroupInput from "../../../components/form-components/ListGroupInput/ListGroupInput";
 import SearchSelect from "../../../components/form-components/SearchSelect";
-import TimeInput from "../../../components/TimeInput/TimeInput";
+import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { useFormContext } from "../../../contexts/FormContext";
 import { searchOptions } from "../../../utils";
 
@@ -23,7 +23,7 @@ function ManutenzioneForm({ data }) {
           <TimeInput vertical={true} />
         </Col>
         <Col xs={4} className="text-center">
-          <Form.Label>Operatore:</Form.Label>
+          <Form.Label htmlFor="operatore">Operatore:</Form.Label>
           <SearchSelect
             label={false}
             name="operatore"

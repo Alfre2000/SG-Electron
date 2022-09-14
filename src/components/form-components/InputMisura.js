@@ -21,7 +21,8 @@ function InputMisura({ label, name, initialData, convFunction, errors, options }
   const [value, setValue] = useState(initialData?.value || "")
   const [uMisura, setUMisura] = useState(initialData?.u || null)
 
-  const labelText = label ? label : `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:`
+  const lastName = name ? name.split('__')[name.split('__').length - 1] : "";
+  const labelText = label ? label : `${capitalize(lastName).replace('_', ' ')}:`
   return (
     <>
       <input

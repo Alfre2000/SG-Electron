@@ -30,9 +30,13 @@ export const parseProssimeManutenzioni = (response, full = false) => {
     if (scadutaGiorni || scadutaPezzi) parsedData.late.push(operazione)
     else parsedData.ok.push(operazione)
   })
-  parsedData.ok = parsedData.ok.sort((a, b) => a.pezzi_mancanti - b.pezzi_mancanti)
-  parsedData.late = parsedData.late.sort((a, b) => a.pezzi_mancanti - b.pezzi_mancanti)
+  parsedData.ok = parsedData.ok.sort((a, b) => parseNumber(a.pezzi_mancanti) - parseNumber(b.pezzi_mancanti))
+  parsedData.late = parsedData.late.sort((a, b) => parseNumber(a.pezzi_mancanti) - parseNumber(b.pezzi_mancanti))
   return parsedData
+}
+
+const parseNumber = (number) => {
+  return parseInt(number.split(' ')[0].replaceAll(".", ""))
 }
 
 export const parseSchedaLavorazione = (response) => {

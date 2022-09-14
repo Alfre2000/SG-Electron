@@ -13,7 +13,7 @@ function Navbar({ menu, navOpen }) {
   const versione = navOpen ? "Versione Software" : "Versione";
 
   // Se c'è più di un programma aggiungi il dropdown dei programmi e la possibilità di tornare alla homepage
-  if (user.user && user.user.programmi.length > 1) {
+  if (user.user && user.user.programmi?.length > 1) {
     const links = user.user.programmi
       ? user.user.programmi.map((el) => PROGRAMMI[el])
       : [];

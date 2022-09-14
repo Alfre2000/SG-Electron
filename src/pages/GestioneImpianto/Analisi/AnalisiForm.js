@@ -9,7 +9,7 @@ import DateInput from "../../../components/form-components/DateInput/DateInput";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
-import TimeInput from "../../../components/TimeInput/TimeInput";
+import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { useFormContext } from "../../../contexts/FormContext";
 import { findElementFromID, searchOptions } from "../../../utils";
 
@@ -159,7 +159,7 @@ function AnalisiForm({ data }) {
           <Form.Group>
             <Row>
               <Col xs={2} className="flex items-center">
-                <Form.Label>Note:</Form.Label>
+                <Form.Label htmlFor="note">Note:</Form.Label>
               </Col>
               <Col sm={10}>
                 <Input

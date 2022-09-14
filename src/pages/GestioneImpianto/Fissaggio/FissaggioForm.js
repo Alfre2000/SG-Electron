@@ -1,6 +1,6 @@
 import { Col, Row, Stack } from "react-bootstrap";
 import React, { useMemo } from "react";
-import TimeInput from "../../../components/TimeInput/TimeInput";
+import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { searchOptions } from "../../../utils";
 import Input from "../../../components/form-components/Input";
 import Checkbox from "../../../components/form-components/Checkbox";
@@ -13,12 +13,12 @@ function FissaggioForm({ data }) {
   const { initialData } = useFormContext();
   const operazione = useMemo(
     () =>
-      data.operazioni
+      data?.operazioni
         ? data.operazioni.length === 1
           ? data.operazioni[0]
           : data.operazioni.filter((op) => op.tipologia === "fissaggi")[0]
         : {},
-    [data.operazioni]
+    [data?.operazioni]
   );
   const parametroID = operazione?.parametri?.at(0)?.id || "";
   return (
@@ -28,7 +28,6 @@ function FissaggioForm({ data }) {
         className="pr-12 border-r-2 border-r-gray-500 border-b-2 border-b-gray-500 pb-6"
       >
         <Stack gap={2} className="text-left">
-          <Hidden value={operazione?.id} name="operazione" />
           <DateInput />
           <TimeInput />
           <SearchSelect
@@ -65,6 +64,8 @@ function FissaggioForm({ data }) {
           />
         </Stack>
       </Col>
+      <Hidden value={operazione?.id} name="operazione" />
+      <Hidden value={true} name="contro_analisi" />
     </Row>
   );
 }

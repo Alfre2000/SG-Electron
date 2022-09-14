@@ -9,8 +9,9 @@ import RequiredSelect from "./RequiredSelect";
 import { useFormContext } from "../../contexts/FormContext";
 
 function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors, colProps }) {
-  if (label === undefined &&  name === undefined) label = false; 
-  const labelText = label ? label : name ? `${capitalize(name.split('.').at(-1)).replace('_', ' ')}:` : ""
+  if (label === undefined &&  name === undefined) label = false;
+  const lastName = name ? name.split('__')[name.split('__').length - 1] : ""; 
+  const labelText = label ? label : name ? `${capitalize(lastName).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = label !== false ? 12 - labelColumns : 12
   const SelectComponent = createTable ? CreatableSelect : RequiredSelect
@@ -26,7 +27,7 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
   return (
     <Form.Group as={Row} className="items-center">
       {label !== false && (
-        <Form.Label column sm={labelColumns} {...labelProps}>
+        <Form.Label column sm={labelColumns} htmlFor={name} {...labelProps}>
           {labelText}
         </Form.Label>
       )}
@@ -42,6 +43,7 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
           options={options}
           defaultValue={defaultValue ? options.filter(o => o.value === defaultValue || o.label === defaultValue)[0] : null}
           isDisabled={disabled}
+          inputId={name}
           {...inputProps}
           error={errorsValue}
           errors={!!errors}

@@ -1,10 +1,12 @@
 import React from "react";
+import { useId } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useFormContext } from "../../../contexts/FormContext";
 import { findNestedElement } from "../../../pages/utils";
 import { dateToDatePicker } from "../../../utils";
 
 function DateInput({ vertical = false }) {
+  const id = useId()
   const { errors, initialData, view } = useFormContext();
   const errorsValue = errors
     ? findNestedElement(errors, "data")?.join(" - ")
@@ -18,6 +20,7 @@ function DateInput({ vertical = false }) {
       className="text-center"
       type="date"
       name="data"
+      id={id}
       defaultValue={defaultValue}
       isInvalid={errors && Boolean(errorsValue)}
       isValid={!errorsValue && !!errors}
@@ -26,12 +29,12 @@ function DateInput({ vertical = false }) {
   );
   return vertical ? (
     <Form.Group className="text-center">
-      <Form.Label>Data:</Form.Label>
+      <Form.Label htmlFor={id}>Data:</Form.Label>
       {Input}
     </Form.Group>
   ) : (
     <Form.Group as={Row}>
-      <Form.Label column sm="4">
+      <Form.Label htmlFor={id} column sm="4">
         Data:
       </Form.Label>
       <Col sm="8">{Input}</Col>

@@ -7,7 +7,7 @@ import DateInput from "../../../components/form-components/DateInput/DateInput";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
-import TimeInput from "../../../components/TimeInput/TimeInput";
+import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { useFormContext } from "../../../contexts/FormContext";
 import { useUserContext } from "../../../UserContext";
 import { searchOptions } from "../../../utils";
@@ -36,15 +36,15 @@ function RecordLavorazioneOssidoForm({ data }) {
       const name = e.target.name.includes("spessore")
         ? "spessore_ossido"
         : e.target.name.split("__").at(-1);
-      const minimo = data.scheda_controllo[`${name}_minimo`];
-      const massimo = data.scheda_controllo[`${name}_massimo`];
+      const minimo = data?.scheda_controllo[`${name}_minimo`];
+      const massimo = data?.scheda_controllo[`${name}_massimo`];
       const value = parseFloat(e.target.value);
       let errMsg = "";
       if (value > massimo) errMsg = `Valore oltre il massimo di ${massimo} !`;
       else if (value < minimo) errMsg = `Valore sotto il minimo di ${minimo} !`;
       setErrValore((oldErr) => ({ ...oldErr, [e.target.name]: errMsg }));
     },
-    [data.scheda_controllo]
+    [data?.scheda_controllo]
   );
 
   useEffect(() => {
@@ -194,14 +194,14 @@ function RecordLavorazioneOssidoForm({ data }) {
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
-              <Form.Label column sm="6">
+              <Form.Label column sm="6" htmlFor="dati_aggiuntivi__n_difetti_materiale">
                 Difetti del materiale:
               </Form.Label>
               <Col sm="4">
                 <Input
                   label={false}
+                  name="dati_aggiuntivi__n_difetti_materiale"
                   inputProps={{
-                    name: "dati_aggiuntivi__n_difetti_materiale",
                     type: "number",
                     className: "text-center",
                     value: materiale,
@@ -214,14 +214,14 @@ function RecordLavorazioneOssidoForm({ data }) {
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
-              <Form.Label column sm="6">
+              <Form.Label column sm="6" htmlFor="dati_aggiuntivi__n_difetti_sporco">
                 Difetti da sporco:
               </Form.Label>
               <Col sm="4">
                 <Input
                   label={false}
+                  name="dati_aggiuntivi__n_difetti_sporco"
                   inputProps={{
-                    name: "dati_aggiuntivi__n_difetti_sporco",
                     type: "number",
                     className: "text-center",
                     value: sporco,
@@ -234,14 +234,14 @@ function RecordLavorazioneOssidoForm({ data }) {
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
-              <Form.Label column sm="6">
+              <Form.Label column sm="6" htmlFor="dati_aggiuntivi__n_difetti_meccanici">
                 Difetti meccanici:
               </Form.Label>
               <Col sm="4">
                 <Input
                   label={false}
+                  name="dati_aggiuntivi__n_difetti_meccanici"
                   inputProps={{
-                    name: "dati_aggiuntivi__n_difetti_meccanici",
                     type: "number",
                     className: "text-center",
                     value: meccanici,
@@ -254,14 +254,14 @@ function RecordLavorazioneOssidoForm({ data }) {
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
-              <Form.Label column sm="6">
+              <Form.Label column sm="6" htmlFor="dati_aggiuntivi__n_difetti_trattamento">
                 Difetti del trattamento:
               </Form.Label>
               <Col sm="4">
                 <Input
                   label={false}
+                  name="dati_aggiuntivi__n_difetti_trattamento"
                   inputProps={{
-                    name: "dati_aggiuntivi__n_difetti_trattamento",
                     type: "number",
                     className: "text-center",
                     value: trattamento,
@@ -274,14 +274,14 @@ function RecordLavorazioneOssidoForm({ data }) {
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
-              <Form.Label column sm="6">
+              <Form.Label column sm="6" htmlFor="dati_aggiuntivi__n_difetti_altro">
                 Difetti altri:
               </Form.Label>
               <Col sm="4">
                 <Input
                   label={false}
+                  name="dati_aggiuntivi__n_difetti_altro"
                   inputProps={{
-                    name: "dati_aggiuntivi__n_difetti_altro",
                     type: "number",
                     className: "text-center",
                     value: altro,

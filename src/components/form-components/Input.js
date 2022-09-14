@@ -12,16 +12,18 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
   const formData = useFormContext()
   errors = errors !== undefined ? errors : formData?.errors
   const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
-  const defaultValue = formData?.initialData && !("value" in (inputProps || {})) ? findNestedElement(formData?.initialData, name) : null
+  const defaultValue = formData?.initialData && !("value" in (inputProps || {})) ? findNestedElement(formData?.initialData, name) : undefined
+  const default_ = inputProps && "value" in inputProps ? {} : { defaultValue: defaultValue }
   const disabled = formData?.view === true ? true : null
   return vertical ? (
     <Form.Group className="text-center">
-      {label !== false && <Form.Label {...labelProps}>{labelText}</Form.Label>}
+      {label !== false && <Form.Label {...labelProps} htmlFor={name}>{labelText}</Form.Label>}
       <Form.Control
         size="sm"
+        id={name}
         name={name}
         className="text-center"
-        defaultValue={defaultValue}
+        {...default_}
         disabled={disabled}
         {...inputProps}
         isInvalid={errors && Boolean(errorsValue)}
@@ -34,16 +36,17 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
   ) : (
     <Form.Group as={Row}>
       {label !== false && (
-        <Form.Label column sm={labelColumns} {...labelProps}>
+        <Form.Label column sm={labelColumns} htmlFor={name} {...labelProps}>
           {labelText}
         </Form.Label>
       )}
       <Col sm={inputColumns} {...colProps}>
         <Form.Control
           size="sm"
+          id={name}
           name={name}
           className="text-center"
-          defaultValue={defaultValue}
+          {...default_}
           disabled={disabled}
           {...inputProps}
           isInvalid={errors && Boolean(errorsValue)}

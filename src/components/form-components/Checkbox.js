@@ -5,7 +5,8 @@ import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
 function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, initialData }) {
-  const labelText = label ? label : `${capitalize(name.split('__').at(-1)).replace('_', ' ')}:`
+  const lastName = name ? name.split('__')[name.split('__').length - 1] : "";
+  const labelText = label ? label : `${capitalize(lastName).replace('_', ' ')}:`
   const labelColumns = labelCols ? labelCols : 4 
   const inputColumns = 12 - labelColumns
   const formData = useFormContext()
@@ -14,19 +15,20 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
   defaultValue = defaultValue === "false" ? false : defaultValue
   return vertical ? (
     <Form.Group className="m-auto text-center">
-      {label !== false && <Form.Label {...labelProps}>{labelText}</Form.Label>}
+      {label !== false && <Form.Label {...labelProps}  htmlFor={name}>{labelText}</Form.Label>}
       <Form.Check 
         type="checkbox"
         name={name}
         defaultChecked={defaultValue}
         disabled={formData?.view}
+        id={name}
         {...inputProps}
       />
     </Form.Group>
   ) : (
     <Form.Group as={Row}>
       {label !== false && (
-        <Form.Label column sm={labelColumns} {...labelProps}>
+        <Form.Label column sm={labelColumns} htmlFor={name} {...labelProps}>
           {labelText}
         </Form.Label>
       )}
@@ -35,6 +37,7 @@ function Checkbox({ label, name, vertical, inputProps, labelProps, labelCols, in
           type="checkbox"
           className="text-center mt-2"
           name={name}
+          id={name}
           defaultChecked={defaultValue}
           disabled={formData?.view}
           {...inputProps}

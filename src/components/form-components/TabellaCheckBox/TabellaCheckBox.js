@@ -29,8 +29,9 @@ function TabellaCheckBox({
                 value={row[0].id}
                 name={`${listName}__${idx * 2}__${itemName}`}
               />
-              {hiddens?.map((el) => (
+              {hiddens?.map((el, idx) => (
                 <Hidden
+                  key={idx}
                   value={el.value}
                   name={`${listName}__${idx * 2}__${el.name}`}
                 />
@@ -58,8 +59,9 @@ function TabellaCheckBox({
                     value={row[1].id}
                     name={`${listName}__${idx * 2 + 1}__${itemName}`}
                   />
-                  {hiddens?.map((el) => (
+                  {hiddens?.map((el, idx) => (
                     <Hidden
+                      key={idx}
                       value={el.value}
                       name={`${listName}__${idx * 2 + 1}__${el.name}`}
                     />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Col, Row, Form, Stack } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
-import TimeInput from "../../../components/TimeInput/TimeInput";
+import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { findElementFromID, searchOptions } from "../../../utils";
 import Fieldset from "../../../components/form-components/Fieldset";
 import SearchSelect from "../../../components/form-components/SearchSelect";

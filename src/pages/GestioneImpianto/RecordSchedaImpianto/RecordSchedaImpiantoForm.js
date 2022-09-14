@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row, Form, Alert } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
-import TimeInput from "../../../components/TimeInput/TimeInput";
+import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { searchOptions } from "../../../utils";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import Fieldset from "../../../components/form-components/Fieldset";

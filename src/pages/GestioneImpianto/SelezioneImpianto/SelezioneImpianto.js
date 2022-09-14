@@ -7,6 +7,7 @@ import { URLS } from "../../../urls";
 import { findElementFromID } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../../UserContext";
+import { useEffect } from "react";
 
 function SelezioneImpianto() {
   let navigate = useNavigate();
@@ -21,6 +22,13 @@ function SelezioneImpianto() {
     setUser({ ...user, user: { ...user.user, impianto: impianto } });
     setTimeout(() => navigate("/manutenzione/record-lavorazione/"), 150);
   };
+
+  // Se l'utente ha già un'impianto selezionato rimanda alla pagina record lavorazione
+  useEffect(() => {
+    if (user?.user?.impianto && !impiantoID) {
+      navigate("/manutenzione/record-lavorazione/");
+    }
+  }, [navigate, user?.user?.impianto, impiantoID]);
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

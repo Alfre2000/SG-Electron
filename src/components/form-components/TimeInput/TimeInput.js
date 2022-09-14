@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
-import { useFormContext } from "../../contexts/FormContext";
-import { findNestedElement } from "../../pages/utils";
-import { dateToTimePicker } from "../../utils";
+import { useFormContext } from "../../../contexts/FormContext";
+import { findNestedElement } from "../../../pages/utils";
+import { dateToTimePicker } from "../../../utils";
 
-function TimeInput({ initialData, view, vertical = false }) {
-  const formData = useFormContext();
-  initialData = initialData !== undefined ? initialData : formData?.initialData;
-  view = view !== undefined ? view : formData?.view;
-  const errorsValue = formData?.errors
-    ? findNestedElement(formData?.errors, "ora")?.join(" - ")
+function TimeInput({ vertical = false }) {
+  const id = useId();
+  const { initialData, view, errors } = useFormContext();
+  const errorsValue = errors
+    ? findNestedElement(errors, "ora")?.join(" - ")
     : undefined;
   const [time, setTime] = useState(
     dateToTimePicker(
@@ -30,20 +29,21 @@ function TimeInput({ initialData, view, vertical = false }) {
       value={time}
       onChange={(e) => setTime(e.target.value)}
       name="ora"
+      id={id}
       placeholder="Ora"
-      isInvalid={formData?.errors && Boolean(errorsValue)}
-      isValid={!errorsValue && !!formData?.errors}
+      isInvalid={errors && Boolean(errorsValue)}
+      isValid={!errorsValue && !!errors}
       disabled={view}
     />
   );
   return vertical ? (
     <Form.Group className="text-center">
-      <Form.Label>Ora:</Form.Label>
+      <Form.Label htmlFor={id}>Ora:</Form.Label>
       {Input}
     </Form.Group>
   ) : (
     <Form.Group as={Row}>
-      <Form.Label column sm="4">
+      <Form.Label htmlFor={id} column sm="4">
         Ora:
       </Form.Label>
       <Col sm="8">{Input}</Col>
