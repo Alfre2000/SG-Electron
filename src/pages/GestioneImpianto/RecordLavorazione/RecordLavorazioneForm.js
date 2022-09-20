@@ -13,8 +13,12 @@ import SezioneInformazioniArticolo from "./Sezioni/SezioneInformazioniArticolo";
 import SezioneSpessori from "./Sezioni/SezioneSpessori";
 import SezioneDocumenti from "./Sezioni/SezioneDocumenti";
 import SezioneControlli from "./Sezioni/SezioneControlli";
+import SezioneAnomalie from "./Sezioni/SezioneAnomalie";
+import { useFormContext } from "../../../contexts/FormContext";
+import SezioneAllegati from "./Sezioni/SezioneAllegati";
 
-function RecordLavorazioneForm({ data, initialData, view }) {
+function RecordLavorazioneForm({ data }) {
+  const { initialData, view } = useFormContext();
   const { user } = useUserContext();
   const initialCliente =
     data.articoli && initialData?.articolo
@@ -158,8 +162,11 @@ function RecordLavorazioneForm({ data, initialData, view }) {
           <SezioneSpessori articolo={articolo} />
           <SezioneDocumenti articolo={articolo} />
           <SezioneControlli data={data} articolo={articolo} />
+          <SezioneAnomalie articolo={articolo} />
+          <SezioneAllegati articolo={articolo} />
         </>
       )}
+      
       <Form.Group className="mt-8">
         <Row className="mb-4">
           <Col xs={1} className="flex items-center">

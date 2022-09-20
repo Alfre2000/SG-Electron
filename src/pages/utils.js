@@ -54,7 +54,7 @@ export const findNestedElement = (obj, path) => {
     obj = obj[key];
   }
   const key = stack.shift()
-  if (!(key in obj)) return null
+  if ((typeof obj !== "object") || !(key in obj)) return null
   return obj[key]
 }
 

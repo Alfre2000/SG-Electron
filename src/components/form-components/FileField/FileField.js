@@ -7,7 +7,7 @@ import ImageModal from "../../Modals/ImageModal/ImageModal";
 import Hidden from "../Hidden/Hidden";
 const electron = window?.require ? window.require("electron") : null;
 
-function FileField({ name }) {
+const FileField = React.forwardRef(({ name, onChange }, ref) => {
   const { initialData, view, errors } = useFormContext();
   const [showModal, setShowModal] = useState(false)
   const errorsValue = errors
@@ -46,7 +46,7 @@ function FileField({ name }) {
             className="pl-6 hover:underline-offset-1 hover:underline hover:cursor-pointer"
             onClick={handleClick}
           >
-            {defaultValue?.split("/")?.at(-1)}
+            {defaultValue?.split("/")?.at(-1)?.split("?")?.[0]}
           </span>
           {showModal && (
             <ImageModal setShow={setShowModal} url={defaultValue} /> 
@@ -63,6 +63,8 @@ function FileField({ name }) {
             disabled={!!view}
             isInvalid={errors && Boolean(errorsValue)}
             isValid={!errorsValue && !!errors}
+            ref={ref}
+            onChange={onChange}
           />
         </div>
       }
@@ -74,6 +76,6 @@ function FileField({ name }) {
       </Form.Control.Feedback>
     </Form.Group>
   );
-}
+})
 
 export default FileField;

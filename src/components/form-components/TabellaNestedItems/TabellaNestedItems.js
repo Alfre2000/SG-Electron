@@ -42,7 +42,7 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
     return empty
   }
   const [items, setItems] = useState(
-    !!initialData ? initialData[name] : [emptyItem()]
+    !!initialData ? initialData[name] || [] : [emptyItem()]
   );
   const colWidth = 95 / colonne.length;
   const hasDatetime = colonne.some(c => c.type === "date") && colonne.some(c => c.type === "time")

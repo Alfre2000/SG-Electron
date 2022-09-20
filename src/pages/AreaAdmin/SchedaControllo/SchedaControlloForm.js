@@ -12,6 +12,7 @@ import { useFormContext } from "../../../contexts/FormContext";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { findElementFromID, searchOptions } from "../../../utils";
+import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
 
 function SchedaControlloForm({ data, setData }) {
   const { initialData } = useFormContext()
@@ -173,6 +174,14 @@ function SchedaControlloForm({ data, setData }) {
             Sezione
           </Button>
         </div>
+      </Fieldset>
+      <Fieldset title="Allegati obbligatori">
+        <TabellaNestedItems
+          name="allegati"
+          colonne={[
+            { name: "nome_file" },
+          ]}
+        />
       </Fieldset>
     </>
   );
