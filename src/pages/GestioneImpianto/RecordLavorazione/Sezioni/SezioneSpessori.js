@@ -36,14 +36,15 @@ function SezioneSpessori({ articolo }) {
                   (ric) =>
                     ric.punto === punto + 1 && ric.lavorazione.id === lav.id
                 );
+                if (
+                  !richiesta ||
+                  (!richiesta.spessore_minimo && !richiesta.spessore_massimo)
+                ) {
+                  return <td key={lav.id}></td>;
+                }
                 return (
                   <td key={lav.id}>
-                    {richiesta && (
-                      <>
-                        {richiesta.spessore_minimo} ÷{" "}
-                        {richiesta.spessore_massimo} µ
-                      </>
-                    )}
+                    {richiesta.spessore_minimo} ÷ {richiesta.spessore_massimo} µ
                   </td>
                 );
               })}

@@ -3,9 +3,9 @@ import { Table } from "react-bootstrap";
 import Sezione from "./Sezione";
 
 function SezioneInformazioniArticolo({ articolo }) {
-  const lavorazioni = articolo.richieste
-    .map((ric) => ric.lavorazione.nome)
-    .join(" - ");
+  const lavorazioni = [
+    ...new Set(articolo.richieste.map((ric) => ric.lavorazione.nome)),
+  ].join(" - ");
   return (
     <Sezione title="Informazioni Articolo">
       <Table className="align-middle text-center" bordered>

@@ -31,7 +31,7 @@ const FileField = React.forwardRef(({ name, onChange }, ref) => {
     if (defaultValue) {
       fetch(defaultValue).then(res => res.blob()).then(blob => {
         const dataTransfer = new DataTransfer()
-        const file = new File([blob], defaultValue)
+        const file = new File([blob], defaultValue?.split("?")?.[0])
         dataTransfer.items.add(file)
         hiddenFileRef.current.files = dataTransfer.files
       })
