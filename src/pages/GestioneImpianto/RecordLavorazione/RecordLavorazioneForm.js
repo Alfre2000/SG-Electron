@@ -99,7 +99,7 @@ function RecordLavorazioneForm({ data }) {
                   label: `${a.nome} (${a.codice || "-"})`,
                 }))}
             />
-            <SearchSelect
+            {/* <SearchSelect
               name="lavorazione"
               options={searchOptions(lavorazioni, "nome")}
               inputProps={{
@@ -107,7 +107,7 @@ function RecordLavorazioneForm({ data }) {
                 value: lavorazione,
                 onChange: (e) => setLavorazione(e),
               }}
-            />
+            /> */}
           </Stack>
         </Col>
       </Row>

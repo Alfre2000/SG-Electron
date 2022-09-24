@@ -81,6 +81,10 @@ function ArticoloForm({ data, campoScheda }) {
               options: searchOptions(data?.lavorazioni, "nome"),
             },
             {
+              name: "punto",
+              type: "number",
+            },
+            {
               name: "spessore_minimo",
               type: "number",
               label: "Spessore minimo (µm)",

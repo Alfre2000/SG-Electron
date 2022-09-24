@@ -15,17 +15,17 @@ const defaultMisurazioni = (initialData, lavorazioni) => {
   if (initialData.misurazioni.length === 0) return []
   let groups = {}
   initialData.misurazioni.forEach(misurazione => {
-    if (misurazione.lavorazione in groups) {
-      groups[misurazione.lavorazione].push(misurazione)
+    if (misurazione.richiesta in groups) {
+      groups[misurazione.richiesta].push(misurazione)
     } else {
-      groups[misurazione.lavorazione] = [misurazione]
+      groups[misurazione.richiesta] = [misurazione]
     }
   })
   let maxRows = Math.max(...Object.values(groups).map(el => el.length))
   let columns = []
-  lavorazioni.forEach(lav => {
-    if (lav.id in groups) {
-      let col = groups[lav.id]
+  lavorazioni.forEach(lav => lav.richieste.forEach(ric => {
+    if (ric.id in groups) {
+      let col = groups[ric.id]
       if (col.length < maxRows) {
         Array(maxRows - col.length).fill(0).forEach(_ => col.push({ valore: "" }))
       }
@@ -35,16 +35,25 @@ const defaultMisurazioni = (initialData, lavorazioni) => {
       Array(maxRows).fill(0).forEach(_ => col.push({ valore: "" }))
       columns.push(col)
     }
-  })
+  }))
   columns = columns[0].map((_, colIndex) => columns.map(row => row[colIndex]))
   return columns
 }
 
 function PopoverMisurazioni({ data, controllo, idxControllo, initialData, articolo }) {
-  const lavorazioni = useMemo(() => 
-    controllo?.misurazioni?.map(lav => findElementFromID(lav, data?.lavorazioni))
-  , [controllo?.misurazioni, data?.lavorazioni]) 
-  const emptyRow = lavorazioni.map(_ => ({ valore: "" }))
+  const lavorazioni = useMemo(() =>
+    controllo?.misurazioni?.map(lav => {
+      let lavorazione = findElementFromID(lav, data?.lavorazioni)
+      lavorazione.richieste = articolo.richieste.filter(ric => ric.lavorazione.id === lavorazione.id)
+      return lavorazione
+    })
+  , [controllo?.misurazioni, data?.lavorazioni, articolo?.richieste]) 
+  let nCols = 0
+  lavorazioni.forEach(lav => {
+    nCols += articolo.richieste.filter(ric => ric.lavorazione.id === lav.id).length
+  })
+  const richieste = lavorazioni.map(lav => lav.richieste).flat()
+  const emptyRow = Array(nCols).fill(0).map(_ => ({ valore: "" }))
   const [misurazioni, setMisurazioni] = useState(initialData?.misurazioni ? defaultMisurazioni(initialData, lavorazioni) : [emptyRow])
   const [open, setOpen] = useState(false)
   const popupRef = useRef(null);
@@ -54,7 +63,11 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
     }
   });
   const basePath = `record_controlli__${idxControllo}__misurazioni`
-  const width = 250 + 100 * lavorazioni.length
+  const width = 250 + 100 * nCols
+  const style = nCols < 5 ? 
+    { top: "-20px", left: `-${width}px`, maxWidth: "700px", width: `${width}px` } :
+    { top: "10px" , left: `-${width/3}px`,maxWidth: "800px", width: `${width}px` }
+  const placement = nCols < 5 ? "left" : "bottom"
   return (
     <>
       <Button 
@@ -70,9 +83,9 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
       <div className={`${open ? "block" : "hidden"} relative`}>
         <Popover
           ref={popupRef}
-          placement="left"
+          placement={placement}
           id="popover-basic"
-          style={{ top: "-20px", left: `-${width}px`, maxWidth: "700px", width: `${width}px` }}
+          style={style}
         >
           <Popover.Header as="h3" className="text-center font-bold py-[10px]" style={{ borderTopRightRadius: "0" }}>
             Misurazioni effettuate
@@ -80,21 +93,40 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
           <Popover.Body>
             <Table className="align-middle text-center" bordered>
               <thead>
-                <tr>
-                  <th>N°</th>
-                  {lavorazioni.map(lav => (
-                    <th key={lav.id}>Valore {lav.nome.toLowerCase()}</th>
-                  ))}
-                  <th></th>
-                </tr>
+                {nCols === lavorazioni.length ? (
+                  <tr>
+                    <th>N°</th>
+                    {lavorazioni.map(lav => (
+                      <th key={lav.id}>Valori {lav.nome.toLowerCase()}</th>
+                    ))}
+                    <th></th>
+                  </tr>
+                ) : (
+                  <>
+                    <tr>
+                      <th></th>
+                      {lavorazioni.map(lav => (
+                        <th key={lav.id} colSpan={lav.richieste.length}>Valori {lav.nome.toLowerCase()}<br></br>(Punti)</th>
+                      ))}
+                      <th></th>
+                    </tr>
+                    <tr>
+                      <th>N°</th>
+                      {lavorazioni.map(lav => lav.richieste.map(ric => (
+                        <th key={ric.id}>{ric.punto}</th>
+                      )))}
+                      <th></th>
+                    </tr>
+                  </>
+                )}
               </thead>
               <tbody>
                 {misurazioni?.map((row, idxRow) => (
                   <tr key={idxRow}>
                     <td className="font-semibold">{idxRow + 1}</td>
                     {row?.map((misurazione, idxCol) => {
-                      const idx = idxRow * lavorazioni.length + idxCol
-                      const lavorazione = lavorazioni[idxCol]
+                      const idx = idxRow * nCols + idxCol
+                      const richiesta = richieste[idxCol]
                       return (
                         <td key={idxCol}>
                           {initialData && misurazione.valore && (
@@ -104,21 +136,20 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
                             label={false}
                             name={`${basePath}__${idx}__valore`}
                             inputProps={{
-                              className: "text-center pl-5",
+                              className: nCols < 5 ? "text-center pl-5" : "text-center no-arrows",
                               value: misurazione.valore,
                               type: "number",
-                              onChange: (e) => setMisurazioni(
-                                modifyNestedObject(misurazioni, `${idxRow}__${idxCol}__valore`, e.target.value)
+                              onChange: (e) => setMisurazioni(old =>
+                                modifyNestedObject(old, `${idxRow}__${idxCol}__valore`, e.target.value)
                               )
                             }}
                           />
                           <ErroreInput 
                             misurazione={misurazione}
-                            articolo={articolo}
-                            lavorazione={lavorazione}
+                            richiesta={richiesta}
                           />
                           {misurazione.valore && (
-                            <Hidden name={`${basePath}__${idx}__lavorazione`} value={lavorazione.id}/>
+                            <Hidden name={`${basePath}__${idx}__richiesta`} value={richiesta.id}/>
                           )}
                         </td>
                       )
@@ -131,7 +162,8 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
                   </tr>
                 ))}
                 <tr>
-                  <td colSpan={4}>
+                  <td></td>
+                  <td colSpan={nCols}>
                     <PlusIcon 
                       onClick={() => setMisurazioni([...misurazioni, emptyRow])}
                     />
@@ -179,12 +211,9 @@ function RiassuntoDati({ misurazioni, lavorazione, index }) {
   )
 }
 
-function ErroreInput({ misurazione, articolo, lavorazione }) {
-  const lavorazioniRichieste = articolo.richieste.map(ric => ric.lavorazione)
+function ErroreInput({ misurazione, richiesta }) {
   const hasValore = misurazione.valore !== ""
-  const hasMassimoMinimo = lavorazioniRichieste.map(lav => lav.id).includes(lavorazione.id)
-  if (!hasValore || !hasMassimoMinimo) return null;
-  const richiesta = articolo.richieste.find(ric => ric.lavorazione.id === lavorazione.id)
+  if (!hasValore) return null;
   const sopraMassimo = misurazione.valore > richiesta.spessore_massimo
   const sottoMinimo = misurazione.valore < richiesta.spessore_minimo
   if (!sopraMassimo && !sottoMinimo) return null;

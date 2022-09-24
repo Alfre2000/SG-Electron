@@ -36,7 +36,7 @@ export const parseProssimeManutenzioni = (response, full = false) => {
 }
 
 const parseNumber = (number) => {
-  return parseInt(number.split(' ')[0].replaceAll(".", ""))
+  return parseInt(number.toString().split(' ')[0].replaceAll(".", ""))
 }
 
 export const parseSchedaLavorazione = (response) => {
