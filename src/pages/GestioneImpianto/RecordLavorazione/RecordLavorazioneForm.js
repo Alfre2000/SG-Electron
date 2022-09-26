@@ -3,7 +3,7 @@ import { Col, Row, Form, Stack } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
 import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
-import { findElementFromID, searchOptions } from "../../../utils";
+import { findElementFromID } from "../../../utils";
 import Fieldset from "../../../components/form-components/Fieldset";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { useUserContext } from "../../../UserContext";
@@ -16,6 +16,7 @@ import SezioneControlli from "./Sezioni/SezioneControlli";
 import SezioneAnomalie from "./Sezioni/SezioneAnomalie";
 import { useFormContext } from "../../../contexts/FormContext";
 import SezioneAllegati from "./Sezioni/SezioneAllegati";
+import OperatoreInput from "../../../components/form-components/OperatoreInput/OperatoreInput";
 
 function RecordLavorazioneForm({ data }) {
   const { initialData, view } = useFormContext();
@@ -55,10 +56,7 @@ function RecordLavorazioneForm({ data }) {
           <Stack gap={2} className="text-left justify-center">
             <DateInput />
             <TimeInput />
-            <SearchSelect
-              name="operatore"
-              options={searchOptions(data?.operatori, "nome")}
-            />
+            <OperatoreInput data={data} />
           </Stack>
         </Col>
         <Col xs={6} className="pl-10 flex">
@@ -68,7 +66,9 @@ function RecordLavorazioneForm({ data }) {
               inputProps={{
                 value: cliente,
                 onChange: (e) =>
-                  setCliente(e) || setArticoloID(null) || setLavorazione(null),
+                  setCliente(e) ||
+                  setArticoloID(null) ||
+                  setLavorazione(null),
               }}
               options={
                 clienti &&
@@ -100,14 +100,14 @@ function RecordLavorazioneForm({ data }) {
                 }))}
             />
             {/* <SearchSelect
-              name="lavorazione"
-              options={searchOptions(lavorazioni, "nome")}
-              inputProps={{
-                isDisabled: !articolo || view,
-                value: lavorazione,
-                onChange: (e) => setLavorazione(e),
-              }}
-            /> */}
+            name="lavorazione"
+            options={searchOptions(lavorazioni, "nome")}
+            inputProps={{
+              isDisabled: !articolo || view,
+              value: lavorazione,
+              onChange: (e) => setLavorazione(e),
+            }}
+          /> */}
           </Stack>
         </Col>
       </Row>
@@ -166,7 +166,6 @@ function RecordLavorazioneForm({ data }) {
           <SezioneAllegati articolo={articolo} />
         </>
       )}
-      
       <Form.Group className="mt-8">
         <Row className="mb-4">
           <Col xs={1} className="flex items-center">

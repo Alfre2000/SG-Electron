@@ -4,7 +4,8 @@ import { useFormContext } from "../../contexts/FormContext";
 import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
-function Input({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols }) {
+const Input = React.forwardRef(
+  ({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols }, ref) => {
   const lastName = name ? name.split('__')[name.split('__').length - 1] : "";
   const labelText = label ? label : name ? `${capitalize(lastName).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
@@ -19,6 +20,7 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
     <Form.Group className="text-center">
       {label !== false && <Form.Label {...labelProps} htmlFor={name}>{labelText}</Form.Label>}
       <Form.Control
+        ref={ref}
         size="sm"
         id={name}
         name={name}
@@ -42,6 +44,7 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
       )}
       <Col sm={inputColumns} {...colProps}>
         <Form.Control
+          ref={ref}
           size="sm"
           id={name}
           name={name}
@@ -58,6 +61,6 @@ function Input({ label, name, errors, vertical, inputProps, labelProps, colProps
       </Col>
     </Form.Group>
   );
-}
+})
 
 export default Input;
