@@ -1,10 +1,11 @@
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
-import { Alert, Button, Modal } from "react-bootstrap";
+import { Alert, Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import { apiGet } from "../../../api/api";
 import { useFormContext } from "../../../contexts/FormContext";
 import { URLS } from "../../../urls";
 import { searchOptions } from "../../../utils";
-import Input from "../Input";
 import SearchSelect from "../SearchSelect";
 
 function OperatoreInput({ data }) {
@@ -12,11 +13,13 @@ function OperatoreInput({ data }) {
   const [pswModal, setPswModal] = useState(false);
   const [operatore, setOperatore] = useState(null);
   const [error, setError] = useState("");
+  const [passwordType, setPasswordType] = useState("password");
+  const EyeIcon = passwordType === "password" ? faEye : faEyeSlash;
   const pswdRef = useRef(null);
 
   const changeOperatore = (e) => {
     if (e && e?.value !== operatore?.value) {
-      setPswModal(e.value);
+      setPswModal(e);
       setTimeout(() => pswdRef.current.focus(), 50);
     } else {
       setOperatore(e);
@@ -24,7 +27,7 @@ function OperatoreInput({ data }) {
   };
 
   const checkPassword = () => {
-    apiGet(URLS.OPERATORI + pswModal + "/").then((res) => {
+    apiGet(URLS.OPERATORI + pswModal.value + "/").then((res) => {
       if (res.codice === pswdRef.current.value) {
         setPswModal(false);
         setError("");
@@ -40,6 +43,11 @@ function OperatoreInput({ data }) {
     setPswModal(false);
     setOperatore(null);
     setError("");
+  };
+
+  const handleEyePassword = () => {
+    if (passwordType === "password") setPasswordType("text");
+    else setPasswordType("password");
   };
   return (
     <>
@@ -71,14 +79,29 @@ function OperatoreInput({ data }) {
             Inserire il codice operatore
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Input
-            ref={pswdRef}
-            label="Codice:"
-            inputProps={{
-              type: "password",
-            }}
-          />
+        <Modal.Body className="px-5">
+          <FloatingLabel label="Operatore" className="mb-3">
+            <Form.Control
+              placeholder="Operatore"
+              value={pswModal?.label}
+              disabled
+              required
+            />
+          </FloatingLabel>
+          <FloatingLabel label="Codice" className="mb-2">
+            <Form.Control
+              type={passwordType}
+              ref={pswdRef}
+              autoFocus
+              className={error ? "is-invalid" : ""}
+              placeholder="Password"
+            />
+            <FontAwesomeIcon
+              icon={EyeIcon}
+              onClick={handleEyePassword}
+              className="absolute top-[23px] left-[85%] text-nav-blue cursor-pointer"
+            />
+          </FloatingLabel>
         </Modal.Body>
         <Modal.Footer className="justify-between">
           {error ? (

@@ -12,7 +12,7 @@ function ModifyModal({ show, handleClose, children }) {
         <Button
           variant="secondary"
           onClick={() => handleClose(false)}
-          className="bg-[#6e757c]"
+          className="bg-[#6e757c] ml-auto"
         >
           Chiudi
         </Button>
