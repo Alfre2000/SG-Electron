@@ -17,6 +17,7 @@ function ArticoloForm({ data, campoScheda }) {
           <Stack gap={2} className="text-left justify-center">
             <Input name="nome" />
             <Input name="codice" />
+            <Input name="descrizione" />
           </Stack>
         </Col>
         <Col xs={6} className="pl-10 flex m-auto">
@@ -26,6 +27,11 @@ function ArticoloForm({ data, campoScheda }) {
               labelCols={5}
               createTable={true}
               options={searchOptions(data?.clienti, "nome")}
+            />
+            <SearchSelect
+              name="impianto"
+              labelCols={5}
+              options={searchOptions(data?.impianti, "nome")}
             />
             {campoScheda !== false && (
               <SearchSelect

@@ -12,6 +12,7 @@ function Articolo() {
   const [data, setData] = useGetAPIData([
     { nome: "records", url: URLS.ARTICOLI },
     { nome: "clienti", url: URLS.CLIENTI },
+    { nome: "impianti", url: URLS.IMPIANTI },
     { nome: "lavorazioni", url: URLS.LAVORAZIONI },
     { nome: "schede_controllo", url: URLS.SCHEDE_CONTROLLO },
   ]);

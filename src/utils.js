@@ -33,6 +33,7 @@ export const updateQueryStringParameter = (uri, key, value) => {
 export const isDateRecent = (date, hours) => {
   const recordDate = new Date(date)
   const now = new Date()
+  if (hours === false) return true;
   return Math.abs(now - recordDate) / 36e5 < hours;
 }
 
