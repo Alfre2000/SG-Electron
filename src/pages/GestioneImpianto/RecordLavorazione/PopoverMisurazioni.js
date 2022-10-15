@@ -7,6 +7,7 @@ import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import MinusIcon from "../../../components/Icons/MinusIcon/MinusIcon";
 import PlusIcon from "../../../components/Icons/PlusIcon/PlusIcon";
+import { useFormContext } from "../../../contexts/FormContext";
 import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { findElementFromID, max, mean, min } from "../../../utils";
 import { modifyNestedObject } from "../../utils";
@@ -168,8 +169,12 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
                       onClick={() => setMisurazioni([...misurazioni, emptyRow])}
                     />
                   </td>
+                  <td></td>
                 </tr>
               </tbody>
+              {misurazioni?.[0]?.length > 1 && (
+                <RiassuntoDati misurazioni={misurazioni} lavorazione={lavorazioni} index={0} />
+              )}
             </Table>
           </Popover.Body>
           {misurazioni?.[0]?.length === 1 && (
@@ -184,6 +189,37 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
 function RiassuntoDati({ misurazioni, lavorazione, index }) {
   const misurazioniCompilate = misurazioni ? misurazioni.map(row => row[index]).filter(el => !!el.valore).map(el => el.valore) : 0
   const padding = misurazioni[0].length === 1 ? "py-[13px]" : "py-[5px]"
+  const { initialData } = useFormContext();
+  if (misurazioni?.[0]?.length > 1) {
+    const compilate = misurazioni.some(row => row.some(el => el.valore !== ""))
+    if (!compilate || initialData?.completata !== true) return;
+    const n_richieste = lavorazione.map(lav => lav.richieste.map(_ => 1).reduce((a,b)=>a+b)).reduce((a,b)=>a+b)
+    return (
+      <tfoot className={`text-center py-[5px] bg-[#f0f0f0] mx-0`} style={{ borderTop: "1px solid rgba(0,0,0,0.2)"}}>
+        <tr>
+          <td className="font-semibold">Min</td>
+          {Array(n_richieste).fill(0).map((_, i) => (
+            <td className="border-0">{min(misurazioni.map(row => row[i].valore).filter(x => x !== ""))}</td>
+          ))}
+          <td></td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Med</td>
+          {Array(n_richieste).fill(0).map((_, i) => (
+            <td className="border-0">{mean(misurazioni.map(row => row[i].valore).filter(x => x !== ""))}</td>
+          ))}
+          <td></td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Max</td>
+          {Array(n_richieste).fill(0).map((_, i) => (
+            <td className="border-0">{max(misurazioni.map(row => row[i].valore).filter(x => x !== ""))}</td>
+          ))}
+          <td></td>
+        </tr>
+      </tfoot>
+    )
+  }
   return index === misurazioni[0].length - 1 ? (
     <Row className={`text-center ${padding} bg-[#f0f0f0] mx-0`} style={{ borderTop: index === 0 ? "1px solid rgba(0,0,0,0.2)" : "", borderBottomLeftRadius: "5px", borderBottomRightRadius: "5px"}}>
       {misurazioni[0].length > 1 && (
