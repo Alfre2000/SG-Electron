@@ -6,15 +6,19 @@ import { useFormContext } from "../../../contexts/FormContext";
 function MinusIcon({ onClick }) {
   const { view } = useFormContext();
   return (
-    <FontAwesomeIcon
-      icon={faCircleMinus}
-      data-testid="icon-minus"
-      size="lg"
-      className={`${
-        view ? "cursor-not-allowed" : "cursor-pointer"
-      } text-nav-blue hover:text-blue-800`}
-      onClick={() => !view && onClick()}
-    />
+    <button
+      onClick={(e) => !view && onClick() && e.stopPropagation()}
+      className="minus-icon outline-blue-700"
+    >
+      <FontAwesomeIcon
+        icon={faCircleMinus}
+        data-testid="icon-minus"
+        size="lg"
+        className={`${
+          view ? "cursor-not-allowed" : "cursor-pointer"
+        } text-nav-blue hover:text-blue-800`}
+      />
+    </button>
   );
 }
 

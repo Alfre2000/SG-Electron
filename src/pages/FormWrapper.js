@@ -18,6 +18,7 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
+    if (["plus-icon", "minus-icon"].includes(document.activeElement.classList[0])) return;
     if (validator) {
       const res = validator(form);
       if (res === false) return;

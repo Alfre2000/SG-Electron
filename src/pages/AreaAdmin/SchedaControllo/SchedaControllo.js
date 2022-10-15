@@ -12,6 +12,7 @@ import Tabella from "../../Tabella";
 function SchedaControllo() {
   const [data, setData] = useGetAPIData([
     { nome: "articoli", url: URLS.ARTICOLI_NESTED },
+    { nome: "impianti", url: URLS.IMPIANTI },
     { nome: "records", url: URLS.SCHEDE_CONTROLLO },
     { nome: "clienti", url: URLS.CLIENTI },
     { nome: "lavorazioni", url: URLS.LAVORAZIONI },
