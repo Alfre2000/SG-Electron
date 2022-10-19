@@ -8,7 +8,7 @@ import { customStyle } from "./stylesSelect";
 import RequiredSelect from "./RequiredSelect";
 import { useFormContext } from "../../contexts/FormContext";
 
-function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors, colProps }) {
+function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors, colProps, errorName }) {
   if (label === undefined &&  name === undefined) label = false;
   const lastName = name ? name.split('__')[name.split('__').length - 1] : ""; 
   const labelText = label ? label : name ? `${capitalize(lastName).replace('_', ' ')}:` : ""
@@ -21,7 +21,8 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
   const disabled = formData?.view === true ? true : null
   let defaultValue = !!initialData && Object.keys(initialData).length > 0 ? findNestedElement(initialData, name) : undefined
   defaultValue =  typeof defaultValue === "object" ? defaultValue?.id : defaultValue
-  const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
+  const errorSearch = errorName ? errorName : name
+  const errorsValue = errors ? findNestedElement(errors, errorSearch)?.join(' - ') : undefined
   const errorClass = errorsValue ? "react-select-invalid" : ""
   const successClass = errors && !errorsValue ? "react-select-valid" : ""
   return (

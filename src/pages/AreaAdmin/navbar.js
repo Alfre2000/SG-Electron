@@ -1,4 +1,4 @@
-import { faSquarePlus } from '@fortawesome/free-solid-svg-icons'
+import { faCertificate, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 
 export const getNavItems = (user) => {
   let items = [
@@ -8,6 +8,11 @@ export const getNavItems = (user) => {
       {name: 'Scheda impianto', link: '/area-admin/scheda-impianto/'},
       {name: 'Analisi', link: '/area-admin/analisi/'},
       {name: 'Manutenzione', link: '/area-admin/manutenzione/'},
+      {name: 'Cliente', link: '/area-admin/cliente/'},
+      {name: 'Operatore', link: '/area-admin/operatore/'},
+    ]},
+    { title: "Certificati qualità", icon: faCertificate, links: [
+      {name: 'Certificati', link: '/area-admin/certificati/'},
     ]},
   ];
   return items

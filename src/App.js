@@ -21,6 +21,9 @@ import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
 import AdminManutenzione from "./pages/AreaAdmin/Manutenzione/Manutenzione";
+import Certificati from "./pages/AreaAdmin/Certificati/Certificati";
+import Cliente from "./pages/AreaAdmin/Cliente/Cliente";
+import Operatore from "./pages/AreaAdmin/Operatore/Operatore";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -67,6 +70,10 @@ function App() {
               <Route path="scheda-impianto/" element={<SchedaImpianto />}></Route>
               <Route path="analisi/" element={<AdminAnalisi />}></Route>
               <Route path="manutenzione/" element={<AdminManutenzione />}></Route>
+              <Route path="cliente/" element={<Cliente />}></Route>
+              <Route path="operatore/" element={<Operatore />}></Route>
+
+              <Route path="certificati/" element={<Certificati />}></Route>
             </Route>
           </Routes>
         </HashRouter>
