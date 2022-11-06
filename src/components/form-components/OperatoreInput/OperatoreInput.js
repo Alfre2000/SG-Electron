@@ -10,8 +10,13 @@ import SearchSelect from "../SearchSelect";
 
 function OperatoreInput({ data }) {
   const { initialData, view } = useFormContext();
+
+  const operatori = searchOptions(data?.operatori, "nome");
+
   const [pswModal, setPswModal] = useState(false);
-  const [operatore, setOperatore] = useState(null);
+  const [operatore, setOperatore] = useState(
+    view ? operatori.find((op) => op.value === initialData.operatore) : null
+  );
   const [error, setError] = useState("");
   const [passwordType, setPasswordType] = useState("password");
   const EyeIcon = passwordType === "password" ? faEye : faEyeSlash;
@@ -53,12 +58,12 @@ function OperatoreInput({ data }) {
     <>
       <SearchSelect
         name="operatore"
-        initialData={view ? undefined : {}}
+        initialData={view ? initialData.operatore : {}}
         inputProps={{
           value: operatore,
           onChange: changeOperatore,
         }}
-        options={searchOptions(data?.operatori, "nome")}
+        options={operatori}
       />
       <div
         className={

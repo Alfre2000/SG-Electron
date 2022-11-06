@@ -10,6 +10,7 @@ export const customStyle = {
   singleValue: (provided, state) => ({
     ...provided,
     fontSize: "0.875rem",
+    color: "#212529"
   }),
   clearIndicator: (provided, state) => ({
     ...provided,

@@ -109,6 +109,9 @@ a {
 .react-select-valid > div:first-of-type:focus {
   box-shadow: 0 0 0 0.25rem rgb(25 135 84 / 25%) !important;
 }
+.react-select-view > div {
+  background-color: #e9ecef;
+}
 
 .my-modal-content,
 .my-caption {

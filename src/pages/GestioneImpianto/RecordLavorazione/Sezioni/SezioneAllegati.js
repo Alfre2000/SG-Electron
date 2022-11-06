@@ -19,7 +19,7 @@ function SezioneAllegati({ articolo }) {
         </p>
         <hr className="h-4 w-28 ml-3 pt-px pb-0.5 bg-nav-blue opacity-90" />
         {articolo.scheda_controllo.allegati.map((allegato, idx) => (
-          <Allegato info={allegato} idx={idx} />
+          <Allegato info={allegato} idx={idx} key={idx} />
         ))}
         {error && (
           <Alert
