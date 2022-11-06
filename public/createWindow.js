@@ -2,22 +2,30 @@ const { screen, BrowserWindow, Menu } = require("electron");
 const updater = require("./updater");
 const isDev = require("electron-is-dev");
 const path = require("path");
+const windowStateKeeper = require("electron-window-state");
 
 const contextMenu = Menu.buildFromTemplate(require("./contextMenu"));
 
 module.exports = function createWindow() {
-  // Check for Updates after 8 seconds
-  setTimeout(updater, 8000);
+  // Check for Updates after 4 seconds
+  setTimeout(updater, 4000);
 
   // Get Screen size
   const { width: screenWidth, height: screenHeight } =
     screen.getPrimaryDisplay().bounds;
 
+  let state = windowStateKeeper({
+    defaultWidth: screenWidth * 0.9,
+    defaultHeight: screenHeight,
+  });
+
   // Create the browser window.
   const win = new BrowserWindow({
-    width: screenWidth * 0.9,
+    x: state.x,
+    y: state.y,
+    width: state.width,
     minWidth: 1000,
-    height: screenHeight,
+    height: state.height,
     minHeight: 500,
     webPreferences: {
       nodeIntegration: true,
@@ -26,6 +34,8 @@ module.exports = function createWindow() {
     },
     show: false,
   });
+
+  state.manage(win);
 
   win.once("ready-to-show", win.show);
 
@@ -40,7 +50,7 @@ module.exports = function createWindow() {
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
   }
-  win.webContents.on('context-menu', e => {
+  win.webContents.on("context-menu", (e) => {
     contextMenu.popup();
-  })
+  });
 };
