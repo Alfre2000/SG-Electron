@@ -25,7 +25,7 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
   const errorsValue = errors ? findNestedElement(errors, errorSearch)?.join(' - ') : undefined
   const errorClass = errorsValue ? "react-select-invalid" : ""
   const successClass = errors && !errorsValue ? "react-select-valid" : ""
-  const viewClass = formData.view ? "react-select-view" : ""
+  const viewClass = formData?.view ? "react-select-view" : ""
   return (
     <Form.Group as={Row} className="items-center">
       {label !== false && (
