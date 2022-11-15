@@ -1,6 +1,6 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import { apiGet } from "../../../api/api";
 import { useFormContext } from "../../../contexts/FormContext";
@@ -21,6 +21,21 @@ function OperatoreInput({ data }) {
   const [passwordType, setPasswordType] = useState("password");
   const EyeIcon = passwordType === "password" ? faEye : faEyeSlash;
   const pswdRef = useRef(null);
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    const enterClick = (e) => {
+      if (e.key === "Enter" && pswModal !== false) {
+        e.preventDefault();
+        btnRef.current.click();
+      }
+    }
+    document.addEventListener("keydown", enterClick)
+    return () => {
+      document.removeEventListener("keydown", enterClick)
+    }
+  }, [pswModal])
+  
 
   const changeOperatore = (e) => {
     if (e && e?.value !== operatore?.value) {
@@ -117,6 +132,7 @@ function OperatoreInput({ data }) {
             <div></div>
           )}
           <Button
+            ref={btnRef}
             variant="primary"
             type="submit"
             className="bg-[#0d6efd]"

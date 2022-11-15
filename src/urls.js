@@ -23,7 +23,6 @@ export const URLS = {
     OPERATORI: BASE_PATH + '/base/operatori/',
     ARTICOLI: BASE_PATH + '/base/articoli/',
     ARTICOLI_NESTED: BASE_PATH + '/base/articoli-nested/',
-    ARTICOLI_SENZA_SCHEDA: BASE_PATH + '/base/articoli-senza-scheda/',
     IMPIANTI: BASE_PATH + '/base/impianti/',
     CLIENTI: BASE_PATH + '/base/clienti/',
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',

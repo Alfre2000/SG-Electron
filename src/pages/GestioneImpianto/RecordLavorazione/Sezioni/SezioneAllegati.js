@@ -26,7 +26,7 @@ function SezioneAllegati({ articolo }) {
             variant="danger"
             className="text-sm text-center mt-4 p-1.5 w-auto px-5 mx-auto text-red-800"
           >
-            {error}
+            Per completare la scheda è necessario caricare tutti gli allegati obbligatori !
           </Alert>
         )}
       </Row>
