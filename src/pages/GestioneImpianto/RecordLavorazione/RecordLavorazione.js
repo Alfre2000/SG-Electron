@@ -1,20 +1,20 @@
-import {
-  faArrowCircleRight,
-  faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//   faArrowCircleRight,
+//   faTriangleExclamation,
+// } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Col, Container, Row, Card, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Col, Container, Row, Card } from "react-bootstrap";
+// import { Link } from "react-router-dom";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
-import { isDateRecent } from "../../../utils";
+// import { isDateRecent } from "../../../utils";
 import FormWrapper from "../../FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordLavorazioneForm from "./RecordLavorazioneForm";
-const { motion } = require("framer-motion");
+// const { motion } = require("framer-motion");
 
 function RecordLavorazione() {
   const [data, setData] = useGetAPIData(
@@ -27,13 +27,13 @@ function RecordLavorazione() {
     ],
     true
   );
-  const isSchedaImpiantoOld =
-    data?.scheda_impianto?.id && !isDateRecent(data.scheda_impianto.data, 8);
+  // const isSchedaImpiantoOld =
+  //   data?.scheda_impianto?.id && !isDateRecent(data.scheda_impianto.data, 8);
   return (
     <Wrapper title="Scheda di Controllo">
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
         <PageTitle>Scheda di Controllo</PageTitle>
-        {isSchedaImpiantoOld && (
+        {/* {isSchedaImpiantoOld && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -57,7 +57,7 @@ function RecordLavorazione() {
               </Link>
             </Alert>
           </motion.div>
-        )}
+        )} */}
         <Row className="mt-6">
           <Col xs={12}>
             <Card>
