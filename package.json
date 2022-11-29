@@ -73,6 +73,7 @@
   "build": {
     "productName": "SuperGalvanica",
     "appId": "it.SuperGalvanica",
+    "asar": false, 
     "publish": {
       "provider": "github"
     },
@@ -81,12 +82,28 @@
       "output": "release"
     },
     "mac": {
-      "category": "public.app-category.business",
-      "target": "default"
+      "target": [
+        "pkg"
+      ],
+      "entitlements": "entitlements.mac.plist"
     },
     "win": {
-      "target": "nsis"
-    },
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
     "files": [
       "build/**/*"
     ]
