@@ -73,6 +73,22 @@ app.whenReady().then(() => {
         }
     }))
   })
+  ipcMain.handle('save-certificato', (_, file, defaultName) => {
+    const win = BrowserWindow.getFocusedWindow()
+    const defaultPath = app.getPath('desktop') + '/' + defaultName
+    dialog.showSaveDialog(win, { 
+      title: "Salva Certificato",
+      defaultPath: defaultPath,
+      properties: ['openFile', 'openDirectory', 'createDirectory'],
+    }).then((path => {
+      if (!path.canceled) {
+        fs.writeFile(path.filePath.toString(), file, (err) => {
+          if (err) throw err;
+          console.log('It\'s saved!');
+        })
+      }
+  }))
+  })
   ipcMain.handle('open-file', (_, link) => {
     const win = new BrowserWindow({
       width: 700, minWidth: 700,

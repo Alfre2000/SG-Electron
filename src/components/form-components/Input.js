@@ -1,11 +1,11 @@
 import React from "react";
-import { Col, Form, Row } from "react-bootstrap";
+import { Col, FloatingLabel, Form, Row } from "react-bootstrap";
 import { useFormContext } from "../../contexts/FormContext";
 import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
 const Input = React.forwardRef(
-  ({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols }, ref) => {
+  ({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols, floating }, ref) => {
   const lastName = name ? name.split('__')[name.split('__').length - 1] : "";
   const labelText = label ? label : name ? `${capitalize(lastName).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
@@ -35,6 +35,25 @@ const Input = React.forwardRef(
         {errors && errorsValue}
       </Form.Control.Feedback>
     </Form.Group>
+  ) : floating ? (
+    <>
+      <FloatingLabel label={labelText} {...labelProps} htmlFor={name}>
+        <Form.Control
+          size="sm"
+          ref={ref}
+          id={name}
+          name={name}
+          {...default_}
+          disabled={disabled}
+          {...inputProps}
+          isInvalid={errors && Boolean(errorsValue)}
+          isValid={!errorsValue && !! errors}
+        />
+      </FloatingLabel>
+      <Form.Control.Feedback type="invalid" className="text-xs text-center">
+        {errors && errorsValue}
+      </Form.Control.Feedback>
+    </>
   ) : (
     <Form.Group as={Row}>
       {label !== false && (

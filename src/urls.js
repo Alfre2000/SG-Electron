@@ -31,7 +31,11 @@ export const URLS = {
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
     RECORD_LAVORAZIONI_IN_SOSPESO: BASE_PATH + '/scheda-controllo/record-lavorazioni?completata=false',
+    RECORD_LAVORAZIONI_SEARCH: BASE_PATH + '/scheda-controllo/record-lavorazioni-search/',
+    RECORD_LAVORAZIONI_CERTIFICATO: BASE_PATH + '/scheda-controllo/record-lavorazioni-certificato/',
     SCHEDE_CONTROLLO: BASE_PATH + '/scheda-controllo/schede-controllo/',
+    CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',
+    CREA_CERTIFICATO: BASE_PATH + '/scheda-controllo/crea-certificato/',
 
     SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',
     ANDAMENTO_PRODUZIONE: BASE_PATH + '/scheda-controllo/andamento-produzione/',

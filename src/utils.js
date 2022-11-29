@@ -12,6 +12,13 @@ export const dateToTimePicker = (date) => {
   return hour + ":" + min
 }
 
+export const today = () => {
+  const date = new Date();
+  let day = ("0" + date.getDate()).slice(-2);
+  let month = ("0" + (date.getMonth() + 1)).slice(-2);
+  return (day)+"/"+(month)+"/"+date.getFullYear();
+}
+
 export const findElementFromID = (id, array) => {
   if (!array) return ""
   return array.find(el => el.id === id) || ""

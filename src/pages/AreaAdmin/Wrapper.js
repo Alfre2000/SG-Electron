@@ -17,7 +17,7 @@ function Wrapper({ children, defaultNav }) {
   return (
     <>
       <Navbar menu={[...navItems]} navOpen={navOpen} />
-      <div className="grow flex flex-col overflow-scroll max-h-screen">
+      <div className="grow flex flex-col overflow-scroll max-h-screen" id="page">
         <Header toggleNavbar={toggleNavbar} title={title} />
         <div className="bg-gray-50 grow flex px-8 justify-center">
           {!pendingAuth && children}
