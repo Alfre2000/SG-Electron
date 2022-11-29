@@ -31,7 +31,7 @@ module.exports = () => {
         }).then(result => {
             if (result.response === 0) {
                 localStorage.removeItem("user")
-                autoUpdater.quitAndInstall(false, true)
+                autoUpdater.quitAndInstall(true, true)
            }
         })
     })
