@@ -89,9 +89,13 @@
       "entitlements": "entitlements.mac.plist"
     },
     "win": {
-      "target": "nsis",
-      "arch": [
-        "x64"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
       ]
     },
     "files": [
