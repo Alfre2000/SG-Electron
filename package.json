@@ -81,21 +81,11 @@
       "output": "release"
     },
     "mac": {
-      "target": [
-        "dmg"
-      ],
       "category": "public.app-category.business",
-      "entitlements": "entitlements.mac.plist"
+      "target": "default"
     },
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
+      "target": "nsis"
     },
     "files": [
       "build/**/*"
