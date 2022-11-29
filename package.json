@@ -73,7 +73,6 @@
   "build": {
     "productName": "SuperGalvanica",
     "appId": "it.SuperGalvanica",
-    "asar": false, 
     "publish": {
       "provider": "github"
     },
@@ -81,6 +80,7 @@
       "buildResources": "build",
       "output": "release"
     },
+    "asar": false, 
     "mac": {
       "target": [
         "pkg"
@@ -102,8 +102,7 @@
           ]
         }
       ]
-    }
-  },
+    },
     "files": [
       "build/**/*"
     ]
