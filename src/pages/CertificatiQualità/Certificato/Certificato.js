@@ -7,7 +7,7 @@ import MyToast from "../../../components/MyToast/MyToast";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
-import Wrapper from "../../AreaAdmin/Wrapper";
+import Wrapper from "../../CertificatiQualità/Wrapper";
 import FormWrapper from "../../FormWrapper";
 import CertificatoForm from "./CertificatoForm";
 

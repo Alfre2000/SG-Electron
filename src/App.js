@@ -23,8 +23,8 @@ import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
 import AdminManutenzione from "./pages/AreaAdmin/Manutenzione/Manutenzione";
 import Cliente from "./pages/AreaAdmin/Cliente/Cliente";
 import Operatore from "./pages/AreaAdmin/Operatore/Operatore";
-import Certificato from "./pages/AreaAdmin/Certificato/Certificato";
-import RecordCertificato from "./pages/AreaAdmin/RecordCertificato/RecordCertificato";
+import Certificato from "./pages/CertificatiQualità/Certificato/Certificato";
+import RecordCertificato from "./pages/CertificatiQualità/RecordCertificato/RecordCertificato";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -75,7 +75,11 @@ function App() {
               <Route path="operatore/" element={<Operatore />}></Route>
               <Route path="certificato/" element={<Certificato />}></Route>
 
+            </Route>
+            {/* Certificati Qualità */}
+            <Route path="certificati-qualita/">
               <Route path="record-certificato/" element={<RecordCertificato />}></Route>
+              <Route path="certificato/" element={<Certificato />}></Route>
             </Route>
           </Routes>
         </HashRouter>
