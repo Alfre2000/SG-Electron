@@ -15,7 +15,7 @@ const electron = window?.require ? window.require("electron") : null;
 const fileNameCertificato = (formData, record) => {
   const [day, month, year] = formData.data.split('/')
   const data = year + '_' + month + '_' + day
-  const codice = record.articolo.split('(').at(-1).split(')')[0]
+  const codice = record.articolo.split('(').at(-1).split(')')[0].split('/')[0]
   const extension = formData.file_type === "pdf" ? "pdf" : "docx"
   const DDTNumber = formData.nostro_ddt + '_' + (formData.certificato_n.split('.')[2] || "")
   return `${data}_Certificato ${DDTNumber} Art ${codice}.${extension}`

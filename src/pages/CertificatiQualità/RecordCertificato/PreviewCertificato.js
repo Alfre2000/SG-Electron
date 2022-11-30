@@ -20,7 +20,7 @@ function PreviewCertificato({ record, indietro }) {
   const [data, setData] = useState();
   const [successToast, setSuccessToast] = useState(false);
   const [DDT, setDDT] = useState(`${new Date().getFullYear()}.00`);
-  const [fileType, setFileType] = useState("")
+  const [fileType, setFileType] = useState("");
   useEffect(() => {
     apiGet(`${URLS.RECORD_LAVORAZIONI_CERTIFICATO}${record.id}/`).then((res) =>
       setData(res)
@@ -106,12 +106,12 @@ function PreviewCertificato({ record, indietro }) {
             </td>
             <td className="w-1/3" style={{ borderLeft: 0 }}>
               <div className="flex items-center justify-evenly">
-                Cormano, 
+                Cormano,
                 <Input
                   name="data"
                   label={false}
                   inputProps={{
-                    defaultValue: today()
+                    defaultValue: today(),
                   }}
                 />
               </div>
@@ -162,10 +162,10 @@ function PreviewCertificato({ record, indietro }) {
               <Input
                 name="quantità"
                 label={false}
-                inputProps={{ 
+                inputProps={{
                   className: "text-left pl-3 w-1/4",
                   type: "number",
-                  defaultValue: data.n_pezzi_dichiarati
+                  defaultValue: data.n_pezzi_dichiarati,
                 }}
               />
             </td>
@@ -286,12 +286,12 @@ function PreviewCertificato({ record, indietro }) {
                         <p className="text-blue-800">No. of inspected parts:</p>
                       </div>
                       <div className="font-semibold w-1/5">
-                        <Input 
+                        <Input
                           name={`tests__${idx}__pezzi_testati`}
                           label={false}
                           inputProps={{
                             className: "text-center",
-                            defaultValue: controllo.frequenza_n
+                            defaultValue: controllo.frequenza_n,
                           }}
                         />
                       </div>
@@ -337,7 +337,7 @@ function PreviewCertificato({ record, indietro }) {
                             </p>
                           )}
                           {test.metodo_en && (
-                            <p className="text-blue-800 -ml-4">
+                            <p className="text-blue-800">
                               Method:{" "}
                               <span className="font-semibold">
                                 {test.metodo_en}
@@ -351,29 +351,89 @@ function PreviewCertificato({ record, indietro }) {
                 </tr>
                 {test.lavorazione && (
                   <>
-                    <tr className="font-semibold">
-                      <td rowSpan={1 + tabella.length}></td>
-                      <td></td>
-                      <td>Min</td>
-                      <td>Med</td>
-                      <td>Max</td>
-                    </tr>
-                    {tabella.map((values, index) => (
-                      <tr key={index}>
-                        <td>
-                          {tabella.length !== 1 && (
-                            <>
-                              Punto <span className="text-blue-800">Point</span>{" "}
-                              n°{" "}
-                              <span className="font-semibold">{index + 1}</span>
-                            </>
-                          )}
-                        </td>
-                        <td className="font-semibold w-1/12">{values.min}</td>
-                        <td className="font-semibold w-1/12">{values.med}</td>
-                        <td className="font-semibold w-1/12">{values.max}</td>
-                      </tr>
-                    ))}
+                    {tabella.length === 1 && tabella[0].values.length <= 5 ? (
+                      <>
+                        {tabella[0].values.map((val, index) => (
+                          <tr>
+                            <td className="text-left">
+                              <span className="pl-4">
+                                Campione
+                                <span className="text-blue-800"> Sample </span>
+                                <span>n° </span>
+                                <span className="font-semibold">
+                                  {index + 1}
+                                </span>
+                              </span>
+                            </td>
+                            <td colSpan={4} className="font-semibold">
+                              {val.toString().replace(".", ",")}
+                            </td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td className="text-left">
+                            <span className="pl-4">Valore minimo </span>
+                            <span className="text-blue-800">Minimum value</span>
+                          </td>
+                          <td colSpan={4} className="font-semibold">
+                            {tabella[0].min.toString().replace(".", ",")}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-left">
+                            <span className="pl-4">Valore massimo </span>
+                            <span className="text-blue-800">Maximum value</span>
+                          </td>
+                          <td colSpan={4} className="font-semibold">
+                            {tabella[0].max.toString().replace(".", ",")}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-left">
+                            <span className="pl-4">Media </span>
+                            <span className="text-blue-800">Mean</span>
+                          </td>
+                          <td colSpan={4} className="font-semibold">
+                            {tabella[0].med.toString().replace(".", ",")}
+                          </td>
+                        </tr>
+                      </>
+                    ) : (
+                      <>
+                        <tr className="font-semibold">
+                          <td rowSpan={1 + tabella.length}></td>
+                          <td></td>
+                          <td>Min</td>
+                          <td>Med</td>
+                          <td>Max</td>
+                        </tr>
+                        {tabella.map((values, index) => (
+                          <tr key={index}>
+                            <td>
+                              {tabella.length !== 1 && (
+                                <>
+                                  Punto{" "}
+                                  <span className="text-blue-800">Point</span>{" "}
+                                  n°{" "}
+                                  <span className="font-semibold">
+                                    {index + 1}
+                                  </span>
+                                </>
+                              )}
+                            </td>
+                            <td className="font-semibold w-1/12">
+                              {values.min}
+                            </td>
+                            <td className="font-semibold w-1/12">
+                              {values.med}
+                            </td>
+                            <td className="font-semibold w-1/12">
+                              {values.max}
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    )}
                   </>
                 )}
               </tbody>
@@ -398,7 +458,11 @@ function PreviewCertificato({ record, indietro }) {
         </tbody>
       </Table>
       <Hidden name="file_type" value={fileType} />
-      <Button type="submit" onClick={() => setFileType("word")} className="bg-[#0d6efd] w-38 font-medium mt-8">
+      <Button
+        type="submit"
+        onClick={() => setFileType("word")}
+        className="bg-[#0d6efd] w-38 font-medium mt-8"
+      >
         Scarica File Word <FontAwesomeIcon icon={faFileWord} className="pl-2" />
       </Button>
       {/* <Button type="submit" onClick={() => setFileType("pdf")} className="bg-[#0d6efd] w-38 font-medium mt-8 ml-16">

@@ -18,6 +18,7 @@ export const punti = (record, test) => {
       }
     });
   return res.map((misurazioni) => ({
+    values: misurazioni,
     min: min(misurazioni),
     med: mean(misurazioni),
     max: max(misurazioni),
