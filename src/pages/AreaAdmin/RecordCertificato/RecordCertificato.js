@@ -12,6 +12,15 @@ import PreviewCertificato from "./PreviewCertificato";
 import SelezioneLotto from "./SelezioneLotto";
 const electron = window?.require ? window.require("electron") : null;
 
+const fileNameCertificato = (formData, record) => {
+  const [day, month, year] = formData.data.split('/')
+  const data = year + '_' + month + '_' + day
+  const codice = record.articolo.split('(').at(-1).split(')')[0]
+  const extension = formData.file_type === "pdf" ? "pdf" : "docx"
+  const DDTNumber = formData.nostro_ddt + '_' + (formData.certificato_n.split('.')[2] || "")
+  return `${data}_Certificato ${DDTNumber} Art ${codice}.${extension}`
+}
+
 function RecordCertificato() {
   const [data, setData] = useGetAPIData([
     { nome: "records", url: URLS.RECORD_LAVORAZIONI_SEARCH },
@@ -30,11 +39,8 @@ function RecordCertificato() {
       finalFormData.append(obj[0], obj[1])
     );
     apiPost(`${URLS.CREA_CERTIFICATO}${record.id}/`, finalFormData).then((res) => {
-      console.log(finalFormData);
       const file = Buffer.from(res.doc, "base64");
-      const defaultName = `Certificato ${record.articolo} ${
-        record.n_lotto_cliente || record.n_lotto_super
-      }.${finalFormData.file_type === "pdf" ? "pdf" : "docx"}`;
+      const defaultName = fileNameCertificato(formData, record)
       electron.ipcRenderer.invoke("save-certificato", file, defaultName);
       setSuccessToast(true);
       setTimeout(() => setSuccessToast(false), 4000);

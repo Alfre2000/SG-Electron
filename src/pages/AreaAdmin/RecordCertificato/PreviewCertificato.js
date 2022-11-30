@@ -105,7 +105,16 @@ function PreviewCertificato({ record, indietro }) {
               <div></div>
             </td>
             <td className="w-1/3" style={{ borderLeft: 0 }}>
-              Cormano, {today()}
+              <div className="flex items-center justify-evenly">
+                Cormano, 
+                <Input
+                  name="data"
+                  label={false}
+                  inputProps={{
+                    defaultValue: today()
+                  }}
+                />
+              </div>
             </td>
           </tr>
         </tbody>
@@ -150,15 +159,15 @@ function PreviewCertificato({ record, indietro }) {
               Quantity
             </td>
             <td className="w-3/5 font-semibold">
-              {data.n_pezzi_dichiarati ? (
-                data.n_pezzi_dichiarati.toLocaleString()
-              ) : (
-                <Input
-                  name="n_pezzi_dichiarati"
-                  label={false}
-                  inputProps={{ className: "text-left pl-3", type: "number" }}
-                />
-              )}
+              <Input
+                name="quantità"
+                label={false}
+                inputProps={{ 
+                  className: "text-left pl-3 w-1/4",
+                  type: "number",
+                  defaultValue: data.n_pezzi_dichiarati
+                }}
+              />
             </td>
           </tr>
           <tr>
@@ -194,10 +203,10 @@ function PreviewCertificato({ record, indietro }) {
           </tr>
           <tr>
             <td className="w-1/5" style={{ borderRight: 0 }}>
-              Commessa N°
+              Commessa Cliente N°
             </td>
             <td className="w-1/5 text-blue-800" style={{ borderLeft: 0 }}>
-              Batch No.
+              Customer Batch No.
             </td>
             <td className="w-3/5">
               {data.n_lotto_cliente ? (
@@ -276,8 +285,15 @@ function PreviewCertificato({ record, indietro }) {
                         <p>N° pezzi testati:</p>
                         <p className="text-blue-800">No. of inspected parts:</p>
                       </div>
-                      <div className="font-semibold">
-                        {controllo.frequenza_n}
+                      <div className="font-semibold w-1/5">
+                        <Input 
+                          name={`tests__${idx}__pezzi_testati`}
+                          label={false}
+                          inputProps={{
+                            className: "text-center",
+                            defaultValue: controllo.frequenza_n
+                          }}
+                        />
                       </div>
                     </div>
                   </td>
