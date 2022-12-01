@@ -291,7 +291,7 @@ function PreviewCertificato({ record, indietro }) {
                           label={false}
                           inputProps={{
                             className: "text-center",
-                            defaultValue: controllo.frequenza_n,
+                            defaultValue: record_controllo.pezzi_da_testare,
                           }}
                         />
                       </div>
@@ -337,7 +337,7 @@ function PreviewCertificato({ record, indietro }) {
                             </p>
                           )}
                           {test.metodo_en && (
-                            <p className="text-blue-800">
+                            <p className="text-blue-800 text-left">
                               Method:{" "}
                               <span className="font-semibold">
                                 {test.metodo_en}
@@ -354,7 +354,7 @@ function PreviewCertificato({ record, indietro }) {
                     {tabella.length === 1 && tabella[0].values.length <= 5 ? (
                       <>
                         {tabella[0].values.map((val, index) => (
-                          <tr>
+                          <tr key={index}>
                             <td className="text-left">
                               <span className="pl-4">
                                 Campione
@@ -366,7 +366,7 @@ function PreviewCertificato({ record, indietro }) {
                               </span>
                             </td>
                             <td colSpan={4} className="font-semibold">
-                              {val.toString().replace(".", ",")}
+                              {val.toFixed(2).toLocaleString()}
                             </td>
                           </tr>
                         ))}
@@ -376,7 +376,7 @@ function PreviewCertificato({ record, indietro }) {
                             <span className="text-blue-800">Minimum value</span>
                           </td>
                           <td colSpan={4} className="font-semibold">
-                            {tabella[0].min.toString().replace(".", ",")}
+                            {tabella[0].min.toLocaleString()}
                           </td>
                         </tr>
                         <tr>
@@ -385,7 +385,7 @@ function PreviewCertificato({ record, indietro }) {
                             <span className="text-blue-800">Maximum value</span>
                           </td>
                           <td colSpan={4} className="font-semibold">
-                            {tabella[0].max.toString().replace(".", ",")}
+                            {tabella[0].max.toLocaleString()}
                           </td>
                         </tr>
                         <tr>
@@ -394,7 +394,7 @@ function PreviewCertificato({ record, indietro }) {
                             <span className="text-blue-800">Mean</span>
                           </td>
                           <td colSpan={4} className="font-semibold">
-                            {tabella[0].med.toString().replace(".", ",")}
+                            {tabella[0].med.toLocaleString()}
                           </td>
                         </tr>
                       </>
@@ -409,17 +409,13 @@ function PreviewCertificato({ record, indietro }) {
                         </tr>
                         {tabella.map((values, index) => (
                           <tr key={index}>
-                            <td>
-                              {tabella.length !== 1 && (
-                                <>
-                                  Punto{" "}
-                                  <span className="text-blue-800">Point</span>{" "}
-                                  n°{" "}
-                                  <span className="font-semibold">
-                                    {index + 1}
-                                  </span>
-                                </>
-                              )}
+                            <td className="text-left">
+                              Punto{" "}
+                              <span className="text-blue-800">Point</span>{" "}
+                              n°{" "}
+                              <span className="font-semibold">
+                                {index + 1}
+                              </span>
                             </td>
                             <td className="font-semibold w-1/12">
                               {values.min}

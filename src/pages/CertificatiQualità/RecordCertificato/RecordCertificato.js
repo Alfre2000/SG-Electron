@@ -18,7 +18,7 @@ const fileNameCertificato = (formData, record) => {
   const codice = record.articolo.split('(').at(-1).split(')')[0].split('/')[0]
   const extension = formData.file_type === "pdf" ? "pdf" : "docx"
   const DDTNumber = formData.nostro_ddt + '_' + (formData.certificato_n.split('.')[2] || "")
-  return `${data}_Certificato ${DDTNumber} Art ${codice}.${extension}`
+  return `${data}_Certificato Art ${codice} N° ${DDTNumber}.${extension}`
 }
 
 function RecordCertificato() {
