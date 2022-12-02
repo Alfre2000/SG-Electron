@@ -21,33 +21,21 @@ import OperatoreInput from "../../../components/form-components/OperatoreInput/O
 function RecordLavorazioneForm({ data }) {
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
+  const cleanCliente = (nome) => nome.replace("SPA", "").replace("SRL", "");
   const initialCliente =
     data.articoli && initialData?.articolo
       ? findElementFromID(initialData?.articolo, data.articoli).cliente.nome
       : "";
   const [cliente, setCliente] = useState(
-    initialCliente ? { value: initialCliente, label: initialCliente } : null
+    initialCliente
+      ? { value: initialCliente, label: cleanCliente(initialCliente) }
+      : null
   );
   const [articoloID, setArticoloID] = useState(initialData?.articolo || "");
-  const [lavorazione, setLavorazione] = useState(
-    initialData?.lavorazione || null
-  );
   const articolo = findElementFromID(articoloID, data.articoli);
   const clienti = data.articoli
     ? new Set(data.articoli.map((articolo) => articolo.cliente.nome))
     : new Set([]);
-  let lavorazioni = user?.user?.impianto?.lavorazioni;
-  if (lavorazioni && articolo) {
-    let lavorazioniRichieste = articolo.richieste.map(
-      (ric) => ric.lavorazione.id
-    );
-    lavorazioni = lavorazioni.filter((lav) =>
-      lavorazioniRichieste.includes(lav.id)
-    );
-  }
-  if (lavorazioni.length === 1 && lavorazioni[0]?.id !== lavorazione?.value) {
-    setLavorazione({ value: lavorazioni[0].id, label: lavorazioni[0].nome });
-  }
   return (
     <>
       <Row className="mb-4">
@@ -66,15 +54,16 @@ function RecordLavorazioneForm({ data }) {
               inputProps={{
                 value: cliente,
                 onChange: (e) =>
-                  setCliente(e) ||
-                  setArticoloID(null) ||
-                  setLavorazione(null),
+                  setCliente(e ? {
+                    value: e.value,
+                    label: cleanCliente(e.label),
+                  } : null) || setArticoloID(null),
               }}
               options={
                 clienti &&
                 [...clienti].map((cliente) => ({
                   value: cliente,
-                  label: cliente,
+                  label: cleanCliente(cliente),
                 }))
               }
             />
@@ -88,9 +77,7 @@ function RecordLavorazioneForm({ data }) {
                       label: `${articolo.nome} (${articolo.codice || "-"})`,
                     }
                   : null,
-                onChange: (e) =>
-                  setArticoloID(e?.value ? e.value : null) ||
-                  setLavorazione(null),
+                onChange: (e) => setArticoloID(e?.value ? e.value : null),
               }}
               options={data?.articoli
                 ?.filter((arti) => arti.cliente.nome === cliente?.value)
@@ -99,15 +86,6 @@ function RecordLavorazioneForm({ data }) {
                   label: `${a.nome} (${a.codice || "-"})`,
                 }))}
             />
-            {/* <SearchSelect
-            name="lavorazione"
-            options={searchOptions(lavorazioni, "nome")}
-            inputProps={{
-              isDisabled: !articolo || view,
-              value: lavorazione,
-              onChange: (e) => setLavorazione(e),
-            }}
-          /> */}
           </Stack>
         </Col>
       </Row>
