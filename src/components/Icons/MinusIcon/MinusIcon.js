@@ -1,13 +1,20 @@
 import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useRef } from "react";
 import { useFormContext } from "../../../contexts/FormContext";
 
 function MinusIcon({ onClick }) {
   const { view } = useFormContext();
+  const btnRef = useRef(null);
   return (
     <button
-      onClick={(e) => !view && onClick() && e.stopPropagation()}
+      ref={btnRef}
+      onClick={(e) =>
+        !view &&
+        btnRef.current === document.activeElement &&
+        onClick() &&
+        e.stopPropagation()
+      }
       className="minus-icon outline-blue-700"
     >
       <FontAwesomeIcon

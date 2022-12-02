@@ -31,15 +31,17 @@ export const URLS = {
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
     RECORD_LAVORAZIONI_IN_SOSPESO: BASE_PATH + '/scheda-controllo/record-lavorazioni?completata=false',
-    RECORD_LAVORAZIONI_SEARCH: BASE_PATH + '/scheda-controllo/record-lavorazioni-search/',
-    RECORD_LAVORAZIONI_CERTIFICATO: BASE_PATH + '/scheda-controllo/record-lavorazioni-certificato/',
     SCHEDE_CONTROLLO: BASE_PATH + '/scheda-controllo/schede-controllo/',
-    CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',
-    CREA_CERTIFICATO: BASE_PATH + '/scheda-controllo/crea-certificato/',
 
     SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',
     ANDAMENTO_PRODUZIONE: BASE_PATH + '/scheda-controllo/andamento-produzione/',
     PRODUZIONE_PER_OPERATORE: BASE_PATH + '/scheda-controllo/produzione-per-operatore/',
+
+    // CERTIFICATI
+    RECORD_LAVORAZIONI_SEARCH: BASE_PATH + '/scheda-controllo/record-lavorazioni-search/',
+    RECORD_LAVORAZIONI_CERTIFICATO: BASE_PATH + '/scheda-controllo/record-lavorazioni-certificato/',
+    CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',
+    CREA_CERTIFICATO: BASE_PATH + '/scheda-controllo/crea-certificato/',
 
     // SCHEDE IMPIANTO
     SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/schede-impianti/',
