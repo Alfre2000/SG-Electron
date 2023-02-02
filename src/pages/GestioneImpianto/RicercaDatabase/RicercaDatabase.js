@@ -76,6 +76,7 @@ function RicercaDatabase() {
                   valori={["operazione__operazioni", "operatore__operatori"]}
                   data={dataTabella}
                   setData={setData}
+                  filtering={false}
                 />
               </Card.Body>
             </Card>

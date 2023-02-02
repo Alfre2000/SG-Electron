@@ -47,6 +47,7 @@ function LavorazioniInSospeso() {
                   url={URLS.RECORD_LAVORAZIONI}
                   onSuccess={updateRecords}
                   hoursModify={false}
+                  filtering={false}
                 />
               </Card.Body>
             </Card>

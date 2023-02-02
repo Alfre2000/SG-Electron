@@ -327,7 +327,7 @@ function PreviewCertificato({ record, indietro }) {
                   {(test.metodo || test.metodo_en) && (
                     <td>
                       <div className="flex items-stretch justify-between px-3">
-                        <div className="flex flex-col py-1 justify-between">
+                        <div className="flex flex-col py-1 justify-between text-left">
                           {test.metodo && (
                             <p>
                               Metodo:{" "}

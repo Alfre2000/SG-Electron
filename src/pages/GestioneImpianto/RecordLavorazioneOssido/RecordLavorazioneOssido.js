@@ -140,6 +140,7 @@ function RecordLavorazioneOssido() {
                     "n_pezzi_dichiarati",
                     "operatore__operatori",
                   ]}
+                  types={["text", "number", "text"]}
                   data={data}
                   setData={setData}
                   FormComponent={RecordLavorazioneOssidoForm}

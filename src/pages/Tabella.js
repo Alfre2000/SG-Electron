@@ -1,6 +1,6 @@
 import { faSearch, faTrash, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Placeholder, Table } from 'react-bootstrap';
 import ConfirmModal from '../components/Modals/ConfirmModal/ConfirmModal';
 import ModifyModal from '../components/Modals/ModifyModal/ModifyModal';
@@ -11,8 +11,13 @@ import ViewModal from '../components/Modals/ViewModal/ViewModal';
 import { findElementFromID, isDateRecent } from '../utils';
 import { deleteRecord, findNestedElement } from './utils';
 import DefaultFormWrapper from './FormWrapper';
+import FilterPopup from '../components/FilterPopup/FilterPopup';
+import { apiGet } from '../api/api';
+import UserContext from '../UserContext';
 
-function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess, hoursModify = 2 }) {
+function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess, hoursModify = 2, filtering = true, types }) {
+  const { user } = useContext(UserContext);
+  const impianto = user?.user?.impianto;
   const [showPasswordDeleteModal, setShowPasswordDeleteModal] = useState("0");
   const [showPasswordModifyModal, setShowPasswordModifyModal] = useState("0");
   const [showConfirmModal, setShowConfirmModal] = useState("0");
@@ -36,6 +41,19 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
   url = url || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).url) || (showConfirmModal !== "0" && findElementFromID(showConfirmModal, data.records.results).url) || (showViewModal !== "0" && findElementFromID(showViewModal, data.records.results).url) 
 
   const FormWrapperComponent = FormWrapper ? FormWrapper : DefaultFormWrapper
+  const [filters, setFilters] = useState({ ordering: "", filters: {} })
+  types = types || new Array(valori.length).fill("text")
+  const submit = (newFilters) => {
+    const filterParams = newFilters ? newFilters : filters
+    const params = new URLSearchParams(Object.entries(filterParams.filters).filter(([k, v]) => !!v))
+    params.set("ordering", filterParams.ordering)
+    if (impianto?.id) params.append("impianto", impianto.id);
+    params.set("page", 1);
+    console.log(`${url}?${params.toString()}`);console.log(filterParams);
+    apiGet(`${url}?${params.toString()}`).then(
+      res => setData(prev => ({...prev, records: res}))
+    )
+  }
   return (
     <>
       {deletedtoast && <MyToast>Record eliminato con successo !</MyToast>}
@@ -90,12 +108,27 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
           <tr>
             {date !== false && (
               <>
-                <th>Data</th>
-                <th>Ora</th>
+                <th className='relative'>
+                  Data
+                  {filtering && (
+                    <FilterPopup label="Data" name="data" update={setFilters} filters={filters} submit={submit} type="date" />
+                  )}
+                </th>
+                <th className='relative'>
+                  Ora
+                  {filtering && (
+                    <FilterPopup label="Ora" name="ora" update={setFilters} filters={filters} submit={submit} type="time" />
+                  )}
+                </th>
               </>
             )}
-            {headers.map((el) => (
-              <th key={el}>{el}</th>
+            {headers.map((el, idx) => (
+              <th key={el} className='relative'>
+                {el}
+                {filtering && (
+                  <FilterPopup label={el} name={valori[idx]} update={setFilters} filters={filters} submit={submit} type={types[idx]} />
+                )}
+              </th>
             ))}
             <th>Vedi</th>
             <th>Modifica</th>
