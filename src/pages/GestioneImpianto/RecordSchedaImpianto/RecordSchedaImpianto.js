@@ -7,6 +7,7 @@ import { Col, Container, Row, Card, Alert } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
+import { isDateRecent } from "../../../utils";
 import FormWrapper from "../../FormWrapper";
 import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
@@ -34,6 +35,8 @@ function RecordSchedaImpianto() {
     setWarning(false);
     return true;
   };
+  const ultimaScheda = data?.records?.results[0]
+  const isSchedaImpiantoOld = !isDateRecent(ultimaScheda?.data, 8);
   return (
     <Wrapper title="Scheda di Controllo" ref={pageRef}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -50,7 +53,7 @@ function RecordSchedaImpianto() {
             <div>L'impianto non presenta ancora nessuna scheda</div>
           </Alert>
         ) : (
-          data?.schede_impianto && (
+          data?.schede_impianto && data?.records && (
             <>
               <Row className="mt-6">
                 <Col xs={12}>
@@ -64,6 +67,7 @@ function RecordSchedaImpianto() {
                         setData={setData}
                         url={URLS.RECORD_SCHEDE_IMPIANTO}
                         validator={validator}
+                        initialData={isSchedaImpiantoOld ? null : ultimaScheda}
                       >
                         <RecordSchedaImpiantoForm
                           data={data}

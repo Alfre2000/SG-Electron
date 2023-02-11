@@ -81,6 +81,8 @@ function FormWrapper({ data, setData, initialData, onSuccess, url, children, vie
       if (onSuccess) {
         onSuccess(newData);
       } else {
+        setSuccess(true)
+        setTimeout(() => setSuccess(false), 4000)
         setData(newData);
       } 
     }).catch(err => {
