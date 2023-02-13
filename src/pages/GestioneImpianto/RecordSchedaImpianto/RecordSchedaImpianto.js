@@ -35,8 +35,8 @@ function RecordSchedaImpianto() {
     setWarning(false);
     return true;
   };
-  const ultimaScheda = data?.records?.results[0]
-  const isSchedaImpiantoOld = !isDateRecent(ultimaScheda?.data, 8);
+  // const ultimaScheda = data?.records?.results[0]
+  // const isSchedaImpiantoOld = !isDateRecent(ultimaScheda?.data, 8);
   return (
     <Wrapper title="Scheda di Controllo" ref={pageRef}>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -67,7 +67,7 @@ function RecordSchedaImpianto() {
                         setData={setData}
                         url={URLS.RECORD_SCHEDE_IMPIANTO}
                         validator={validator}
-                        initialData={isSchedaImpiantoOld ? null : ultimaScheda}
+                        // initialData={isSchedaImpiantoOld ? null : ultimaScheda}
                       >
                         <RecordSchedaImpiantoForm
                           data={data}
