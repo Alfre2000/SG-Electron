@@ -5,6 +5,7 @@ const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('
 const isDev = require('electron-is-dev');
 const mainMenu = require('./mainMenu');
 const createWindow = require('./createWindow');
+const JSZip = require('jszip');
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -86,6 +87,39 @@ app.whenReady().then(() => {
           if (err) throw err;
           console.log('It\'s saved!');
         })
+      }
+  }))
+  })
+  ipcMain.handle('save-zip', (_, file, defaultName) => {
+    const win = BrowserWindow.getFocusedWindow()
+    const defaultPath = app.getPath('desktop') + '/' + defaultName
+    dialog.showSaveDialog(win, { 
+      title: "Salva Certificati",
+      defaultPath: defaultPath,
+      properties: ['openFile', 'openDirectory', 'createDirectory'],
+    }).then((path => {
+      if (!path.canceled) {
+        JSZip.loadAsync(file).then(zip => {
+          const basePath = path.filePath.toString()
+          fs.mkdir(basePath, { recursive: true }, (err) => {
+            if (err) throw err;
+          })
+          // Iterate over each file in the zip archive
+          Object.keys(zip.files).forEach(filename => {
+            // Extract the file and save it to disk
+            zip.files[filename].async('nodebuffer').then(content => {
+              fs.writeFile(`${basePath}/${filename}`, content, err => {
+                if (err) {
+                  console.error(`Error saving file ${filename}: ${err}`);
+                } else {
+                  console.log(`File ${filename} saved successfully.`);
+                }
+              });
+            });
+          });
+        }).catch(err => {
+          console.error(`Error extracting zip file: ${err}`);
+        });
       }
   }))
   })

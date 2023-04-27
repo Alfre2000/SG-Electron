@@ -86,7 +86,7 @@ function RecordLavorazione() {
                 <Tabella
                   headers={["Lotto", "N° Pezzi", "Operatore"]}
                   valori={[
-                    "n_lotto_cliente",
+                    "n_lotto_super",
                     "n_pezzi_dichiarati",
                     "operatore__operatori",
                   ]}

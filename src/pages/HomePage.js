@@ -18,7 +18,7 @@ function HomePage(props) {
     if (!userStorage) {
       navigate('/login')
       return
-    } else if (!userStorage.user.impianto) {
+    } else if (!userStorage.user.hasOwnProperty('impianto')) {
       setUser({...user, user: {...user.user, impianto: null}})
     }
     const programs =  user.user.programmi ? user.user.programmi.map(el => PROGRAMMI[el]) : []

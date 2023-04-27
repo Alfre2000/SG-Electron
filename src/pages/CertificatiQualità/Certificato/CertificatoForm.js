@@ -102,7 +102,7 @@ function CertificatoForm({ data, scheda }) {
               <div className="text-center font-semibold">xxxx.xxxxxx.x</div>
               <div></div>
             </td>
-            <td className="w-1/3" style={{ borderLeft: 0}}>Cormano, 15/12/2022</td>
+            <td className="w-1/3" style={{ borderLeft: 0}}>Cormano, xx/xx/xxxx</td>
           </tr>
         </tbody>
       </Table>
@@ -113,8 +113,8 @@ function CertificatoForm({ data, scheda }) {
             <td className="w-1/5 text-blue-800" style={{ borderLeft: 0}}>Customer</td>
             <td className="w-3/5">
               <p className="font-semibold">Esempio Cliente</p>
-              <p>Via XXV Aprile, 36</p>
-              <p>25050 Piancamuno</p>
+              <p>xxxxxxxx, xx</p>
+              <p>xxxxxx xxxxxxxx</p>
             </td>
           </tr>
           <tr>
@@ -125,17 +125,17 @@ function CertificatoForm({ data, scheda }) {
           <tr>
             <td className="w-1/5" style={{ borderRight: 0}}>Quantità</td>
             <td className="w-1/5 text-blue-800" style={{ borderLeft: 0}}>Quantity</td>
-            <td className="w-3/5 font-semibold">5.760</td>
+            <td className="w-3/5 font-semibold">xxxxx</td>
           </tr>
           <tr>
             <td className="w-1/5" style={{ borderRight: 0}}>Nostro DDT N°</td>
             <td className="w-1/5 text-blue-800" style={{ borderLeft: 0}}>Our Delivery Note No.</td>
-            <td className="w-3/5">2116</td>
+            <td className="w-3/5">xxx</td>
           </tr>
           <tr>
             <td className="w-1/5" style={{ borderRight: 0}}>Nostro lotto N°</td>
             <td className="w-1/5 text-blue-800" style={{ borderLeft: 0}}>Our Batch No.</td>
-            <td className="w-3/5">22/05623.8</td>
+            <td className="w-3/5">xx/xxxx.x</td>
           </tr>
         </tbody>
       </Table>
@@ -342,21 +342,63 @@ function CertificatoForm({ data, scheda }) {
               </tr>
               {test.lavorazione && (
                 <>
-                  <tr className="font-semibold">
-                    <td rowSpan={4}></td>
+                  <tr>
+                    <td>
+                      <div className="flex items-stretch justify-between px-3 text-left">
+                        <div className="flex flex-col py-1 justify-between">
+                          <p>Informazioni aggiuntive:</p>
+                          <p className="text-blue-800">Additional information:</p>
+                        </div>
+                        <div className="w-3/5">
+                          <Input
+                            label={false}
+                            name={`tests__${idx}__note`}
+                            inputProps={{
+                              className: "text-left",
+                              value: test.note,
+                              onChange: (e) =>
+                                setTests(
+                                  modifyNestedObject(
+                                    tests,
+                                    `${idx}__note`,
+                                    e.target.value
+                                  )
+                                )
+                            }}
+                          />
+                          <Input
+                            label={false}
+                            name={`tests__${idx}__note_en`}
+                            inputProps={{
+                              className: "text-left mt-2",
+                              value: test.note_en,
+                              onChange: (e) =>
+                                setTests(
+                                  modifyNestedObject(
+                                    tests,
+                                    `${idx}__note_en`,
+                                    e.target.value
+                                  )
+                                )
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </td>
                     <td></td>
-                    <td>Min</td>
-                    <td>Max</td>
+                    <td className="font-semibold">Min</td>
+                    <td className="font-semibold">Max</td>
                   </tr>
                   <tr>
+                    <td rowSpan={3}></td>
                     <td>Punto <span className="text-blue-800">Point</span> n° <span className="font-semibold">1</span></td>
-                    <td className="font-semibold">4.17</td>
-                    <td className="font-semibold">6.13</td>
+                    <td className="font-semibold">x.xx</td>
+                    <td className="font-semibold">x.xx</td>
                   </tr>
                   <tr>
                     <td>Punto <span className="text-blue-800">Point</span> n° <span className="font-semibold">2</span></td>
-                    <td className="font-semibold">8.01</td>
-                    <td className="font-semibold">13.80</td>
+                    <td className="font-semibold">x.xx</td>
+                    <td className="font-semibold">xx.xx</td>
                   </tr>
                   <tr className="relative">
                     <td>Punto <span className="text-blue-800">Point</span> n° <span className="font-semibold">...</span>
