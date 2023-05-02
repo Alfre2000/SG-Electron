@@ -91,18 +91,18 @@ function RecordLavorazioneForm({ data }) {
       </Row>
       <Fieldset title="Informazioni Lotto">
         <Row>
-          <Col xs={6} className="pr-8">
+        <Col xs={6} className="pr-8">
             <Input
-              label="N° lotto cliente:"
-              name="n_lotto_cliente"
+              label="N° lotto supergalvanica:"
+              name="n_lotto_super"
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
             />
           </Col>
           <Col xs={6} className="pl-0">
             <Input
-              label="N° lotto supergalvanica:"
-              name="n_lotto_super"
+              label="N° lotto cliente:"
+              name="n_lotto_cliente"
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
             />
