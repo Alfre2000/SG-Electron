@@ -1,7 +1,18 @@
-import { faFilePdf, faWarning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleExclamation,
+  faFilePdf,
+  faWarning,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { Alert, Button, Card, Container, Table } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Card,
+  Container,
+  Spinner,
+  Table,
+} from "react-bootstrap";
 import { apiPost } from "../../../api/api";
 import { getDatiBollaMago } from "../../../api/mago";
 import Checkbox from "../../../components/form-components/Checkbox";
@@ -15,15 +26,23 @@ const electron = window?.require ? window.require("electron") : null;
 function CertificatiBolla() {
   const [nBolla, setNBolla] = useState("");
   const [bolla, setBolla] = useState(null);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingCertificati, setLoadingCertificati] = useState(false);
   const searchBolla = () => {
+    setLoading(true);
+    setError(false);
     getDatiBollaMago(nBolla)
       .then((rows) => {
+        setError(false);
         console.log(rows);
         setBolla(rows);
       })
       .catch((err) => {
-        console.error(err);
-      });
+        setError(true);
+        setTimeout(() => setError(false), 1000 * 60 * 2);
+      })
+      .finally(() => setLoading(false));
   };
   const generaPDF = (e) => {
     e.preventDefault();
@@ -34,14 +53,19 @@ function CertificatiBolla() {
       (lotto, idx) => formData[`lotto_${idx}`] === "on"
     );
     console.log(requestData);
-    apiPost(URLS["CERTIFICATI_BOLLA"], requestData).then((res) => {
-      const data = Buffer.from(res.zip_file, "base64");
-      electron.ipcRenderer.invoke(
-        "save-zip",
-        data,
-        `Certificati bolla n°${nBolla}`
-      );
-    });
+    setLoadingCertificati(true);
+
+    apiPost(URLS["CERTIFICATI_BOLLA"], requestData)
+      .then((res) => {
+        const data = Buffer.from(res.zip_file, "base64");
+        electron.ipcRenderer.invoke(
+          "save-zip",
+          data,
+          `Certificati bolla n°${nBolla}`
+        );
+      })
+      .catch((err) => setError(err.errors))
+      .finally(() => setLoadingCertificati(false));
   };
   return (
     <Wrapper>
@@ -72,7 +96,48 @@ function CertificatiBolla() {
             </Button>
           </Card.Body>
         </Card>
+        {loadingCertificati && (
+          <div className="h-[100vh] w-[84%] fixed left-[240px] top-[57px] flex justify-center bg-slate-50 z-50 opacity-80">
+            <div className="mt-[50vh]">
+              <h3 className="text-lg font-semibold">
+                Generazione certificati in corso...
+              </h3>
+              <Spinner
+                animation="border"
+                role="status"
+                className="mt-3"
+                variant="secondary"
+              />
+            </div>
+          </div>
+        )}
+        {loading && (
+          <div className="h-[40vh] flex justify-center">
+            <Spinner
+              animation="border"
+              role="status"
+              className="mt-[20vh]"
+              variant="secondary"
+            />
+          </div>
+        )}
+        {error === true && !loading && !loadingCertificati && (
+          <Alert
+            className="text-center mt-10 w-1/2 py-3 mx-auto flex justify-center"
+            variant="danger"
+          >
+            <FontAwesomeIcon
+              size="lg"
+              className="mr-3"
+              icon={faCircleExclamation}
+            />
+            <h3 className="text-md font-semibold mx-3">
+              Errore di connessione al database !
+            </h3>
+          </Alert>
+        )}
         {bolla &&
+          !loading &&
           (bolla.lotti.length > 0 ? (
             <form onSubmit={generaPDF}>
               <Table
@@ -122,8 +187,19 @@ function CertificatiBolla() {
                 </thead>
                 <tbody>
                   {bolla.lotti.map((lotto, idx) => (
-                    <tr key={idx}>
-                      <td>{lotto.trattamento1}</td>
+                    <tr key={idx} className="relative">
+                      <td>
+                        {error &&
+                          !loadingCertificati &&
+                          error?.includes(lotto.line) && (
+                            <FontAwesomeIcon
+                              icon={faCircleExclamation}
+                              className="absolute -left-8 text-red-800"
+                              size="lg"
+                            />
+                          )}
+                        {lotto.trattamento1}
+                      </td>
                       <td>{lotto.description}</td>
                       <td>{lotto.item}</td>
                       <td>{lotto.uom}</td>
@@ -151,6 +227,22 @@ function CertificatiBolla() {
                 Genera Certificati
                 <FontAwesomeIcon icon={faFilePdf} className="ml-3" />
               </Button>
+              {error && error.length > 0 && !loadingCertificati && (
+                <Alert
+                  className="text-center mt-8 w-4/5 py-2 mx-auto flex justify-center"
+                  variant="danger"
+                >
+                  <h3 className="text-sm font-semibold mx-3">
+                    I lotti indicati come{" "}
+                    <FontAwesomeIcon icon={faCircleExclamation} />, si
+                    riferiscono ad articoli di cui non sono state salvate le
+                    informazioni nel database Mago.
+                    <br />
+                    Aggiungere le informazioni e ricaricare la pagina per poter
+                    generare i certificati.
+                  </h3>
+                </Alert>
+              )}
             </form>
           ) : (
             <Alert

@@ -87,7 +87,7 @@ function RecordLavorazione() {
                   headers={["Lotto", "N° Pezzi", "Operatore"]}
                   valori={[
                     "n_lotto_super",
-                    "n_pezzi_dichiarati",
+                    "quantità",
                     "operatore__operatori",
                   ]}
                   types={["text", "number", "text"]}

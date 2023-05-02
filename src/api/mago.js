@@ -6,7 +6,7 @@ const Connection = window?.require
   ? window.require("tedious").Connection
   : null;
 
-const serverConfigs = {
+  const serverConfigs = {
   server: SERVER_IP,
   authentication: {
     type: "default",
@@ -21,7 +21,38 @@ const serverConfigs = {
   },
 };
 
+const example = {
+  docno: "000567",
+  documentdate: "2023-04-09T00:00:00",
+  companyname: "MAGO SRL",
+  address: "Via Roma, 1",
+  city: "Roma",
+  zipcode: "00100",
+  taxidnumber: "12312412122",
+  lotti: [
+    {
+      n_lotto_super: "121",
+      qty: "1001.12",
+      uom: "KG",
+      item: "71323",
+      description: "Articolo... test 3 VS LOTTO WO CIAO123",
+      impianto: "Ossido 6000",
+      line: "2",
+      // articolo_certificato: "Articolo Certificato Test",
+      // "specifiche_it": "Specifiche IT test",
+      // "specifiche_en": "Specifiche EN test",
+      // trattamento_s10",
+      "trattamento1": "Argentatura",
+      "trattamento2": "Stagnatura",
+      "trattamento3": "Micron",
+      "trattamento4": "SP",
+      "trattamento5": "",
+    },
+  ],
+};
+
 export const getDatiBollaMago = async (n_bolla) => {
+  // return example
   const numero_documento = n_bolla.padStart(6, "0");
   const query = `SELECT
     doc.docno,
@@ -55,7 +86,8 @@ export const getDatiBollaMago = async (n_bolla) => {
     item.spessore_massimo,
     item.n_misurazioni,
     item.mail_cliente,
-    sale.job AS n_lotto_super
+    sale.job AS n_lotto_super,
+    sale.line as line_lotto
   FROM ma_saledoc AS doc
   JOIN ma_custsupp AS cust ON doc.custsupp = cust.custsupp
   JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid

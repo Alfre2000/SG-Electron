@@ -137,7 +137,7 @@ function RecordLavorazioneOssido() {
                   headers={["Lotto", "N° Pezzi", "Operatore"]}
                   valori={[
                     "n_lotto_cliente",
-                    "n_pezzi_dichiarati",
+                    "quantità",
                     "operatore__operatori",
                   ]}
                   types={["text", "number", "text"]}

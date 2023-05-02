@@ -100,20 +100,26 @@ app.whenReady().then(() => {
     }).then((path => {
       if (!path.canceled) {
         JSZip.loadAsync(file).then(zip => {
-          const basePath = path.filePath.toString()
+          const basePath = path.filePath.toString();
           fs.mkdir(basePath, { recursive: true }, (err) => {
             if (err) throw err;
-          })
-          // Iterate over each file in the zip archive
-          Object.keys(zip.files).forEach(filename => {
-            // Extract the file and save it to disk
-            zip.files[filename].async('nodebuffer').then(content => {
-              fs.writeFile(`${basePath}/${filename}`, content, err => {
-                if (err) {
-                  console.error(`Error saving file ${filename}: ${err}`);
-                } else {
-                  console.log(`File ${filename} saved successfully.`);
-                }
+            // Iterate over each file in the zip archive
+            Object.keys(zip.files).forEach(filename => {
+              // Extract the file and save it to disk
+              console.log(filename);
+              zip.files[filename].async('nodebuffer').then(content => {
+                const dirname = filename.split('/').slice(0, filename.split('/').length - 1).join('')
+                const fileBasePath = `${basePath}/${dirname}`;
+                fs.mkdir(fileBasePath, { recursive: true }, (err) => {
+                  if (err) throw err;
+                  fs.writeFile(`${basePath}/${filename}`, content, err => {
+                    if (err) {
+                      console.error(`Error saving file ${filename}: ${err}`);
+                    } else {
+                      console.log(`File ${filename} saved successfully.`);
+                    }
+                  });
+                });
               });
             });
           });

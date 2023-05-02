@@ -165,7 +165,7 @@ function PreviewCertificato({ record, indietro }) {
                 inputProps={{
                   className: "text-left pl-3 w-1/4",
                   type: "number",
-                  defaultValue: data.n_pezzi_dichiarati,
+                  defaultValue: data.quantità,
                 }}
               />
             </td>
