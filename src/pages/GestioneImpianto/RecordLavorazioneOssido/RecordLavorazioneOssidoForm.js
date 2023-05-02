@@ -122,7 +122,7 @@ function RecordLavorazioneOssidoForm({ data }) {
         <Col xs={5}>
           <Input
             label="Valvole dichiarate:"
-            name="n_pezzi_dichiarati"
+            name="quantità"
             labelCols={5}
             labelProps={{ className: "pr-0" }}
             inputProps={{

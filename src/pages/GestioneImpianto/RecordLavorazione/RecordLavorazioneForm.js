@@ -112,7 +112,7 @@ function RecordLavorazioneForm({ data }) {
           <Col xs={6} className="pr-8">
             <Input
               label="N° pezzi dichiarati:"
-              name="n_pezzi_dichiarati"
+              name="quantità"
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
               inputProps={{
