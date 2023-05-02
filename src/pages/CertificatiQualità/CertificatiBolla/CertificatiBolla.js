@@ -233,7 +233,7 @@ function CertificatiBolla() {
                   variant="danger"
                 >
                   <h3 className="text-sm font-semibold mx-3">
-                    I lotti indicati come{" "}
+                    I lotti indicati con{" "}
                     <FontAwesomeIcon icon={faCircleExclamation} />, si
                     riferiscono ad articoli di cui non sono state salvate le
                     informazioni nel database Mago.
