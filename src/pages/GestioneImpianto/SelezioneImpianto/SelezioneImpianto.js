@@ -25,7 +25,8 @@ function SelezioneImpianto() {
 
   // Se l'utente ha già un'impianto selezionato rimanda alla pagina record lavorazione
   useEffect(() => {
-    if (user?.user?.impianto && !impiantoID) {
+    const userData = JSON.parse(localStorage.getItem("user"))
+    if (user?.user?.impianto && userData?.user?.impianto && !impiantoID) {
       navigate("/manutenzione/record-lavorazione/");
     }
   }, [navigate, user?.user?.impianto, impiantoID]);
