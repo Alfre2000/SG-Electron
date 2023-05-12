@@ -28,6 +28,7 @@ function RecordLavorazioneForm({ data, setData }) {
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || undefined);
   const [loadingLotto, setLoadingLotto] = useState(false);
+  const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
   const [errorLotto, setErrorLotto] = useState(false);
   const cleanCliente = (nome) => nome.replace("SPA", "").replace("SRL", "");
   const initialCliente =
@@ -46,8 +47,16 @@ function RecordLavorazioneForm({ data, setData }) {
     : new Set([]);
 
   const loadLotto = (e) => {
-    if (view || initialData) return;
-    const value = e.target.value;
+    if (view || initialData) {
+      setLotto(e.target.value);
+      return;
+    }
+    let value = e.target.value;
+    if (/^\d{2}-\d{6,7}$/.test(value)) {
+      value = value.replace("-", "/");
+      value = value.replace(/(\d{5})/, "$1.");
+    }
+    setLotto(value);
     const regex = /^\d{2}\/\d{5}[/.]\d{1,2}$/;
     if (regex.test(value)) {
       setLoadingLotto(true);
@@ -76,6 +85,20 @@ function RecordLavorazioneForm({ data, setData }) {
       });
     }
   };
+
+  useState(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.target.name === "n_lotto_super") {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    });
+    return () => {
+      document.removeEventListener("keydown", (e) => {
+        console.log(e);
+      });
+    };
+  }, []);
   return (
     <>
       <Row className="mb-4">
@@ -140,7 +163,7 @@ function RecordLavorazioneForm({ data, setData }) {
               label="N° lotto supergalvanica:"
               name="n_lotto_super"
               labelProps={{ className: "text-right pr-5 pb-2" }}
-              inputProps={{ onChange: loadLotto }}
+              inputProps={{ value: lotto, onChange: loadLotto }}
               labelCols={7}
             />
             {loadingLotto && (
