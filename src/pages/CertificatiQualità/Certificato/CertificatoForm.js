@@ -22,7 +22,6 @@ const TRANSLATIONS = {
 function CertificatoForm({ data, scheda }) {
   const { initialData } = useFormContext();
   const scheda_controllo = data?.schede_controllo?.find(s => s.id === scheda)
-  console.log(data?.schede_controllo, scheda, scheda_controllo);
   const controlli = scheda_controllo?.sezioni?.map(sez => sez.controlli.filter(c => !!c.frequenza)).flat()
   const [controllo, setControllo] = useState(null)
   const [misurazione, setMisurazione] = useState(null)

@@ -1,12 +1,13 @@
 const Request = window?.require ? window.require("tedious").Request : null;
+// const fs = window?.require ? window.require("fs") : null;
 
-const SERVER_IP = "192.168.1.128"
+const SERVER_IP = "192.168.1.128";
 
 const Connection = window?.require
   ? window.require("tedious").Connection
   : null;
 
-  const serverConfigs = {
+const serverConfigs = {
   server: SERVER_IP,
   authentication: {
     type: "default",
@@ -43,17 +44,73 @@ const example = {
       // "specifiche_it": "Specifiche IT test",
       // "specifiche_en": "Specifiche EN test",
       // trattamento_s10",
-      "trattamento1": "Argentatura",
-      "trattamento2": "Stagnatura",
-      "trattamento3": "Micron",
-      "trattamento4": "SP",
-      "trattamento5": "",
+      trattamento1: "Argentatura",
+      trattamento2: "Stagnatura",
+      trattamento3: "Micron",
+      trattamento4: "SP",
+      trattamento5: "",
     },
   ],
 };
 
+// read the json file named test_obj.json
+// const example = JSON.parse(fs.readFileSync("test_obj.json", "utf8"));
+// const example2 = JSON.parse(fs.readFileSync("test_obj2.json", "utf8"));
+
+export const makeDatabaseRequest = async (query) => {
+  const configs = {
+    ...serverConfigs,
+    authentication: {
+      ...serverConfigs.authentication,
+      options: {
+        ...serverConfigs.authentication.options,
+        password: localStorage.getItem("mago_psw"),
+      },
+    },
+  };
+  const connection = new Connection(configs);
+  
+  return new Promise((resolve, reject) => {
+    connection.on("connect", (err) => {
+      if (err) {
+        console.log("Connection Failed");
+        reject(err);
+      }
+      executeStatement();
+    });
+    
+    connection.connect();
+    
+    function executeStatement() {
+      const rows = [];
+      const request = new Request(query, (err, rowCount) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+        connection.close();
+      });
+      
+      request.on("row", (columns) => {
+        const row = {};
+        columns.forEach((column) => {
+          row[column.metadata.colName] = column.value;
+        });
+        rows.push(row);
+      });
+      
+      request.on("error", (err) => {
+        reject(err);
+      });
+      
+      connection.execSql(request);
+    }
+  });
+};
+
+
 export const getDatiBollaMago = async (n_bolla) => {
-  // return example
   const numero_documento = n_bolla.padStart(6, "0");
   const query = `SELECT
     doc.docno,
@@ -99,51 +156,51 @@ export const getDatiBollaMago = async (n_bolla) => {
     AND doc.docno = '${numero_documento}' 
     AND doc.documentdate = (SELECT MAX(documentdate) FROM ma_saledoc WHERE docno = '${numero_documento}')
   ORDER BY doc.documentdate desc`;
-  const configs = {
-    ...serverConfigs,
-    authentication: {
-      ...serverConfigs.authentication,
-      options: {
-        ...serverConfigs.authentication.options,
-        password: localStorage.getItem("mago_psw"),
-      },
-    },
+  
+  const res = await makeDatabaseRequest(query);
+  const lotti = res.sort((a, b) => a.line - b.line);
+  return {
+    lotti,
+    ...lotti[0],
   };
-  const connection = new Connection(configs);
-  return new Promise((resolve, reject) => {
-    connection.on("connect", (err) => {
-      if (err) {
-        console.log("Connection Failed");
-        reject(err);
-      }
-      executeStatement();
-    });
-    connection.connect();
-    function executeStatement() {
-      const rows = [];
-      const request = new Request(query, (err, rowCount) => {
-        if (err) {
-          reject(err);
-        } else {
-          const res = {
-            lotti: rows.sort((a, b) => a.line - b.line),
-            ...rows[0],
-          };
-          resolve(res);
-        }
-        connection.close();
-      });
-      request.on("row", (columns) => {
-        const row = {};
-        columns.forEach((column) => {
-          row[column.metadata.colName] = column.value;
-        });
-        rows.push(row);
-      });
-      request.on("error", (err) => {
-        reject(err);
-      });
-      connection.execSql(request);
-    }
-  });
 };
+
+export const getLottoInformation = async (n_lotto) => {
+  const job = n_lotto.slice(0, 8);
+  const line = n_lotto.slice(9);
+  const query = `
+    SELECT
+      sale.qty as quantity,
+      sale.description,
+      sale.uom,
+      sale.item,
+      cust.companyname,
+      cust.address,
+      cust.zipcode,
+      cust.taxidnumber,
+      cust.city,
+      cust.county,
+      cust.email,
+      item.impianto,
+      item.trattamento1,
+      item.trattamento2,
+      item.trattamento3,
+      item.trattamento4,
+      item.trattamento5,
+      item.superficie,
+      item.articolo_certificato,
+      item.specifiche_it,
+      item.specifiche_en,
+      item.trattamento_certificato,
+      item.spessore_minimo,
+      item.spessore_massimo,
+      item.n_misurazioni,
+      item.mail_cliente
+    FROM ma_saleorddetails AS sale
+      JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
+      JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
+    WHERE sale.job = '${job}' AND sale.line = '${line}'
+  `
+  const res = await makeDatabaseRequest(query);
+  return res
+}

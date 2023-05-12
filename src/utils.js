@@ -27,7 +27,6 @@ export const dateToAPIdate = (date) => {
 
 export const dateToPickerDate = (date) => {
   if (!date) return undefined
-  console.log(date);
   const [day, month, year] = date.split("/");
   return year + "-" + month + "-" + day;
 };

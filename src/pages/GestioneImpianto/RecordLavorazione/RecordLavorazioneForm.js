@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Row, Form, Stack } from "react-bootstrap";
+import { Col, Row, Form, Stack, Spinner } from "react-bootstrap";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
 import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
@@ -17,14 +17,22 @@ import SezioneAnomalie from "./Sezioni/SezioneAnomalie";
 import { useFormContext } from "../../../contexts/FormContext";
 import SezioneAllegati from "./Sezioni/SezioneAllegati";
 import OperatoreInput from "../../../components/form-components/OperatoreInput/OperatoreInput";
+import { getLottoInformation } from "../../../api/mago";
+import { apiPost } from "../../../api/api";
+import { URLS } from "../../../urls";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
-function RecordLavorazioneForm({ data }) {
+function RecordLavorazioneForm({ data, setData }) {
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
+  const [qty, setQty] = useState(initialData?.quantità || undefined);
+  const [loadingLotto, setLoadingLotto] = useState(false);
+  const [errorLotto, setErrorLotto] = useState(false);
   const cleanCliente = (nome) => nome.replace("SPA", "").replace("SRL", "");
   const initialCliente =
     data.articoli && initialData?.articolo
-      ? findElementFromID(initialData?.articolo, data.articoli).cliente.nome
+      ? findElementFromID(initialData?.articolo, data.articoli).cliente?.nome
       : "";
   const [cliente, setCliente] = useState(
     initialCliente
@@ -34,8 +42,40 @@ function RecordLavorazioneForm({ data }) {
   const [articoloID, setArticoloID] = useState(initialData?.articolo || "");
   const articolo = findElementFromID(articoloID, data.articoli);
   const clienti = data.articoli
-    ? new Set(data.articoli.map((articolo) => articolo.cliente.nome))
+    ? new Set(data.articoli.map((articolo) => articolo.cliente?.nome))
     : new Set([]);
+
+  const loadLotto = (e) => {
+    if (view || initialData) return;
+    const value = e.target.value;
+    const regex = /^\d{2}\/\d{5}[/.]\d{1,2}$/;
+    if (regex.test(value)) {
+      setLoadingLotto(true);
+      getLottoInformation(value).then((res) => {
+        if (!res.length) {
+          setLoadingLotto(false);
+          setErrorLotto(true);
+          setTimeout(() => setErrorLotto(false), 1000 * 5);
+          return;
+        }
+        apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0]).then((res) => {
+          if (!data.articoli.map((a) => a.id).includes(res.articolo.id)) {
+            setData((prev) => ({
+              ...prev,
+              articoli: [res.articolo, ...prev.articoli],
+            }));
+          }
+          setArticoloID(res.articolo.id);
+          setCliente({
+            value: res.articolo.cliente.nome,
+            label: cleanCliente(res.articolo.cliente.nome),
+          });
+          setQty(res.quantità);
+          setLoadingLotto(false);
+        });
+      });
+    }
+  };
   return (
     <>
       <Row className="mb-4">
@@ -54,10 +94,14 @@ function RecordLavorazioneForm({ data }) {
               inputProps={{
                 value: cliente,
                 onChange: (e) =>
-                  setCliente(e ? {
-                    value: e.value,
-                    label: cleanCliente(e.label),
-                  } : null) || setArticoloID(null),
+                  setCliente(
+                    e
+                      ? {
+                          value: e.value,
+                          label: cleanCliente(e.label),
+                        }
+                      : null
+                  ) || setArticoloID(null),
               }}
               options={
                 clienti &&
@@ -91,13 +135,28 @@ function RecordLavorazioneForm({ data }) {
       </Row>
       <Fieldset title="Informazioni Lotto">
         <Row>
-        <Col xs={6} className="pr-8">
+          <Col xs={6} className="pr-8 relative">
             <Input
               label="N° lotto supergalvanica:"
               name="n_lotto_super"
               labelProps={{ className: "text-right pr-5 pb-2" }}
+              inputProps={{ onChange: loadLotto }}
               labelCols={7}
             />
+            {loadingLotto && (
+              <Spinner
+                animation="border"
+                role="status"
+                className="absolute top-1 -right-2 text-sm w-[22px] h-[22px]"
+                variant="secondary"
+              />
+            )}
+            {errorLotto && !loadingLotto && (
+              <FontAwesomeIcon
+                icon={faExclamationTriangle}
+                className="absolute top-[5px] -right-1 text-sm w-[20px] h-[20px] text-red-600"
+              />
+            )}
           </Col>
           <Col xs={6} className="pl-0">
             <Input
@@ -117,6 +176,8 @@ function RecordLavorazioneForm({ data }) {
               labelCols={7}
               inputProps={{
                 type: "number",
+                value: qty,
+                onChange: (e) => setQty(e.target.value),
               }}
             />
           </Col>

@@ -49,7 +49,6 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
     params.set("ordering", filterParams.ordering)
     if (impianto?.id) params.append("impianto", impianto.id);
     params.set("page", 1);
-    console.log(`${url}?${params.toString()}`);console.log(filterParams);
     apiGet(`${url}?${params.toString()}`).then(
       res => setData(prev => ({...prev, records: res}))
     )

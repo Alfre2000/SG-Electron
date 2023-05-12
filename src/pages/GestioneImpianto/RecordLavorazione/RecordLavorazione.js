@@ -70,7 +70,7 @@ function RecordLavorazione() {
                   setData={setData}
                   url={URLS.RECORD_LAVORAZIONI}
                 >
-                  <RecordLavorazioneForm data={data} />
+                  <RecordLavorazioneForm data={data} setData={setData} />
                 </FormWrapper>
               </Card.Body>
             </Card>

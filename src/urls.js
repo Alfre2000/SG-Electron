@@ -37,6 +37,8 @@ export const URLS = {
     ANDAMENTO_PRODUZIONE: BASE_PATH + '/scheda-controllo/andamento-produzione/',
     PRODUZIONE_PER_OPERATORE: BASE_PATH + '/scheda-controllo/produzione-per-operatore/',
 
+    RECORD_LAVORAZIONE_INFO: BASE_PATH + '/scheda-controllo/record-lavorazione-info/',
+
     // CERTIFICATI
     RECORD_LAVORAZIONI_SEARCH: BASE_PATH + '/scheda-controllo/record-lavorazioni-search/',
     RECORD_LAVORAZIONI_CERTIFICATO: BASE_PATH + '/scheda-controllo/record-lavorazioni-certificato/',

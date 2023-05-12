@@ -6,7 +6,7 @@ import Admin from "./images/admin.png";
 import Certificate from "./images/certificate.png";
 
 export const PROGRAMMI = {
-    "Gestione Impianto": {name: 'Gestione Impianto', link: '/manutenzione/record-lavorazione/', icon: ToolBox},
+    "Gestione Impianto": {name: 'Gestione Impianto', link: '/manutenzione/selezione-impianto/', icon: ToolBox},
     "Gestione Inventario": {name: 'Gestione Inventario', link: '#', icon: Inventory},
     "Gestione Preventivi": {name: 'Gestione Preventivi', link: '#', icon: Budget},
     "Programma 4": {name: 'Programma 4', link: '#', icon: WorkInProgress},
