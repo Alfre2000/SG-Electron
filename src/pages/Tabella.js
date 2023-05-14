@@ -150,6 +150,9 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
                 } else {
                   campo = findNestedElement(record, value)
                 }
+                if (typeof campo === "number") {
+                  campo = campo.toLocaleString()
+                }
                 return (
                   <td key={campo || idx}>{campo || "-"}</td>
                 )
