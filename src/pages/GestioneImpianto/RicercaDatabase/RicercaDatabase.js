@@ -12,14 +12,14 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 import RicercaDatabaseForm from "./RicercaDatabaseForm";
 
 const tabellaForms = {
-  manutenzioni: ManutenzioneForm,
+  manutenzione: ManutenzioneForm,
   analisi: AnalisiForm,
-  fissaggi: FissaggioForm,
+  fissaggio: FissaggioForm,
 };
 const tabellaURLs = {
-  manutenzioni: URLS.RECORD_MANUTENZIONE,
+  manutenzione: URLS.RECORD_MANUTENZIONE,
   analisi: URLS.RECORD_ANALISI,
-  fissaggi: URLS.RECORD_FISSAGGIO,
+  fissaggio: URLS.RECORD_FISSAGGIO,
 };
 
 function RicercaDatabase() {

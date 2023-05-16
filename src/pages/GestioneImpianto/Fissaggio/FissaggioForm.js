@@ -16,7 +16,7 @@ function FissaggioForm({ data }) {
       data?.operazioni
         ? data.operazioni.length === 1
           ? data.operazioni[0]
-          : data.operazioni.filter((op) => op.tipologia === "fissaggi")[0]
+          : data.operazioni.filter((op) => op.tipologia === "fissaggio")[0]
         : {},
     [data?.operazioni]
   );
