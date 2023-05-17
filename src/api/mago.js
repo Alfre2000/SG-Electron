@@ -150,7 +150,7 @@ export const getDatiBollaMago = async (n_bolla) => {
   JOIN ma_custsupp AS cust ON doc.custsupp = cust.custsupp
   JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
   JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
-  JOIN ma_saleorddetails AS sale ON detail.description = sale.description AND detail.item = sale.item
+  JOIN ma_saleorddetails AS sale ON detail.description = sale.description AND detail.item = sale.item AND sale.qty = detail.qty AND sale.uom = detail.uom
   WHERE doc.documenttype = 3407873 
     AND doc.CustSuppType = 3211264 
     AND doc.docno = '${numero_documento}' 
