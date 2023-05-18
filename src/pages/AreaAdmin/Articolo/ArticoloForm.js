@@ -43,6 +43,14 @@ function ArticoloForm({ data, campoScheda }) {
           </Stack>
         </Col>
       </Row>
+      <Fieldset title="informazioni certificato">
+        <Row className="mb-3">
+          <Stack gap={1}>
+            <Input name="specifica_it" labelProps={{className: "text-left"}} labelCols={2} inputProps={{className: "text-left pl-3"}} />
+            <Input name="specifica_en" labelProps={{className: "text-left"}} labelCols={2} inputProps={{className: "text-left pl-3"}} />
+          </Stack>
+        </Row>
+      </Fieldset>
       <Fieldset title="caratteristiche fisiche">
         <Row className="mb-3">
           <Col className="flex justify-center">
