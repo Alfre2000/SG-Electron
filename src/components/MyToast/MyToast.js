@@ -6,7 +6,7 @@ const { motion } = require("framer-motion");
 
 function MyToast({ children }) {
   return (
-    <ToastContainer position="bottom-end" className="p-2 fixed">
+    <ToastContainer position="bottom-end" className="p-2 fixed z-50">
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: 0 }}

@@ -1,4 +1,4 @@
-import { faCheck, faCircleCheck, faCircleXmark, faSearch, faTrash, faWrench, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faSearch, faTrash, faWrench, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useState } from 'react'
 import { Placeholder, Table } from 'react-bootstrap';

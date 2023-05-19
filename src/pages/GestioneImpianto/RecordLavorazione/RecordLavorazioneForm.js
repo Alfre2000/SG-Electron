@@ -22,6 +22,9 @@ import { apiPost } from "../../../api/api";
 import { URLS } from "../../../urls";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import ModifyModal from "../../../components/Modals/ModifyModal/ModifyModal";
+import FormWrapper from "../../FormWrapper";
+import MyToast from "../../../components/MyToast/MyToast";
 
 function RecordLavorazioneForm({ data, setData }) {
   const { initialData, view } = useFormContext();
@@ -30,6 +33,8 @@ function RecordLavorazioneForm({ data, setData }) {
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
   const [errorLotto, setErrorLotto] = useState(false);
+  const [modifytoast, setModifytoast] = useState(false);
+  const [recordModify, setRecordModify] = useState(undefined);
   const cleanCliente = (nome) => nome.replace("SPA", "").replace("SRL", "");
   const initialCliente =
     data.articoli && initialData?.articolo
@@ -67,6 +72,7 @@ function RecordLavorazioneForm({ data, setData }) {
           setTimeout(() => setErrorLotto(false), 1000 * 5);
           return;
         }
+        console.log(res[0]);
         apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0]).then((res) => {
           if (!data.articoli.map((a) => a.id).includes(res.articolo.id)) {
             setData((prev) => ({
@@ -74,13 +80,18 @@ function RecordLavorazioneForm({ data, setData }) {
               articoli: [res.articolo, ...prev.articoli],
             }));
           }
-          setArticoloID(res.articolo.id);
-          setCliente({
-            value: res.articolo.cliente.nome,
-            label: cleanCliente(res.articolo.cliente.nome),
-          });
-          setQty(res.quantità);
           setLoadingLotto(false);
+          if (res.record) {
+            setLotto("");
+            setRecordModify(res.record);
+          } else {
+            setArticoloID(res.articolo.id);
+            setCliente({
+              value: res.articolo.cliente.nome,
+              label: cleanCliente(res.articolo.cliente.nome),
+            });
+            setQty(res.quantità);
+          }
         });
       });
     }
@@ -101,6 +112,26 @@ function RecordLavorazioneForm({ data, setData }) {
   }, []);
   return (
     <>
+      <ModifyModal
+        show={recordModify}
+        handleClose={() => setRecordModify(undefined)}
+      >
+        <FormWrapper
+          data={data}
+          setData={setData}
+          initialData={recordModify}
+          url={URLS.RECORD_LAVORAZIONI}
+          onSuccess={(newData) => {
+            setRecordModify(undefined);
+            if (newData) setData(newData);
+            setModifytoast(true);
+            setTimeout(() => setModifytoast(false), 4000);
+          }}
+        >
+          <RecordLavorazioneForm data={data} initialData={recordModify} />
+        </FormWrapper>
+      </ModifyModal>
+      {modifytoast && <MyToast>Record modificato con successo !</MyToast>}
       <Row className="mb-4">
         <Hidden name="impianto" value={user.user.impianto.id} />
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
