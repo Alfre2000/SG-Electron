@@ -2,7 +2,7 @@
   "name": "SuperGalvanica",
   "description": "Applicazione per la gestione dei processi aziendali",
   "author": "Alfredo Mauri",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "private": false,
   "homepage": "./",
   "dependencies": {
