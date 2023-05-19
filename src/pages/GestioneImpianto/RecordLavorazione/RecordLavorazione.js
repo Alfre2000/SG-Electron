@@ -84,15 +84,17 @@ function RecordLavorazione() {
               </Card.Header>
               <Card.Body>
                 <Tabella
-                  headers={["Lotto", "N° Pezzi", "Operatore"]}
+                  headers={["Lotto", "N° Pezzi", "Operatore", "Completata"]}
                   valori={[
                     "n_lotto_super",
                     "quantità",
                     "operatore__operatori",
+                    "completata"
                   ]}
-                  types={["text", "number", "text"]}
+                  types={["text", "number", "text", "boolean"]}
                   data={data}
                   setData={setData}
+                  hoursModify={false}
                   FormComponent={RecordLavorazioneForm}
                   url={URLS.RECORD_LAVORAZIONI}
                 />

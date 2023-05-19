@@ -1,4 +1,4 @@
-import { faSearch, faTrash, faWrench } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faCircleCheck, faCircleXmark, faSearch, faTrash, faWrench, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useState } from 'react'
 import { Placeholder, Table } from 'react-bootstrap';
@@ -153,6 +153,13 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
                 if (typeof campo === "number") {
                   campo = campo.toLocaleString()
                 }
+                if (types[idx] === "boolean") {
+                  return (
+                    <td key={campo || idx} className="text-center">
+                      <FontAwesomeIcon className="border-0 bg-transparent" icon={campo === true ? faCheck : faXmark} />
+                    </td>
+                  )
+                }
                 return (
                   <td key={campo || idx}>{campo || "-"}</td>
                 )
@@ -160,7 +167,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
               <td className="cursor-pointer" onClick={() => setShowViewModal(record.id)}>
                 <FontAwesomeIcon icon={faSearch} className="rotate-90" />
               </td>
-              {i === 0 && isDateRecent(record.data, hoursModify) ? (
+              {isDateRecent(record.data, hoursModify) ? (
                 <td className="cursor-pointer" onClick={() => setShowModifyModal(record.id)}>
                   <FontAwesomeIcon icon={faWrench} />
                 </td>
@@ -169,7 +176,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
                   <FontAwesomeIcon icon={faWrench} />
                 </td>
               )}
-              {i === 0 && isDateRecent(record.data, hoursModify) ? (
+              {isDateRecent(record.data, hoursModify) ? (
                 <td className="cursor-pointer" onClick={() => setShowConfirmModal(record.id)}>
                   <FontAwesomeIcon icon={faTrash} className="text-red-800" />
                 </td>
