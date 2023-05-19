@@ -92,6 +92,10 @@ function RecordLavorazioneForm({ data, setData }) {
             });
             setQty(res.quantità);
           }
+        }).catch((err) => {
+          setErrorLotto(true);
+          setLoadingLotto(false);
+          setTimeout(() => setErrorLotto(false), 1000 * 5);
         });
       });
     }
