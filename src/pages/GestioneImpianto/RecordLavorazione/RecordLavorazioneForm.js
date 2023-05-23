@@ -30,7 +30,7 @@ function RecordLavorazioneForm({ data, setData }) {
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || undefined);
-  const [um, setUm] = useState(initialData?.um || undefined);
+  const [um, setUm] = useState(initialData?.um || "N");
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
   const [lottoCliente, setLottoCliente] = useState(initialData?.n_lotto_cliente || "");
