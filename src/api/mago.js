@@ -150,11 +150,11 @@ export const getDatiBollaMago = async (n_bolla) => {
   JOIN ma_custsupp AS cust ON doc.custsupp = cust.custsupp
   JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
   JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
-  JOIN ma_saleorddetails AS sale ON detail.description = sale.description AND detail.item = sale.item AND sale.deliveredqty = detail.qty AND sale.uom = detail.uom
+  JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
   WHERE doc.documenttype = 3407873 
     AND doc.CustSuppType = 3211264 
     AND doc.docno = '${numero_documento}' 
-    AND doc.documentdate = (SELECT MAX(documentdate) FROM ma_saledoc WHERE docno = '${numero_documento}')
+    AND doc.documentdate = (SELECT MAX(documentdate) FROM ma_saledoc WHERE docno = '${numero_documento}' AND documenttype = '3407873')
   ORDER BY doc.documentdate desc`;
   
   const res = await makeDatabaseRequest(query);
