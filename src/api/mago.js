@@ -1,5 +1,4 @@
 const Request = window?.require ? window.require("tedious").Request : null;
-// const fs = window?.require ? window.require("fs") : null;
 
 const SERVER_IP = "192.168.1.128";
 
@@ -21,41 +20,6 @@ const serverConfigs = {
     readOnlyIntent: true,
   },
 };
-
-const example = {
-  docno: "000567",
-  documentdate: "2023-04-09T00:00:00",
-  companyname: "MAGO SRL",
-  address: "Via Roma, 1",
-  city: "Roma",
-  zipcode: "00100",
-  taxidnumber: "12312412122",
-  lotti: [
-    {
-      n_lotto_super: "121",
-      qty: "1001.12",
-      uom: "KG",
-      item: "71322",
-      description: "Articolo... test 3 VS LOTTO WO CIAO123",
-      impianto: "Ossido 6000",
-      line: "2",
-      line_lotto: "1",
-      // articolo_certificato: "Articolo Certificato Test",
-      // "specifiche_it": "Specifiche IT test",
-      // "specifiche_en": "Specifiche EN test",
-      // trattamento_s10",
-      trattamento1: "Argentatura",
-      trattamento2: "Stagnatura",
-      trattamento3: "Micron",
-      trattamento4: "SP",
-      trattamento5: "",
-    },
-  ],
-};
-
-// read the json file named test_obj.json
-// const example = JSON.parse(fs.readFileSync("test_obj.json", "utf8"));
-// const example2 = JSON.parse(fs.readFileSync("test_obj2.json", "utf8"));
 
 export const makeDatabaseRequest = async (query) => {
   const configs = {

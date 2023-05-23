@@ -30,8 +30,10 @@ function RecordLavorazioneForm({ data, setData }) {
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || undefined);
+  const [um, setUm] = useState(initialData?.um || undefined);
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
+  const [lottoCliente, setLottoCliente] = useState(initialData?.n_lotto_cliente || "");
   const [errorLotto, setErrorLotto] = useState(false);
   const [modifytoast, setModifytoast] = useState(false);
   const [recordModify, setRecordModify] = useState(undefined);
@@ -91,6 +93,8 @@ function RecordLavorazioneForm({ data, setData }) {
               label: cleanCliente(res.articolo.cliente.nome),
             });
             setQty(res.quantità);
+            setUm(res.um);
+            setLottoCliente(res.lotto_cliente);
           }
         }).catch((err) => {
           setErrorLotto(true);
@@ -221,6 +225,7 @@ function RecordLavorazioneForm({ data, setData }) {
               label="N° lotto cliente:"
               name="n_lotto_cliente"
               labelProps={{ className: "text-right pr-5 pb-2" }}
+              inputProps={{ value: lottoCliente, onChange: (e) => setLottoCliente(e.target.value) }}
               labelCols={7}
             />
           </Col>
@@ -238,6 +243,7 @@ function RecordLavorazioneForm({ data, setData }) {
                 onChange: (e) => setQty(e.target.value),
               }}
             />
+            <Hidden value={um} name="um" />
           </Col>
           <Col xs={6} className="pl-0">
             <Input
