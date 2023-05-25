@@ -26,6 +26,8 @@ import ModifyModal from "../../../components/Modals/ModifyModal/ModifyModal";
 import FormWrapper from "../../FormWrapper";
 import MyToast from "../../../components/MyToast/MyToast";
 
+let last_res = undefined;
+
 function RecordLavorazioneForm({ data, setData }) {
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
@@ -74,8 +76,9 @@ function RecordLavorazioneForm({ data, setData }) {
           setTimeout(() => setErrorLotto(false), 1000 * 5);
           return;
         }
-        console.log(res[0]);
         apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0]).then((res) => {
+          console.log(last_res, parseInt(value.split('.').at(-1)));
+          if (last_res && last_res > parseInt(value.split('.').at(-1))) return;
           if (!data.articoli.map((a) => a.id).includes(res.articolo.id)) {
             setData((prev) => ({
               ...prev,
@@ -87,6 +90,8 @@ function RecordLavorazioneForm({ data, setData }) {
             setLotto("");
             setRecordModify(res.record);
           } else {
+            setLotto(value)
+            setRecordModify(undefined);
             setArticoloID(res.articolo.id);
             setCliente({
               value: res.articolo.cliente.nome,
@@ -96,6 +101,10 @@ function RecordLavorazioneForm({ data, setData }) {
             setUm(res.um);
             setLottoCliente(res.lotto_cliente);
           }
+          last_res = parseInt(value.split('.').at(-1));
+          setTimeout(() => {
+            last_res = undefined;
+          }, 1000);
         }).catch((err) => {
           setErrorLotto(true);
           setLoadingLotto(false);
