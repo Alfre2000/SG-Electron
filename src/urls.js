@@ -44,6 +44,8 @@ export const URLS = {
     RECORD_LAVORAZIONI_CERTIFICATO: BASE_PATH + '/scheda-controllo/record-lavorazioni-certificato/',
     CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',
     CERTIFICATI_BOLLA: BASE_PATH + '/certificati/builder/',
+    
+    ETICHETTE_MTA: BASE_PATH + '/certificati/etichette-mta/',
 
     // SCHEDE IMPIANTO
     SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/schede-impianti/',

@@ -90,6 +90,26 @@ app.whenReady().then(() => {
       }
   }))
   })
+  ipcMain.handle('save-pdf', (event, data, defaultName) => {
+    const win = BrowserWindow.getFocusedWindow()
+    const defaultPath = app.getPath('desktop') + '/' + defaultName
+    dialog.showSaveDialog(win, { 
+      title: "Salva Documento",
+      defaultPath: defaultPath,
+      properties: ['openFile', 'openDirectory', 'createDirectory'],
+      filters: [{ name: 'PDF', extensions: ['pdf'] }],
+    }).then((result => {
+      if (!result.canceled && result.filePath) {
+        fs.writeFile(result.filePath, data, (error) => {
+          if (error) {
+            console.error('Error saving PDF:', error);
+          } else {
+            console.error('PDF saved correctly:');
+          }
+        });
+      }
+  }))
+  })
   ipcMain.handle('save-zip', (_, file, defaultName) => {
     const win = BrowserWindow.getFocusedWindow()
     const defaultPath = app.getPath('desktop') + '/' + defaultName

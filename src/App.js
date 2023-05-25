@@ -25,6 +25,7 @@ import Cliente from "./pages/AreaAdmin/Cliente/Cliente";
 import Operatore from "./pages/AreaAdmin/Operatore/Operatore";
 import Certificato from "./pages/CertificatiQualità/Certificato/Certificato";
 import CertificatiBolla from "./pages/CertificatiQualità/CertificatiBolla/CertificatiBolla";
+import EtichetteMTA from "./pages/CertificatiQualità/EtichetteMTA/EtichetteMTA";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -80,6 +81,7 @@ function App() {
             <Route path="certificati-qualita/">
               <Route path="record-certificato/" element={<CertificatiBolla />}></Route>
               <Route path="certificato/" element={<Certificato />}></Route>
+              <Route path="etichette-mta/" element={<EtichetteMTA />}></Route>
             </Route>
           </Routes>
         </HashRouter>

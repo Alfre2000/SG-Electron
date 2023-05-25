@@ -1,4 +1,4 @@
-import { faCertificate, faFileCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { faCertificate, faFileCircleCheck, faTags } from '@fortawesome/free-solid-svg-icons'
 
 export const getNavItems = (user) => {
   let items = [
@@ -7,6 +7,9 @@ export const getNavItems = (user) => {
     ]},
     { title: "Modelli Certificati", icon: faFileCircleCheck, links: [
         {name: 'Modelli Certificati', link: '/certificati-qualita/certificato/'},
+      ]},
+    { title: "Etichette MTA", icon: faTags, links: [
+        {name: 'Etichette MTA', link: '/certificati-qualita/etichette-mta/'},
       ]},
   ];
   return items

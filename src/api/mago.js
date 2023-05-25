@@ -169,3 +169,25 @@ export const getLottoInformation = async (n_lotto) => {
   const res = await makeDatabaseRequest(query);
   return res
 }
+
+export const getDatiEtichettaMago = async (n_lotto) => {
+  const query = `
+    SELECT
+      sale.item,
+      sale.qty,
+      sale.uom,
+      sale.job,
+      sale.line,
+      sale.description,
+      cust.companyname,
+      item.trattamento_certificato,
+      item.note
+    FROM ma_saleorddetails AS sale
+      JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
+      JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
+    WHERE sale.job = '${n_lotto}'
+    ORDER BY sale.line
+  `
+  const res = await makeDatabaseRequest(query);
+  return res
+}
