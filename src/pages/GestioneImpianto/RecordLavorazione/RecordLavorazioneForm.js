@@ -77,7 +77,6 @@ function RecordLavorazioneForm({ data, setData }) {
           return;
         }
         apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0]).then((res) => {
-          console.log(last_res, parseInt(value.split('.').at(-1)));
           if (last_res && last_res > parseInt(value.split('.').at(-1))) return;
           if (!data.articoli.map((a) => a.id).includes(res.articolo.id)) {
             setData((prev) => ({
