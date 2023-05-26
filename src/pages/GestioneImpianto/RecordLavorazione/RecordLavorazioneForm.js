@@ -35,7 +35,9 @@ function RecordLavorazioneForm({ data, setData }) {
   const [um, setUm] = useState(initialData?.um || "N");
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
-  const [lottoCliente, setLottoCliente] = useState(initialData?.n_lotto_cliente || "");
+  const [lottoCliente, setLottoCliente] = useState(
+    initialData?.n_lotto_cliente || ""
+  );
   const [errorLotto, setErrorLotto] = useState(false);
   const [modifytoast, setModifytoast] = useState(false);
   const [recordModify, setRecordModify] = useState(undefined);
@@ -76,39 +78,42 @@ function RecordLavorazioneForm({ data, setData }) {
           setTimeout(() => setErrorLotto(false), 1000 * 5);
           return;
         }
-        apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0]).then((res) => {
-          if (last_res && last_res > parseInt(value.split('.').at(-1))) return;
-          if (!data.articoli.map((a) => a.id).includes(res.articolo.id)) {
-            setData((prev) => ({
-              ...prev,
-              articoli: [res.articolo, ...prev.articoli],
-            }));
-          }
-          setLoadingLotto(false);
-          if (res.record) {
-            setLotto("");
-            setRecordModify(res.record);
-          } else {
-            setLotto(value)
-            setRecordModify(undefined);
-            setArticoloID(res.articolo.id);
-            setCliente({
-              value: res.articolo.cliente.nome,
-              label: cleanCliente(res.articolo.cliente.nome),
-            });
-            setQty(res.quantità);
-            setUm(res.um);
-            setLottoCliente(res.lotto_cliente);
-          }
-          last_res = parseInt(value.split('.').at(-1));
-          setTimeout(() => {
-            last_res = undefined;
-          }, 1000);
-        }).catch((err) => {
-          setErrorLotto(true);
-          setLoadingLotto(false);
-          setTimeout(() => setErrorLotto(false), 1000 * 5);
-        });
+        apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0])
+          .then((res) => {
+            if (last_res && last_res > parseInt(value.split(".").at(-1)))
+              return;
+            if (!data.articoli.map((a) => a.id).includes(res.articolo.id)) {
+              setData((prev) => ({
+                ...prev,
+                articoli: [res.articolo, ...prev.articoli],
+              }));
+            }
+            setLoadingLotto(false);
+            if (res.record) {
+              setLotto("");
+              setRecordModify(res.record);
+            } else {
+              setLotto(value);
+              setRecordModify(undefined);
+              setArticoloID(res.articolo.id);
+              setCliente({
+                value: res.articolo.cliente.nome,
+                label: cleanCliente(res.articolo.cliente.nome),
+              });
+              setQty(res.quantità);
+              setUm(res.um);
+              setLottoCliente(res.lotto_cliente);
+            }
+            last_res = parseInt(value.split(".").at(-1));
+            setTimeout(() => {
+              last_res = undefined;
+            }, 1000);
+          })
+          .catch((err) => {
+            setErrorLotto(true);
+            setLoadingLotto(false);
+            setTimeout(() => setErrorLotto(false), 1000 * 5);
+          });
       });
     }
   };
@@ -163,8 +168,16 @@ function RecordLavorazioneForm({ data, setData }) {
               name="cliente"
               labelCols={3}
               inputProps={{
-                isDisabled: true,
                 value: cliente,
+                onChange: (e) =>
+                  setCliente(
+                    e
+                      ? {
+                          value: e.value,
+                          label: cleanCliente(e.label),
+                        }
+                      : null
+                  ) || setArticoloID(null),
               }}
               options={
                 clienti &&
@@ -178,13 +191,14 @@ function RecordLavorazioneForm({ data, setData }) {
               name="articolo"
               labelCols={3}
               inputProps={{
-                isDisabled: true,
+                isDisabled: !cliente || view,
                 value: articolo
                   ? {
                       value: articolo.id,
                       label: `${articolo.nome} (${articolo.codice || "-"})`,
                     }
                   : null,
+                onChange: (e) => setArticoloID(e?.value ? e.value : null),
               }}
               options={data?.articoli
                 ?.filter((arti) => arti.cliente.nome === cliente?.value)
@@ -226,7 +240,10 @@ function RecordLavorazioneForm({ data, setData }) {
               label="N° lotto cliente:"
               name="n_lotto_cliente"
               labelProps={{ className: "text-right pr-5 pb-2" }}
-              inputProps={{ value: lottoCliente, onChange: (e) => setLottoCliente(e.target.value) }}
+              inputProps={{
+                value: lottoCliente,
+                onChange: (e) => setLottoCliente(e.target.value),
+              }}
               labelCols={7}
             />
           </Col>
