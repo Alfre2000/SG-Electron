@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Row, Stack } from "react-bootstrap";
 import Fieldset from "../../../components/form-components/Fieldset";
 import Input from "../../../components/form-components/Input";
@@ -7,9 +7,19 @@ import SearchSelect from "../../../components/form-components/SearchSelect";
 import { convertPeso, convertSuperficie, searchOptions } from "../../../utils";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
 import { useFormContext } from "../../../contexts/FormContext";
+import { useMemo } from "react";
+import Hidden from "../../../components/form-components/Hidden/Hidden";
 
 function ArticoloForm({ data, campoScheda }) {
   const { initialData } = useFormContext();
+  const [clienteSelect, setClienteSelect] = useState(
+    data?.clienti?.find((c) => c.nome === initialData?.cliente)?.id || undefined
+  );
+  const cliente = useMemo(() => {
+    if (clienteSelect) {
+      return data?.clienti.find((c) => c.id === clienteSelect);
+    }
+  }, [clienteSelect, data?.clienti]);
   return (
     <>
       <Row className="mb-4">
@@ -26,6 +36,10 @@ function ArticoloForm({ data, campoScheda }) {
               name="cliente"
               labelCols={5}
               createTable={true}
+              inputProps={{
+                value: { label: cliente?.nome, value: cliente?.id },
+                onChange: (e) => setClienteSelect(e.value),
+              }}
               options={searchOptions(data?.clienti, "nome")}
             />
             <SearchSelect
@@ -46,10 +60,68 @@ function ArticoloForm({ data, campoScheda }) {
       <Fieldset title="informazioni certificato">
         <Row className="mb-3">
           <Stack gap={1}>
-            <Input name="specifica_it" labelProps={{className: "text-left"}} labelCols={2} inputProps={{className: "text-left pl-3"}} />
-            <Input name="specifica_en" labelProps={{className: "text-left"}} labelCols={2} inputProps={{className: "text-left pl-3"}} />
+            <Input
+              name="specifica_it"
+              labelProps={{ className: "text-left" }}
+              labelCols={2}
+              inputProps={{ className: "text-left pl-3" }}
+            />
+            <Input
+              name="specifica_en"
+              labelProps={{ className: "text-left" }}
+              labelCols={2}
+              inputProps={{ className: "text-left pl-3" }}
+            />
           </Stack>
         </Row>
+      </Fieldset>
+      {clienteSelect && cliente?.campi_aggiuntivi && (
+        <Fieldset title={`Dati Aggiuntivi - ${cliente.nome}`}>
+          <Hidden name="info_aggiuntive" value={null}/>
+          <Row className="mb-3">
+            <Stack gap={1}>
+              {cliente.campi_aggiuntivi.split(",").map((campo) => (
+                <Input
+                  key={campo}
+                  name={`info_aggiuntive.${campo.trim()}`}
+                  label={campo.trim() + ":"}
+                  labelProps={{ className: "text-left" }}
+                  labelCols={3}
+                  inputProps={{
+                    defaultValue: initialData?.info_aggiuntive?.[campo.trim()],
+                    className: "text-left pl-3 mb-1"
+                  }}
+                />
+              ))}
+            </Stack>
+          </Row>
+        </Fieldset>
+      )}
+      <Fieldset title="lavorazioni richieste">
+        <TabellaNestedItems
+          name="richieste"
+          colonne={[
+            {
+              name: "lavorazione",
+              type: "select",
+              options: searchOptions(data?.lavorazioni, "nome"),
+            },
+            {
+              name: "punto",
+              type: "number",
+            },
+            {
+              name: "spessore_minimo",
+              type: "number",
+              label: "Spessore minimo (µm)",
+            },
+            {
+              name: "spessore_massimo",
+              type: "number",
+              label: "Spessore massimo (µm)",
+            },
+          ]}
+        />
       </Fieldset>
       <Fieldset title="caratteristiche fisiche">
         <Row className="mb-3">
@@ -84,32 +156,6 @@ function ArticoloForm({ data, campoScheda }) {
             />
           </Col>
         </Row>
-      </Fieldset>
-      <Fieldset title="lavorazioni richieste">
-        <TabellaNestedItems
-          name="richieste"
-          colonne={[
-            {
-              name: "lavorazione",
-              type: "select",
-              options: searchOptions(data?.lavorazioni, "nome"),
-            },
-            {
-              name: "punto",
-              type: "number",
-            },
-            {
-              name: "spessore_minimo",
-              type: "number",
-              label: "Spessore minimo (µm)",
-            },
-            {
-              name: "spessore_massimo",
-              type: "number",
-              label: "Spessore massimo (µm)",
-            },
-          ]}
-        />
       </Fieldset>
       <Fieldset title="immagini di supporto">
         <TabellaNestedItems

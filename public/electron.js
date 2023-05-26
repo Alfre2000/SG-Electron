@@ -114,7 +114,7 @@ app.whenReady().then(() => {
     const win = BrowserWindow.getFocusedWindow()
     const defaultPath = app.getPath('desktop') + '/' + defaultName
     dialog.showSaveDialog(win, { 
-      title: "Salva Certificati",
+      title: "Salva Documenti",
       defaultPath: defaultPath,
       properties: ['openFile', 'openDirectory', 'createDirectory'],
     }).then((path => {

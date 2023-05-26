@@ -15,7 +15,7 @@ import FilterPopup from '../components/FilterPopup/FilterPopup';
 import { apiGet } from '../api/api';
 import UserContext from '../UserContext';
 
-function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess, hoursModify = 2, filtering = true, types }) {
+function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, url, date, onSuccess, hoursModify = 2, filtering = true, types, defaultFilters = {} }) {
   const { user } = useContext(UserContext);
   const impianto = user?.user?.impianto;
   const [showPasswordDeleteModal, setShowPasswordDeleteModal] = useState("0");
@@ -41,7 +41,7 @@ function Tabella({ headers, valori, data, setData, FormComponent, FormWrapper, u
   url = url || (showModifyModal !== "0" && findElementFromID(showModifyModal, data.records.results).url) || (showConfirmModal !== "0" && findElementFromID(showConfirmModal, data.records.results).url) || (showViewModal !== "0" && findElementFromID(showViewModal, data.records.results).url) 
 
   const FormWrapperComponent = FormWrapper ? FormWrapper : DefaultFormWrapper
-  const [filters, setFilters] = useState({ ordering: "", filters: {} })
+  const [filters, setFilters] = useState({ ordering: "", filters: defaultFilters })
   types = types || new Array(valori.length).fill("text")
   const submit = (newFilters) => {
     const filterParams = newFilters ? newFilters : filters

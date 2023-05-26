@@ -8,18 +8,20 @@ import Wrapper from "../../AreaAdmin/Wrapper";
 import ArticoloForm from "./ArticoloForm";
 import Tabella from "../../Tabella";
 
-function Articolo() {
+function Articolo({ cliente, wrapper }) {
+  const WrapperElement = wrapper || Wrapper;
+  const URL_ARTICOLI = cliente ? URLS.ARTICOLI + "?cliente=" + cliente : URLS.ARTICOLI;
   const [data, setData] = useGetAPIData([
-    { nome: "records", url: URLS.ARTICOLI },
+    { nome: "records", url: URL_ARTICOLI },
     { nome: "clienti", url: URLS.CLIENTI },
     { nome: "impianti", url: URLS.IMPIANTI },
     { nome: "lavorazioni", url: URLS.LAVORAZIONI },
     { nome: "schede_controllo", url: URLS.SCHEDE_CONTROLLO },
   ]);
   return (
-    <Wrapper>
+    <WrapperElement>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
-        <PageTitle>Articoli</PageTitle>
+        <PageTitle>Articoli {cliente && cliente}</PageTitle>
         <Row className="mt-10">
           <Col xs={12}>
             <Card>
@@ -49,13 +51,14 @@ function Articolo() {
                   setData={setData}
                   FormComponent={ArticoloForm}
                   url={URLS.ARTICOLI}
+                  defaultFilters={{ cliente: cliente }}
                 />
               </Card.Body>
             </Card>
           </Col>
         </Row>
       </Container>
-    </Wrapper>
+    </WrapperElement>
   );
 }
 

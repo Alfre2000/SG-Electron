@@ -31,6 +31,7 @@ function EtichetteMTA() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingDati, setLoadingDati] = useState(false);
+  const [noMTA, setNoMTA] = useState(false);
 
   const searchEtichette = () => {
     setLoading(true);
@@ -39,7 +40,11 @@ function EtichetteMTA() {
       .then((rows) => {
         setError(false);
         console.log(rows);
-        setLotto(rows);
+        if (rows.filter((row) => row.companyname !== "MTA S.P.A.").length > 0) {
+          setNoMTA(true);
+        } else {
+          setLotto(rows);
+        }
       })
       .catch((err) => {
         setError(true);
@@ -58,14 +63,16 @@ function EtichetteMTA() {
     setLoadingDati(true);
 
     apiPost(URLS["ETICHETTE_MTA"], requestData)
-    .then((res) => {
-      electron.ipcRenderer.invoke(
-        "save-pdf",
-        res,
-        "etichette.pdf"
-      );
-    })
-      .catch((err) => setError(err.errors))
+      .then((res) => {
+        setError(false);
+        const data = Buffer.from(res.zip_file, "base64");
+        electron.ipcRenderer.invoke(
+          "save-zip",
+          data,
+          `Etichette lotto ${nLotto.replace("/", "-")}`
+        );
+      })
+      .catch((err) => console.log(Object.keys(error)) || setError(err))
       .finally(() => setLoadingDati(false));
   };
   return (
@@ -122,6 +129,21 @@ function EtichetteMTA() {
             />
           </div>
         )}
+        {noMTA === true && !loading && !loadingDati && (
+          <Alert
+            className="text-center mt-10 w-1/2 py-3 mx-auto flex justify-center"
+            variant="danger"
+          >
+            <FontAwesomeIcon
+              size="lg"
+              className="mr-3"
+              icon={faCircleExclamation}
+            />
+            <h3 className="text-md font-semibold mx-3">
+              Il lotto cercato non è di MTA
+            </h3>
+          </Alert>
+        )}
         {error === true && !loading && !loadingDati && (
           <Alert
             className="text-center mt-10 w-1/2 py-3 mx-auto flex justify-center"
@@ -167,7 +189,7 @@ function EtichetteMTA() {
                       <td>
                         {error &&
                           !loadingDati &&
-                          error?.includes(lotto.line) && (
+                          Object.keys(error)?.includes(lotto.line.toString()) && (
                             <FontAwesomeIcon
                               icon={faCircleExclamation}
                               className="absolute -left-8 text-red-800"
@@ -203,21 +225,28 @@ function EtichetteMTA() {
                 Genera Etichette
                 <FontAwesomeIcon icon={faFilePdf} className="ml-3" />
               </Button>
-              {error && error.length > 0 && !loadingDati && (
-                <Alert
-                  className="text-center mt-8 w-4/5 py-2 mx-auto flex justify-center"
-                  variant="danger"
-                >
-                  <h3 className="text-sm font-semibold mx-3">
-                    Le righe indicate con{" "}
-                    <FontAwesomeIcon icon={faCircleExclamation} />, si
-                    riferiscono ad articoli di cui non sono state salvate le
-                    informazioni nel database.
-                    <br />
-                    Aggiungere le informazioni e ricaricare la pagina per poter
-                    generare le etichette.
-                  </h3>
-                </Alert>
+              {error && !loadingDati && (
+                <>
+                  <Alert
+                    className="text-center mt-8 w-4/5 py-2 mx-auto flex flex-col justify-center"
+                    variant="danger"
+                  >
+                    <h3 className="text-sm font-semibold mx-3">
+                      Le righe indicate con{" "}
+                      <FontAwesomeIcon icon={faCircleExclamation} />, si
+                      riferiscono ad articoli di cui non sono state salvate le
+                      informazioni nel database.
+                      <br />
+                      Aggiungere le informazioni e ricaricare la pagina per
+                      poter generare le etichette.
+                    </h3>
+                  {/* <ul className="mx-auto">
+                    {Object.entries(error).map(([key, value]) => (
+                      <li className="text-left list-disc ml-14" key={key}>Riga {key}: {value}</li>
+                    ))}
+                  </ul> */}
+                  </Alert>
+                </>
               )}
             </form>
           ) : (
