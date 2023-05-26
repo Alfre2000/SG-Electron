@@ -31,7 +31,7 @@ let last_res = undefined;
 function RecordLavorazioneForm({ data, setData }) {
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
-  const [qty, setQty] = useState(initialData?.quantità || undefined);
+  const [qty, setQty] = useState(initialData?.quantità || "");
   const [um, setUm] = useState(initialData?.um || "N");
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
@@ -161,17 +161,10 @@ function RecordLavorazioneForm({ data, setData }) {
           <Stack gap={2} className="text-left justify-center">
             <SearchSelect
               name="cliente"
+              labelCols={3}
               inputProps={{
+                isDisabled: true,
                 value: cliente,
-                onChange: (e) =>
-                  setCliente(
-                    e
-                      ? {
-                          value: e.value,
-                          label: cleanCliente(e.label),
-                        }
-                      : null
-                  ) || setArticoloID(null),
               }}
               options={
                 clienti &&
@@ -183,15 +176,15 @@ function RecordLavorazioneForm({ data, setData }) {
             />
             <SearchSelect
               name="articolo"
+              labelCols={3}
               inputProps={{
-                isDisabled: !cliente || view,
+                isDisabled: true,
                 value: articolo
                   ? {
                       value: articolo.id,
                       label: `${articolo.nome} (${articolo.codice || "-"})`,
                     }
                   : null,
-                onChange: (e) => setArticoloID(e?.value ? e.value : null),
               }}
               options={data?.articoli
                 ?.filter((arti) => arti.cliente.nome === cliente?.value)
