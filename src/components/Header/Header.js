@@ -41,8 +41,9 @@ function Header({ title, toggleNavbar }) {
       navigate("/login", { from: "/" });
     });
   };
+  const bgClass = process.env.NODE_ENV === "development" ? "bg-nav-lightblue" : "bg-nav-blue";
   return (
-    <Navbar bg="dark" variant="dark" id="sg-header">
+    <Navbar id="sg-header" className={bgClass}>
       <Container className="mx-12">
         <Nav>
           <Nav.Link className="px-4 text-white" onClick={toggleNavbar}>

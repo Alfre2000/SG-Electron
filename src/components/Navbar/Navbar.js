@@ -23,10 +23,11 @@ function Navbar({ menu, navOpen }) {
       links: [{ name: "HomePage", link: "/" }, ...links],
     });
   }
+  const bgClass = process.env.NODE_ENV === "development" ? "bg-nav-lightblue" : "bg-nav-blue";
   return (
     <div
       id="navbar"
-      className={`bg-nav-blue min-h-screen ${
+      className={`${bgClass} min-h-screen ${
         navOpen ? "" : "closed"
       } flex flex-col font-poppins text-white`}
       style={{ maxWidth: "15rem" }}

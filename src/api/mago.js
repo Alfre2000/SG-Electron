@@ -181,6 +181,7 @@ export const getDatiEtichettaMago = async (n_lotto) => {
       sale.description,
       cust.companyname,
       item.articolo_certificato,
+      item.impianto,
       item.note
     FROM ma_saleorddetails AS sale
       JOIN bt_supergitems AS item ON sale.item = item.cod_articolo

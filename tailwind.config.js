@@ -6,6 +6,7 @@ module.exports = {
     extend: {
       colors: {
         'nav-blue': '#123A73',
+        'nav-lightblue': '#434491',
         'btn-blue': '#005ABB',
         'card-blue': '#007AFF',
         'gray-blue': '#4C4E61',
