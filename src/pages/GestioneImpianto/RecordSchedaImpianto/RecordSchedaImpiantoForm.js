@@ -8,7 +8,10 @@ import Fieldset from "../../../components/form-components/Fieldset";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { useFormContext } from "../../../contexts/FormContext";
 import DocList from "./DocList";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
@@ -25,6 +28,12 @@ function RecordSchedaImpiantoForm({ data, warning }) {
   const aggiunteIniziali = schedaImpianto.aggiunte.filter(
     (el) => el.iniziale === true
   );
+  const checkAll = (name) => {
+    const checkboxes = [
+      ...document.querySelectorAll(`input[type="checkbox"][name*="${name}"]`),
+    ];
+    checkboxes.forEach((el) => (el.checked = true));
+  };
   return (
     <>
       <Row className="mb-4 mt-4">
@@ -43,7 +52,18 @@ function RecordSchedaImpiantoForm({ data, warning }) {
         </Col>
       </Row>
       <Row className="mb-4">
-        <Fieldset title="Verifiche Iniziali">
+        <Fieldset
+          title={
+            <div>
+              Verifiche Iniziali{" "}
+              <FontAwesomeIcon
+                icon={faCheck}
+                onClick={() => checkAll("record_verifiche_iniziali")}
+                className=" border-stone-300 border-1 rounded-full ml-2 relative top-1 bg-slate-50 p-1 h-4 w-4 cursor-pointer"
+              />
+            </div>
+          }
+        >
           <TabellaCheckBox
             items={schedaImpianto.verifiche_iniziali}
             checkName="eseguito"
@@ -66,7 +86,18 @@ function RecordSchedaImpiantoForm({ data, warning }) {
         )}
       </Row>
       <Row className="mb-4">
-        <Fieldset title="Aggiunte Iniziali">
+        <Fieldset
+          title={
+            <div>
+              Aggiunte Iniziali{" "}
+              <FontAwesomeIcon
+                icon={faCheck}
+                onClick={() => checkAll("record_aggiunte")}
+                className=" border-stone-300 border-1 rounded-full ml-2 relative top-1 bg-slate-50 p-1 h-4 w-4 cursor-pointer"
+              />
+            </div>
+          }
+        >
           <TabellaCheckBox
             items={aggiunteIniziali}
             checkName="eseguito"
