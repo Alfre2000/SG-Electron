@@ -32,7 +32,7 @@ function RecordLavorazioneForm({ data, setData }) {
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || "");
-  const [um, setUm] = useState(initialData?.um || "N");
+  const [um, setUm] = useState(initialData?.um || "");
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
   const [lottoCliente, setLottoCliente] = useState(
@@ -242,16 +242,26 @@ function RecordLavorazioneForm({ data, setData }) {
           </Col>
         </Row>
         <Row className="my-3">
-          <Col xs={6} className="pr-8">
+          <Col xs={6} className="pr-8 relative">
             <Input
-              label="N° pezzi dichiarati:"
+              label="Pezzi dichiarati:"
               name="quantità"
               labelProps={{ className: "text-right pr-5 pb-2" }}
               labelCols={7}
               inputProps={{
                 type: "number",
+                className: "rounded-r-none text-center",
                 value: qty,
                 onChange: (e) => setQty(e.target.value),
+              }}
+            />
+            <Input
+              label={false}
+              isDisabled={true}
+              inputProps={{
+                value: um.replace("NR", "N"),
+                className:
+                  "max-w-[40px] absolute top-0 -right-[8px] text-center px-0 rounded-l-none border-l-0",
               }}
             />
             <Hidden value={um} name="um" />

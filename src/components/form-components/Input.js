@@ -5,7 +5,7 @@ import { findNestedElement } from "../../pages/utils";
 import { capitalize } from "../../utils";
 
 const Input = React.forwardRef(
-  ({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols, floating }, ref) => {
+  ({ label, name, errors, vertical, inputProps, labelProps, colProps, labelCols, inputCols, floating, isDisabled }, ref) => {
   const lastName = name ? name.split('__')[name.split('__').length - 1] : "";
   const labelText = label ? label : name ? `${capitalize(lastName).replace('_', ' ')}:` : ""
   const labelColumns = labelCols ? labelCols : 4 
@@ -15,7 +15,7 @@ const Input = React.forwardRef(
   const errorsValue = errors ? findNestedElement(errors, name)?.join(' - ') : undefined
   const defaultValue = formData?.initialData && !("value" in (inputProps || {})) ? findNestedElement(formData?.initialData, name) : undefined
   const default_ = inputProps && "value" in inputProps ? {} : { defaultValue: defaultValue }
-  const disabled = formData?.view === true ? true : null
+  const disabled = formData?.view === true ? true : isDisabled ? isDisabled : null
   return vertical ? (
     <Form.Group className="text-center">
       {label !== false && <Form.Label {...labelProps} htmlFor={name}>{labelText}</Form.Label>}
