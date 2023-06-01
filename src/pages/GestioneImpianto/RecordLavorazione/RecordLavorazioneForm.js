@@ -168,16 +168,8 @@ function RecordLavorazioneForm({ data, setData }) {
               name="cliente"
               labelCols={3}
               inputProps={{
+                isDisabled: true,
                 value: cliente,
-                onChange: (e) =>
-                  setCliente(
-                    e
-                      ? {
-                          value: e.value,
-                          label: cleanCliente(e.label),
-                        }
-                      : null
-                  ) || setArticoloID(null),
               }}
               options={
                 clienti &&
@@ -191,7 +183,7 @@ function RecordLavorazioneForm({ data, setData }) {
               name="articolo"
               labelCols={3}
               inputProps={{
-                isDisabled: !cliente || view,
+                isDisabled: true,
                 value: articolo
                   ? {
                       value: articolo.id,
@@ -207,6 +199,7 @@ function RecordLavorazioneForm({ data, setData }) {
                   label: `${a.nome} (${a.codice || "-"})`,
                 }))}
             />
+            <Hidden name="articolo" value={articoloID} />
           </Stack>
         </Col>
       </Row>
