@@ -61,7 +61,7 @@ function CertificatiBolla() {
         electron.ipcRenderer.invoke(
           "save-zip",
           data,
-          `Certificati bolla n°${nBolla}`
+          `${new Date().getFullYear()} - Certificati bolla n°${nBolla.padStart(6, '0')}`
         );
       })
       .catch((err) => setError(err.errors))
