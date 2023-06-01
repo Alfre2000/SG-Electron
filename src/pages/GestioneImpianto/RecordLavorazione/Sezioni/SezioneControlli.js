@@ -12,6 +12,7 @@ function SezioneControlli({ data, articolo }) {
   if (!articolo?.scheda_controllo?.sezioni?.length > 0) {
     return null;
   }
+  const sezioni = articolo.scheda_controllo.sezioni.sort((a, b) => a.nome.localeCompare(b.nome))
   return (
     <Sezione title="Controlli da effettuare">
       <Table className="align-middle text-center" bordered>
@@ -24,7 +25,7 @@ function SezioneControlli({ data, articolo }) {
           </tr>
         </thead>
         <tbody>
-          {articolo.scheda_controllo.sezioni.map((sezione) => (
+          {sezioni.map((sezione) => (
               <React.Fragment key={sezione.id}>
                 <tr>
                   <td
