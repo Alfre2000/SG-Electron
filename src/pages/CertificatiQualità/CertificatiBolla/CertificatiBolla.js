@@ -84,6 +84,12 @@ function CertificatiBolla() {
                 inputProps={{
                   value: nBolla,
                   onChange: (e) => setNBolla(e.target.value),
+                  onKeyDown: (e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      searchBolla();
+                    }
+                  },
                 }}
               />
             </div>
