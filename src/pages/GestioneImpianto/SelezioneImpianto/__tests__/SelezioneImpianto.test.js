@@ -10,6 +10,38 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
+const localStorageMock = (function () {
+  let store = {};
+
+  return {
+    getItem(key) {
+      return store[key] || null;
+    },
+
+    setItem(key, value) {
+      store[key] = value;
+    },
+
+    clear() {
+      store = {};
+    },
+
+    removeItem(key) {
+      delete store[key];
+    },
+
+    getAll() {
+      return store;
+    },
+  };
+})();
+
+Object.defineProperty(window, "localStorage", { value: localStorageMock });
+
+const setLocalStorage = (id, data) => {
+  window.localStorage.setItem(id, JSON.stringify(data));
+};
+
 jest.useFakeTimers();
 describe("SelezioneImpianto", () => {
   test("Render correttamente admin user", async () => {
@@ -88,6 +120,7 @@ describe("SelezioneImpianto", () => {
       },
       setUser: jest.fn(),
     };
+    setLocalStorage("user", userAdmin.user);
     render(
       <Router location={history.location} navigator={history}>
         <UserContext.Provider value={userAdmin}>
