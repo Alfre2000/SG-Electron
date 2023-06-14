@@ -6,6 +6,42 @@ const Connection = window?.require
   ? window.require("tedious").Connection
   : null;
 
+const EXAMPLE = [{
+  "docno": "001234",
+  "documentdate": "2023-1-12T10:10:10",
+  "shippingreason": "asd",
+  "companyname": "CIAO",
+  "address": "Via",
+  "zipcode": "123513",
+  "taxidnumber": "",
+  "city": "MI",
+  "county": "MI",
+  "email": "asdf",
+  "line": "1",
+  "description": "ciao", 
+  "item": "234567890",
+  "uom": "NR",
+  "qty": "56",
+  "grossvolume": "123",
+  "impianto": "Roto 500",
+  "trattamento1": "Stagnatura",
+  "trattamento2": "",
+  "trattamento3": "",
+  "trattamento4": "",
+  "trattamento5": "",
+  "superficie": "",
+  "articolo_certificato": "Prova 123",
+  "specifiche_it": "",
+  "specifiche_en": "",
+  "trattamento_certificato": "NICHEL 2-4.5 & STAGNO",
+  "spessore_minimo": "12",
+  "spessore_massimo": "",
+  "n_misurazioni": "",
+  "mail_cliente": "",
+  "n_lotto_super": "23/12345",
+  "line_lotto": "2"
+}]
+
 const serverConfigs = {
   server: SERVER_IP,
   authentication: {
@@ -120,7 +156,7 @@ export const getDatiBollaMago = async (n_bolla) => {
     AND doc.docno = '${numero_documento}' 
     AND doc.documentdate = (SELECT MAX(documentdate) FROM ma_saledoc WHERE docno = '${numero_documento}' AND documenttype = '3407873')
   ORDER BY doc.documentdate desc`;
-  
+  // const res = EXAMPLE;
   const res = await makeDatabaseRequest(query);
   const lotti = res.sort((a, b) => a.line - b.line);
   return {
