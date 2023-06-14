@@ -26,6 +26,7 @@ import Operatore from "./pages/AreaAdmin/Operatore/Operatore";
 import Certificato from "./pages/CertificatiQualità/Certificato/Certificato";
 import CertificatiBolla from "./pages/CertificatiQualità/CertificatiBolla/CertificatiBolla";
 import EtichetteMTA from "./pages/CertificatiQualità/EtichetteMTA/EtichetteMTA";
+import Dashboards from "./pages/AndamentoProduzione/Dashboards/Dashboards";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -75,13 +76,16 @@ function App() {
               <Route path="cliente/" element={<Cliente />}></Route>
               <Route path="operatore/" element={<Operatore />}></Route>
               <Route path="certificato/" element={<Certificato />}></Route>
-
             </Route>
             {/* Certificati Qualità */}
             <Route path="certificati-qualita/">
               <Route path="record-certificato/" element={<CertificatiBolla />}></Route>
               <Route path="certificato/" element={<Certificato />}></Route>
               <Route path="etichette-mta/" element={<EtichetteMTA />}></Route>
+            </Route>
+            {/* Andamento Produzione */}
+            <Route path="andamento-produzione/">
+              <Route path="dashboards/" element={<Dashboards />}></Route>
             </Route>
           </Routes>
         </HashRouter>

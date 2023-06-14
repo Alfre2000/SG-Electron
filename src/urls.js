@@ -55,4 +55,7 @@ export const URLS = {
     // PAGINA
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
     PAGINA_RICERCA_DATABASE: BASE_PATH + '/analisi-manutenzioni/pagina-ricerca-database/',
+
+    // ANDAMENTO PRODUZIONE
+    DASHBOARDS: BASE_PATH + '/base/dashboards/',
 }
