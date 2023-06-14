@@ -10,7 +10,7 @@ import Input from "../Input";
 import { useFormContext } from "../../../contexts/FormContext";
 import FileField from "../FileField/FileField";
 
-function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
+function TabellaNestedItems({ name, colonne, initialData, sortBy, startIndex = 0 }) {
   const formData = useFormContext()
   initialData = initialData !== undefined ? initialData : formData?.initialData;
   if (initialData !== undefined && initialData[name]?.length > 0 && "data" in initialData[name][0]) {
@@ -41,8 +41,25 @@ function TabellaNestedItems({ name, colonne, initialData, startIndex = 0 }) {
     });
     return empty
   }
+  const sortItems = (items) => {
+    if (!sortBy || !items) {
+      return items;
+    }
+    return items.sort((a, b) => {
+      for (let i = 0; i < sortBy.length; i++) {
+        const sort = sortBy[i];
+        if (a[sort] < b[sort]) {
+          return -1;
+        }
+        if (a[sort] > b[sort]) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+  };
   const [items, setItems] = useState(
-    !!initialData ? initialData[name] || [] : [emptyItem()]
+    !!initialData ? sortItems(initialData[name]) || [] : [emptyItem()]
   );
   const colWidth = 95 / colonne.length;
   const hasDatetime = colonne.some(c => c.type === "date") && colonne.some(c => c.type === "time")

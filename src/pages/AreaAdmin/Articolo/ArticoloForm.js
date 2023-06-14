@@ -100,6 +100,7 @@ function ArticoloForm({ data, campoScheda }) {
       <Fieldset title="lavorazioni richieste">
         <TabellaNestedItems
           name="richieste"
+          sortBy={["lavorazione", "punto"]}
           colonne={[
             {
               name: "lavorazione",
