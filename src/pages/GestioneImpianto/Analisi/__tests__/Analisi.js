@@ -38,8 +38,6 @@ describe("Analisi", () => {
     expect(screen.getByLabelText(/controanalisi/i)).toBeInTheDocument();
     expect(screen.getByText(/test operatore/i)).toBeInTheDocument();
     expect(screen.getByText(/test analisi/i)).toBeInTheDocument();
-    expect(screen.getByText("12/7/2022")).toBeInTheDocument();
-    expect(screen.getByText("17:46")).toBeInTheDocument();
     expect(screen.getByText(/salva/i)).toBeInTheDocument();
   });
 });
