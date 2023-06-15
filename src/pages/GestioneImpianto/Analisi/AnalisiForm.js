@@ -113,6 +113,7 @@ function AnalisiForm({ data }) {
                       <Input
                         label={false}
                         inputProps={{
+                          role: "input",
                           type: "number",
                           step: "0.01",
                           className: "w-2/3 m-auto text-center",
