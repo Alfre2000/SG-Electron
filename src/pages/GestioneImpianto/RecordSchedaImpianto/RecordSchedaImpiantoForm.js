@@ -85,56 +85,60 @@ function RecordSchedaImpiantoForm({ data, warning }) {
           </Alert>
         )}
       </Row>
-      <Row className="mb-4">
-        <Fieldset
-          title={
-            <div>
-              Aggiunte Iniziali{" "}
-              <FontAwesomeIcon
-                icon={faCheck}
-                onClick={() => checkAll("record_aggiunte")}
-                className=" border-stone-300 border-1 rounded-full ml-2 relative top-1 bg-slate-50 p-1 h-4 w-4 cursor-pointer"
-              />
-            </div>
-          }
-        >
-          <TabellaCheckBox
-            items={aggiunteIniziali}
-            checkName="eseguito"
-            itemName="aggiunta"
-            listName="record_aggiunte"
-            hiddens={[{ name: "iniziale", value: true }]}
+      {aggiunteIniziali.length > 0 && (
+        <Row className="mb-4">
+          <Fieldset
+            title={
+              <div>
+                Aggiunte Iniziali{" "}
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  onClick={() => checkAll("record_aggiunte")}
+                  className=" border-stone-300 border-1 rounded-full ml-2 relative top-1 bg-slate-50 p-1 h-4 w-4 cursor-pointer"
+                />
+              </div>
+            }
+          >
+            <TabellaCheckBox
+              items={aggiunteIniziali}
+              checkName="eseguito"
+              itemName="aggiunta"
+              listName="record_aggiunte"
+              hiddens={[{ name: "iniziale", value: true }]}
+              initialData={{
+                ...initialData,
+                record_aggiunte:
+                  initialData?.record_aggiunte?.filter((el) => el.iniziale) || [],
+              }}
+            />
+          </Fieldset>
+        </Row>
+      )}
+      {aggiunteSuccessive.length > 0 && (
+        <Fieldset title="Aggiunte successive" className="mb-4">
+          <TabellaNestedItems
+            name="record_aggiunte"
             initialData={{
               ...initialData,
               record_aggiunte:
-                initialData?.record_aggiunte?.filter((el) => el.iniziale) || [],
+                initialData?.record_aggiunte?.filter((agg) => !agg.iniziale) ||
+                [],
             }}
+            startIndex={aggiunteIniziali.length}
+            colonne={[
+              { name: "data", type: "date" },
+              { name: "ora", type: "time" },
+              {
+                name: "aggiunta",
+                type: "select",
+                options: searchOptions(aggiunteSuccessive, "materiale"),
+              },
+              { name: "eseguito", type: "hidden", value: "on" },
+              { name: "iniziale", type: "hidden", value: "off" },
+            ]}
           />
         </Fieldset>
-      </Row>
-      <Fieldset title="Aggiunte successive" className="mb-4">
-        <TabellaNestedItems
-          name="record_aggiunte"
-          initialData={{
-            ...initialData,
-            record_aggiunte:
-              initialData?.record_aggiunte?.filter((agg) => !agg.iniziale) ||
-              [],
-          }}
-          startIndex={aggiunteIniziali.length}
-          colonne={[
-            { name: "data", type: "date" },
-            { name: "ora", type: "time" },
-            {
-              name: "aggiunta",
-              type: "select",
-              options: searchOptions(aggiunteSuccessive, "materiale"),
-            },
-            { name: "eseguito", type: "hidden", value: "on" },
-            { name: "iniziale", type: "hidden", value: "off" },
-          ]}
-        />
-      </Fieldset>
+      )}
       <Row className="mb-4 text-left">
         <Form.Group>
           <Form.Label className="mt-2">Operazioni straordinarie:</Form.Label>
