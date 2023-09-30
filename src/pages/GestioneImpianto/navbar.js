@@ -20,11 +20,15 @@ export const getNavItems = (user) => {
       {name: 'Andamento Produzione', link: '/manutenzione/produzione/'},
     ]},
   ];
+  // Se non è l'impianto Ossido, rimuovi le manutenzioni e aggiungi la scheda dell'ossido
   if (!user.impianto?.nome.toLowerCase().includes('ossido')) {
-    items.splice(2, 1)
-    items[2].links.splice(0, 1)
+    items.splice(2, 1) // Remove Manutenzioni
+    items[2].links.splice(0, 1) // Remove Prossime Manutenzioni
   } else {
-    items[0].links.splice(1, 1)
+    items[0].links.splice(1, 1) // Remove Schede in sospeso
+    items.splice(0, 0, { title: "Scheda valvole", icon: faClipboardCheck, links: [
+      {name: 'Nuova scheda', link: '/manutenzione/record-lavorazione-ossido/'},
+    ]})
   }
   if (!user.impianto?.nome) {
     items = []

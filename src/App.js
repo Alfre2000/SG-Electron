@@ -27,21 +27,32 @@ import Certificato from "./pages/CertificatiQualità/Certificato/Certificato";
 import CertificatiBolla from "./pages/CertificatiQualità/CertificatiBolla/CertificatiBolla";
 import EtichetteMTA from "./pages/CertificatiQualità/EtichetteMTA/EtichetteMTA";
 import Dashboards from "./pages/AndamentoProduzione/Dashboards/Dashboards";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { defaultQueryFn } from "./api/queryFn";
 
 function reducer (state, userInfo) {
   return userInfo
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      queryFn: defaultQueryFn,
+      staleTime: 1000 * 20,
+    },
+  },
+})
+
 function App() {
   const userData = JSON.parse(localStorage.getItem("user")) || {}
   const [success, setSuccess] = useState(false)
   const [user, setUser] = useReducer(reducer, userData)
-  const impianto = user?.user?.impianto || null
   const loginSuccess = () => {
     setSuccess(true);
     setTimeout(() => setSuccess(false), 4000)
   }
   return (
+    <QueryClientProvider client={queryClient}>
     <UserContext.Provider value={{ user, setUser}}>
       <div className="flex" style={{userSelect: "none"}}>
         <HashRouter>
@@ -56,12 +67,8 @@ function App() {
               <Route path="prossime/" element={<Prossime />}></Route>
               <Route path="produzione/" element={<Produzione />}></Route>
               <Route path="ricerca/" element={<RicercaDatabase />}></Route>
-              <Route path="record-lavorazione/" 
-                element={impianto?.nome.toLowerCase().includes('ossido')
-                  ? <RecordLavorazioneOssido /> 
-                  : <RecordLavorazione />
-                }>
-              </Route>
+              <Route path="record-lavorazione/" element={<RecordLavorazione />}></Route>
+              <Route path="record-lavorazione-ossido/" element={<RecordLavorazioneOssido />}></Route>
               <Route path="record-lavorazione-in-sospeso/" element={<LavorazioniInSospeso />}></Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
               <Route path="record-scheda-impianto/" element={<RecordSchedaImpianto />}></Route>
@@ -94,6 +101,7 @@ function App() {
         )}
       </div>
     </UserContext.Provider>
+    </QueryClientProvider>
   );
 }
 
