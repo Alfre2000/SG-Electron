@@ -28,10 +28,12 @@ import { useQueryClient } from "react-query";
 import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 import Form from "../../Form";
 import { toast } from "sonner";
+import { usePageContext } from "../../../contexts/PageContext";
 
 let last_res = undefined;
 
-function RecordLavorazioneForm({ showOperatore, impiantoFilter = true }) {
+function RecordLavorazioneForm({ showOperatore }) {
+  const { impiantoFilter } = usePageContext();
   const queryClient = useQueryClient();
   const { data: articoli } = useCustomQuery({ queryKey: URLS.ARTICOLI_NESTED }, {}, impiantoFilter);
 

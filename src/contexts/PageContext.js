@@ -3,7 +3,7 @@ import UserContext from "../UserContext";
 
 const Context = createContext();
 
-function PageContext({ children, impiantoFilter = false, FormComponent, getURL, postURL, defaultFilters = [], queriesToInvalidate = [] }) {
+function PageContext({ children, impiantoFilter = false, FormComponent, FormComponentFn, getURL, postURL, defaultFilters = [], queriesToInvalidate = [] }) {
   const [copyData, setCopyData] = useState(null)
   const [filters, setFilters] = useState({ ordering: "", filters: {} })
   const [page, setPage] = useState(1)
@@ -18,7 +18,7 @@ function PageContext({ children, impiantoFilter = false, FormComponent, getURL, 
 
   postURL = postURL || queryKey[0]
   return (
-    <Context.Provider value={{ impiantoFilter, FormComponent, queryKey, page, postURL, filters, setFilters, setPage, copyData, setCopyData, queriesToInvalidate }}>
+    <Context.Provider value={{ impiantoFilter, FormComponent, FormComponentFn, queryKey, page, postURL, filters, setFilters, setPage, copyData, setCopyData, queriesToInvalidate }}>
       {children}
     </Context.Provider>
   );

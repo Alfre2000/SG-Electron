@@ -4,18 +4,18 @@ import ReactForm from "react-bootstrap/Form";
 import { apiUpdate } from "../api/api";
 import { apiPost } from "../api/apiV2";
 import FormContext from "../contexts/FormContext";
-import { focusErrorInput, isFormComponent, parseFormData } from "./utils";
+import { focusErrorInput, parseFormData } from "./utils";
 import useCustomQuery from "../hooks/useCustomQuery/useCustomQuery";
 import useImpiantoMutation from "../hooks/useImpiantoMutation/useImpiantoMutation";
 import { usePageContext } from "../contexts/PageContext";
 import { toast } from "sonner";
 
 function Form({ children, initialData, onSuccess, view, validator, componentProps }) {
-  const { FormComponent, queryKey, postURL, copyData, setCopyData, queriesToInvalidate } = usePageContext();
+  const { FormComponent, FormComponentFn, queryKey, postURL, copyData, setCopyData, queriesToInvalidate } = usePageContext();
 
   initialData = initialData || copyData
   const finalURL = typeof postURL === "function" ? postURL(initialData) : postURL
-  const FormComponentFinal = isFormComponent(FormComponent) ? FormComponent : FormComponent(initialData)
+  const FormComponentFinal = FormComponentFn ? FormComponentFn(initialData) : FormComponent
 
   const staticForm = Boolean(view)
   const formRef = useRef(null);

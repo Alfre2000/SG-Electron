@@ -14,15 +14,17 @@ import { searchOptions } from "../../../utils";
 import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 import { URLS } from "../../../urls";
 import { parseSchedaLavorazione } from "../parsers";
+import { usePageContext } from "../../../contexts/PageContext";
 
-function RecordLavorazioneOssidoForm({ impantoFilter = true }) {
-  const operatoriQuery = useCustomQuery({ queryKey: URLS.OPERATORI }, {}, impantoFilter);
-  const articoliQuery = useCustomQuery({ queryKey: URLS.ARTICOLI }, {}, impantoFilter);
-  const recordsQuery = useCustomQuery({ queryKey: [URLS.RECORD_LAVORAZIONI, { page: 1 }] }, {}, impantoFilter);
+function RecordLavorazioneOssidoForm() {
+  const { impiantoFilter } = usePageContext();
+  const operatoriQuery = useCustomQuery({ queryKey: URLS.OPERATORI }, {}, impiantoFilter);
+  const articoliQuery = useCustomQuery({ queryKey: URLS.ARTICOLI }, {}, impiantoFilter);
+  const recordsQuery = useCustomQuery({ queryKey: [URLS.RECORD_LAVORAZIONI, { page: 1 }] }, {}, impiantoFilter);
   const scehdaControlloQuery = useCustomQuery(
     { queryKey: URLS.SCHEDA_CONTROLLO_OSSIDO },
     { select: parseSchedaLavorazione },
-    impantoFilter
+    impiantoFilter
   );
 
   const { user } = useUserContext();
