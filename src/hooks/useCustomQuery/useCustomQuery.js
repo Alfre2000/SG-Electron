@@ -17,6 +17,7 @@ function useCustomQuery(params, options = {}, impiantoFilter = false) {
     });
   }
   const query = useQuery({ queryKey: queryKey, ...options })
+  query.queryKey = queryKey;
   return query;
 }
 

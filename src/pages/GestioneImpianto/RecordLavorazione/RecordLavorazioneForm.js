@@ -35,7 +35,7 @@ let last_res = undefined;
 function RecordLavorazioneForm({ showOperatore }) {
   const { impiantoFilter } = usePageContext();
   const queryClient = useQueryClient();
-  const { data: articoli } = useCustomQuery({ queryKey: URLS.ARTICOLI_NESTED }, {}, impiantoFilter);
+  const { data: articoli, queryKey: articoliQueryKey } = useCustomQuery({ queryKey: URLS.ARTICOLI_NESTED }, {}, impiantoFilter);
 
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
@@ -98,7 +98,7 @@ function RecordLavorazioneForm({ showOperatore }) {
             if (last_res && last_res > parseInt(value.split(".").at(-1)))
               return;
             if (!articoli.map((a) => a.id).includes(res.articolo.id)) {
-              queryClient.setQueryData(URLS.ARTICOLI_NESTED, (prev) => [res.articolo, ...prev])
+              queryClient.setQueryData(articoliQueryKey, () => [res.articolo, ...articoli])
               queryClient.invalidateQueries(URLS.ARTICOLI)
             }
             setLoadingLotto(false);
