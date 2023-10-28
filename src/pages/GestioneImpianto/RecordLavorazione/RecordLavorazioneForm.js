@@ -121,6 +121,7 @@ function RecordLavorazioneForm({ showOperatore, impiantoFilter = true }) {
             }, 1000);
           })
           .catch((err) => {
+            console.log(err);
             setErrorLotto(true);
             setLoadingLotto(false);
             setTimeout(() => setErrorLotto(false), 1000 * 5);

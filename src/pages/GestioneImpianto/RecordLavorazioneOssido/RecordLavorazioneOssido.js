@@ -45,6 +45,7 @@ function RecordLavorazioneOssido() {
       getURL={URLS.RECORD_LAVORAZIONI_OSSIDO}
       postURL={URLS.RECORD_LAVORAZIONI}
       FormComponent={RecordLavorazioneOssidoForm}
+      queriesToInvalidate={[URLS.RECORD_LAVORAZIONI_OSSIDO]}
       impiantoFilter={true}
     >
       <Wrapper>
