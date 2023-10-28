@@ -1,6 +1,6 @@
 import { faPlus, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { Button, Col, Popover, Row, Table } from "react-bootstrap";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
@@ -63,6 +63,14 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
   const richieste = lavorazioni.map(lav => lav.richieste).flat()
   const emptyRow = Array(nCols).fill(0).map(_ => ({ valore: "" }))
   const [misurazioni, setMisurazioni] = useState(initialData?.misurazioni ? defaultMisurazioni(initialData, lavorazioni) : [emptyRow])
+  
+  useEffect(() => {
+    if (initialData?.misurazioni?.length > 0 && misurazioni.length === 0) {
+      setMisurazioni(defaultMisurazioni(initialData, lavorazioni))
+    }
+  }, [initialData, lavorazioni, misurazioni.length])
+
+
   const [open, setOpen] = useState(false)
   const popupRef = useRef(null);
   useOutsideAlerter(popupRef, (e) => {

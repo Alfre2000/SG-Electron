@@ -10,5 +10,7 @@ export const getHeaders = (auth = true) => {
 export const getErrors = (error) => {
   return error.response && error.response.data
     ? error.response.data
-    : error?.message;
+    : error.message
+    ? error?.message
+    : error;
 };
