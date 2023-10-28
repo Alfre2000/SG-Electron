@@ -1,34 +1,40 @@
 import { faCircleCheck, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { findElementFromID } from "../../utils";
+import ManutenzioneForm from "./Manutenzione/ManutenzioneForm";
+import AnalisiForm from "./Analisi/AnalisiForm";
+import FissaggioForm from "./Fissaggio/FissaggioForm";
+import { URLS } from "../../urls";
 
 export const parseProssimeManutenzioni = (response, full = false) => {
   let parsedData = { ok: [], late: [] }
   if (!response) return parsedData;
   response.operazioni.forEach(operazione => {
-    const scadutaGiorni = operazione.giorni_mancanti !== null && operazione.giorni_mancanti <= 0
-    const scadutaPezzi = operazione.pezzi_mancanti !== null && operazione.pezzi_mancanti <= 0
-    if (operazione.tipologia === "fissaggio") operazione.link = `/manutenzione/fissaggio/`;
-    if (operazione.tipologia === "analisi") operazione.link = `/manutenzione/analisi/?analisi=${operazione.id}`;
-    if (operazione.tipologia === "manutenzione") operazione.link = `/manutenzione/manutenzioni/?manutenzione=${operazione.id}`
+    const operazioneParsed = {...operazione}
+    const scadutaGiorni = operazioneParsed.giorni_mancanti !== null && operazioneParsed.giorni_mancanti <= 0
+    const scadutaPezzi = operazioneParsed.pezzi_mancanti !== null && operazioneParsed.pezzi_mancanti <= 0
+    if (operazioneParsed.tipologia === "fissaggio") operazioneParsed.link = `/manutenzione/fissaggio/`;
+    if (operazioneParsed.tipologia === "analisi") operazioneParsed.link = `/manutenzione/analisi/?analisi=${operazioneParsed.id}`;
+    if (operazioneParsed.tipologia === "manutenzione") operazioneParsed.link = `/manutenzione/manutenzioni/?manutenzione=${operazioneParsed.id}`
     if (full) {
-      operazione.colore_pezzi = scadutaPezzi ? "#960c0c" : "#058020"
-      operazione.colore_giorni = scadutaGiorni ? "#960c0c" : "#058020"
-      operazione.pezzi_da_utlima = operazione.intervallo_pezzi && operazione.pezzi_mancanti <= 0 ? -operazione.pezzi_mancanti.toLocaleString() + ' pezzi' : "-"
-      operazione.giorni_da_utlima = operazione.intervallo_giorni && operazione.giorni_mancanti <= 0 ? -operazione.giorni_mancanti + ' giorni' : "-"
-      operazione.pezzi_da_utlima_pop = operazione.intervallo_pezzi ? (operazione.intervallo_pezzi - operazione.pezzi_mancanti).toLocaleString() + ' pezzi' : "-"
-      operazione.giorni_da_utlima_pop = operazione.intervallo_giorni ? operazione.intervallo_giorni - operazione.giorni_mancanti + ' giorni' : "-"
-      operazione.icona_pezzi = operazione.pezzi_mancanti <= 0 ? faWarning : faCircleCheck;
-      operazione.icona_giorni = operazione.giorni_mancanti <= 0 ? faWarning : faCircleCheck;
-      operazione.messaggio_pezzi = operazione.pezzi_mancanti <= 0 ? "Ritardo" : "Da fare tra";
-      operazione.messaggio_giorni = operazione.giorni_mancanti <= 0 ? "Ritardo" : "Da fare tra";
+      operazioneParsed.colore_pezzi = scadutaPezzi ? "#960c0c" : "#058020"
+      operazioneParsed.colore_giorni = scadutaGiorni ? "#960c0c" : "#058020"
+      operazioneParsed.pezzi_da_utlima = operazioneParsed.intervallo_pezzi && operazioneParsed.pezzi_mancanti <= 0 ? -operazioneParsed.pezzi_mancanti.toLocaleString() + ' pezzi' : "-"
+      operazioneParsed.giorni_da_utlima = operazioneParsed.intervallo_giorni && operazioneParsed.giorni_mancanti <= 0 ? -operazioneParsed.giorni_mancanti + ' giorni' : "-"
+      operazioneParsed.pezzi_da_utlima_pop = operazioneParsed.intervallo_pezzi ? (operazioneParsed.intervallo_pezzi - operazioneParsed.pezzi_mancanti).toLocaleString() + ' pezzi' : "-"
+      operazioneParsed.giorni_da_utlima_pop = operazioneParsed.intervallo_giorni ? operazioneParsed.intervallo_giorni - operazioneParsed.giorni_mancanti + ' giorni' : "-"
+      operazioneParsed.icona_pezzi = operazioneParsed.pezzi_mancanti <= 0 ? faWarning : faCircleCheck;
+      operazioneParsed.icona_giorni = operazioneParsed.giorni_mancanti <= 0 ? faWarning : faCircleCheck;
+      operazioneParsed.messaggio_pezzi = operazioneParsed.pezzi_mancanti <= 0 ? "Ritardo" : "Da fare tra";
+      operazioneParsed.messaggio_giorni = operazioneParsed.giorni_mancanti <= 0 ? "Ritardo" : "Da fare tra";
   
-      operazione.pezzi_mancanti = operazione.intervallo_pezzi ? operazione.pezzi_mancanti.toLocaleString() + ' pezzi' : "-"
-      operazione.giorni_mancanti = operazione.intervallo_giorni ? operazione.giorni_mancanti + ' giorni' : "-"
-      operazione.intervallo_pezzi = operazione.intervallo_pezzi ? operazione.intervallo_pezzi.toLocaleString() + ' pezzi' : "-"
-      operazione.intervallo_giorni = operazione.intervallo_giorni ? operazione.intervallo_giorni + ' giorni' : "-"
+      operazioneParsed.pezzi_mancanti = operazioneParsed.intervallo_pezzi ? operazioneParsed.pezzi_mancanti.toLocaleString() + ' pezzi' : "-"
+      operazioneParsed.giorni_mancanti = operazioneParsed.intervallo_giorni ? operazioneParsed.giorni_mancanti + ' giorni' : "-"
+      operazioneParsed.intervallo_pezzi = operazioneParsed.intervallo_pezzi ? operazioneParsed.intervallo_pezzi.toLocaleString() + ' pezzi' : "-"
+      operazioneParsed.intervallo_giorni = operazioneParsed.intervallo_giorni ? operazioneParsed.intervallo_giorni + ' giorni' : "-"
     }
-    operazione.tipologia = operazione.tipologia === "fissaggio" ? "analisi" : operazione.tipologia
-    if (scadutaGiorni || scadutaPezzi) parsedData.late.push(operazione)
-    else parsedData.ok.push(operazione)
+    operazioneParsed.tipologia = operazioneParsed.tipologia === "fissaggio" ? "analisi" : operazioneParsed.tipologia
+    if (scadutaGiorni || scadutaPezzi) parsedData.late.push(operazioneParsed)
+    else parsedData.ok.push(operazioneParsed)
   })
   parsedData.ok = parsedData.ok.sort((a, b) => parseNumber(a.pezzi_mancanti) - parseNumber(b.pezzi_mancanti))
   parsedData.late = parsedData.late.sort((a, b) => parseNumber(a.pezzi_mancanti) - parseNumber(b.pezzi_mancanti))
@@ -40,9 +46,39 @@ const parseNumber = (number) => {
 }
 
 export const parseSchedaLavorazione = (response) => {
-  for (const [key, value] of Object.entries(response.scheda_controllo.caratteristiche)) {
-    response.scheda_controllo[key] = value
+  const scheda = {...response.scheda_controllo}
+  if (scheda?.caratteristiche === undefined) return scheda;
+  for (const [key, value] of Object.entries(scheda.caratteristiche)) {
+    scheda[key] = value
   }
-  delete response.scheda_controllo.caratteristiche
-  return response
+  delete scheda.caratteristiche
+  return scheda
+}
+
+const tabellaForms = {
+  manutenzione: ManutenzioneForm,
+  analisi: AnalisiForm,
+  fissaggio: FissaggioForm,
+};
+const tabellaURLs = {
+  manutenzione: URLS.RECORD_MANUTENZIONE,
+  analisi: URLS.RECORD_ANALISI,
+  fissaggio: URLS.RECORD_FISSAGGIO,
+};
+
+export const parseRicercaDatabase = (response, operazioni) => {
+  return {
+    ...response,
+    results: response.results.map((r) => {
+      const tipologia = findElementFromID(
+        r.operazione,
+        operazioni
+      ).tipologia;
+      return {
+        ...r,
+        form: tabellaForms[tipologia],
+        url: tabellaURLs[tipologia],
+      };
+    }),
+  }
 }

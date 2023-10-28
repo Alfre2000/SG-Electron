@@ -13,7 +13,8 @@ import FileField from "../FileField/FileField";
 function TabellaNestedItems({ name, colonne, initialData, sortBy, startIndex = 0 }) {
   const formData = useFormContext()
   initialData = initialData !== undefined ? initialData : formData?.initialData;
-  if (initialData !== undefined && initialData[name]?.length > 0 && "data" in initialData[name][0]) {
+  const isEmpty = initialData === undefined || initialData === null;
+  if (!isEmpty && initialData[name]?.length > 0 && "data" in initialData[name][0]) {
     initialData[name] = initialData[name].map(el => ({
       ...el, 
       data: dateToDatePicker(new Date(el.data)),
@@ -63,6 +64,17 @@ function TabellaNestedItems({ name, colonne, initialData, sortBy, startIndex = 0
   );
   const colWidth = 95 / colonne.length;
   const hasDatetime = colonne.some(c => c.type === "date") && colonne.some(c => c.type === "time")
+  const removeRow = (item, idx) => {
+    let newItems = items.filter((el) => !objectsEqual(el, item));
+    if (newItems.length === items.length - 1) {
+      setItems(newItems);
+    } else {
+      setItems(items.filter((_, i) => idx !== i));
+    }
+    if (item.id) {
+      formData.setInitialData(prev => ({...prev, [name]: prev[name].filter(el => el.id !== item.id)}))
+    }
+  }
   return (
     <Table bordered className="align-middle text-sm text-center">
       <thead>
@@ -152,16 +164,7 @@ function TabellaNestedItems({ name, colonne, initialData, sortBy, startIndex = 0
                   value={new Date(item.data + " " + item.ora).toISOString()}
                 />
               )}
-              <MinusIcon
-                onClick={() => {
-                  let newItems = items.filter((el) => !objectsEqual(el, item));
-                  if (newItems.length === items.length - 1) {
-                    setItems(newItems);
-                  } else {
-                    setItems(items.filter((_, i) => idx !== i));
-                  }
-                }}
-              />
+              <MinusIcon onClick={() => removeRow(item, idx)} />
             </td>
           </tr>
         ))}

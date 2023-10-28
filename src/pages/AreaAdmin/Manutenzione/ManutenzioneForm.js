@@ -4,8 +4,11 @@ import Hidden from "../../../components/form-components/Hidden/Hidden";
 import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { searchOptions } from "../../../utils";
+import { URLS } from "../../../urls";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 
-function ManutenzioneForm({ data }) {
+function ManutenzioneForm() {
+  const impiantiQuery = useCustomQuery({ queryKey: URLS.IMPIANTI });
   return (
     <>
       <Row className="mb-4 mt-2">
@@ -14,7 +17,7 @@ function ManutenzioneForm({ data }) {
             <Input name="nome" />
             <SearchSelect
               name="impianto"
-              options={searchOptions(data?.impianti, "nome")}
+              options={searchOptions(impiantiQuery.data, "nome")}
             />
           </Stack>
         </Col>

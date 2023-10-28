@@ -43,7 +43,7 @@ function SearchSelect({ label, name, inputProps, labelProps, labelCols, options,
           styles={customStyle}
           name={name}
           options={options}
-          defaultValue={defaultValue ? options.filter(o => o.value === defaultValue || o.label === defaultValue)[0] : null}
+          defaultValue={defaultValue && options ? options.filter(o => o.value === defaultValue || o.label === defaultValue)[0] : null}
           isDisabled={disabled}
           inputId={name}
           {...inputProps}

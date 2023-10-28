@@ -1,16 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Col, Row, Form } from "react-bootstrap";
 import Input from "../../../components/form-components/Input";
 import { dateToDatePicker, searchOptions } from "../../../utils";
 import { URLS } from "../../../urls";
-import { apiGet } from "../../../api/api";
-import { useUserContext } from "../../../UserContext";
 import SearchSelect from "../../../components/form-components/SearchSelect";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
+import { usePageContext } from "../../../contexts/PageContext";
 
-function RicercaDatabaseForm({ data, setData }) {
-  const { user } = useUserContext();
-  const [inizio, setInizio] = useState("");
-  const [fine, setFine] = useState(dateToDatePicker(new Date()));
+function RicercaDatabaseForm() {
+  const { filters, setFilters } = usePageContext();
+
+  const operatoriQuery = useImpiantoQuery({ queryKey: URLS.OPERATORI });
+  const operazioniQuery = useImpiantoQuery({ queryKey: URLS.OPERAZIONI_DEEP });
+
   const formRef = useRef(null);
   const handleHelpChange = (e) => {
     let timeframe;
@@ -21,21 +23,10 @@ function RicercaDatabaseForm({ data, setData }) {
     const newDate = dateToDatePicker(
       new Date(Date.now() - timeframe * 24 * 60 * 60 * 1000)
     );
-    setInizio(newDate);
-    setFine(dateToDatePicker(new Date()));
-    sendForm({ inizio: newDate, fine: dateToDatePicker(new Date()) });
-  };
-  const sendForm = (moreData = {}) => {
-    const impianto = user.user.impianto.id;
-    const formData = {
-      ...Object.fromEntries(new FormData(formRef.current).entries()),
-      ...moreData,
-      impianto: impianto,
-    };
-    const searchParams = new URLSearchParams(formData);
-    apiGet(`${URLS.PAGINA_RICERCA_DATABASE}?${searchParams.toString()}`).then(
-      (res) => setData((prev) => ({ ...prev, records: res }))
-    );
+    setFilters((prev)=> ({
+      ...prev,
+      filters: {...prev.filters, inizio: newDate, fine: dateToDatePicker(new Date())},
+    }));
   };
   return (
     <form ref={formRef}>
@@ -45,10 +36,9 @@ function RicercaDatabaseForm({ data, setData }) {
             name="inizio"
             vertical={true}
             inputProps={{
-              value: inizio,
+              value: filters.filters.inizio,
               onChange: (e) => {
-                setInizio(e.target.value);
-                sendForm();
+                setFilters((prev) => ({...prev, filters: {...prev.filters, inizio: e.target.value }}));
               },
               type: "date",
             }}
@@ -60,10 +50,9 @@ function RicercaDatabaseForm({ data, setData }) {
             vertical={true}
             inputProps={{
               type: "date",
-              value: fine,
+              value: filters.filters.fine,
               onChange: (e) => {
-                setFine(e.target.value);
-                sendForm();
+                setFilters((prev) => ({...prev, filters: {...prev.filters, fine: e.target.value }}));
               },
             }}
           />
@@ -92,9 +81,10 @@ function RicercaDatabaseForm({ data, setData }) {
           <SearchSelect
             label={false}
             name="operatore"
-            options={searchOptions(data?.operatori, "nome")}
+            options={searchOptions(operatoriQuery.data, "nome")}
             inputProps={{
-              onChange: (e) => sendForm({ operatore: e?.value || "" }),
+              onChange: (e) =>
+                setFilters((prev) => ({...prev, filters: {...prev.filters, operatore: e?.value || "" }}))
             }}
           />
         </Col>
@@ -103,9 +93,10 @@ function RicercaDatabaseForm({ data, setData }) {
           <SearchSelect
             label={false}
             name="operazione"
-            options={searchOptions(data?.operazioni, "nome")}
+            options={searchOptions(operazioniQuery.data, "nome")}
             inputProps={{
-              onChange: (e) => sendForm({ operazione: e?.value || "" }),
+              onChange: (e) =>
+                setFilters((prev) => ({...prev, filters: {...prev.filters, operazione: e?.value || "" }}))
             }}
           />
         </Col>

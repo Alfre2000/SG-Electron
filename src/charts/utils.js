@@ -21,6 +21,20 @@ export const formatDate = (date, format) => {
   return capitalize(new Date(date).toLocaleString("default", options));
 };
 
+function capitalizeFirstLetter(word) {
+  if (word.length === 0) {
+    return word; // Return an empty string if the input is empty
+  }
+  
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+export function capitalizeFirstLetters(sentence) {
+  const words = sentence.split(' ');
+  const capitalizedWords = words.map(word => capitalizeFirstLetter(word));
+  return capitalizedWords.join(' ');
+}
+
 export const colors = [
   "rgba(255, 99, 132, 0.9)",
   "rgba(255, 159, 64, 0.9)",

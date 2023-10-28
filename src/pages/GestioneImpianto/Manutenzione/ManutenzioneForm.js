@@ -7,8 +7,13 @@ import SearchSelect from "../../../components/form-components/SearchSelect";
 import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { useFormContext } from "../../../contexts/FormContext";
 import { searchOptions } from "../../../utils";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
+import { URLS } from "../../../urls";
 
-function ManutenzioneForm({ data }) {
+function ManutenzioneForm() {
+  const manutenzioniQuery = useImpiantoQuery({ queryKey: URLS.MANUTENZIONI });
+  const operatoriQuery = useImpiantoQuery({ queryKey: URLS.OPERATORI });
+
   const { initialData } = useFormContext();
   const [searchParams] = useSearchParams();
   const startManutenzione =
@@ -27,7 +32,7 @@ function ManutenzioneForm({ data }) {
           <SearchSelect
             label={false}
             name="operatore"
-            options={searchOptions(data?.operatori, "nome")}
+            options={searchOptions(operatoriQuery.data, "nome")}
           />
         </Col>
       </Row>
@@ -37,7 +42,7 @@ function ManutenzioneForm({ data }) {
         </Col>
         <Col xs={8} className="max-h-[310px] overflow-scroll">
           <ListGroupInput
-            options={searchOptions(data?.operazioni, "nome")}
+            options={searchOptions(manutenzioniQuery.data, "nome")}
             defaultValue={startManutenzione}
             name="operazione"
           />

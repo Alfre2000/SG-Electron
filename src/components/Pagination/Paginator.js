@@ -1,9 +1,7 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
-import { apiGet } from "../../api/api";
-import { updateQueryStringParameter } from "../../utils";
 
-function Paginator({ data, setData }) {
+function Paginator({ data, setPage }) {
   const currentPage = data?.next
     ? parseInt(
         data.next
@@ -16,21 +14,14 @@ function Paginator({ data, setData }) {
           .split("page=")
           [data.previous.split("page=").length - 1].split("&")[0]
       ) + 1
-    : 1;
+    : data?.results?.length === data?.count
+    ? 1
+    : 2;
   const totalPages = data
     ? data.next
       ? Math.ceil(data.count / data.results.length)
       : currentPage
     : "";
-  const baseURL = data?.next || data?.previous || "";
-  const firstPageURL = updateQueryStringParameter(baseURL, "page", "1");
-  const lastPageURL = updateQueryStringParameter(baseURL, "page", "last");
-  const updateData = (pageLink) => {
-    if (!pageLink.includes("page=")) pageLink = firstPageURL;
-    apiGet(pageLink).then(
-      (res) => setData(res)
-    );
-  };
   return (
     <Pagination className="flex justify-between">
       <div className="flex min-w-[150px]">
@@ -38,18 +29,18 @@ function Paginator({ data, setData }) {
           <>
             <Pagination.First
               className="paginator-first"
-              onClick={() => updateData(firstPageURL)}
+              onClick={() => setPage(1)}
             />
             <Pagination.Prev
               className="paginator-back"
-              onClick={() => updateData(data.previous)}
+              onClick={() => setPage(currentPage - 1)}
             >
               Precedente
             </Pagination.Prev>
           </>
         )}
       </div>
-      <div>
+      <div className="m-auto">
         Pagina {currentPage} di {totalPages}
       </div>
       <div className="flex min-w-[150px]">
@@ -57,13 +48,13 @@ function Paginator({ data, setData }) {
           <>
             <Pagination.Next
               className="paginator-next"
-              onClick={() => updateData(data.next)}
+              onClick={() => setPage(currentPage + 1)}
             >
               Successiva
             </Pagination.Next>
             <Pagination.Last
               className="paginator-last"
-              onClick={() => updateData(lastPageURL)}
+              onClick={() => setPage(totalPages)}
             />
           </>
         )}

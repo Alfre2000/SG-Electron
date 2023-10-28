@@ -11,8 +11,20 @@ import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { useFormContext } from "../../../contexts/FormContext";
 import { useUserContext } from "../../../UserContext";
 import { searchOptions } from "../../../utils";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
+import { URLS } from "../../../urls";
+import { parseSchedaLavorazione } from "../parsers";
 
-function RecordLavorazioneOssidoForm({ data }) {
+function RecordLavorazioneOssidoForm({ impantoFilter = true }) {
+  const operatoriQuery = useCustomQuery({ queryKey: URLS.OPERATORI }, {}, impantoFilter);
+  const articoliQuery = useCustomQuery({ queryKey: URLS.ARTICOLI }, {}, impantoFilter);
+  const recordsQuery = useCustomQuery({ queryKey: [URLS.RECORD_LAVORAZIONI, { page: 1 }] }, {}, impantoFilter);
+  const scehdaControlloQuery = useCustomQuery(
+    { queryKey: URLS.SCHEDA_CONTROLLO_OSSIDO },
+    { select: parseSchedaLavorazione },
+    impantoFilter
+  );
+
   const { user } = useUserContext();
   const { initialData } = useFormContext();
   const info = initialData?.dati_aggiuntivi;
@@ -27,7 +39,7 @@ function RecordLavorazioneOssidoForm({ data }) {
   const valvoleScarto =
     +materiale + +sporco + +meccanici + +trattamento + +altro;
 
-  const lavorazione = data?.records?.results?.at(0)?.lavorazione;
+  const lavorazione = recordsQuery.data?.results?.at(0)?.lavorazione;
 
   const [errValore, setErrValore] = useState({});
   const handleValoreChange = useCallback(
@@ -36,15 +48,15 @@ function RecordLavorazioneOssidoForm({ data }) {
       const name = e.target.name.includes("spessore")
         ? "spessore_ossido"
         : e.target.name.split("__").at(-1);
-      const minimo = data?.scheda_controllo[`${name}_minimo`];
-      const massimo = data?.scheda_controllo[`${name}_massimo`];
+      const minimo = scehdaControlloQuery.data?.[`${name}_minimo`];
+      const massimo = scehdaControlloQuery.data?.[`${name}_massimo`];
       const value = parseFloat(e.target.value);
       let errMsg = "";
       if (value > massimo) errMsg = `Valore oltre il massimo di ${massimo} !`;
       else if (value < minimo) errMsg = `Valore sotto il minimo di ${minimo} !`;
       setErrValore((oldErr) => ({ ...oldErr, [e.target.name]: errMsg }));
     },
-    [data?.scheda_controllo]
+    [scehdaControlloQuery.data]
   );
 
   useEffect(() => {
@@ -81,7 +93,7 @@ function RecordLavorazioneOssidoForm({ data }) {
             <TimeInput />
             <SearchSelect
               name="operatore"
-              options={searchOptions(data?.operatori, "nome")}
+              options={searchOptions(operatoriQuery.data, "nome")}
             />
           </Stack>
         </Col>
@@ -93,8 +105,8 @@ function RecordLavorazioneOssidoForm({ data }) {
               name="articolo"
               labelProps={{ className: "pr-6" }}
               options={
-                data?.articoli &&
-                data?.articoli?.map((o) => ({
+                articoliQuery.data &&
+                articoliQuery.data?.map((o) => ({
                   value: o.id,
                   label: `${o.nome} (${o.codice})`,
                 }))
@@ -379,7 +391,7 @@ function RecordLavorazioneOssidoForm({ data }) {
       </Form.Group>
       <Hidden value={valvoleScarto} name="n_pezzi_scartati" />
       <Hidden value={true} name="completata" />
-      <Hidden value={user?.user?.impianto?.id} name="impianto" />
+      <Hidden value={user?.user?.impianto?.id || initialData?.impianto} name="impianto" />
       <Hidden value={lavorazione} name="lavorazione" />
     </>
   );

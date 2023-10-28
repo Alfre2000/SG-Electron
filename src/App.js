@@ -2,7 +2,7 @@ import "./App.css";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import RecordLavorazioneOssido from "./pages/GestioneImpianto/RecordLavorazioneOssido/RecordLavorazioneOssido";
 import Analisi from "./pages/GestioneImpianto/Analisi/Analisi";
 import Fissaggio from "./pages/GestioneImpianto/Fissaggio/Fissaggio";
@@ -10,7 +10,6 @@ import Manutenzione from "./pages/GestioneImpianto/Manutenzione/Manutenzione";
 import Prossime from "./pages/GestioneImpianto/Prossime/Prossime";
 import Produzione from "./pages/GestioneImpianto/Produzione/Produzione";
 import UserContext from "./UserContext";
-import MyToast from "./components/MyToast/MyToast";
 import RicercaDatabase from "./pages/GestioneImpianto/RicercaDatabase/RicercaDatabase";
 import RecordLavorazione from "./pages/GestioneImpianto/RecordLavorazione/RecordLavorazione";
 import SelezioneImpianto from "./pages/GestioneImpianto/SelezioneImpianto/SelezioneImpianto";
@@ -29,6 +28,9 @@ import EtichetteMTA from "./pages/CertificatiQualità/EtichetteMTA/EtichetteMTA"
 import Dashboards from "./pages/AndamentoProduzione/Dashboards/Dashboards";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { defaultQueryFn } from "./api/queryFn";
+import { Toaster, toast } from 'sonner';
+import ProssimeManutenzioni from "./pages/AnalisiManutenzioni/ProssimeManutenzioni/ProssimeManutenzioni";
+import FocusArticolo from "./pages/AndamentoProduzione/FocusArticolo/FocusArticolo";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -38,18 +40,16 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: defaultQueryFn,
-      staleTime: 1000 * 20,
+      staleTime: 1000 * 60, // 60 seconds
     },
   },
 })
 
 function App() {
   const userData = JSON.parse(localStorage.getItem("user")) || {}
-  const [success, setSuccess] = useState(false)
   const [user, setUser] = useReducer(reducer, userData)
   const loginSuccess = () => {
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 4000)
+    toast.success("Login avvenuto con successo !")
   }
   return (
     <QueryClientProvider client={queryClient}>
@@ -93,13 +93,16 @@ function App() {
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">
               <Route path="dashboards/" element={<Dashboards />}></Route>
+              <Route path="focus-articolo/:articoloId" element={<FocusArticolo />}></Route>
+            </Route>
+            {/* Analisi e Manutenzioni */}
+            <Route path="analisi-manutenzioni/">
+              <Route path="prossime-manutenzioni/" element={<ProssimeManutenzioni />}></Route>
             </Route>
           </Routes>
         </HashRouter>
-        {success && (
-          <MyToast>Login avvenuto con successo !</MyToast>
-        )}
       </div>
+      <Toaster richColors />
     </UserContext.Provider>
     </QueryClientProvider>
   );

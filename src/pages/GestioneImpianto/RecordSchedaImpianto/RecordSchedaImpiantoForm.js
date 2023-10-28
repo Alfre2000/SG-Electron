@@ -16,12 +16,17 @@ import { useFormContext } from "../../../contexts/FormContext";
 import DocList from "./DocList";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
 import TabellaCheckBox from "../../../components/form-components/TabellaCheckBox/TabellaCheckBox";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
+import { URLS } from "../../../urls";
 
-function RecordSchedaImpiantoForm({ data, warning }) {
+function RecordSchedaImpiantoForm({ warning }) {
   const { initialData } = useFormContext();
-  const schedaImpianto = Array.isArray(data.schede_impianto)
-    ? data.schede_impianto[0]
-    : data.schede_impianto;
+  const operatoriQuery = useImpiantoQuery({ queryKey: URLS.OPERATORI });
+  const schedeImpiantoQuery = useImpiantoQuery({ queryKey: URLS.SCHEDE_IMPIANTO });
+
+  const schedaImpianto = Array.isArray(schedeImpiantoQuery.data)
+    ? schedeImpiantoQuery.data[0]
+    : schedeImpiantoQuery.data;
   const aggiunteSuccessive = schedaImpianto.aggiunte.filter(
     (agg) => agg.iniziale === false
   );
@@ -47,7 +52,7 @@ function RecordSchedaImpiantoForm({ data, warning }) {
         <Col xs={5}>
           <SearchSelect
             name="operatore"
-            options={searchOptions(data?.operatori, "nome")}
+            options={searchOptions(operatoriQuery.data, "nome")}
           />
         </Col>
       </Row>

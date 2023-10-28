@@ -11,8 +11,11 @@ import { useFormContext } from "../../../contexts/FormContext";
 import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { findElementFromID, max, mean, min } from "../../../utils";
 import { modifyNestedObject } from "../../utils";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
+import { URLS } from "../../../urls";
 
 const defaultMisurazioni = (initialData, lavorazioni) => {
+  if (lavorazioni.every(el => el === "")) return []
   if (initialData.misurazioni.length === 0) return []
   let groups = {}
   initialData.misurazioni.forEach(misurazione => {
@@ -41,16 +44,20 @@ const defaultMisurazioni = (initialData, lavorazioni) => {
   return columns
 }
 
-function PopoverMisurazioni({ data, controllo, idxControllo, initialData, articolo }) {
+function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) {
+  const lavorazioniQuery = useImpiantoQuery({ queryKey: URLS.LAVORAZIONI })
+
   const lavorazioni = useMemo(() =>
     controllo?.misurazioni?.map(lav => {
-      let lavorazione = findElementFromID(lav, data?.lavorazioni)
-      lavorazione.richieste = articolo.richieste.filter(ric => ric.lavorazione.id === lavorazione.id)
+      let lavorazione = findElementFromID(lav, lavorazioniQuery.data)
+      if (lavorazione) {
+        lavorazione.richieste = articolo.richieste.filter(ric => ric.lavorazione.id === lavorazione.id)
+      }
       return lavorazione
     })
-  , [controllo?.misurazioni, data?.lavorazioni, articolo?.richieste]) 
+  , [controllo?.misurazioni, lavorazioniQuery.data, articolo?.richieste]) 
   let nCols = 0
-  lavorazioni.forEach(lav => {
+  lavorazioni?.forEach(lav => {
     nCols += articolo.richieste.filter(ric => ric.lavorazione.id === lav.id).length
   })
   const richieste = lavorazioni.map(lav => lav.richieste).flat()
@@ -92,90 +99,92 @@ function PopoverMisurazioni({ data, controllo, idxControllo, initialData, artico
             Misurazioni effettuate
           </Popover.Header>
           <Popover.Body>
-            <Table className="align-middle text-center" bordered>
-              <thead>
-                {nCols === lavorazioni.length ? (
-                  <tr>
-                    <th>N°</th>
-                    {lavorazioni.map(lav => (
-                      <th key={lav.id}>Valori {lav.nome.toLowerCase()}</th>
-                    ))}
-                    <th></th>
-                  </tr>
-                ) : (
-                  <>
+            {lavorazioniQuery.isSuccess && (
+              <Table className="align-middle text-center" bordered>
+                <thead>
+                  {nCols === lavorazioni.length ? (
                     <tr>
-                      <th></th>
+                      <th>N°</th>
                       {lavorazioni.map(lav => (
-                        <th key={lav.id} colSpan={lav.richieste.length}>Valori {lav.nome.toLowerCase()}<br></br>(Punti)</th>
+                        <th key={lav.id}>Valori {lav.nome.toLowerCase()}</th>
                       ))}
                       <th></th>
                     </tr>
-                    <tr>
-                      <th>N°</th>
-                      {lavorazioni.map(lav => lav.richieste.map(ric => (
-                        <th key={ric.id}>{ric.punto}</th>
-                      )))}
-                      <th></th>
+                  ) : (
+                    <>
+                      <tr>
+                        <th></th>
+                        {lavorazioni.map(lav => (
+                          <th key={lav.id} colSpan={lav.richieste.length}>Valori {lav.nome.toLowerCase()}<br></br>(Punti)</th>
+                        ))}
+                        <th></th>
+                      </tr>
+                      <tr>
+                        <th>N°</th>
+                        {lavorazioni.map(lav => lav.richieste.map(ric => (
+                          <th key={ric.id}>{ric.punto}</th>
+                        )))}
+                        <th></th>
+                      </tr>
+                    </>
+                  )}
+                </thead>
+                <tbody>
+                  {misurazioni?.map((row, idxRow) => (
+                    <tr key={idxRow}>
+                      <td className="font-semibold">{idxRow + 1}</td>
+                      {row?.map((misurazione, idxCol) => {
+                        const idx = idxRow * nCols + idxCol
+                        const richiesta = richieste[idxCol]
+                        return (
+                          <td key={idxCol}>
+                            {initialData && misurazione.valore && (
+                              <Hidden name={`${basePath}__${idx}__id`} value={misurazione.id || undefined}/>
+                            )}
+                            <Input
+                              label={false}
+                              name={`${basePath}__${idx}__valore`}
+                              inputProps={{
+                                className: nCols < 5 ? "text-center pl-5" : "text-center no-arrows",
+                                value: misurazione.valore,
+                                type: "number",
+                                onChange: (e) => setMisurazioni(old =>
+                                  modifyNestedObject(old, `${idxRow}__${idxCol}__valore`, e.target.value)
+                                )
+                              }}
+                            />
+                            <ErroreInput 
+                              misurazione={misurazione}
+                              richiesta={richiesta}
+                            />
+                            {misurazione.valore && (
+                              <Hidden name={`${basePath}__${idx}__richiesta`} value={richiesta.id}/>
+                            )}
+                          </td>
+                        )
+                      })}
+                      <td>
+                        <MinusIcon 
+                          onClick={() => setMisurazioni(misurazioni.filter((_, idx) => idx !== idxRow))}
+                        />
+                      </td>
                     </tr>
-                  </>
-                )}
-              </thead>
-              <tbody>
-                {misurazioni?.map((row, idxRow) => (
-                  <tr key={idxRow}>
-                    <td className="font-semibold">{idxRow + 1}</td>
-                    {row?.map((misurazione, idxCol) => {
-                      const idx = idxRow * nCols + idxCol
-                      const richiesta = richieste[idxCol]
-                      return (
-                        <td key={idxCol}>
-                          {initialData && misurazione.valore && (
-                            <Hidden name={`${basePath}__${idx}__id`} value={misurazione.id || undefined}/>
-                          )}
-                          <Input
-                            label={false}
-                            name={`${basePath}__${idx}__valore`}
-                            inputProps={{
-                              className: nCols < 5 ? "text-center pl-5" : "text-center no-arrows",
-                              value: misurazione.valore,
-                              type: "number",
-                              onChange: (e) => setMisurazioni(old =>
-                                modifyNestedObject(old, `${idxRow}__${idxCol}__valore`, e.target.value)
-                              )
-                            }}
-                          />
-                          <ErroreInput 
-                            misurazione={misurazione}
-                            richiesta={richiesta}
-                          />
-                          {misurazione.valore && (
-                            <Hidden name={`${basePath}__${idx}__richiesta`} value={richiesta.id}/>
-                          )}
-                        </td>
-                      )
-                    })}
-                    <td>
-                      <MinusIcon 
-                        onClick={() => setMisurazioni(misurazioni.filter((_, idx) => idx !== idxRow))}
+                  ))}
+                  <tr>
+                    <td></td>
+                    <td colSpan={nCols}>
+                      <PlusIcon 
+                        onClick={() => setMisurazioni([...misurazioni, emptyRow])}
                       />
                     </td>
+                    <td></td>
                   </tr>
-                ))}
-                <tr>
-                  <td></td>
-                  <td colSpan={nCols}>
-                    <PlusIcon 
-                      onClick={() => setMisurazioni([...misurazioni, emptyRow])}
-                    />
-                  </td>
-                  <td></td>
-                </tr>
-              </tbody>
-              {misurazioni?.[0]?.length > 1 && (
-                <RiassuntoDati misurazioni={misurazioni} lavorazione={lavorazioni} index={0} />
-              )}
-            </Table>
+                </tbody>
+                {misurazioni?.[0]?.length > 1 && (
+                  <RiassuntoDati misurazioni={misurazioni} lavorazione={lavorazioni} index={0} />
+                )}
+              </Table>
+            )}
           </Popover.Body>
           {misurazioni?.[0]?.length === 1 && (
             <RiassuntoDati misurazioni={misurazioni} lavorazione={lavorazioni[0]} index={0} />

@@ -5,6 +5,7 @@ import ToolBox from "./images/tool-box.png";
 import Admin from "./images/admin.png";
 import Certificate from "./images/certificate.png";
 import Monitoring from "./images/monitoring.png";
+import Schedule from "./images/schedule.png";
 
 export const PROGRAMMI = {
     "Gestione Impianto": {name: 'Gestione Impianto', link: '/manutenzione/selezione-impianto/', icon: ToolBox},
@@ -16,4 +17,5 @@ export const PROGRAMMI = {
     "Area Admin": {name: 'Area Admin', link: '/area-admin/scheda-controllo/', icon: Admin},
     "Certificati Qualità": {name: 'Certificati Qualità', link: '/certificati-qualita/record-certificato/', icon: Certificate},
     "Andamento Produzione": {name: 'Andamento Produzione', link: '/andamento-produzione/dashboards/', icon: Monitoring},
+    "Analisi e Manutenzioni": {name: 'Analisi e Manutenzioni', link: '/analisi-manutenzioni/prossime-manutenzioni', icon: Schedule},
 }

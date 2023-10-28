@@ -10,6 +10,8 @@ import { faArrowDown, faArrowUp, faCirclePlus, faClose } from "@fortawesome/free
 import { modifyNestedObject } from "../../utils";
 import { useFormContext } from "../../../contexts/FormContext";
 import { moveDown, moveUp, opzioniControlli, opzioniMisurazioni, removeItem } from "./utils";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
+import { URLS } from "../../../urls";
 
 const TRANSLATIONS = {
   "stagno": "Tin",
@@ -19,9 +21,14 @@ const TRANSLATIONS = {
   "zinco": "Zinc"
 } 
 
-function CertificatoForm({ data, scheda }) {
+function CertificatoForm({ scheda }) {
+  const { data: schedeControllo } = useCustomQuery({ queryKey: URLS.SCHEDE_CONTROLLO })
+  const { data: lavorazioni } = useCustomQuery({ queryKey: URLS.LAVORAZIONI })
+  const { data: metalli } = useCustomQuery({ queryKey: URLS.MATERIALI })
+
+
   const { initialData } = useFormContext();
-  const scheda_controllo = data?.schede_controllo?.find(s => s.id === scheda)
+  const scheda_controllo = schedeControllo?.find(s => s.id === scheda)
   const controlli = scheda_controllo?.sezioni?.map(sez => sez.controlli.filter(c => !!c.frequenza)).flat()
   const [controllo, setControllo] = useState(null)
   const [misurazione, setMisurazione] = useState(null)
@@ -33,7 +40,7 @@ function CertificatoForm({ data, scheda }) {
     const newControllo = e?.value ? controlli.find(c => c.id === e.value) : null
     if (newControllo?.misurazioni) {
       newControllo.misurazioni = newControllo?.misurazioni?.map(
-        mis => data.lavorazioni.find(lav => lav.id === mis || lav.id === mis.id)
+        mis => lavorazioni.find(lav => lav.id === mis || lav.id === mis.id)
       )
     }
     setControllo(newControllo)
@@ -43,7 +50,7 @@ function CertificatoForm({ data, scheda }) {
     if (!!controllo && (controllo.misurazioni.length === 0 || !!misurazione)) {
       const test = {...emptyTest, controllo: controllo.id, titolo: "TEST", titolo_en: "Test"}
       if (!!misurazione) {
-        const metallo = data.metalli.find(m => m.id === misurazione.metallo)
+        const metallo = metalli.find(m => m.id === misurazione.metallo)
         if (metallo?.nome) {
           test.titolo = "TEST SPESSORE " + metallo.nome.toUpperCase()
           test.titolo_en = (TRANSLATIONS[metallo.nome.toLowerCase()] || metallo.nome) + " thickness inspection"
@@ -183,7 +190,7 @@ function CertificatoForm({ data, scheda }) {
         {tests.map((test, idx) => {
           const controllo = controlli.find(c => c.id === test.controllo)
           return (
-          <Table bordered className="text-sm align-middle border-gray-300 mb-10 shadow-sm relative">
+          <Table key={test.id} bordered className="text-sm align-middle border-gray-300 mb-10 shadow-sm relative">
             <tbody>
               <tr>
                 <td colSpan={test.lavorazione ? 4 : 3} className="relative">

@@ -5,14 +5,20 @@ import SearchSelect from "../../../components/form-components/SearchSelect";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
 import { useFormContext } from "../../../contexts/FormContext";
 import { searchOptions } from "../../../utils";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
+import { URLS } from "../../../urls";
 
-function SchedaImpiantoForm({ data }) {
+function SchedaImpiantoForm() {
+  const { data: impianti } = useCustomQuery({ queryKey: URLS.IMPIANTI });
+  const { data: materiali } = useCustomQuery({ queryKey: URLS.MATERIALI });
+  const { data: schedeImpianto } = useCustomQuery({ queryKey: [URLS.SCHEDE_IMPIANTO, { page: 1 }] });
+
   const { initialData } = useFormContext();
-  const impiantiSchede = data?.records
-    ? data.records.results.map((el) => el.impianto)
+  const impiantiSchede = schedeImpianto
+    ? schedeImpianto.results.map((el) => el.impianto)
     : [];
-  const freeImpianti = data?.impianti
-    ? data.impianti.filter(
+  const freeImpianti = impianti
+    ? impianti.filter(
         (impianto) =>
           !impiantiSchede.includes(impianto.id) ||
           (!!initialData && impianto.id === initialData.impianto)
@@ -53,7 +59,7 @@ function SchedaImpiantoForm({ data }) {
               name: "materiale",
               type: "select",
               createTable: true,
-              options: searchOptions(data?.materiali, "nome", true),
+              options: searchOptions(materiali, "nome", true),
             },
             { name: "iniziale", type: "hidden", value: true },
           ]}
@@ -69,7 +75,7 @@ function SchedaImpiantoForm({ data }) {
               name: "materiale",
               type: "select",
               createTable: true,
-              options: searchOptions(data?.materiali, "nome", true),
+              options: searchOptions(materiali, "nome", true),
             },
             { name: "iniziale", type: "hidden", value: "off" },
           ]}

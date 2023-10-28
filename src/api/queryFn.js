@@ -1,12 +1,16 @@
 import { apiGet } from "./api";
 
 export const defaultQueryFn = async ({ queryKey }) => {
+  if (!queryKey[0]) return null;
   const url = new URL(queryKey[0]);
-  if (queryKey[1] && typeof queryKey[1] === "object") {
-    Object.entries(queryKey[1]).forEach(([key, value]) => {
-      if (value) url.searchParams.append(key, value);
-    });
-  }
+  queryKey.slice(1).forEach((element) => {
+    if (element && typeof element === "object") {
+      Object.entries(element).forEach(([key, value]) => {
+        if (value) url.searchParams.append(key, value);
+      });
+    }
+  });
+  // console.log(queryKey, url.toString());
   console.log(url.toString());
   const data = await apiGet(url.toString());
   return data;

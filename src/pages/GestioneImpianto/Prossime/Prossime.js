@@ -6,18 +6,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Card, Col, Container, Placeholder, Row, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
 import { URLS } from "../../../urls";
 import Wrapper from "../Wrapper";
 import { parseProssimeManutenzioni } from "../parsers";
 import InfoPopup from "./InfoPopup";
 import PageTitle from "../../../components/PageTitle/PageTitle";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 
 function Prossime() {
   const [popup, setPopup] = useState(null);
-  const [data] = useGetAPIData([
-    { url: URLS.PAGINA_PROSSIME, parser: (res) => parseProssimeManutenzioni(res, true) },
-  ]);
+  const scadenzeQuery = useImpiantoQuery(
+    { queryKey: URLS.PAGINA_PROSSIME },
+    { select: (data) => parseProssimeManutenzioni(data, true) }
+  );
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -42,9 +43,9 @@ function Prossime() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.late &&
-                      data.late.length > 0 &&
-                      data.late.map((operazione) => (
+                    {scadenzeQuery.isSuccess &&
+                      scadenzeQuery.data.late.length > 0 &&
+                      scadenzeQuery.data.late.map((operazione) => (
                         <tr key={operazione.id}>
                           <td className="max-w-[35%] w-[100%]">
                             {operazione.nome}
@@ -96,12 +97,13 @@ function Prossime() {
                           </td>
                         </tr>
                       ))}
-                    {data.late && data.late.length === 0 && (
-                      <tr>
-                        <td colSpan="7">Nessun allarme attivo</td>
-                      </tr>
-                    )}
-                    {!data.late &&
+                    {scadenzeQuery.isSuccess &&
+                      scadenzeQuery.data.late.length === 0 && (
+                        <tr>
+                          <td colSpan="7">Nessun allarme attivo</td>
+                        </tr>
+                      )}
+                    {scadenzeQuery.isLoading &&
                       Array.from(Array(3)).map((_, idx) => (
                         <tr key={idx}>
                           <td colSpan={7}>
@@ -137,9 +139,9 @@ function Prossime() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.ok &&
-                      data.ok.length > 0 &&
-                      data.ok.map((operazione) => (
+                    {scadenzeQuery.isSuccess &&
+                      scadenzeQuery.data.ok.length > 0 &&
+                      scadenzeQuery.data.ok.map((operazione) => (
                         <tr key={operazione.id}>
                           <td className="max-w-[35%] w-[100%]">
                             {operazione.nome}
@@ -194,12 +196,13 @@ function Prossime() {
                           </td>
                         </tr>
                       ))}
-                    {data.ok && data.ok.length === 0 && (
-                      <tr>
-                        <td colSpan="7">Nessuna manutenzione in coda</td>
-                      </tr>
-                    )}
-                    {!data.ok &&
+                    {scadenzeQuery.isSuccess &&
+                      scadenzeQuery.data.ok.length === 0 && (
+                        <tr>
+                          <td colSpan="7">Nessuna manutenzione in coda</td>
+                        </tr>
+                      )}
+                    {scadenzeQuery.isLoading &&
                       Array.from(Array(3)).map((_, idx) => (
                         <tr key={idx}>
                           <td colSpan={7}>

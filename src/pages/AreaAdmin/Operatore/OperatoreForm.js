@@ -5,12 +5,15 @@ import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { useFormContext } from "../../../contexts/FormContext";
 import { searchOptions } from "../../../utils";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
+import { URLS } from "../../../urls";
 
-function OperatoreForm({ data }) {
+function OperatoreForm() {
+  const impiantiQuery = useCustomQuery({ queryKey: URLS.IMPIANTI });
   const { initialData } = useFormContext();
   const [impianti, setImpianti] = useState(
     initialData?.impianti
-      ? searchOptions(data?.impianti, "nome").filter((im) =>
+      ? searchOptions(impiantiQuery.data, "nome").filter((im) =>
           initialData.impianti.includes(im.value)
         )
       : []
@@ -29,7 +32,7 @@ function OperatoreForm({ data }) {
         <SearchSelect
           errorName="impianti"
           labelCols={2}
-          options={searchOptions(data?.impianti, "nome")}
+          options={searchOptions(impiantiQuery.data, "nome")}
           inputProps={{
             isMulti: true,
             value: impianti,

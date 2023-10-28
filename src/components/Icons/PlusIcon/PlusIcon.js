@@ -6,7 +6,7 @@ import { useFormContext } from "../../../contexts/FormContext";
 function PlusIcon({ onClick }) {
   const { view } = useFormContext();
   return (
-    <button
+    <div
       onClick={(e) =>
         !view &&
         onClick() && 
@@ -22,7 +22,7 @@ function PlusIcon({ onClick }) {
           view ? "cursor-not-allowed" : "cursor-pointer"
         } text-nav-blue hover:text-blue-800`}
       />
-    </button>
+    </div>
   );
 }
 

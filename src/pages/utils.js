@@ -23,6 +23,11 @@ export const parseFormData = (form, formData) => {
         const name = el.name
         formData[name] = [...el.parentElement.children].map(el => el.value).join(',')
       }
+    } 
+    if (el.type === "file") {
+      if (el.files.length === 0) {
+        delete formData[el.name]
+      }
     }
   })
   if ('data' in formData && 'ora' in formData) {
@@ -122,4 +127,17 @@ export const objectsEqual = ( x, y ) => {
         // allows x[ p ] to be set to undefined
 
   return true;
+}
+
+export const buildURL = (baseURL, params) => {
+  const url = new URL(baseURL)
+  Object.keys(params).forEach(key => params[key] !== "" && url.searchParams.append(key, params[key]))
+  return url.toString()
+}
+
+export const isFormComponent = (Component) => {
+  return (
+    typeof Component === 'function' &&
+    Component.prototype?.constructor?.name?.includes('Form')
+  );
 }

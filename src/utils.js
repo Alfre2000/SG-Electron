@@ -12,13 +12,6 @@ export const dateToTimePicker = (date) => {
   return hour + ":" + min;
 };
 
-export const today = () => {
-  const date = new Date();
-  let day = ("0" + date.getDate()).slice(-2);
-  let month = ("0" + (date.getMonth() + 1)).slice(-2);
-  return day + "/" + month + "/" + date.getFullYear();
-};
-
 export const dateToAPIdate = (date) => {
   if (date === undefined) return undefined
   const [year, month, day] = date.split("-");
@@ -37,16 +30,6 @@ export const findElementFromID = (id, array) => {
 };
 
 export const capitalize = (s) => (s && s[0].toUpperCase() + s.slice(1)) || "";
-
-export const updateQueryStringParameter = (uri, key, value) => {
-  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-  var separator = uri.indexOf("?") !== -1 ? "&" : "?";
-  if (uri.match(re)) {
-    return uri.replace(re, "$1" + key + "=" + value + "$2");
-  } else {
-    return uri + separator + key + "=" + value;
-  }
-};
 
 export const isDateRecent = (date, hours) => {
   const recordDate = new Date(date);
@@ -92,14 +75,6 @@ export const searchOptions = (array, labelKey, same = false) => {
   return array?.map((el) => ({ value: el.id, label: el[labelKey] }));
 };
 
-export const isNumeric = (str) => {
-  if (typeof str != "string") return false; // we only process strings!
-  return (
-    !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-    !isNaN(parseFloat(str))
-  ); // ...and ensure strings of whitespace fail
-};
-
 export const min = (array) => {
   return array.length > 0 ? Math.min(...array).toFixed(2) : "-";
 };
@@ -113,3 +88,22 @@ export const mean = (array) => {
       ).toFixed(2)
     : "-";
 };
+
+
+export function removeIdRecursively(data) {
+  if (Array.isArray(data)) {
+    data.forEach((el) => {
+      if (el && typeof el === "object") {
+        delete el.id;
+        removeIdRecursively(el); // Recurse into nested objects or arrays
+      }
+    });
+  } else if (data && typeof data === "object") {
+    delete data.id;
+    for (const key in data) {
+      if (data[key] && typeof data[key] === "object") {
+        removeIdRecursively(data[key]); // Recurse into nested objects or arrays
+      }
+    }
+  }
+}

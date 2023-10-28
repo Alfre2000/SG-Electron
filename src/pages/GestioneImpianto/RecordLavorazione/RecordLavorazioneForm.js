@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Col, Row, Form, Stack, Spinner } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Col, Row, Stack, Spinner } from "react-bootstrap";
+import ReactForm from "react-bootstrap/Form";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
 import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
@@ -23,12 +24,17 @@ import { URLS } from "../../../urls";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import ModifyModal from "../../../components/Modals/ModifyModal/ModifyModal";
-import FormWrapper from "../../FormWrapper";
-import MyToast from "../../../components/MyToast/MyToast";
+import { useQueryClient } from "react-query";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
+import Form from "../../Form";
+import { toast } from "sonner";
 
 let last_res = undefined;
 
-function RecordLavorazioneForm({ data, setData }) {
+function RecordLavorazioneForm({ showOperatore, impiantoFilter = true }) {
+  const queryClient = useQueryClient();
+  const { data: articoli } = useCustomQuery({ queryKey: URLS.ARTICOLI_NESTED }, {}, impiantoFilter);
+
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || "");
@@ -39,12 +45,12 @@ function RecordLavorazioneForm({ data, setData }) {
     initialData?.n_lotto_cliente || ""
   );
   const [errorLotto, setErrorLotto] = useState(false);
-  const [modifytoast, setModifytoast] = useState(false);
   const [recordModify, setRecordModify] = useState(undefined);
-  const cleanCliente = (nome) => nome.replace("SPA", "").replace("SRL", "");
+  const cleanCliente = (nome) => nome?.replace("SPA", "")?.replace("SRL", "");
+
   const initialCliente =
-    data.articoli && initialData?.articolo
-      ? findElementFromID(initialData?.articolo, data.articoli).cliente?.nome
+    articoli && initialData?.articolo
+      ? findElementFromID(initialData?.articolo, articoli).cliente?.nome
       : "";
   const [cliente, setCliente] = useState(
     initialCliente
@@ -52,10 +58,17 @@ function RecordLavorazioneForm({ data, setData }) {
       : null
   );
   const [articoloID, setArticoloID] = useState(initialData?.articolo || "");
-  const articolo = findElementFromID(articoloID, data.articoli);
-  const clienti = data.articoli
-    ? new Set(data.articoli.map((articolo) => articolo.cliente?.nome))
+  const articolo = findElementFromID(articoloID, articoli);
+  const clienti = articoli
+    ? new Set(articoli.map((articolo) => articolo.cliente?.nome))
     : new Set([]);
+  
+  useEffect(() => {
+    if (initialData?.articolo && articoli) {
+      const newCliente = findElementFromID(initialData?.articolo, articoli).cliente?.nome;
+      setCliente({ value: newCliente, label: cleanCliente(newCliente) })
+    }
+  }, [articoli, initialData?.articolo])
 
   const loadLotto = (e) => {
     if (view || initialData) {
@@ -82,11 +95,9 @@ function RecordLavorazioneForm({ data, setData }) {
           .then((res) => {
             if (last_res && last_res > parseInt(value.split(".").at(-1)))
               return;
-            if (!data.articoli.map((a) => a.id).includes(res.articolo.id)) {
-              setData((prev) => ({
-                ...prev,
-                articoli: [res.articolo, ...prev.articoli],
-              }));
+            if (!articoli.map((a) => a.id).includes(res.articolo.id)) {
+              queryClient.setQueryData(URLS.ARTICOLI_NESTED, (prev) => [res.articolo, ...prev])
+              queryClient.invalidateQueries(URLS.ARTICOLI)
             }
             setLoadingLotto(false);
             if (res.record) {
@@ -137,29 +148,21 @@ function RecordLavorazioneForm({ data, setData }) {
         show={recordModify}
         handleClose={() => setRecordModify(undefined)}
       >
-        <FormWrapper
-          data={data}
-          setData={setData}
+        <Form
           initialData={recordModify}
-          url={URLS.RECORD_LAVORAZIONI}
-          onSuccess={(newData) => {
+          onSuccess={() => {
             setRecordModify(undefined);
-            if (newData) setData(newData);
-            setModifytoast(true);
-            setTimeout(() => setModifytoast(false), 4000);
+            toast.success("Record modificato con successo !");
           }}
-        >
-          <RecordLavorazioneForm data={data} initialData={recordModify} />
-        </FormWrapper>
+        />
       </ModifyModal>
-      {modifytoast && <MyToast>Record modificato con successo !</MyToast>}
       <Row className="mb-4">
-        <Hidden name="impianto" value={user.user.impianto.id} />
+        <Hidden name="impianto" value={user.user.impianto?.id || initialData?.impianto} />
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">
             <DateInput />
             <TimeInput />
-            <OperatoreInput data={data} />
+            <OperatoreInput show={showOperatore} />
           </Stack>
         </Col>
         <Col xs={6} className="pl-10 flex">
@@ -192,7 +195,7 @@ function RecordLavorazioneForm({ data, setData }) {
                   : null,
                 onChange: (e) => setArticoloID(e?.value ? e.value : null),
               }}
-              options={data?.articoli
+              options={articoli
                 ?.filter((arti) => arti.cliente.nome === cliente?.value)
                 .map((a) => ({
                   value: a.id,
@@ -285,15 +288,15 @@ function RecordLavorazioneForm({ data, setData }) {
           <SezioneInformazioniArticolo articolo={articolo} />
           <SezioneSpessori articolo={articolo} />
           <SezioneDocumenti articolo={articolo} />
-          <SezioneControlli data={data} articolo={articolo} />
+          <SezioneControlli articolo={articolo} />
           <SezioneAnomalie articolo={articolo} />
           <SezioneAllegati articolo={articolo} />
         </>
       )}
-      <Form.Group className="mt-8">
+      <ReactForm.Group className="mt-8">
         <Row className="mb-4">
           <Col xs={1} className="flex items-center">
-            <Form.Label className="mt-2">Note:</Form.Label>
+            <ReactForm.Label className="mt-2">Note:</ReactForm.Label>
           </Col>
           <Col sm={8}>
             <Input
@@ -313,7 +316,7 @@ function RecordLavorazioneForm({ data, setData }) {
             />
           </Col>
         </Row>
-      </Form.Group>
+      </ReactForm.Group>
     </>
   );
 }

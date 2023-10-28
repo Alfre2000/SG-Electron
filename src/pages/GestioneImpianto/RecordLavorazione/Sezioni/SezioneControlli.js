@@ -6,7 +6,7 @@ import { useFormContext } from "../../../../contexts/FormContext";
 import PopoverMisurazioni from "../PopoverMisurazioni";
 import Sezione from "./Sezione";
 
-function SezioneControlli({ data, articolo }) {
+function SezioneControlli({ articolo }) {
   const { initialData, view } = useFormContext();
   let indexControllo = -1
   if (!articolo?.scheda_controllo?.sezioni?.length > 0) {
@@ -53,7 +53,6 @@ function SezioneControlli({ data, articolo }) {
                             <>
                               <br />
                               <PopoverMisurazioni
-                                data={data}
                                 idxControllo={indexControllo}
                                 controllo={controllo}
                                 initialData={record}

@@ -8,17 +8,22 @@ import Hidden from "../../../components/form-components/Hidden/Hidden";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { useFormContext } from "../../../contexts/FormContext";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
+import { URLS } from "../../../urls";
 
-function FissaggioForm({ data }) {
+function FissaggioForm() {
+  const operazioniQuery = useImpiantoQuery({ queryKey: URLS.FISSAGGI });
+  const operatoriQuery = useImpiantoQuery({ queryKey: URLS.OPERATORI });
+
   const { initialData } = useFormContext();
   const operazione = useMemo(
     () =>
-      data?.operazioni
-        ? data.operazioni.length === 1
-          ? data.operazioni[0]
-          : data.operazioni.filter((op) => op.tipologia === "fissaggio")[0]
+      operazioniQuery.data
+        ? operazioniQuery.data.length === 1
+          ? operazioniQuery.data[0]
+          : operazioniQuery.data.filter((op) => op.tipologia === "fissaggio")[0]
         : {},
-    [data?.operazioni]
+    [operazioniQuery.data]
   );
   const parametroID = operazione?.parametri?.at(0)?.id || "";
   return (
@@ -32,7 +37,7 @@ function FissaggioForm({ data }) {
           <TimeInput />
           <SearchSelect
             name="operatore"
-            options={searchOptions(data?.operatori, "nome")}
+            options={searchOptions(operatoriQuery.data, "nome")}
           />
         </Stack>
       </Col>

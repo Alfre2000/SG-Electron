@@ -13,15 +13,19 @@ import Hidden from "../../../components/form-components/Hidden/Hidden";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import { findElementFromID, searchOptions } from "../../../utils";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
+import { URLS } from "../../../urls";
 
-function SchedaControlloForm({ data, setData }) {
+function SchedaControlloForm() {
+  const { data: lavorazioni } = useCustomQuery({ queryKey: URLS.LAVORAZIONI });
+
   const { initialData } = useFormContext()
   const emptyControllo = { nome: "", frequenza: "", responsabilità: "", misurazioni: null }
   const getSezioneVuota = (n) => {
     const nextLetter = String.fromCharCode(65 + n)
     return { nome: `${nextLetter}. `, controlli: [ emptyControllo ]}
   }
-  const [sezioni, setSezioni] = useState(!!initialData ? initialData?.sezioni?.map(sez => ({...sez, controlli: sez.controlli.map(con => ({...con, misurazioni: con.misurazioni.map(mis => ({ value: mis, label: findElementFromID(mis, data?.lavorazioni).nome }))}))})) || [] : [getSezioneVuota(0)])
+  const [sezioni, setSezioni] = useState(!!initialData ? initialData?.sezioni?.map(sez => ({...sez, controlli: sez.controlli.map(con => ({...con, misurazioni: con.misurazioni.map(mis => ({ value: mis, label: findElementFromID(mis, lavorazioni).nome }))}))})) || [] : [getSezioneVuota(0)])
   return (
     <>
       <Row className="mb-4 mt-2">
@@ -33,7 +37,7 @@ function SchedaControlloForm({ data, setData }) {
         />
       </Row>
       <Fieldset title="Articoli collegati alla scheda di controllo">
-        <ArticoliInput data={data} setData={setData} />
+        <ArticoliInput />
       </Fieldset>
       <Fieldset title="Controlli da effettuare">
         {sezioni.map((sezione, idxSezione) => (
@@ -136,7 +140,7 @@ function SchedaControlloForm({ data, setData }) {
                       <SearchSelect
                         label={false}
                         name={`${basePath}__misurazioni`}
-                        options={searchOptions(data?.lavorazioni, "nome")}
+                        options={searchOptions(lavorazioni, "nome")}
                         inputProps={{
                           isMulti: true,
                           value: controllo.misurazioni,

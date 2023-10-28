@@ -11,7 +11,9 @@ import { dateToAPIdate, dateToPickerDate } from "../../utils";
 import SearchSelect from "../form-components/SearchSelect";
 import Input from "./../form-components/Input";
 
-function FilterPopup({ label, name, update, filters, submit, type = "text" }) {
+function FilterPopup({ label, name, submit, type = "text", defaultFilters = {} }) {
+  const [filters, setFilters] = useState({ ordering: "", filters: defaultFilters })
+
   name = name.split("__")[0];
   const [open, setOpen] = useState(false);
   const numberLike = ["date", "time", "number"].includes(type);
@@ -22,21 +24,24 @@ function FilterPopup({ label, name, update, filters, submit, type = "text" }) {
   const [comparison, setComparison] = useState({ value: "eq", label: "=" });
 
   const setCrescente = () => {
-    update((prev) => {
+    let res;
+    setFilters((prev) => {
       const newOrdering = prev.ordering === name ? "" : name;
-      const res = { ...prev, ordering: newOrdering };
-      submit(res);
+      res = { ...prev, ordering: newOrdering };
       return res;
     });
+    submit(res);
     setOpen(false);
   };
   const setDecrescente = () => {
-    update((prev) => {
+    let res;
+    setFilters((prev) => {
       const newOrdering = prev.ordering === "-" + name ? "" : "-" + name;
-      const res = { ...prev, ordering: newOrdering };
-      submit(res);
+      res = { ...prev, ordering: newOrdering };
+      // console.log(prev, res);
       return res;
     });
+    submit(res);
     setOpen(false);
   };
   const setFilter = (e) => {
@@ -46,7 +51,7 @@ function FilterPopup({ label, name, update, filters, submit, type = "text" }) {
     if (numberLike) {
       filters = { [name + "__" + comparison.value]: value };
     }
-    update((prev) => ({
+    setFilters((prev) => ({
       ...prev,
       filters: { ...prev.filters, ...filters },
     }));
@@ -62,7 +67,7 @@ function FilterPopup({ label, name, update, filters, submit, type = "text" }) {
       ordering: ordering,
       filters: { ...filters.filters, ...newFilters },
     };
-    update(() => res);
+    setFilters(() => res);
     return res;
   };
   const setComparisonFilter = (e) => {
@@ -71,7 +76,7 @@ function FilterPopup({ label, name, update, filters, submit, type = "text" }) {
     delete res.filters[name + "__" + comparison.value];
     res.filters[name + "__" + e.value] = value;
     setComparison(e);
-    update(() => res);
+    setFilters(() => res);
   };
   const popover = (
     <Popover className="max-w-[340px] w-[280px]">
@@ -156,7 +161,7 @@ function FilterPopup({ label, name, update, filters, submit, type = "text" }) {
           size="sm"
           variant="primary"
           className="bg-blue-600"
-          onClick={() => submit() || setOpen(false)}
+          onClick={() => submit(filters) || setOpen(false)}
         >
           Applica
         </Button>

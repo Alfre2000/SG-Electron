@@ -5,18 +5,20 @@ import { Alert, Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import { apiGet } from "../../../api/api";
 import { useFormContext } from "../../../contexts/FormContext";
 import { URLS } from "../../../urls";
-import { searchOptions } from "../../../utils";
+import { findElementFromID, searchOptions } from "../../../utils";
 import SearchSelect from "../SearchSelect";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
+import useStateInitialData from "../../../hooks/useInitialData/useInitialData";
 
-function OperatoreInput({ data }) {
+function OperatoreInput({ show }) {
+  const operatoriQuery = useImpiantoQuery({ queryKey: URLS.OPERATORI });
   const { initialData, view } = useFormContext();
 
-  const operatori = searchOptions(data?.operatori, "nome");
+  const operatori = searchOptions(operatoriQuery.data, "nome");
 
   const [pswModal, setPswModal] = useState(false);
-  const [operatore, setOperatore] = useState(
-    view ? operatori.find((op) => op.value === initialData.operatore) : null
-  );
+
+  const [operatore, setOperatore] = useStateInitialData(initialData?.operatore, operatoriQuery.data, Boolean(view || show));
   const [error, setError] = useState("");
   const [passwordType, setPasswordType] = useState("password");
   const EyeIcon = passwordType === "password" ? faEye : faEyeSlash;
@@ -38,11 +40,11 @@ function OperatoreInput({ data }) {
   
 
   const changeOperatore = (e) => {
-    if (e && e?.value !== operatore?.value) {
+    if (e && e?.value !== operatore?.id) {
       setPswModal(e);
       setTimeout(() => pswdRef.current.focus(), 50);
     } else {
-      setOperatore(e);
+      setOperatore(findElementFromID(operatori, e?.value));
     }
   };
 
@@ -51,7 +53,7 @@ function OperatoreInput({ data }) {
       if (res.codice === pswdRef.current.value) {
         setPswModal(false);
         setError("");
-        setOperatore({ value: res.id, label: res.nome });
+        setOperatore(res);
       } else {
         setError("Codice errato !");
         setTimeout(() => setError(""), 1000 * 5);
@@ -75,7 +77,7 @@ function OperatoreInput({ data }) {
         name="operatore"
         initialData={view ? initialData.operatore : {}}
         inputProps={{
-          value: operatore,
+          value: { value: operatore?.id, label: operatore?.nome },
           onChange: changeOperatore,
         }}
         options={operatori}

@@ -12,21 +12,28 @@ import SearchSelect from "../../../components/form-components/SearchSelect";
 import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { useFormContext } from "../../../contexts/FormContext";
 import { findElementFromID, searchOptions } from "../../../utils";
+import { URLS } from "../../../urls";
+import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 
-function AnalisiForm({ data }) {
+function AnalisiForm() {
+  const operatoriQuery = useImpiantoQuery({ queryKey: URLS.OPERATORI });
+  const operazioniQuery = useImpiantoQuery({ queryKey: URLS.ANALISI });
+
   const [searchParams] = useSearchParams();
   const { initialData } = useFormContext();
+
   const [analisiID, setAnalisiID] = useState(
     initialData?.operazione || searchParams.get("analisi") || ""
   );
   const analisi = useMemo(
-    () => findElementFromID(analisiID, data?.operazioni),
-    [analisiID, data?.operazioni]
+    () => findElementFromID(analisiID, operazioniQuery.data),
+    [analisiID, operazioniQuery.data]
   );
   const [errValore, setErrValore] = useState({});
 
   const handleValoreChange = useCallback(
     (e) => {
+      if (!analisi) return;
       const parametro = analisi.parametri[e.target.name.split("__").at(1)];
       const value = parseFloat(e.target.value);
       let errMsg = "";
@@ -34,7 +41,7 @@ function AnalisiForm({ data }) {
       else if (value < parametro.minimo) errMsg = "Valore sotto il minimo !";
       setErrValore((oldErr) => ({ ...oldErr, [e.target.name]: errMsg }));
     },
-    [analisi.parametri]
+    [analisi]
   );
 
   useEffect(() => {
@@ -63,7 +70,7 @@ function AnalisiForm({ data }) {
           <Stack gap={2} className="text-left">
             <SearchSelect
               name="operatore"
-              options={searchOptions(data?.operatori, "nome")}
+              options={searchOptions(operatoriQuery.data, "nome")}
             />
             <SearchSelect
               label="Analisi:"
@@ -73,7 +80,7 @@ function AnalisiForm({ data }) {
                 value: { value: analisi?.id, label: analisi?.nome },
                 onChange: (newValue) => setAnalisiID(newValue.value),
               }}
-              options={searchOptions(data?.operazioni, "nome")}
+              options={searchOptions(operazioniQuery.data, "nome")}
             />
           </Stack>
         </Col>
@@ -91,7 +98,7 @@ function AnalisiForm({ data }) {
               </tr>
             </thead>
             <tbody>
-              {data.operazioni &&
+              {operazioniQuery.data &&
                 analisi.parametri.map((parametro, idx) => (
                   <tr key={parametro.id} className="align-middle text-center">
                     <td className="text-left">{parametro.nome}</td>

@@ -9,25 +9,29 @@ import { useFormContext } from '../../../contexts/FormContext';
 import { URLS } from '../../../urls';
 import { findElementFromID } from '../../../utils';
 import ArticoloForm from '../Articolo/ArticoloForm';
-import FormWrapper from '../../FormWrapper';
+import useCustomQuery from '../../../hooks/useCustomQuery/useCustomQuery';
+import Loading from "../../../components/Loading/Loading";
+import Form from '../../Form';
 
-function ArticoliInput({ data, setData }) {
+function ArticoliInput() {
+  const articoliQuery = useCustomQuery({ queryKey: URLS.ARTICOLI_NESTED });
+  
   const { initialData } = useFormContext()
   const [modalArticolo, setModalArticolo] = useState(false)
   const [ricerca, setRicerca] = useState("")
   const [cliente, setCliente] = useState(null)
-  const [articoli, setArticoli] = useState(!!initialData ? data.articoli.filter(a => a.scheda_controllo?.id === initialData.id): [])
+  const [articoli, setArticoli] = useState(!!initialData ? articoliQuery.data.filter(a => a.scheda_controllo?.id === initialData.id && initialData.id): [])
   const handleAddArticolo = (event) => {
-    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), data.articoli)
+    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), articoliQuery.data)
     setArticoli([...articoli, selectedArticolo])
   }
   const handleRemoveArticolo = (event) => {
-    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), data.articoli)
+    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), articoliQuery.data)
     setArticoli(articoli.filter(articolo => articolo.id !== selectedArticolo.id))
   }
   const idSelezionati = articoli.map(articolo => articolo.id)
-  const articoliPossibili = data?.articoli 
-    ? data.articoli.filter(articolo => {
+  const articoliPossibili = articoliQuery.data 
+    ? articoliQuery.data.filter(articolo => {
       const noScheda = articolo.scheda_controllo === null
       const tolto = initialData && initialData.id === articolo.scheda_controllo?.id
       const nonSelezionato = !idSelezionati.includes(articolo.id)
@@ -36,23 +40,21 @@ function ArticoliInput({ data, setData }) {
       return (noScheda || tolto) && nonSelezionato && clienteFilter &&  articoloNomeFilter
     }) 
     : []
-  const clienti = data?.articoli ? new Set(data?.articoli.map(articolo => articolo.cliente?.nome)) : new Set([]);
+  const clienti = articoliQuery.data ? new Set(articoliQuery.data.map(articolo => articolo.cliente?.nome)) : new Set([]);
   return (
     <>
       {modalArticolo && (
         <ModifyModal 
           show={modalArticolo}
           handleClose={() => setModalArticolo(false)}>
-            <FormWrapper data={data} setData={setData} url={URLS.ARTICOLI}
-              onSuccess={(newData) => {
-                const articolo = newData.records.results.shift()
-                newData.articoli.push(articolo)
+            <Form
+              onSuccess={(response, queryClient) => {
+                queryClient.setQueryData([URLS.ARTICOLI], [response.data, ...articoliQuery.data])
                 setModalArticolo(false)
-                setData(newData)
-                setArticoli([articolo, ...articoli])
+                setArticoli([response.data, ...articoli])
               }}>
-              <ArticoloForm data={data} campoScheda={false} />
-            </FormWrapper>
+              <ArticoloForm campoScheda={false} />
+            </Form>
         </ModifyModal>
       )}
       <Row className="mb-4 bg-slate-100 py-3 rounded-lg px-4">
@@ -87,7 +89,10 @@ function ArticoliInput({ data, setData }) {
             Articoli Selezionabili
           </div>
           <ListGroup className="text-sm max-h-[250px] h-[250px] overflow-scroll rounded-t-none border-t-0 border border-slate-300">
-            {articoliPossibili.map(articolo => (
+            {articoliQuery.isLoading && (
+              <Loading className='relative top-20' />
+            )}
+            {articoliQuery.isSuccess && articoliPossibili.map(articolo => (
               <ListGroup.Item
                 key={articolo.id}
                 value={articolo.id}

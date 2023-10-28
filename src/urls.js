@@ -2,6 +2,7 @@ export const BASE_PATH =
   process.env.NODE_ENV === 'production' 
     ? 'https://supergalvanica.herokuapp.com'
     : 'http://localhost:8000'
+// export const BASE_PATH = "https://supergalvanica.herokuapp.com"
 
 
 export const URLS = {
@@ -27,9 +28,12 @@ export const URLS = {
     CLIENTI: BASE_PATH + '/base/clienti/',
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',
     MATERIALI: BASE_PATH + '/base/materiali/',
+    TRAVERSINI: BASE_PATH + '/base/traversini/',
 
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
+    RECORD_LAVORAZIONI_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=True',
+    RECORD_LAVORAZIONI_NOT_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=False',
     RECORD_LAVORAZIONI_IN_SOSPESO: BASE_PATH + '/scheda-controllo/record-lavorazioni?completata=false',
     SCHEDE_CONTROLLO: BASE_PATH + '/scheda-controllo/schede-controllo/',
 
@@ -57,5 +61,7 @@ export const URLS = {
     PAGINA_RICERCA_DATABASE: BASE_PATH + '/analisi-manutenzioni/pagina-ricerca-database/',
 
     // ANDAMENTO PRODUZIONE
-    DASHBOARDS: BASE_PATH + '/base/dashboards/',
+    LAST_SCHEDE_IMPIANTO: BASE_PATH + '/base/dashboards/last-schede-impianto/',
+    LATEST_SCHEDE_CONTROLLO: BASE_PATH + '/base/dashboards/latest-schede-controllo/',
+    RECORD_LAVORAZIONI_OVER_TIME: BASE_PATH + '/base/dashboards/record-lavorazione-over-time/',
 }

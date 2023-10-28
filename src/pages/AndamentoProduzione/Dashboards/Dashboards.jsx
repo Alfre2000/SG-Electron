@@ -1,45 +1,26 @@
 import React from "react";
-import { Col, Container, Row, Card, Table } from "react-bootstrap";
-import useGetAPIData from "../../../hooks/useGetAPIData/useGetAPIData";
-import { URLS } from "../../../urls";
+import { Col, Container, Row } from "react-bootstrap";
 import Wrapper from "../Wrapper";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import LastSchedaImpianto from "./components/LastSchedaImpianto/LastSchedaImpianto";
+import LatestSchedeControllo from "./components/LatestSchedeControllo/LatestSchedeControllo";
+import GraficoSchede from "./components/GraficoSchede/GraficoSchede";
 
 function Dashboards() {
-  const [data, setData] = useGetAPIData([{ url: URLS.DASHBOARDS }]);
   return (
     <Wrapper>
-      <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
-        <Row>
-          <Col>
-          <Card className="text-center">
-            <Card.Header>Schede Impianto</Card.Header>
-            <Card.Body>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Impianto</th>
-                    <th>Ultima Scheda</th>
-                    <th>Alert</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data?.schede_impianto?.map((impianto) => (
-                      <tr>
-                        <td>{impianto.nome}</td>
-                        <td>{impianto.last_scheda_text}</td>
-                        <td>{impianto.last_scheda > 48 && (
-                          <FontAwesomeIcon icon={faExclamationCircle} className="text-red-800" />
-                        )}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
+      <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12 px-0 flex flex-col gap-8">
+        <Row className="gap-8">
+          <Col className="px-0">
+            <LastSchedaImpianto />
           </Col>
-          <Col></Col>
+          <Col className="px-0">
+            <GraficoSchede />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="px-0">
+            <LatestSchedeControllo />
+          </Col>
         </Row>
       </Container>
     </Wrapper>

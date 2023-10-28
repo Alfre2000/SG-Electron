@@ -5,8 +5,11 @@ import Input from "../../../components/form-components/Input";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
 import { searchOptions } from "../../../utils";
+import { URLS } from "../../../urls";
+import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 
-function AnalisiForm({ data }) {
+function AnalisiForm() {
+  const impiantiQuery = useCustomQuery({ queryKey: URLS.IMPIANTI });
   return (
     <>
       <Row className="mb-4 mt-2">
@@ -15,7 +18,7 @@ function AnalisiForm({ data }) {
             <Input name="nome" />
             <SearchSelect
               name="impianto"
-              options={searchOptions(data?.impianti, "nome")}
+              options={searchOptions(impiantiQuery.data, "nome")}
             />
           </Stack>
         </Col>
