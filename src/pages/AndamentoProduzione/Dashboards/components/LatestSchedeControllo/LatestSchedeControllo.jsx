@@ -23,7 +23,7 @@ const dateOptions = {
 function LatestSchedeControllo() {
   return (
     <PageContext 
-      FormComponent={(r) =>  r.dati_aggiuntivi ? RecordLavorazioneOssidoForm : RecordLavorazioneForm}
+      FormComponentFn={(r) =>  r.dati_aggiuntivi ? RecordLavorazioneOssidoForm : RecordLavorazioneForm}
       getURL={URLS.RECORD_LAVORAZIONI}
       defaultFilters={[{ custom_page_size: 8 }]}
       impiantoFilter={false}

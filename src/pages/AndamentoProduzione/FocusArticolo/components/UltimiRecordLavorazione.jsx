@@ -27,7 +27,7 @@ function UltimiRecordLavorazione() {
   const { articoloId } = useParams();
   return (
     <PageContext 
-      FormComponent={(r) =>  r.dati_aggiuntivi ? RecordLavorazioneOssidoForm : RecordLavorazioneForm}
+      FormComponentFn={(r) =>  r.dati_aggiuntivi ? RecordLavorazioneOssidoForm : RecordLavorazioneForm}
       getURL={URLS.RECORD_LAVORAZIONI}
       defaultFilters={[{ custom_page_size: 8 }, { articolo_id: articoloId }]}
       impiantoFilter={false}
