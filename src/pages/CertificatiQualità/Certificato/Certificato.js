@@ -12,10 +12,12 @@ import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 import Loading from "../../../components/Loading/Loading";
 import PageContext from "../../../contexts/PageContext";
 import { toast } from "sonner";
+import Input from "../../../components/form-components/Input";
 
 function Certificato() {
+  const [nome, setNome] = useState(null)
   const [searchParams] = useSearchParams()
-  const schedeControlloQuery = useCustomQuery({ queryKey: URLS.SCHEDE_CONTROLLO })
+  const schedeControlloQuery = useCustomQuery({ queryKey: [URLS.SCHEDE_CONTROLLO, {page: 1}, { nome: nome }] })
   const certificatiQuery = useCustomQuery({ queryKey: [URLS.CERTIFICATI, {page: 1}] })
 
   const [scheda, setScheda] = useState(searchParams.get("scheda_controllo"));
@@ -29,7 +31,6 @@ function Certificato() {
           <PageTitle>Modello Certificato</PageTitle>
           {scheda ? certificatiQuery.isSuccess && schedeControlloQuery.isSuccess ? (
             <div className="relative">
-
               <Button 
                 variant="secondary"
                 className="absolute font-medium left-full bg-gray-400 border-gray-400 -translate-x-full -translate-y-[120%] flex items-center"
@@ -61,11 +62,23 @@ function Certificato() {
                 Seleziona la scheda controllo di cui vuoi creare o modificare il
                 certificato
               </p>
+              <div className="flex justify-center mt-8">
+                <div className="w-1/2 items-center">
+                  <Input
+                    label="Ricerca"
+                    labelProps={{ className: "pb-2" }}
+                    inputProps={{
+                      value: nome,
+                      onChange: e => setNome(e.target.value)
+                    }}
+                  />
+                </div>
+              </div>
               <ListGroup className="w-2/3 mx-auto mt-8 hover:cursor-pointer">
                 {schedeControlloQuery.isLoading && (
                   <Loading className="mb-10 relative top-5" />
                 )}
-                {schedeControlloQuery.isSuccess && schedeControlloQuery.data.map((el) => (
+                {schedeControlloQuery.isSuccess && schedeControlloQuery.data.results.map((el) => (
                   <ListGroupItem
                     key={el.id}
                     active={scheda === el.nome}
