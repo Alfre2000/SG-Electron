@@ -29,7 +29,7 @@ function LavorazioniInSospeso() {
                   <Tabella
                     headers={["Lotto", "N° Pezzi", "Operatore"]}
                     valori={[
-                      "n_lotto_cliente",
+                      "n_lotto_super",
                       "quantità",
                       "operatore__operatori",
                     ]}
