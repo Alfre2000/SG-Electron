@@ -26,7 +26,6 @@ function CertificatoForm({ scheda }) {
   const { data: lavorazioni } = useCustomQuery({ queryKey: URLS.LAVORAZIONI })
   const { data: metalli } = useCustomQuery({ queryKey: URLS.MATERIALI })
 
-
   const { initialData } = useFormContext();
   const scheda_controllo = schedeControllo?.find(s => s.id === scheda)
   const controlli = scheda_controllo?.sezioni?.map(sez => sez.controlli.filter(c => !!c.frequenza)).flat()
@@ -69,8 +68,8 @@ function CertificatoForm({ scheda }) {
     }
   }
 
-  const controlliOptions = useMemo(() => opzioniControlli(controlli, tests), [controlli, tests])
-  const misurazioniOptions = useMemo(() => opzioniMisurazioni(controllo, tests), [controllo, tests])
+  const controlliOptions = useMemo(() => controlli ? opzioniControlli(controlli, tests) : [], [controlli, tests])
+  const misurazioniOptions = useMemo(() => controllo ? opzioniMisurazioni(controllo, tests) : [], [controllo, tests])
 
   return (
     <div className="mb-10">
