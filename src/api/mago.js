@@ -123,6 +123,7 @@ export const getDatiBollaMago = async (n_bolla) => {
     cust.city,
     cust.county,
     cust.email,
+    cust.custsupp,
     detail.line,
     detail.description, 
     detail.item,
