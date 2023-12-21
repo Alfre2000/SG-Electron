@@ -1,19 +1,8 @@
-import {
-  faCircleExclamation,
-  faFilePdf,
-  faWarning,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation, faFilePdf, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Container,
-  Spinner,
-  Table,
-} from "react-bootstrap";
-import { apiPost } from "../../../api/api";
+import { Alert, Button, Card, Container, Spinner, Table } from "react-bootstrap";
+import { apiGet, apiPost } from "../../../api/api";
 import { getDatiBollaMago } from "../../../api/mago";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
@@ -49,24 +38,50 @@ function CertificatiBolla() {
     const form = e.currentTarget;
     let formData = Object.fromEntries(new FormData(form).entries());
     const requestData = { ...bolla };
-    requestData.lotti = requestData.lotti.filter(
-      (lotto, idx) => formData[`lotto_${idx}`] === "on"
-    );
+    requestData.lotti = requestData.lotti.filter((lotto, idx) => formData[`lotto_${idx}`] === "on");
     console.log(requestData);
     setLoadingCertificati(true);
 
-    apiPost(URLS["CERTIFICATI_BOLLA"], requestData)
-      .then((res) => {
-        const data = Buffer.from(res.zip_file, "base64");
-        electron.ipcRenderer.invoke(
-          "save-zip",
-          data,
-          `${new Date().getFullYear()} - Certificati bolla n°${nBolla.padStart(6, '0')}`
-        );
-      })
-      .catch((err) => setError(err.errors))
-      .finally(() => setLoadingCertificati(false));
+    apiPost(URLS["CERTIFICATI_BOLLA"], requestData).then((res) => {
+      const taskID = res.task_id;
+      const urlStatus = `${URLS["CERTIFICATI_BOLLA_STATUS"]}${taskID}/`;
+      let requestInProgress = false;
+      const interval = setInterval(() => {
+        if (!requestInProgress) {
+          requestInProgress = true;
+          apiGet(urlStatus)
+            .then((res) => {
+              console.log(res.status);
+              if (res.status === "SUCCESS") {
+                clearInterval(interval);
+                setLoadingCertificati(false);
+                setError(false);
+                const data = Buffer.from(res.result, "base64");
+                electron.ipcRenderer.invoke(
+                  "save-zip",
+                  data,
+                  `${new Date().getFullYear()} - Certificati bolla n°${nBolla.padStart(6, "0")}`
+                );
+              } else if (res.status === "ERROR") {
+                setLoadingCertificati(false);
+                clearInterval(interval);
+                setError(res.result.errors);
+              } else if (res.status === "FAILURE") {
+                setLoadingCertificati(false);
+                clearInterval(interval);
+                setError("Errore generazione certificati");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              clearInterval(interval);
+            })
+            .finally(() => (requestInProgress = false));
+        }
+      }, 2000);
+    });
   };
+
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -93,11 +108,7 @@ function CertificatiBolla() {
                 }}
               />
             </div>
-            <Button
-              variant="primary"
-              className="bg-[#0d6efd] mb-1 relative -top-1"
-              onClick={searchBolla}
-            >
+            <Button variant="primary" className="bg-[#0d6efd] mb-1 relative -top-1" onClick={searchBolla}>
               Cerca
             </Button>
           </Card.Body>
@@ -105,51 +116,27 @@ function CertificatiBolla() {
         {loadingCertificati && (
           <div className="h-[100vh] w-[84%] fixed left-[240px] top-[57px] flex justify-center bg-slate-50 z-50 opacity-80">
             <div className="mt-[50vh]">
-              <h3 className="text-lg font-semibold">
-                Generazione certificati in corso...
-              </h3>
-              <Spinner
-                animation="border"
-                role="status"
-                className="mt-3"
-                variant="secondary"
-              />
+              <h3 className="text-lg font-semibold">Generazione certificati in corso...</h3>
+              <Spinner animation="border" role="status" className="mt-3" variant="secondary" />
             </div>
           </div>
         )}
         {loading && (
           <div className="h-[40vh] flex justify-center">
-            <Spinner
-              animation="border"
-              role="status"
-              className="mt-[20vh]"
-              variant="secondary"
-            />
+            <Spinner animation="border" role="status" className="mt-[20vh]" variant="secondary" />
           </div>
         )}
         {error === true && !loading && !loadingCertificati && (
-          <Alert
-            className="text-center mt-10 w-1/2 py-3 mx-auto flex justify-center"
-            variant="danger"
-          >
-            <FontAwesomeIcon
-              size="lg"
-              className="mr-3"
-              icon={faCircleExclamation}
-            />
-            <h3 className="text-md font-semibold mx-3">
-              Errore di connessione al database !
-            </h3>
+          <Alert className="text-center mt-10 w-1/2 py-3 mx-auto flex justify-center" variant="danger">
+            <FontAwesomeIcon size="lg" className="mr-3" icon={faCircleExclamation} />
+            <h3 className="text-md font-semibold mx-3">Errore di connessione al database !</h3>
           </Alert>
         )}
         {bolla &&
           !loading &&
           (bolla.lotti.length > 0 ? (
             <form onSubmit={generaPDF}>
-              <Table
-                bordered
-                className="text-sm align-middle border-gray-300 mb-10 shadow-sm relative mt-16"
-              >
+              <Table bordered className="text-sm align-middle border-gray-300 mb-10 shadow-sm relative mt-16">
                 <tbody>
                   <tr>
                     <td>
@@ -164,23 +151,16 @@ function CertificatiBolla() {
                     </td>
                     <td>
                       <span>Cliente:</span>
-                      <span className="font-semibold ml-2">
-                        {bolla.companyname}
-                      </span>
+                      <span className="font-semibold ml-2">{bolla.companyname}</span>
                     </td>
                   </tr>
                 </tbody>
               </Table>
               <div className="flex items-center">
                 <h3 className="text-left font-semibold text-lg">LOTTI:</h3>
-                <span className="ml-2 text-sm">
-                  (indicare i lotti di cui si vogliono generare i certificati)
-                </span>
+                <span className="ml-2 text-sm">(indicare i lotti di cui si vogliono generare i certificati)</span>
               </div>
-              <Table
-                bordered
-                className="text-sm align-middle border-gray-300 mb-10 shadow-sm relative mt-2"
-              >
+              <Table bordered className="text-sm align-middle border-gray-300 mb-10 shadow-sm relative mt-2">
                 <thead>
                   <tr>
                     <th>Trattamento</th>
@@ -195,15 +175,13 @@ function CertificatiBolla() {
                   {bolla.lotti.map((lotto, idx) => (
                     <tr key={idx} className="relative">
                       <td>
-                        {error &&
-                          !loadingCertificati &&
-                          error?.includes(lotto.line) && (
-                            <FontAwesomeIcon
-                              icon={faCircleExclamation}
-                              className="absolute -left-8 text-red-800"
-                              size="lg"
-                            />
-                          )}
+                        {error && !loadingCertificati && error?.includes(lotto.line) && (
+                          <FontAwesomeIcon
+                            icon={faCircleExclamation}
+                            className="absolute -left-8 text-red-800"
+                            size="lg"
+                          />
+                        )}
                         {lotto.trattamento1}
                       </td>
                       <td>{lotto.description}</td>
@@ -225,40 +203,25 @@ function CertificatiBolla() {
                   ))}
                 </tbody>
               </Table>
-              <Button
-                variant="primary"
-                type="submit"
-                className="bg-[#0d6efd] mb-1 relative -top-1"
-              >
+              <Button variant="primary" type="submit" className="bg-[#0d6efd] mb-1 relative -top-1">
                 Genera Certificati
                 <FontAwesomeIcon icon={faFilePdf} className="ml-3" />
               </Button>
               {error && error.length > 0 && !loadingCertificati && (
-                <Alert
-                  className="text-center mt-8 w-4/5 py-2 mx-auto flex justify-center"
-                  variant="danger"
-                >
+                <Alert className="text-center mt-8 w-4/5 py-2 mx-auto flex justify-center" variant="danger">
                   <h3 className="text-sm font-semibold mx-3">
-                    I lotti indicati con{" "}
-                    <FontAwesomeIcon icon={faCircleExclamation} />, si
-                    riferiscono ad articoli di cui non sono state salvate le
-                    informazioni nel database Mago.
+                    I lotti indicati con <FontAwesomeIcon icon={faCircleExclamation} />, si riferiscono ad articoli
+                    di cui non sono state salvate le informazioni nel database Mago.
                     <br />
-                    Aggiungere le informazioni e ricaricare la pagina per poter
-                    generare i certificati.
+                    Aggiungere le informazioni e ricaricare la pagina per poter generare i certificati.
                   </h3>
                 </Alert>
               )}
             </form>
           ) : (
-            <Alert
-              className="text-center mt-10 w-1/2 py-3 mx-auto flex justify-center"
-              variant="warning"
-            >
+            <Alert className="text-center mt-10 w-1/2 py-3 mx-auto flex justify-center" variant="warning">
               <FontAwesomeIcon icon={faWarning} className="relative top-0.5" />
-              <h3 className="text-md font-semibold mx-3">
-                La bolla non è stata trovata
-              </h3>
+              <h3 className="text-md font-semibold mx-3">La bolla non è stata trovata</h3>
               <FontAwesomeIcon icon={faWarning} className="relative top-0.5" />
             </Alert>
           ))}
