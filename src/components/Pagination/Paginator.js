@@ -22,6 +22,7 @@ function Paginator({ data, setPage }) {
       ? Math.ceil(data.count / data.results.length)
       : currentPage
     : "";
+  console.log(data);
   return (
     <Pagination className="flex justify-between">
       <div className="flex min-w-[150px]">

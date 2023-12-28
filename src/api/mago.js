@@ -146,7 +146,8 @@ export const getDatiBollaMago = async (n_bolla) => {
     item.n_misurazioni,
     item.mail_cliente,
     sale.job AS n_lotto_super,
-    sale.line as line_lotto
+    sale.line as line_lotto,
+    sale.taxableamount as taxableamount
   FROM ma_saledoc AS doc
   JOIN ma_custsupp AS cust ON doc.custsupp = cust.custsupp
   JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
