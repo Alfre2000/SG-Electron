@@ -1,9 +1,9 @@
 import React from "react";
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import Wrapper from "../Wrapper";
-import { URLS } from "@/urls";
+import { URLS } from "../../../urls";
 import { useParams } from "react-router-dom";
-import Loading from "@/components/Loading/Loading";
+import Loading from "../../../components/Loading/Loading";
 import { useQuery } from "react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserTie } from "@fortawesome/free-solid-svg-icons";
