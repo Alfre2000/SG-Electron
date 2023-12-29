@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import RecordLavorazioneOssidoForm from "../RecordLavorazioneOssidoForm";
 import FormContext from "../../../../contexts/FormContext";
-import UserContext from "../../../../UserContext";
+import { UserContext } from "../../../../contexts/UserContext";
 
 describe("RecordLavorazioneOssidoForm", () => {
   test("Render correttamente", async () => {

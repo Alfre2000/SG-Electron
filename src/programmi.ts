@@ -19,3 +19,5 @@ export const PROGRAMMI = {
     "Andamento Produzione": {name: 'Andamento Produzione', link: '/andamento-produzione/dashboards/', icon: Monitoring},
     "Analisi e Manutenzioni": {name: 'Analisi e Manutenzioni', link: '/analisi-manutenzioni/prossime-manutenzioni', icon: Schedule},
 }
+
+export type ProgrammiNames = keyof typeof PROGRAMMI;

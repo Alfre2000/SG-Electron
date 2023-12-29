@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import UserContext from "../../UserContext";
 import { useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 
 function useCustomQuery(params, options = {}, impiantoFilter = false) {
   const { user } = useContext(UserContext);

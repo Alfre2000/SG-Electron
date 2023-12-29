@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
-import UserContext from "../../UserContext";
 import { getErrors } from "../../api/utils";
 import { useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 
 function useImpiantoMutation(mutationFn, options = {}) {
   const { onSuccess, onMutate, onError, ...restOptions } = options;

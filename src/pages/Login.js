@@ -4,9 +4,9 @@ import { login } from '../api/users';
 import Header from '../components/Header/Header'
 import Navbar from '../components/Navbar/Navbar'
 import { Card, FloatingLabel, Form, Button, Alert } from 'react-bootstrap';
-import UserContext from '../UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { UserContext } from '../contexts/UserContext';
 
 function Login({ from, afterLogin }) {
   let navigate = useNavigate();

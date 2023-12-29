@@ -1,7 +1,7 @@
 import { useQueries } from "react-query";
-import UserContext from "../../UserContext";
 import { useContext } from "react";
 import { defaultQueryFn } from "../../api/queryFn";
+import { UserContext } from "../../contexts/UserContext";
 
 function useCustomQueries(queries, impiantoFilter = false) {
   const { user } = useContext(UserContext);

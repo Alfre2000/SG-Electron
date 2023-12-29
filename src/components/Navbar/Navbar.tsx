@@ -1,14 +1,34 @@
-import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../../UserContext";
-import Icona from "./../../images/icona.png";
 import "./Navbar.css";
-import Menu from "./subcomponents/Menu";
+import Menu from "./Menu";
 import { PROGRAMMI } from "../../programmi";
-import { faComputer } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition, faComputer } from "@fortawesome/free-solid-svg-icons";
+import { useUserContext } from "../../contexts/UserContext";
+import Icona from "../../images/icona.png";
 
-function Navbar({ menu, navOpen }) {
-  const { user } = useContext(UserContext);
+
+export type LinkType = {
+  name: string;
+  link?: string;
+  action?: () => void
+};
+
+export type MenuType = {
+  title: string;
+  icon: IconDefinition;
+  links: LinkType[];
+};
+
+type NavbarProps = {
+  menu: MenuType[];
+  navOpen: boolean;
+};
+
+function Navbar({ menu, navOpen }: NavbarProps) {
+  const userContext = useUserContext();
+  if (!userContext) return null;
+  const { user } = userContext;
+
   const copyright = navOpen ? "Copyright" : "©";
   const versione = navOpen ? "Versione Software" : "Versione";
 

@@ -14,7 +14,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import "./Header.css";
-import UserContext from "../../UserContext";
+import { UserContext } from "../../contexts/UserContext";
 const electron = window?.require ? window.require("electron") : null;
 
 function Header({ title, toggleNavbar }) {

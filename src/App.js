@@ -9,7 +9,6 @@ import Fissaggio from "./pages/GestioneImpianto/Fissaggio/Fissaggio";
 import Manutenzione from "./pages/GestioneImpianto/Manutenzione/Manutenzione";
 import Prossime from "./pages/GestioneImpianto/Prossime/Prossime";
 import Produzione from "./pages/GestioneImpianto/Produzione/Produzione";
-import UserContext from "./UserContext";
 import RicercaDatabase from "./pages/GestioneImpianto/RicercaDatabase/RicercaDatabase";
 import RecordLavorazione from "./pages/GestioneImpianto/RecordLavorazione/RecordLavorazione";
 import SelezioneImpianto from "./pages/GestioneImpianto/SelezioneImpianto/SelezioneImpianto";
@@ -31,6 +30,7 @@ import { defaultQueryFn } from "./api/queryFn";
 import { Toaster, toast } from 'sonner';
 import ProssimeManutenzioni from "./pages/AnalisiManutenzioni/ProssimeManutenzioni/ProssimeManutenzioni";
 import FocusArticolo from "./pages/AndamentoProduzione/FocusArticolo/FocusArticolo";
+import { UserContext } from "./contexts/UserContext";
 
 function reducer (state, userInfo) {
   return userInfo

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import UserContext from "../../../UserContext";
 import PasswordModal from "./PasswordModal";
 import { adminLogin } from "../../../api/users";
+import { UserContext } from "../../../contexts/UserContext";
 jest.mock("../../../api/users", () => ({ adminLogin: jest.fn() }))
 
 describe("Password Modal", () => {

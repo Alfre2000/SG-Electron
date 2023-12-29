@@ -3,8 +3,8 @@ import Navbar from "../../components/Navbar/Navbar";
 import Header from "../../components/Header/Header";
 import useCheckAuth from "../../hooks/useCheckAuth/useCheckAuth";
 import { getNavItems } from "./navbar";
-import UserContext from "../../UserContext";
 import useCheckImpianto from "../../hooks/useCheckImpianto/useCheckImpianto";
+import { UserContext } from "../../contexts/UserContext";
 
 const Wrapper = React.forwardRef(({ children, defaultNav }, ref) => {
   const pendingAuth = useCheckAuth();

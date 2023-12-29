@@ -1,15 +1,24 @@
-import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
-import useOutsideAlerter from "../../../hooks/useOutsideAlerter/useOutsideAlerter";
+import useOutsideAlerter from "../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { Link, useNavigate } from "react-router-dom";
+import { LinkType } from "./Navbar";
 
-function Menu({ title, icon, links, navOpen }) {
+
+type MenuProps = {
+  title: string;
+  icon: IconDefinition;
+  links: LinkType[];
+  navOpen?: boolean;
+};
+
+function Menu({ title, icon, links, navOpen = false }: MenuProps) {
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const wrapperRef = useRef(null);
+  const wrapperRef = useRef<HTMLUListElement>(null);
   useOutsideAlerter(wrapperRef, (e) => {
-    if (!navOpen && !wrapperRef.current.parentElement.contains(e.target)) {
+    if (!navOpen && wrapperRef.current && !wrapperRef.current.parentElement!.contains(e.target as Node)) {
       setOpen(false);
     }
   });
@@ -17,7 +26,7 @@ function Menu({ title, icon, links, navOpen }) {
     if (links.length === 1) {
       if (links[0].link) {
         navigate(links[0].link);
-      } else {
+      } else if (links[0].action) {
         links[0].action();
       }
     } else {

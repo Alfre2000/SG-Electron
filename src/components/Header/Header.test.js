@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import Header from "./Header";
-import UserContext from "../../UserContext";
 import { logout } from "../../api/users";
+import { UserContext } from "../../contexts/UserContext";
 jest.mock("../../api/users", () => ({ logout: jest.fn() }));
 
 describe("Header", () => {

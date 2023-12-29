@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import { adminLogin } from "../../../api/users";
-import UserContext from "../../../UserContext";
+import { UserContext } from "../../../contexts/UserContext";
 
 function PasswordModal({ show, onSuccess, onFail }) {
   const [password, setPassword] = useState("");

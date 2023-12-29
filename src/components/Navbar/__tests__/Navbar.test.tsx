@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import Navbar from "./Navbar";
-import UserContext from "../../UserContext";
+import Navbar from "../Navbar";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { UserContext, UserContextType } from "../../../contexts/UserContext";
 
 const menu = [
   {
@@ -29,7 +29,7 @@ const userMultipleProgrammi = {
     },
   },
   setUser: jest.fn(),
-};
+} as UserContextType;
 const userSingoloProgramma = {
   user: {
     user: {
@@ -39,7 +39,7 @@ const userSingoloProgramma = {
     },
   },
   setUser: jest.fn(),
-};
+} as UserContextType;
 
 describe("Navbar", () => {
   test("Render corretto: singolo programma", async () => {

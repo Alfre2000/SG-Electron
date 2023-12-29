@@ -7,7 +7,6 @@ import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
 import { findElementFromID } from "../../../utils";
 import Fieldset from "../../../components/form-components/Fieldset";
 import SearchSelect from "../../../components/form-components/SearchSelect";
-import { useUserContext } from "../../../UserContext";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import SezioneInformazioniArticolo from "./Sezioni/SezioneInformazioniArticolo";
@@ -29,6 +28,7 @@ import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 import Form from "../../Form";
 import { toast } from "sonner";
 import { usePageContext } from "../../../contexts/PageContext";
+import { useUserContext } from "../../../contexts/UserContext";
 
 let last_res = undefined;
 

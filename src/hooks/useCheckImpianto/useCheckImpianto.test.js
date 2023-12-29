@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../../UserContext";
 import useCheckImpianto from "./useCheckImpianto";
+import { UserContext } from "../../contexts/UserContext";
 
 jest.mock("react-router-dom", () => ({ useNavigate: jest.fn() }));
 

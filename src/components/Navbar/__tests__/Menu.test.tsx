@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import Menu from "./Menu";
+import Menu from "../Menu";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 describe("Menu", () => {

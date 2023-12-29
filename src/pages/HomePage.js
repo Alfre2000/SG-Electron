@@ -3,9 +3,9 @@ import Card from "./../components/Card/Card";
 import Navbar from "./../components/Navbar/Navbar";
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import Header from "./../components/Header/Header";
-import UserContext from '../UserContext';
 import { PROGRAMMI } from '../programmi';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext';
 const electron = window.require('electron');
 
 function HomePage(props) {
