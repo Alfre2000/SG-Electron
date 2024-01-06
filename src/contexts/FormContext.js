@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { usePageContext } from "./PageContext";
 
 const Context = createContext();
@@ -9,6 +9,10 @@ function FormContext({ children, errors, initialData, view, isValidated }) {
 
   const [startingData, setInitialData] = useState(initialData)
   initialData = startingData
+
+  useEffect(() => {
+    if (pageContext?.copyData) setInitialData(pageContext?.copyData)
+  }, [pageContext?.copyData])
   return (
     <Context.Provider value={{ errors, initialData, view, isValidated, setInitialData }}>
       {children}

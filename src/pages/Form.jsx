@@ -10,7 +10,7 @@ import useImpiantoMutation from "../hooks/useImpiantoMutation/useImpiantoMutatio
 import { usePageContext } from "../contexts/PageContext";
 import { toast } from "sonner";
 
-function Form({ children, initialData, onSuccess, view, validator, componentProps }) {
+function Form({ children = undefined, initialData, onSuccess = undefined, view = false, validator = undefined, componentProps = undefined }) {
   const { FormComponent, FormComponentFn, queryKey, postURL, copyData, setCopyData, queriesToInvalidate } = usePageContext();
 
   initialData = initialData || copyData

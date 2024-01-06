@@ -26,4 +26,13 @@ function PageContext({ children, impiantoFilter = false, FormComponent, FormComp
 
 export default PageContext;
 
-export const usePageContext = () => useContext(Context);
+
+export const usePageContext = () => {
+  const context = useContext(Context);
+
+  if (context === null) {
+    throw new Error("useUserContext must be used within a UserProvider");
+  }
+
+  return context;
+};
