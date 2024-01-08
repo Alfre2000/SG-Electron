@@ -41,6 +41,7 @@ function RecordLavorazioneForm({ showOperatore }) {
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || "");
   const [um, setUm] = useState(initialData?.um || "");
+  const [price, setPrice] = useState()
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
   const [lottoCliente, setLottoCliente] = useState(
@@ -93,6 +94,8 @@ function RecordLavorazioneForm({ showOperatore }) {
           setTimeout(() => setErrorLotto(false), 1000 * 5);
           return;
         }
+        console.log(res);
+        setPrice(res[0].price);
         apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0])
           .then((res) => {
             if (last_res && last_res > parseInt(value.split(".").at(-1)))
@@ -161,6 +164,7 @@ function RecordLavorazioneForm({ showOperatore }) {
       </ModifyModal>
       <Row className="mb-4">
         <Hidden name="impianto" value={user.user.impianto?.id || initialData?.impianto} />
+        <Hidden name="prezzo" value={price} />
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">
             <DateInput />

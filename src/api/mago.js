@@ -176,6 +176,7 @@ export const getLottoInformation = async (n_lotto) => {
       sale.description,
       sale.uom,
       sale.item,
+      sale.taxableamount as price,
       CONCAT(sale.job, '.', sale.line) AS lotto_super,
       cust.companyname,
       cust.address,
