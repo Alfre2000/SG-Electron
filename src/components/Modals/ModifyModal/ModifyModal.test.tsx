@@ -2,11 +2,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import ModifyModal from "./ModifyModal";
 
 describe("Modify Modal", () => {
+  const props = {
+    show: true,
+    handleClose: jest.fn(),
+  };
   test("Render correttamente con show true", async () => {
-    const props = {
-      show: true,
-      handleClose: jest.fn(),
-    };
     render(<ModifyModal {...props}>ciao</ModifyModal>);
     expect(screen.getByText(/chiudi/i)).toBeInTheDocument();
     fireEvent.click(screen.getByText(/chiudi/i));

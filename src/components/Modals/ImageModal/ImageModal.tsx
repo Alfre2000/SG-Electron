@@ -1,13 +1,14 @@
-import React from "react";
-// const electron = window?.require ? window.require("electron") : null;
+type ImageModalProps = {
+  setShow: (show: boolean) => void;
+  url: string;
+  titolo?: string;
+};
 
-function ImageModal({ setShow, url, titolo = "" }) {
-  // const handleDownload = () => {
-  //   electron.ipcRenderer.invoke("save-img", immagine.immagine);
-  // };
+function ImageModal({ setShow, url, titolo = "" }: ImageModalProps) {
   return (
     <div
       className="fixed z-10 pt-24 left-0 top-0 w-full h-full overflow-auto bg-[#000000e6]"
+      data-testid="image-modal"
       onClick={() => setShow(false)}
     >
       <span className="my-modal-close">&times;</span>

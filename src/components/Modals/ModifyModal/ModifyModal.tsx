@@ -1,7 +1,12 @@
-import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
-function ModifyModal({ show, handleClose, children }) {
+type ModifyModalProps = {
+  show: boolean;
+  handleClose: (value: boolean) => void;
+  children: React.ReactNode;
+};
+
+function ModifyModal({ show, handleClose, children }: ModifyModalProps) {
   return (
     <Modal centered size="xl" show={show} onHide={() => handleClose(false)}>
       <Modal.Header closeButton>
@@ -9,11 +14,7 @@ function ModifyModal({ show, handleClose, children }) {
       </Modal.Header>
       <Modal.Body className="px-5">{children}</Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          onClick={() => handleClose(false)}
-          className="bg-[#6e757c] ml-auto"
-        >
+        <Button variant="secondary" onClick={() => handleClose(false)} className="bg-[#6e757c] ml-auto">
           Chiudi
         </Button>
       </Modal.Footer>
