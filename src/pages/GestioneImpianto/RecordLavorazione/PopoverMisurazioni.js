@@ -100,8 +100,9 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
         <Popover
           ref={popupRef}
           placement={placement}
-          id="popover-basic"
+          id="popover-misurazioni"
           style={style}
+          className="absolute"
         >
           <Popover.Header as="h3" className="text-center font-bold py-[10px]" style={{ borderTopRightRadius: "0" }}>
             Misurazioni effettuate
