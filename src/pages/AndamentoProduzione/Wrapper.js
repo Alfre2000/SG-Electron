@@ -5,9 +5,9 @@ import useCheckAuth from '../../hooks/useCheckAuth/useCheckAuth';
 import { getNavItems } from './navbar';
 import { UserContext } from '../../contexts/UserContext';
 
-function Wrapper({ children, defaultNav }) {
+function Wrapper({ children, defaultNav = true }) {
   const pendingAuth = useCheckAuth();
-  const [navOpen, setNavOpen] = useState(defaultNav !== undefined ? defaultNav : true)
+  const [navOpen, setNavOpen] = useState(defaultNav)
   const toggleNavbar = () => {
     setNavOpen(!navOpen)
   }

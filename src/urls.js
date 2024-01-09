@@ -66,4 +66,5 @@ export const URLS = {
     LATEST_SCHEDE_CONTROLLO: BASE_PATH + '/base/dashboards/latest-schede-controllo/',
     RECORD_LAVORAZIONI_OVER_TIME: BASE_PATH + '/base/dashboards/record-lavorazione-over-time/',
     RECORD_MANCANTI: BASE_PATH + '/base/dashboards/record-mancanti/',
+    RICAVI: BASE_PATH + '/base/dashboards/ricavi/',
 }

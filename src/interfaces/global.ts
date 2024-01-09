@@ -7,3 +7,9 @@ export type RecordMancantiType = {
   total: number;
   inseriti: number;
 }[];
+
+export type RicaviType = {
+  impianto__nome: string;
+  month: string;
+  ricavi: number;
+}[];

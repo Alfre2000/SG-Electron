@@ -1,4 +1,4 @@
-import { faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { faChartLine, faEuroSign } from "@fortawesome/free-solid-svg-icons";
 
 export const getNavItems = (user) => {
   let items = [
@@ -7,6 +7,13 @@ export const getNavItems = (user) => {
       icon: faChartLine,
       links: [
         { name: "Dashboards", link: "/andamento-produzione/dashboards/" },
+      ],
+    },
+    {
+      title: "Dashboard Ricavi",
+      icon: faEuroSign,
+      links: [
+        { name: "Dashboard Ricavi", link: "/andamento-produzione/dashboard-ricavi/" },
       ],
     },
   ];

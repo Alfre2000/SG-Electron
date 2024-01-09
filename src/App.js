@@ -31,6 +31,7 @@ import { Toaster, toast } from 'sonner';
 import ProssimeManutenzioni from "./pages/AnalisiManutenzioni/ProssimeManutenzioni/ProssimeManutenzioni";
 import FocusArticolo from "./pages/AndamentoProduzione/FocusArticolo/FocusArticolo";
 import { UserContext } from "./contexts/UserContext";
+import DashboardRicavi from "./pages/AndamentoProduzione/DashboardRicavi/DashboardRicavi";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -93,6 +94,7 @@ function App() {
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">
               <Route path="dashboards/" element={<Dashboards />}></Route>
+              <Route path="dashboard-ricavi/" element={<DashboardRicavi />}></Route>
               <Route path="focus-articolo/:articoloId" element={<FocusArticolo />}></Route>
             </Route>
             {/* Analisi e Manutenzioni */}
