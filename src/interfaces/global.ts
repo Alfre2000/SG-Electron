@@ -13,3 +13,15 @@ export type RicaviType = {
   month: string;
   ricavi: number;
 }[];
+
+export type Clienti = {
+  id: string;
+  nome: string;
+  piva?: string;
+  indirizzo?: string;
+  cap?: string;
+  città?: string;
+  attivo: boolean;
+  dal: string;
+  campi_aggiuntivi?: Record;
+}[];

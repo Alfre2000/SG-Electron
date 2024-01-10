@@ -32,6 +32,8 @@ import ProssimeManutenzioni from "./pages/AnalisiManutenzioni/ProssimeManutenzio
 import FocusArticolo from "./pages/AndamentoProduzione/FocusArticolo/FocusArticolo";
 import { UserContext } from "./contexts/UserContext";
 import DashboardRicavi from "./pages/AndamentoProduzione/DashboardRicavi/DashboardRicavi";
+import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
+import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati/DatabaseCertificati";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -90,12 +92,14 @@ function App() {
               <Route path="record-certificato/" element={<CertificatiBolla />}></Route>
               <Route path="certificato/" element={<Certificato />}></Route>
               <Route path="etichette-mta/" element={<EtichetteMTA />}></Route>
+              <Route path="database-certificati/" element={<DatabaseCertificati />}></Route>
             </Route>
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">
               <Route path="dashboards/" element={<Dashboards />}></Route>
               <Route path="dashboard-ricavi/" element={<DashboardRicavi />}></Route>
               <Route path="focus-articolo/:articoloId" element={<FocusArticolo />}></Route>
+              <Route path="focus-cliente/" element={<FocusCliente />}></Route>
             </Route>
             {/* Analisi e Manutenzioni */}
             <Route path="analisi-manutenzioni/">

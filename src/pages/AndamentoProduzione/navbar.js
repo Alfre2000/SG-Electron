@@ -1,4 +1,4 @@
-import { faChartLine, faEuroSign } from "@fortawesome/free-solid-svg-icons";
+import { faChartLine, faEuroSign, faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 export const getNavItems = (user) => {
   let items = [
@@ -16,6 +16,13 @@ export const getNavItems = (user) => {
         { name: "Dashboard Ricavi", link: "/andamento-produzione/dashboard-ricavi/" },
       ],
     },
+    // {
+    //   title: "Focus Cliente",
+    //   icon: faUserTie,
+    //   links: [
+    //     { name: "Focus Cliente", link: "/andamento-produzione/focus-cliente/" },
+    //   ],
+    // },
   ];
   return items;
 };

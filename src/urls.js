@@ -24,6 +24,7 @@ export const URLS = {
     OPERATORI: BASE_PATH + '/base/operatori/',
     ARTICOLI: BASE_PATH + '/base/articoli/',
     ARTICOLI_NESTED: BASE_PATH + '/base/articoli-nested/',
+    ARTICOLI_NAMES: BASE_PATH + '/base/articoli-names/',
     IMPIANTI: BASE_PATH + '/base/impianti/',
     CLIENTI: BASE_PATH + '/base/clienti/',
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',
@@ -49,6 +50,7 @@ export const URLS = {
     CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',
     CERTIFICATI_BOLLA: BASE_PATH + '/certificati/builder-async/',
     CERTIFICATI_BOLLA_STATUS: BASE_PATH + '/certificati/builder-async-status/',
+    RECORD_CERTIFICATI: BASE_PATH + '/scheda-controllo/record-certificati/',
     
     ETICHETTE_MTA: BASE_PATH + '/certificati/etichette-mta/',
 
