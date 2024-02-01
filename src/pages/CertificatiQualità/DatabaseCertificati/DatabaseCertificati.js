@@ -4,7 +4,7 @@ import Wrapper from "../Wrapper";
 import SearchSelect from "../../../components/form-components/SearchSelect";
 import Input from "../../../components/form-components/Input";
 import { URLS } from "../../../urls";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { searchOptions } from "../../../utils";
 import { MESI } from "../../../constants";
 import PageContext, { usePageContext } from "../../../contexts/PageContext";
@@ -12,8 +12,23 @@ import RecordLavorazioneForm from "../../GestioneImpianto/RecordLavorazione/Reco
 import { useState } from "react";
 import Paginator from "../../../components/Pagination/Paginator";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faFilePdf, faUpload } from "@fortawesome/free-solid-svg-icons";
+import {
+  Dialog,
+  DialogHeader,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogFooter,
+} from "../../../components/shadcn/Dialog";
+import { Button as ShadcnButton } from "../../../components/shadcn/Button";
+import { Input as ShadcnInput } from "../../../components/shadcn/Input";
+import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from "../../../components/shadcn/Form";
+import { toast } from "sonner";
 import JSZip from "jszip";
+import { apiUpdate } from "../../../api/apiV2";
+import { getErrors } from "../../../api/utils";
+import { useForm } from "react-hook-form";
 const electron = window?.require ? window.require("electron") : null;
 
 const dateOptions = {
@@ -106,34 +121,93 @@ export default DatabaseCertificati;
 
 function Tabella() {
   const { queryKey, setPage } = usePageContext();
+  const [recordOpen, setRecordOpen] = useState();
   const recordsQuery = useQuery({ queryKey: queryKey, keepPreviousData: true });
   const openCertificato = (record) => {
+    console.log(record.certificato);
     electron.ipcRenderer.invoke("open-file", record.certificato);
   };
+  const form = useForm();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const file = event.target.certificato.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("certificato", file);
+      updateMutation.mutate(formData);
+    }
+  };
+  const updateMutation = useMutation((data) => apiUpdate(URLS.RECORD_LAVORAZIONI + recordOpen.id + "/", data), {
+    onSuccess: () => {
+      setRecordOpen(null);
+      recordsQuery.refetch();
+      toast.success("Certificato aggiornato con successo");
+    },
+    onError: (error) => {
+      const errors = getErrors(error);
+      console.log(errors);
+      toast.error("Si è verificato un errore.");
+    },
+  });
   return (
     <>
+      <Dialog open={recordOpen} onOpenChange={setRecordOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <Form {...form}>
+            <form onSubmit={handleSubmit}>
+              <DialogHeader>
+                <DialogTitle>Modifica Certificato</DialogTitle>
+                <DialogDescription>
+                  Sostituisci il certificato di qualità per il lotto <b>{recordOpen?.n_lotto_super}</b>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-3">
+                <FormField
+                  control={form.control}
+                  name="certificato"
+                  render={({ field }) => (
+                    <FormControl>
+                      <FormItem>
+                        <FormLabel className="relative left-1">PDF Certificato:</FormLabel>
+                        <FormControl>
+                          <ShadcnInput type="file" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </FormControl>
+                  )}
+                />
+              </div>
+              <DialogFooter className="mt-4">
+                <ShadcnButton type="submit">Carica</ShadcnButton>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
       <Table className="table-fixed w-full align-middle text-center" striped bordered>
         <thead>
           <tr>
-            <th className="w-[15%]">Ora</th>
-            <th className="w-[20%]">Cliente</th>
-            <th className="w-[20%]">Articolo</th>
+            <th className="w-[12%]">Data</th>
+            <th className="w-[19%]">Cliente</th>
+            <th className="w-[19%]">Articolo</th>
             <th className="w-[15%]">N° Lotto</th>
             <th className="w-[15%]">N° Bolla</th>
-            <th className="w-[15%]">Certificato</th>
+            <th className="w-[10%]">Certificato</th>
+            <th className="w-[10%]">Sostituisci</th>
           </tr>
         </thead>
         <tbody>
           {recordsQuery.data?.results.map((record) => (
             <tr key={record.id}>
-              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[15%]">
+              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[12%]">
                 {new Date(record.data).toLocaleString("it-IT", dateOptions)}
               </td>
-              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[20%]">{record.cliente}</td>
-              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[20%]">{record.articolo}</td>
+              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[19%]">{record.cliente}</td>
+              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[19%]">{record.articolo}</td>
               <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[15%]">{record.n_lotto_super}</td>
               <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[15%]">{record.n_bolla}</td>
-              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[15%]">
+              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[10%]">
                 {record.certificato === null ? (
                   "-"
                 ) : (
@@ -144,17 +218,24 @@ function Tabella() {
                   />
                 )}
               </td>
+              <td className="whitespace-nowrap overflow-hidden text-ellipsis w-[10%]">
+                <FontAwesomeIcon
+                  icon={faUpload}
+                  className="text-nav-blue text-lg cursor-pointer"
+                  onClick={() => setRecordOpen(record)}
+                />
+              </td>
             </tr>
           ))}
           {recordsQuery.isSuccess && recordsQuery.data.results.length === 0 && (
             <tr>
-              <td colSpan={6}>Nessun record presente</td>
+              <td colSpan={7}>Nessun record presente</td>
             </tr>
           )}
           {recordsQuery.isLoading &&
             Array.from(Array(25)).map((_, idx) => (
               <tr key={idx}>
-                <td colSpan={6}>
+                <td colSpan={7}>
                   <Placeholder as="p" animation="glow">
                     <Placeholder xs={12} className="rounded-md" />
                   </Placeholder>
