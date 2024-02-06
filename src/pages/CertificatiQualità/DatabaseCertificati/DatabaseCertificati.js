@@ -137,7 +137,7 @@ function Tabella() {
       updateMutation.mutate(formData);
     }
   };
-  const updateMutation = useMutation((data) => apiUpdate(URLS.RECORD_LAVORAZIONI + recordOpen.id + "/", data), {
+  const updateMutation = useMutation((data) => apiUpdate(URLS.UPDATE_CERTIFICATO + recordOpen.id + "/", data), {
     onSuccess: () => {
       setRecordOpen(null);
       recordsQuery.refetch();
