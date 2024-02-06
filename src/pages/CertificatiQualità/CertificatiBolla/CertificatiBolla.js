@@ -82,6 +82,11 @@ function CertificatiBolla() {
     });
   };
 
+  const checkAll = (e) => {
+    const checkboxes = document.querySelectorAll("input[type=checkbox]");
+    checkboxes.forEach((checkbox) => (checkbox.checked = e.target.checked));
+  }
+
   return (
     <Wrapper>
       <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
@@ -168,7 +173,11 @@ function CertificatiBolla() {
                     <th>Codice articolo</th>
                     <th>UM</th>
                     <th>Quantità</th>
-                    <th>Certificato?</th>
+                    <th className="relative">
+                      <div className="absolute -top-8 left-5 text-muted font-medium">
+                        <Checkbox label="Tutti" inputProps={{ onClick: checkAll, defaultChecked: true, className: "text-lg" }} labelProps={{ className: "relative bottom-1"}} />
+                      </div>
+                      Certificato?</th>
                   </tr>
                 </thead>
                 <tbody>
