@@ -15,11 +15,12 @@ import { findElementFromID, searchOptions } from "../../../utils";
 import TabellaNestedItems from "../../../components/form-components/TabellaNestedItems/TabellaNestedItems";
 import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 import { URLS } from "../../../urls";
+import Checkbox from "../../../components/form-components/Checkbox";
 
 function SchedaControlloForm() {
   const { data: lavorazioni } = useCustomQuery({ queryKey: URLS.LAVORAZIONI });
 
-  const { initialData } = useFormContext()
+  const { initialData, view } = useFormContext()
   const emptyControllo = { nome: "", frequenza: "", responsabilità: "", misurazioni: null }
   const getSezioneVuota = (n) => {
     const nextLetter = String.fromCharCode(65 + n)
@@ -73,9 +74,10 @@ function SchedaControlloForm() {
               <thead>
                 <tr className="uppercase">
                   <th className="w-[30%]">nome</th>
-                  <th className="w-[20%]">frequenza</th>
-                  <th className="w-[20%]">responsabilità</th>
-                  <th className="w-[25%]">misurazioni</th>
+                  <th className="w-[15%]">frequenza</th>
+                  <th className="w-[15%]">responsabilità</th>
+                  <th className="w-[20%]">misurazioni</th>
+                  <th className="w-[15%]">rischi</th>
                   <th className="w-[5%]"></th>
                 </tr>
               </thead>
@@ -126,17 +128,6 @@ function SchedaControlloForm() {
                         />
                     </td>
                     <td>
-                      {/* <Checkbox 
-                        label={false}
-                        name={`${basePath}__misurazioni`}
-                        inputProps={{ 
-                          checked: controllo.misurazioni,
-                          onChange: (e) => setSezioni(
-                            modifyNestedObject(sezioni, `${richiestePath}__misurazioni`, e.target.value)
-                          )
-                         }}
-                        vertical={true}
-                      /> */}
                       <SearchSelect
                         label={false}
                         name={`${basePath}__misurazioni`}
@@ -150,6 +141,19 @@ function SchedaControlloForm() {
                           )}
                         }}
                       />
+                    </td>
+                    <td>
+                      {!!view || initialData ? (
+                        <>
+                        <Checkbox name={`${basePath}__safety`} label="Safety" inputProps={{ className: "text-lg relative -top-1" }} labelProps={{ className: "py-0 pl-5"}}  />
+                        <Checkbox name={`${basePath}__critical`} label="Critical" inputProps={{ className: "text-lg relative -top-1" }} labelProps={{ className: "py-0 pl-5"}} />
+                        </>
+                      ) : (
+                        <>
+                        <Checkbox labelCols={8} name={`${basePath}__safety`} label="Safety" inputProps={{ className: "text-lg relative -top-1", defaultChecked: false }} labelProps={{ className: "py-0"}}  />
+                        <Checkbox labelCols={8} name={`${basePath}__critical`} label="Critical" inputProps={{ className: "text-lg relative -top-1", defaultChecked: false }} labelProps={{ className: "py-0"}} />
+                        </>
+                      )}
                     </td>
                     <td>
                       <MinusIcon 

@@ -5,6 +5,8 @@ import Hidden from "../../../../components/form-components/Hidden/Hidden";
 import { useFormContext } from "../../../../contexts/FormContext";
 import PopoverMisurazioni from "../PopoverMisurazioni";
 import Sezione from "./Sezione";
+import Cricical from "../../../../images/critical_symbol.svg";
+import Safety from "../../../../images/safety_symbol.svg";
 
 function SezioneControlli({ articolo }) {
   const { initialData, view } = useFormContext();
@@ -46,6 +48,16 @@ function SezioneControlli({ articolo }) {
                           style={{ paddingLeft: "1.5em" }}
                         >
                           {controllo.nome}
+                          {controllo.critical && (
+                            <span className="font-semibold ml-4"> CRITICO 
+                            <img src={Cricical} alt="critical" className="w-8 h-8 inline-block ml-1 mb-1" />
+                            </span>
+                          )}
+                          {controllo.safety && (
+                            <span className="font-semibold ml-4"> SICUREZZA 
+                            <img src={Safety} alt="critical" className="w-8 h-8 inline-block ml-1 mb-1" />
+                            </span>
+                          )}
                         </td>
                         <td className="py-1.5">
                           {controllo.frequenza}
