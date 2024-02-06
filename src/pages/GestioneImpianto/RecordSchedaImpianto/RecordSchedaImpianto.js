@@ -37,6 +37,7 @@ function RecordSchedaImpianto() {
       getURL={URLS.RECORD_SCHEDE_IMPIANTO}
       FormComponent={RecordSchedaImpiantoForm}
       impiantoFilter={true}
+      queriesToInvalidate={[URLS.ULTIMA_SCHEDA_IMPIANTO]}
     >
       <Wrapper title="Scheda di Controllo" ref={pageRef}>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

@@ -1,6 +1,6 @@
 import { faPlus, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { Button, Col, Popover, Row, Table } from "react-bootstrap";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
@@ -13,6 +13,10 @@ import { findElementFromID, max, mean, min } from "../../../utils";
 import { modifyNestedObject } from "../../utils";
 import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 import { URLS } from "../../../urls";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/shadcn/Tabs";
+import { Input as ShadcnInput } from "../../../components/shadcn/Input";
+import { Label } from "../../../components/shadcn/Label";
+import { UserContext } from "../../../contexts/UserContext";
 
 const defaultMisurazioni = (initialData, lavorazioni) => {
   if (lavorazioni.every(el => el === "")) return []
@@ -45,6 +49,9 @@ const defaultMisurazioni = (initialData, lavorazioni) => {
 }
 
 function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) {
+  const { user } = useContext(UserContext);
+  const impianto = user?.user?.impianto;
+
   const lavorazioniQuery = useImpiantoQuery({ queryKey: URLS.LAVORAZIONI })
 
   const lavorazioni = useMemo(() =>
@@ -109,90 +116,108 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
           </Popover.Header>
           <Popover.Body>
             {lavorazioniQuery.isSuccess && (
-              <Table className="align-middle text-center" bordered>
-                <thead>
-                  {nCols === lavorazioni.length ? (
-                    <tr>
-                      <th>N°</th>
-                      {lavorazioni.map(lav => (
-                        <th key={lav.id}>Valori {lav.nome.toLowerCase()}</th>
-                      ))}
-                      <th></th>
-                    </tr>
-                  ) : (
-                    <>
+              <Tabs defaultValue="misurazioni" className="text-center">
+                <TabsList className={`${impianto.nome !== "Oro 140" ? "hidden" : ""}`}>
+                  <TabsTrigger value="misurazioni">Misurazioni</TabsTrigger>
+                  <TabsTrigger  value="min-max">Min-Max</TabsTrigger>
+                </TabsList>
+              <TabsContent value="misurazioni">
+                <Table className="align-middle text-center" bordered>
+                  <thead>
+                    {nCols === lavorazioni.length ? (
                       <tr>
-                        <th></th>
+                        <th>N°</th>
                         {lavorazioni.map(lav => (
-                          <th key={lav.id} colSpan={lav.richieste.length}>Valori {lav.nome.toLowerCase()}<br></br>(Punti)</th>
+                          <th key={lav.id}>Valori {lav.nome.toLowerCase()}</th>
                         ))}
                         <th></th>
                       </tr>
-                      <tr>
-                        <th>N°</th>
-                        {lavorazioni.map(lav => lav.richieste.map(ric => (
-                          <th key={ric.id}>{ric.punto}</th>
-                        )))}
-                        <th></th>
+                    ) : (
+                      <>
+                        <tr>
+                          <th></th>
+                          {lavorazioni.map(lav => (
+                            <th key={lav.id} colSpan={lav.richieste.length}>Valori {lav.nome.toLowerCase()}<br></br>(Punti)</th>
+                          ))}
+                          <th></th>
+                        </tr>
+                        <tr>
+                          <th>N°</th>
+                          {lavorazioni.map(lav => lav.richieste.map(ric => (
+                            <th key={ric.id}>{ric.punto}</th>
+                          )))}
+                          <th></th>
+                        </tr>
+                      </>
+                    )}
+                  </thead>
+                  <tbody>
+                    {misurazioni?.map((row, idxRow) => (
+                      <tr key={idxRow}>
+                        <td className="font-semibold">{idxRow + 1}</td>
+                        {row?.map((misurazione, idxCol) => {
+                          const idx = idxRow * nCols + idxCol
+                          const richiesta = richieste[idxCol]
+                          return (
+                            <td key={idxCol}>
+                              {initialData && misurazione.valore && (
+                                <Hidden name={`${basePath}__${idx}__id`} value={misurazione.id || undefined}/>
+                              )}
+                              <Input
+                                label={false}
+                                name={`${basePath}__${idx}__valore`}
+                                inputProps={{
+                                  className: nCols < 5 ? "text-center pl-5" : "text-center no-arrows",
+                                  value: misurazione.valore,
+                                  type: "number",
+                                  onChange: (e) => setMisurazioni(old =>
+                                    modifyNestedObject(old, `${idxRow}__${idxCol}__valore`, e.target.value)
+                                  )
+                                }}
+                              />
+                              <ErroreInput 
+                                misurazione={misurazione}
+                                richiesta={richiesta}
+                              />
+                              {misurazione.valore && (
+                                <Hidden name={`${basePath}__${idx}__richiesta`} value={richiesta.id}/>
+                              )}
+                            </td>
+                          )
+                        })}
+                        <td>
+                          <MinusIcon 
+                            onClick={() => setMisurazioni(misurazioni.filter((_, idx) => idx !== idxRow))}
+                          />
+                        </td>
                       </tr>
-                    </>
-                  )}
-                </thead>
-                <tbody>
-                  {misurazioni?.map((row, idxRow) => (
-                    <tr key={idxRow}>
-                      <td className="font-semibold">{idxRow + 1}</td>
-                      {row?.map((misurazione, idxCol) => {
-                        const idx = idxRow * nCols + idxCol
-                        const richiesta = richieste[idxCol]
-                        return (
-                          <td key={idxCol}>
-                            {initialData && misurazione.valore && (
-                              <Hidden name={`${basePath}__${idx}__id`} value={misurazione.id || undefined}/>
-                            )}
-                            <Input
-                              label={false}
-                              name={`${basePath}__${idx}__valore`}
-                              inputProps={{
-                                className: nCols < 5 ? "text-center pl-5" : "text-center no-arrows",
-                                value: misurazione.valore,
-                                type: "number",
-                                onChange: (e) => setMisurazioni(old =>
-                                  modifyNestedObject(old, `${idxRow}__${idxCol}__valore`, e.target.value)
-                                )
-                              }}
-                            />
-                            <ErroreInput 
-                              misurazione={misurazione}
-                              richiesta={richiesta}
-                            />
-                            {misurazione.valore && (
-                              <Hidden name={`${basePath}__${idx}__richiesta`} value={richiesta.id}/>
-                            )}
-                          </td>
-                        )
-                      })}
-                      <td>
-                        <MinusIcon 
-                          onClick={() => setMisurazioni(misurazioni.filter((_, idx) => idx !== idxRow))}
+                    ))}
+                    <tr>
+                      <td></td>
+                      <td colSpan={nCols}>
+                        <PlusIcon 
+                          onClick={() => setMisurazioni([...misurazioni, emptyRow])}
                         />
                       </td>
+                      <td></td>
                     </tr>
-                  ))}
-                  <tr>
-                    <td></td>
-                    <td colSpan={nCols}>
-                      <PlusIcon 
-                        onClick={() => setMisurazioni([...misurazioni, emptyRow])}
-                      />
-                    </td>
-                    <td></td>
-                  </tr>
-                </tbody>
-                {misurazioni?.[0]?.length > 1 && (
-                  <RiassuntoDati misurazioni={misurazioni} lavorazione={lavorazioni} index={0} />
-                )}
-              </Table>
+                  </tbody>
+                  {misurazioni?.[0]?.length > 1 && (
+                    <RiassuntoDati misurazioni={misurazioni} lavorazione={lavorazioni} index={0} />
+                  )}
+                </Table>
+              </TabsContent>
+              <TabsContent value="min-max" className="space-y-1 pt-3 pb-2 grid grid-cols-2 items-center">
+                <Label>Minimo</Label>
+                <ShadcnInput name="minimo" className="h-8 text-center" type="number" />
+                <Label>Media</Label>
+                <ShadcnInput name="media" className="h-8 text-center" type="number" />
+                <Label>Massimo</Label>
+                <ShadcnInput name="massimo" className="h-8 text-center" type="number"/>
+                <Label>N° Misurazioni</Label>
+                <ShadcnInput name="n_misurazioni" className="h-8 text-center" type="number"/>
+              </TabsContent>
+            </Tabs>
             )}
           </Popover.Body>
           {misurazioni?.[0]?.length === 1 && (
