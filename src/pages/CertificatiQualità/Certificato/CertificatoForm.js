@@ -187,7 +187,7 @@ function CertificatoForm({ scheda }) {
       </div>
       <div className="mb-6">
         {tests.map((test, idx) => {
-          const controllo = controlli.find(c => c.id === test.controllo)
+          const controllo = controlli?.find(c => c.id === test.controllo)
           return (
           <Table key={test.id} bordered className="text-sm align-middle border-gray-300 mb-10 shadow-sm relative">
             <tbody>
@@ -278,7 +278,7 @@ function CertificatoForm({ scheda }) {
                       <p>N° pezzi testati:</p>
                       <p className="text-blue-800">No. of inspected parts:</p>
                     </div>
-                    <div className="font-semibold">{controllo.frequenza_n}</div>
+                    <div className="font-semibold">{controllo?.frequenza_n}</div>
                   </div>
                 </td>
                 <td rowSpan={2} colSpan={test.lavorazione ? 2 : 1} className="w-1/4 px-4">
