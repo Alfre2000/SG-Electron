@@ -137,7 +137,8 @@ export const getDatiBollaMago = async (n_bolla) => {
     item.trattamento4,
     item.trattamento5,
     item.superficie,
-    item.articolo_certificato,
+    item.pesopezzo as peso,
+    CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
     item.specifiche_it,
     item.specifiche_en,
     item.trattamento_certificato,
@@ -152,6 +153,7 @@ export const getDatiBollaMago = async (n_bolla) => {
   JOIN ma_custsupp AS cust ON doc.custsupp = cust.custsupp
   JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
   JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
+  JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
   JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
   WHERE doc.documenttype = 3407873 
     AND doc.CustSuppType = 3211264 
@@ -185,6 +187,7 @@ export const getLottoInformation = async (n_lotto) => {
       cust.city,
       cust.county,
       cust.email,
+      cust.custsupp,
       item.impianto,
       item.trattamento1,
       item.trattamento2,
@@ -192,7 +195,8 @@ export const getLottoInformation = async (n_lotto) => {
       item.trattamento4,
       item.trattamento5,
       item.superficie,
-      item.articolo_certificato,
+      item.pesopezzo as peso,
+      CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
       item.specifiche_it,
       item.specifiche_en,
       item.trattamento_certificato,
@@ -202,6 +206,7 @@ export const getLottoInformation = async (n_lotto) => {
       item.mail_cliente
     FROM ma_saleorddetails AS sale
       JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
+      JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
       JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
     WHERE sale.job = '${job}' AND sale.line = '${line}'
   `
@@ -219,11 +224,12 @@ export const getDatiEtichettaMago = async (n_lotto) => {
       sale.line,
       sale.description,
       cust.companyname,
-      item.articolo_certificato,
+      CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
       item.impianto,
       item.note
     FROM ma_saleorddetails AS sale
       JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
+      JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
       JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
     WHERE sale.job = '${n_lotto}'
     ORDER BY sale.line
