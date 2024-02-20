@@ -9,6 +9,7 @@ import Input from "../../../components/form-components/Input";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Wrapper from "../Wrapper";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@components/shadcn/Tooltip";
 
 const electron = window?.require ? window.require("electron") : null;
 
@@ -16,6 +17,7 @@ function CertificatiBolla() {
   const [nBolla, setNBolla] = useState("");
   const [bolla, setBolla] = useState(null);
   const [error, setError] = useState(false);
+  const [messages, setMessages] = useState();
   const [loading, setLoading] = useState(false);
   const [loadingCertificati, setLoadingCertificati] = useState(false);
   const searchBolla = () => {
@@ -66,6 +68,7 @@ function CertificatiBolla() {
                 setLoadingCertificati(false);
                 clearInterval(interval);
                 setError(res.result.errors);
+                setMessages(res.result.messages);
               } else if (res.status === "FAILURE") {
                 setLoadingCertificati(false);
                 clearInterval(interval);
@@ -185,11 +188,20 @@ function CertificatiBolla() {
                     <tr key={idx} className="relative">
                       <td>
                         {error && !loadingCertificati && error?.includes(lotto.line) && (
-                          <FontAwesomeIcon
-                            icon={faCircleExclamation}
-                            className="absolute -left-8 text-red-800"
-                            size="lg"
-                          />
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <FontAwesomeIcon
+                                  icon={faCircleExclamation}
+                                  className="absolute -left-8 text-red-800"
+                                  size="lg"
+                                />
+                              </TooltipTrigger>
+                            <TooltipContent className="bg-red-800 text-white">
+                              {messages?.[lotto.line] || ""}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         )}
                         {lotto.trattamento1}
                       </td>
