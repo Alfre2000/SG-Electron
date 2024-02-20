@@ -68,7 +68,7 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
     nCols += articolo.richieste.filter(ric => ric.lavorazione.id === lav.id).length
   })
   const richieste = lavorazioni.map(lav => lav.richieste).flat()
-  const emptyRow = Array(nCols).fill(0).map(_ => ({ valore: "" }))
+  const emptyRow = Array(Math.max(1, nCols)).fill(0).map(_ => ({ valore: "" }))
   const [misurazioni, setMisurazioni] = useState(initialData?.misurazioni ? defaultMisurazioni(initialData, lavorazioni) : [emptyRow])
   
   useEffect(() => {
