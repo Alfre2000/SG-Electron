@@ -3,9 +3,8 @@ import ViewModal from "../../Modals/ViewModal/ViewModal";
 import Form from "../../../pages/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { Record } from "../../../interfaces/global";
 
-function View({ record }: { record: Record }) {
+function View<TData>({ record }: { record: TData }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>

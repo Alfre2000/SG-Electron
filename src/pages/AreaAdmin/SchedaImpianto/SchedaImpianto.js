@@ -1,22 +1,18 @@
-import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from "../../../components/PageTitle/PageTitle";
+import PageTitle from "@components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import SchedaImpiantoForm from "./SchedaImpiantoForm";
-import Tabella from "../../Tabella";
-import PageContext from "../../../contexts/PageContext";
+import PageContext from "@contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function SchedaImpianto() {
   const onSuccess = (_, queryClient) => {
     queryClient.invalidateQueries(URLS.MATERIALI);
-  }
+  };
   return (
-    <PageContext
-      getURL={URLS.SCHEDE_IMPIANTO}
-      FormComponent={SchedaImpiantoForm}
-    >
+    <PageContext getURL={URLS.SCHEDE_IMPIANTO} FormComponent={SchedaImpiantoForm}>
       <Wrapper>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
           <PageTitle>Schede Impianto</PageTitle>
@@ -39,11 +35,10 @@ function SchedaImpianto() {
                   Schede impianto create
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    date={false}
-                    valori={["impianto__impianti"]}
-                    queries={{ impianti: URLS.IMPIANTI }}
-                    onModify={onSuccess}
+                  <DataTable
+                    columns={[{ accessorKey: "impianto__nome", query: URLS.IMPIANTI }]}
+                    endpoint={URLS.SCHEDE_IMPIANTO}
+                    onSuccess={onSuccess}
                   />
                 </Card.Body>
               </Card>

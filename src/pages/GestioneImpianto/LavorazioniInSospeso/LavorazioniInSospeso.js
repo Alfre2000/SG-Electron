@@ -2,10 +2,10 @@ import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
-import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordLavorazioneForm from "./../RecordLavorazione/RecordLavorazioneForm";
 import PageContext from "../../../contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function LavorazioniInSospeso() {
   return (
@@ -26,21 +26,16 @@ function LavorazioniInSospeso() {
                   Lavorazioni non completate
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    headers={["Lotto", "N° Pezzi", "Operatore"]}
-                    valori={[
-                      "n_lotto_super",
-                      "quantità",
-                      "operatore__operatori",
+                  <DataTable
+                    endpoint={URLS.RECORD_LAVORAZIONI_IN_SOSPESO}
+                    columns={[
+                      { accessorKey: "data", type: "datetime", size: 25 },
+                      { accessorKey: "n_lotto_super", label: "Lotto" },
+                      { accessorKey: "quantità" },
+                      { accessorKey: "operatore__nome", query: URLS.OPERATORI },
+                      { accessorKey: "completata", type: "boolean", enableSorting: false},
                     ]}
-                    queries={{
-                      clienti: URLS.CLIENTI,
-                      operatori: URLS.OPERATORI,
-                    }}
-                    hoursModify={false}
-                    filtering={false}
-                    canCopy={false}
-                    canDelete={false}
+                    options={{ impiantoFilter: true, canCopy: false, canDelete: false}}
                   />
                 </Card.Body>
               </Card>

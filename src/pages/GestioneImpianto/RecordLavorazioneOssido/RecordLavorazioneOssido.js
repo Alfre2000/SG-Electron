@@ -10,12 +10,12 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import Tabella from "../../Tabella";
 import { parseProssimeManutenzioni } from "../parsers";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { capitalize, isDateRecent } from "../../../utils";
 import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 import PageContext from "../../../contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 const { motion } = require("framer-motion");
 
 const alert = {
@@ -119,16 +119,15 @@ function RecordLavorazioneOssido() {
                   Ultimi lotti lavorati
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    headers={["Lotto", "N° Pezzi", "Operatore"]}
-                    valori={[
-                      "n_lotto_cliente",
-                      "quantità",
-                      "operatore__operatori",
+                  <DataTable
+                    endpoint={URLS.RECORD_LAVORAZIONI_OSSIDO}
+                    columns={[
+                      { accessorKey: "data", type: "datetime", size: 25 },
+                      { accessorKey: "n_lotto_cliente", label: "Lotto" },
+                      { accessorKey: "quantità" },
+                      { accessorKey: "operatore__nome", query: URLS.OPERATORI },
                     ]}
-                    types={["text", "number", "text"]}
-                    queries={{ operatori: URLS.OPERATORI }}
-                    canCopy={false}
+                    options={{ impiantoFilter: true, canCopy: false }}
                   />
                 </Card.Body>
               </Card>

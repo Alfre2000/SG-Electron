@@ -1,12 +1,11 @@
-import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from "../../../components/PageTitle/PageTitle";
+import PageTitle from "@components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import SchedaControlloForm from "./SchedaControlloForm";
-import Tabella from "../../Tabella";
-import PageContext from "../../../contexts/PageContext";
+import PageContext from "@contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function SchedaControllo() {
   return (
@@ -37,10 +36,7 @@ function SchedaControllo() {
                   Ultimi schede controllo create
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    date={false}
-                    valori={["nome"]}
-                  />
+                  <DataTable columns={[{ accessorKey: "nome" }]} endpoint={URLS.SCHEDE_CONTROLLO} />
                 </Card.Body>
               </Card>
             </Col>

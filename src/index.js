@@ -13,13 +13,16 @@ import {
   Legend,
   ArcElement,
   PointElement,
-  LineElement
+  LineElement,
+  TimeScale
 } from 'chart.js';
+import 'chartjs-adapter-luxon';
 
 ChartJS.register(
   ArcElement,
   CategoryScale,
   LinearScale,
+  TimeScale,
   BarElement,
   PointElement,
   LineElement,

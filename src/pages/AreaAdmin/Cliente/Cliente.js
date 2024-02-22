@@ -1,19 +1,15 @@
-import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from "../../../components/PageTitle/PageTitle";
+import PageTitle from "@components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import ClienteForm from "./ClienteForm";
-import Tabella from "../../Tabella";
-import PageContext from "../../../contexts/PageContext";
+import PageContext from "@contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function Cliente() {
   return (
-    <PageContext
-      getURL={URLS.CLIENTI}
-      FormComponent={ClienteForm}
-    >
+    <PageContext getURL={URLS.CLIENTI} FormComponent={ClienteForm}>
       <Wrapper>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
           <PageTitle>Clienti</PageTitle>
@@ -36,10 +32,7 @@ function Cliente() {
                   Ultimi Clienti creati
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    date={false}
-                    valori={["nome"]}
-                  />
+                  <DataTable columns={[{ accessorKey: "nome" }]} endpoint={URLS.CLIENTI} />
                 </Card.Body>
               </Card>
             </Col>

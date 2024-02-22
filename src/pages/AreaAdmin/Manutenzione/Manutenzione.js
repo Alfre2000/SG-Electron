@@ -1,19 +1,15 @@
-import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from "../../../components/PageTitle/PageTitle";
+import PageTitle from "@components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import ManutenzioneForm from "./ManutenzioneForm";
-import Tabella from "../../Tabella";
-import PageContext from "../../../contexts/PageContext";
+import PageContext from "@contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function Manutenzione() {
   return (
-    <PageContext
-      getURL={URLS.MANUTENZIONI}
-      FormComponent={ManutenzioneForm}
-    >
+    <PageContext getURL={URLS.MANUTENZIONI} FormComponent={ManutenzioneForm}>
       <Wrapper>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
           <PageTitle>Manutenzioni</PageTitle>
@@ -36,16 +32,14 @@ function Manutenzione() {
                   Ultime manutenzioni create creati
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    date={false}
-                    valori={[
-                      "impianto__impianti",
-                      "nome",
-                      "intervallo_pezzi",
-                      "intervallo_giorni",
+                  <DataTable
+                    columns={[
+                      { accessorKey: "impianto__nome", size: 20, query: URLS.IMPIANTI },
+                      { accessorKey: "nome", size: 40 },
+                      { accessorKey: "intervallo_pezzi", size: 20 },
+                      { accessorKey: "intervallo_giorni", size: 20 },
                     ]}
-                    colSizes={[20, 40, 20, 20]}
-                    queries={{ impianti: URLS.IMPIANTI }}
+                    endpoint={URLS.MANUTENZIONI}
                   />
                 </Card.Body>
               </Card>

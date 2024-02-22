@@ -7,11 +7,11 @@ import { Col, Container, Row, Card, Alert } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
-import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordSchedaImpiantoForm from "./RecordSchedaImpiantoForm";
 import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 import PageContext from "../../../contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function RecordSchedaImpianto() {
   const [warning, setWarning] = useState(false);
@@ -20,9 +20,7 @@ function RecordSchedaImpianto() {
   const pageRef = useRef();
   const validator = (form) => {
     const checkboxes = [...form.elements].filter(
-      (el) =>
-        el.name.startsWith("record_verifiche_iniziali") &&
-        !el.hasAttribute("hidden")
+      (el) => el.name.startsWith("record_verifiche_iniziali") && !el.hasAttribute("hidden")
     );
     if (!checkboxes.every((el) => el.checked) && warning === false) {
       setWarning(true);
@@ -43,14 +41,8 @@ function RecordSchedaImpianto() {
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
           <PageTitle>Scheda Impianto</PageTitle>
           {schedeImpiantoQuery.isSuccess && schedeImpiantoQuery.data.length === 0 ? (
-            <Alert
-              variant="danger"
-              className="mt-14 py-3 px-6 mb-2 text-left inline-flex items-center"
-            >
-              <FontAwesomeIcon
-                icon={faTriangleExclamation}
-                className="mr-10"
-              ></FontAwesomeIcon>
+            <Alert variant="danger" className="mt-14 py-3 px-6 mb-2 text-left inline-flex items-center">
+              <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
               <div>L'impianto non presenta ancora nessuna scheda</div>
             </Alert>
           ) : (
@@ -75,13 +67,14 @@ function RecordSchedaImpianto() {
                         Ultimi schede impianto
                       </Card.Header>
                       <Card.Body>
-                        <Tabella
-                          valori={["operatore__operatori", "note"]}
-                          queries={{
-                            operatori: URLS.OPERATORI,
-                          }}
-                          hoursModify={8}
-                          canCopy={false}
+                        <DataTable
+                          columns={[
+                            { accessorKey: "data", type: "datetime" },
+                            { accessorKey: "operatore__nome", query: URLS.OPERATORI },
+                            { accessorKey: "note" },
+                          ]}
+                          endpoint={URLS.RECORD_SCHEDE_IMPIANTO}
+                          options={{canCopy: false, impiantoFilter: true}}
                         />
                       </Card.Body>
                     </Card>

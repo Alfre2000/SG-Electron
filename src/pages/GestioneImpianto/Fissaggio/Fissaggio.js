@@ -4,9 +4,9 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import FissaggioForm from "./FissaggioForm";
 import Form from "../../Form";
-import Tabella from "../../Tabella";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import PageContext from "../../../contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function Fissaggio() {
   return (
@@ -37,14 +37,14 @@ function Fissaggio() {
                   Ultime aggiunte eseguite
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    headers={["Operatore", "pH"]}
-                    valori={[
-                      "operatore__operatori",
-                      "record_parametri__0__valore",
+                  <DataTable
+                    endpoint={URLS.RECORD_FISSAGGIO}
+                    columns={[
+                      { accessorKey: "data", type: "datetime", size: 25 },
+                      { accessorKey: "operatore__nome", query: URLS.OPERATORI, enableSorting: false },
+                      { accessorKey: "record_parametri__0__valore", label: "pH", enableSorting: false },
                     ]}
-                    queries={{ operatori: URLS.OPERATORI }}
-                    canCopy={false}
+                    options={{ impiantoFilter: true, canCopy: false }}
                   />
                 </Card.Body>
               </Card>

@@ -1,7 +1,4 @@
-import {
-  faArrowCircleRight,
-  faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Col, Container, Row, Card, Alert } from "react-bootstrap";
@@ -10,11 +7,11 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import { isDateRecent } from "../../../utils";
 import Form from "../../Form";
-import Tabella from "../../Tabella";
 import Wrapper from "../Wrapper";
 import RecordLavorazioneForm from "./RecordLavorazioneForm";
 import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 import PageContext from "../../../contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 const { motion } = require("framer-motion");
 
 function RecordLavorazione() {
@@ -37,19 +34,10 @@ function RecordLavorazione() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <Alert
-                variant="danger"
-                className="mt-8 -mb-2 py-2 px-20 text-left inline-flex items-center"
-              >
-                <FontAwesomeIcon
-                  icon={faTriangleExclamation}
-                  className="mr-10"
-                ></FontAwesomeIcon>
+              <Alert variant="danger" className="mt-8 -mb-2 py-2 px-20 text-left inline-flex items-center">
+                <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
                 <b>Attenzione:</b>
-                <div className="pl-2 pr-16">
-                  {" "}
-                  compilare la scheda dell'impianto !
-                </div>
+                <div className="pl-2 pr-16"> compilare la scheda dell'impianto !</div>
                 <Link to="/manutenzione/record-scheda-impianto/">
                   <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
                 </Link>
@@ -75,18 +63,16 @@ function RecordLavorazione() {
                   Ultimi lotti lavorati
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    headers={["Lotto", "N° Pezzi", "Operatore", "Completata"]}
-                    valori={[
-                      "n_lotto_super",
-                      "quantità",
-                      "operatore__operatori",
-                      "completata"
+                  <DataTable
+                    endpoint={URLS.RECORD_LAVORAZIONI_NOT_OSSIDO}
+                    columns={[
+                      { accessorKey: "data", type: "datetime", size: 25 },
+                      { accessorKey: "n_lotto_super", label: "Lotto" },
+                      { accessorKey: "quantità" },
+                      { accessorKey: "operatore__nome", query: URLS.OPERATORI },
+                      { accessorKey: "completata", type: "boolean" },
                     ]}
-                    types={["text", "number", "text", "boolean"]}
-                    queries={{ operatori: URLS.OPERATORI }}
-                    hoursModify={false}
-                    canCopy={false}
+                    options={{ impiantoFilter: true, canCopy: false }}
                   />
                 </Card.Body>
               </Card>

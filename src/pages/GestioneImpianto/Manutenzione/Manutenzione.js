@@ -4,9 +4,9 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import Form from "../../Form";
 import ManutenzioneForm from "./ManutenzioneForm";
-import Tabella from "../../Tabella";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import PageContext from "../../../contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function Manutenzione() {
   return (
@@ -37,15 +37,14 @@ function Manutenzione() {
                   Ultime manutenzioni effettuate
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    headers={["Manutenzione", "Operatore"]}
-                    valori={["operazione__operazioni", "operatore__operatori"]}
-                    queries={{
-                      operazioni: URLS.MANUTENZIONI,
-                      operatori: URLS.OPERATORI,
-                    }}
-                    colSizes={[70, 30]}
-                    canCopy={false}
+                  <DataTable
+                    endpoint={URLS.RECORD_MANUTENZIONE}
+                    columns={[
+                      { accessorKey: "data", type: "datetime", size: 25 },
+                      { accessorKey: "operazione__nome", query: URLS.MANUTENZIONI, size: 50, label: "Manutenzione", enableSorting: false },
+                      { accessorKey: "operatore__nome", query: URLS.OPERATORI, size: 25, enableSorting: false },
+                    ]}
+                    options={{ impiantoFilter: true, canCopy: false }}
                   />
                 </Card.Body>
               </Card>

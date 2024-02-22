@@ -8,8 +8,6 @@ import Analisi from "./pages/GestioneImpianto/Analisi/Analisi";
 import Fissaggio from "./pages/GestioneImpianto/Fissaggio/Fissaggio";
 import Manutenzione from "./pages/GestioneImpianto/Manutenzione/Manutenzione";
 import Prossime from "./pages/GestioneImpianto/Prossime/Prossime";
-import Produzione from "./pages/GestioneImpianto/Produzione/Produzione";
-import RicercaDatabase from "./pages/GestioneImpianto/RicercaDatabase/RicercaDatabase";
 import RecordLavorazione from "./pages/GestioneImpianto/RecordLavorazione/RecordLavorazione";
 import SelezioneImpianto from "./pages/GestioneImpianto/SelezioneImpianto/SelezioneImpianto";
 import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
@@ -28,12 +26,12 @@ import Dashboards from "./pages/AndamentoProduzione/Dashboards/Dashboards";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { defaultQueryFn } from "./api/queryFn";
 import { Toaster, toast } from 'sonner';
-import ProssimeManutenzioni from "./pages/AnalisiManutenzioni/ProssimeManutenzioni/ProssimeManutenzioni";
 import FocusArticolo from "./pages/AndamentoProduzione/FocusArticolo/FocusArticolo";
 import { UserContext } from "./contexts/UserContext";
 import DashboardRicavi from "./pages/AndamentoProduzione/DashboardRicavi/DashboardRicavi";
-import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
+import SelezioneCliente from "./pages/AndamentoProduzione/FocusCliente/SelezioneCliente";
 import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati/DatabaseCertificati";
+import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -68,8 +66,6 @@ function App() {
               <Route path="fissaggio/" element={<Fissaggio />}></Route>
               <Route path="manutenzioni/" element={<Manutenzione />}></Route>
               <Route path="prossime/" element={<Prossime />}></Route>
-              <Route path="produzione/" element={<Produzione />}></Route>
-              <Route path="ricerca/" element={<RicercaDatabase />}></Route>
               <Route path="record-lavorazione/" element={<RecordLavorazione />}></Route>
               <Route path="record-lavorazione-ossido/" element={<RecordLavorazioneOssido />}></Route>
               <Route path="record-lavorazione-in-sospeso/" element={<LavorazioniInSospeso />}></Route>
@@ -99,11 +95,8 @@ function App() {
               <Route path="dashboards/" element={<Dashboards />}></Route>
               <Route path="dashboard-ricavi/" element={<DashboardRicavi />}></Route>
               <Route path="focus-articolo/:articoloId" element={<FocusArticolo />}></Route>
-              <Route path="focus-cliente/" element={<FocusCliente />}></Route>
-            </Route>
-            {/* Analisi e Manutenzioni */}
-            <Route path="analisi-manutenzioni/">
-              <Route path="prossime-manutenzioni/" element={<ProssimeManutenzioni />}></Route>
+              <Route path="focus-cliente/" element={<SelezioneCliente />}></Route>
+              <Route path="focus-cliente/:cliente" element={<FocusCliente />}></Route>
             </Route>
           </Routes>
         </HashRouter>

@@ -27,9 +27,12 @@ export const URLS = {
     ARTICOLI_NAMES: BASE_PATH + '/base/articoli-names/',
     IMPIANTI: BASE_PATH + '/base/impianti/',
     CLIENTI: BASE_PATH + '/base/clienti/',
+    CONTATTI: BASE_PATH + '/base/contatti/',
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',
     MATERIALI: BASE_PATH + '/base/materiali/',
     TRAVERSINI: BASE_PATH + '/base/traversini/',
+
+    CLIENTI_ANAGRAFICA: BASE_PATH + '/base/clienti/anagrafica/',
 
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
@@ -43,6 +46,8 @@ export const URLS = {
     PRODUZIONE_PER_OPERATORE: BASE_PATH + '/scheda-controllo/produzione-per-operatore/',
 
     RECORD_LAVORAZIONE_INFO: BASE_PATH + '/scheda-controllo/record-lavorazione-info/',
+
+    UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
 
     // CERTIFICATI
     RECORD_LAVORAZIONI_SEARCH: BASE_PATH + '/scheda-controllo/record-lavorazioni-search/',

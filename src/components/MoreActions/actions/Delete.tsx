@@ -7,9 +7,8 @@ import { toast } from "sonner";
 import { usePageContext } from "../../../contexts/PageContext";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Record } from "../../../interfaces/global";
 
-function Delete({ record }: { record: Record }) {
+function Delete<TData extends { id: string | number }>({ record }: { record: TData }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { queryKey, url, postURL, queriesToInvalidate } = usePageContext();

@@ -3,9 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { removeIdRecursively } from "../../../utils";
 import { usePageContext } from "../../../contexts/PageContext";
-import { Record } from "../../../interfaces/global";
 
-function Copy({ record }: { record: Record }) {
+function Copy<TData>({ record }: { record: TData }) {
   const { setCopyData } = usePageContext();
 
   const handleCopy = () => {

@@ -13,13 +13,13 @@ export const dateToTimePicker = (date) => {
 };
 
 export const dateToAPIdate = (date) => {
-  if (date === undefined) return undefined
+  if (date === undefined) return undefined;
   const [year, month, day] = date.split("-");
   return day + "/" + month + "/" + year;
 };
 
 export const dateToPickerDate = (date) => {
-  if (!date) return undefined
+  if (!date) return undefined;
   const [day, month, year] = date.split("/");
   return year + "-" + month + "-" + day;
 };
@@ -70,8 +70,7 @@ export const toTableArray = (array) => {
 };
 
 export const searchOptions = (array, labelKey, same = false) => {
-  if (same)
-    return array?.map((el) => ({ value: el[labelKey], label: el[labelKey] }));
+  if (same) return array?.map((el) => ({ value: el[labelKey], label: el[labelKey] }));
   return array?.map((el) => ({ value: el.id, label: el[labelKey] }));
 };
 
@@ -83,12 +82,9 @@ export const max = (array) => {
 };
 export const mean = (array) => {
   return array.length > 0
-    ? (
-        array.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / array.length
-      ).toFixed(2)
+    ? (array.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / array.length).toFixed(2)
     : "-";
 };
-
 
 export function removeIdRecursively(data) {
   if (Array.isArray(data)) {
@@ -106,4 +102,21 @@ export function removeIdRecursively(data) {
       }
     }
   }
+}
+
+export const toEuro = (amount) => {
+  return amount !== undefined ? amount.toLocaleString("it-IT", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }) : "-";
+};
+
+export const toPercentage = (amount, addSign = true, decimals = 0) => {
+  const sign = addSign ? amount >= 0 ? "+" : "" : "";
+  return amount !== undefined ? sign + amount.toLocaleString("it-IT", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }) + " %" : "-";
 }

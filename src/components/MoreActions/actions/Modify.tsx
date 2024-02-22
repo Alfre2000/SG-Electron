@@ -4,9 +4,8 @@ import { toast } from "sonner";
 import Form from "../../../pages/Form";
 import { faWrench } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Record } from "../../../interfaces/global";
 
-function Modify({ record }: { record: Record }) {
+function Modify<TData>({ record }: { record: TData }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSuccess = () => {

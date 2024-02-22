@@ -7,10 +7,9 @@ import Delete from "./actions/Delete";
 import useOutsideAlerter from "../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { Link } from "react-router-dom";
 import Copy from "./actions/Copy";
-import { Record } from "../../interfaces/global";
 
-type MoreActionsProps = {
-  record: Record;
+type MoreActionsProps<TData> = {
+  record: TData;
   view?: boolean;
   modify?: boolean;
   del?: boolean;
@@ -23,7 +22,7 @@ type MoreActionsProps = {
   }[];
 };
 
-function MoreActions({ record, view, modify, del, copy, otherActions }: MoreActionsProps) {
+function MoreActions<TData extends {id: string | number }>({ record, view, modify, del, copy, otherActions }: MoreActionsProps<TData>) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   useOutsideAlerter(menuRef, () => setIsMenuOpen(false));

@@ -4,8 +4,8 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import Form from "../../Form";
 import AnalisiForm from "./AnalisiForm";
-import Tabella from "../../Tabella";
 import PageTitle from "../../../components/PageTitle/PageTitle";
+import DataTable from "@ui/data-table/DataTable";
 import PageContext from "../../../contexts/PageContext";
 
 function Analisi() {
@@ -37,15 +37,14 @@ function Analisi() {
                   Ultime analisi effettuate
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    headers={["Analisi", "Operatore"]}
-                    valori={["operazione__operazioni", "operatore__operatori"]}
-                    queries={{
-                      operazioni: URLS.ANALISI,
-                      operatori: URLS.OPERATORI,
-                    }}
-                    colSizes={[70, 30]}
-                    canCopy={false}
+                  <DataTable
+                    endpoint={URLS.RECORD_ANALISI}
+                    columns={[
+                      { accessorKey: "data", type: "datetime", size: 25 },
+                      { accessorKey: "operazione__nome", query: URLS.ANALISI, size: 50, label: "Analisi", enableSorting: false },
+                      { accessorKey: "operatore__nome", query: URLS.OPERATORI, size: 25, enableSorting: false },
+                    ]}
+                    options={{ impiantoFilter: true, canCopy: false }}
                   />
                 </Card.Body>
               </Card>

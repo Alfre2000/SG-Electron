@@ -13,17 +13,16 @@ export const getNavItems = (user) => {
       {name: 'Fissaggio', link: '/manutenzione/fissaggio/'},
       {name: 'Manutenzioni', link: '/manutenzione/manutenzioni/'},
       {name: 'Analisi', link: '/manutenzione/analisi/'},
-      {name: 'Ricerca Database', link: '/manutenzione/ricerca/'},
     ]},
     { title: "Informazioni", icon: faChartLine, links: [
       {name: 'Prossime Manutenzioni', link: '/manutenzione/prossime/'},
-      {name: 'Andamento Produzione', link: '/manutenzione/produzione/'},
     ]},
   ];
   // Se non è l'impianto Ossido, rimuovi le manutenzioni e aggiungi la scheda dell'ossido
   if (!user.impianto?.nome.toLowerCase().includes('ossido')) {
     items.splice(2, 1) // Remove Manutenzioni
     items[2].links.splice(0, 1) // Remove Prossime Manutenzioni
+    items.pop() // Remove Informazioni
   } else {
     items[0].links.splice(1, 1) // Remove Schede in sospeso
     items.splice(0, 0, { title: "Scheda valvole", icon: faClipboardCheck, links: [

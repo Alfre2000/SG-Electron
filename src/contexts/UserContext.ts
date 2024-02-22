@@ -4,6 +4,11 @@ import { ProgrammiNames } from "../programmi";
 export interface UserContextType {
   user: {
     user: {
+      id: number;
+      impianto: {
+        id: number;
+      } | null;
+      is_staff: boolean;
       username: string;
       programmi: ProgrammiNames[];
     };
@@ -20,4 +25,9 @@ export const useUserContext = () => {
   }
 
   return context;
+};
+
+export const useImpianto = () => {
+  const context = useUserContext();
+  return context.user?.user?.impianto?.id;
 };

@@ -1,12 +1,11 @@
-import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import PageTitle from "../../../components/PageTitle/PageTitle";
+import PageTitle from "@components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
 import Wrapper from "../../AreaAdmin/Wrapper";
 import ArticoloForm from "./ArticoloForm";
-import Tabella from "../../Tabella";
-import PageContext from "../../../contexts/PageContext";
+import PageContext from "@contexts/PageContext";
+import DataTable from "@ui/data-table/DataTable";
 
 function Articolo() {
   return (
@@ -37,9 +36,9 @@ function Articolo() {
                   Ultimi articoli creati
                 </Card.Header>
                 <Card.Body>
-                  <Tabella
-                    date={false}
-                    valori={["nome", "codice", "cliente"]}
+                  <DataTable
+                    columns={[{ accessorKey: "nome" }, { accessorKey: "codice" }, { accessorKey: "cliente" }]}
+                    endpoint={URLS.ARTICOLI}
                   />
                 </Card.Body>
               </Card>
