@@ -28,7 +28,6 @@ import { defaultQueryFn } from "./api/queryFn";
 import { Toaster, toast } from 'sonner';
 import FocusArticolo from "./pages/AndamentoProduzione/FocusArticolo/FocusArticolo";
 import { UserContext } from "./contexts/UserContext";
-import DashboardRicavi from "./pages/AndamentoProduzione/DashboardRicavi/DashboardRicavi";
 import SelezioneCliente from "./pages/AndamentoProduzione/FocusCliente/SelezioneCliente";
 import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati/DatabaseCertificati";
 import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
@@ -93,7 +92,6 @@ function App() {
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">
               <Route path="dashboards/" element={<Dashboards />}></Route>
-              <Route path="dashboard-ricavi/" element={<DashboardRicavi />}></Route>
               <Route path="focus-articolo/:articoloId" element={<FocusArticolo />}></Route>
               <Route path="focus-cliente/" element={<SelezioneCliente />}></Route>
               <Route path="focus-cliente/:cliente" element={<FocusCliente />}></Route>
