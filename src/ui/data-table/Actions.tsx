@@ -7,19 +7,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@components/shadcn/DropdownMenu";
-import { faClone, faEllipsis, faMagnifyingGlass, faTrash, faWrench } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faMagnifyingGlass, faTrash, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import View from "./View";
 import Modify from "./Modify";
 import Delete from "./Delete";
 import { WithID } from "@interfaces/global";
-import { usePageContext } from "@contexts/PageContext";
-import { removeIdRecursively } from "@utils/main";
 import { Link } from "react-router-dom";
+import Copy from "./Copy";
 
 type ActionsProps<TData> = {
   record: TData;
+  endpoint: string;
   view?: boolean;
   modify?: boolean;
   del?: boolean;
@@ -30,8 +30,8 @@ type ActionsProps<TData> = {
     link?: string;
     onClick?: () => void;
   }[];
-  endpoint: string;
   onSuccess?: (data?: TData[]) => void;
+  trigger?: React.ReactElement;
 };
 
 function Actions<TData extends WithID>({
@@ -43,30 +43,35 @@ function Actions<TData extends WithID>({
   otherActions = [],
   endpoint,
   onSuccess,
+  trigger,
 }: ActionsProps<TData>) {
-  const { setCopyData } = usePageContext();
   const [viewOpen, setViewOpen] = React.useState(false);
   const [modifyOpen, setModifyOpen] = React.useState(false);
   const [delOpen, setDelOpen] = React.useState(false);
-
-  const handleCopy = () => {
-    const initialData = { ...record };
-    removeIdRecursively(initialData);
-    setCopyData(initialData);
-    setTimeout(() => {
-      document.getElementById("sg-header")?.scrollIntoView({ behavior: "smooth" });
-    }, 500);
-  };
   return (
     <>
       {viewOpen && <View isOpen={viewOpen} setIsOpen={setViewOpen} record={record} />}
-      {modifyOpen && <Modify isOpen={modifyOpen} setIsOpen={setModifyOpen} record={record} onSuccess={onSuccess} />}
-      {delOpen && <Delete isOpen={delOpen} setIsOpen={setDelOpen} record={record} endpoint={endpoint} onSuccess={onSuccess} />}
+      {modifyOpen && (
+        <Modify isOpen={modifyOpen} setIsOpen={setModifyOpen} record={record} onSuccess={onSuccess} />
+      )}
+      {delOpen && (
+        <Delete
+          isOpen={delOpen}
+          setIsOpen={setDelOpen}
+          record={record}
+          endpoint={endpoint}
+          onSuccess={onSuccess}
+        />
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-14 p-0">
-            <FontAwesomeIcon icon={faEllipsis} className="h-4 w-4" />
-          </Button>
+          {trigger ? (
+            trigger
+          ) : (
+            <Button variant="ghost" className="h-8 w-14 p-0">
+              <FontAwesomeIcon icon={faEllipsis} className="h-4 w-4" />
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-40">
           <DropdownMenuLabel className="ml-1.5">Azioni</DropdownMenuLabel>
@@ -83,12 +88,7 @@ function Actions<TData extends WithID>({
               Modifica
             </DropdownMenuItem>
           )}
-          {copy && (
-            <DropdownMenuItem onClick={handleCopy} className="py-1.5 cursor-pointer">
-              <FontAwesomeIcon icon={faClone} size="sm" className="mr-3 ml-1.5" />
-              Copia
-            </DropdownMenuItem>
-          )}
+          {copy && <Copy record={record} />}
           {del && (
             <DropdownMenuItem onClick={() => setDelOpen(true)} className="py-1.5 cursor-pointer">
               <FontAwesomeIcon icon={faTrash} size="sm" className="mr-3 ml-1.5" />

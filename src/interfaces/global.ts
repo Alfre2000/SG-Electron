@@ -43,6 +43,25 @@ export type Operatore = {
   impianti: number[];
 };
 
+export type RecordCertificato = {
+  id: string;
+  articolo: string;
+  cliente: string;
+  n_lotto_super: string;
+  certificato: string;
+  data: string;
+  n_bolla: string;
+};
+
+
 export type WithID = {
   id: string | number;
+};
+
+
+export type PaginationData<TData> = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: TData[];
 };

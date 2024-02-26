@@ -8,7 +8,7 @@ import { customStyle } from "./stylesSelect";
 import RequiredSelect from "./RequiredSelect";
 import { useFormContext } from "../../contexts/FormContext";
 
-function SearchSelect({ label, name, inputProps, labelProps, labelCols, options, createTable, initialData, errors, colProps, errorName, showMessageError = true }) {
+function SearchSelect({ label = undefined, name = undefined, inputProps = undefined, labelProps = undefined, labelCols = undefined, options = undefined, createTable = undefined, initialData = undefined, errors = undefined, colProps = undefined, errorName = undefined, showMessageError = true }) {
   if (label === undefined &&  name === undefined) label = false;
   const lastName = name ? name.split('__')[name.split('__').length - 1] : ""; 
   const labelText = label ? label : name ? `${capitalize(lastName).replace('_', ' ')}:` : ""

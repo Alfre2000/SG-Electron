@@ -5,7 +5,6 @@ import {
   ColumnFiltersState,
   RowData,
   SortingState,
-  TableMeta,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,

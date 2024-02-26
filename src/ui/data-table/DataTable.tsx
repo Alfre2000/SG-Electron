@@ -22,7 +22,7 @@ import {
 import React from "react";
 import { useQuery } from "react-query";
 import Actions from "./Actions";
-import { WithID } from "@interfaces/global";
+import { PaginationData, WithID } from "@interfaces/global";
 import { DataTableColumnHeader } from "./ColumnHeader";
 import { Skeleton } from "@components/shadcn/Skeleton";
 import { findNestedElement } from "@pages/utils";
@@ -36,13 +36,12 @@ export interface ExtendedColumn<TData, TValue> extends Column<TData, TValue> {
   columnDef: ExtendedColumnDef<TData, TValue>;
 }
 
-type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+export type ExtendedColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> & {
   accessorKey?: string;
   label?: string;
   type?: "string" | "number" | "date" | "datetime" | "boolean";
   query?: string;
 };
-
 
 interface DataTableProps<TData, TValue> {
   columns: ExtendedColumnDef<TData, TValue>[];
@@ -55,20 +54,14 @@ interface DataTableProps<TData, TValue> {
     impiantoFilter?: boolean;
     canCopy?: boolean;
     canDelete?: boolean;
+    azioni?: boolean;
   };
 }
 
-type PaginationData<TData> = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: TData[];
-};
-
-interface FetchDataOptions {
+export interface FetchDataOptions {
   page: number;
   custom_page_size: number;
-  ordering: string | null;
+  ordering?: string | null;
   [key: string]: any;
 }
 
@@ -80,11 +73,14 @@ function DataTable<TData extends WithID, TValue>({
   if (!options.extraFetchOptions) options.extraFetchOptions = {};
   if (!options.impiantoFilter === undefined) options.impiantoFilter = false;
   if (options.canCopy === undefined) options.canCopy = true;
-  if (options.canDelete === undefined) options.canCopy = true;
-  
+  if (options.canDelete === undefined) options.canDelete = true;
+  if (options.azioni === undefined) options.azioni = true;
+
   columns = columns.map((column) => {
     const header = column.label ?? column.accessorKey ?? "";
-    column.header = ({ column, table } : any) => <DataTableColumnHeader table={table} column={column} title={header} />;
+    column.header = ({ column, table }: any) => (
+      <DataTableColumnHeader table={table} column={column} title={header} />
+    );
     if (!column.cell) {
       column.cell = ({ row, table, cell }) => {
         let value = findNestedElement(row.original, column.accessorKey ?? "");
@@ -120,9 +116,8 @@ function DataTable<TData extends WithID, TValue>({
     }
     return column;
   });
-  columns = [
-    ...columns,
-    {
+  if (options.azioni) {
+    columns.push({
       id: "actions",
       header: "",
       cell: ({ row }) => (
@@ -137,17 +132,15 @@ function DataTable<TData extends WithID, TValue>({
         />
       ),
       size: 10,
-    },
-  ];
+    });
+  }
   const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({ pageIndex: 0, pageSize: 15 });
   const impianto = useImpianto();
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const sortQuery = sorting.length > 0 ? `${sorting[0].desc ? "-" : ""}${sorting[0].id}` : null;
-  console.log(columnFilters);
-  
-  
+
   const fetchDataOptions: FetchDataOptions = {
     page: pageIndex + 1,
     custom_page_size: pageSize,
@@ -155,27 +148,29 @@ function DataTable<TData extends WithID, TValue>({
   };
   columnFilters.forEach((filter) => {
     if (filter.value) {
-      fetchDataOptions[filter.id.split('__')[0]] = filter.value;
+      fetchDataOptions[filter.id.split("__")[0]] = filter.value;
     }
   });
   if (options.impiantoFilter === true && impianto) {
-    fetchDataOptions.impianto = impianto.toString()
+    fetchDataOptions.impianto = impianto.toString();
   }
-  
 
   let queries: Record<string, string> = {};
   columns.forEach((column) => {
     if (column.query && column.accessorKey) {
-      queries[column.accessorKey.split('__')[0]] = column.query;
+      queries[column.accessorKey.split("__")[0]] = column.query;
     }
   });
- 
-  const auxQueries = useCustomQueries(queries, options.impiantoFilter) as Record<string, ReturnType<typeof useQuery>>;
+
+  const auxQueries = useCustomQueries(queries, options.impiantoFilter) as Record<
+    string,
+    ReturnType<typeof useQuery>
+  >;
   const dataQuery = useQuery<PaginationData<TData>>([endpoint, fetchDataOptions], {
     keepPreviousData: true,
   });
 
-  const ready = dataQuery.isSuccess && Object.values(auxQueries).every(query => query.isSuccess)
+  const ready = dataQuery.isSuccess && Object.values(auxQueries).every((query) => query.isSuccess);
   console.log(dataQuery.data?.results);
 
   const defaultData = React.useMemo(() => [], []);
@@ -187,7 +182,7 @@ function DataTable<TData extends WithID, TValue>({
     columns,
     pageCount: dataQuery.data ? Math.ceil(dataQuery.data?.count / pageSize) : -1,
     meta: {
-      auxQueries
+      auxQueries,
     },
     state: {
       columnFilters,
