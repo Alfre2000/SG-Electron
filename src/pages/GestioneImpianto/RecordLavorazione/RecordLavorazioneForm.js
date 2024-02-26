@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Col, Row, Stack, Spinner } from "react-bootstrap";
 import ReactForm from "react-bootstrap/Form";
 import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
 import TimeInput from "../../../components/form-components/TimeInput/TimeInput";
-import { findElementFromID } from "../../../utils";
 import Fieldset from "../../../components/form-components/Fieldset";
-import SearchSelect from "../../../components/form-components/SearchSelect";
 import DateInput from "../../../components/form-components/DateInput/DateInput";
 import Hidden from "../../../components/form-components/Hidden/Hidden";
 import SezioneInformazioniArticolo from "./Sezioni/SezioneInformazioniArticolo";
@@ -23,55 +21,29 @@ import { URLS } from "../../../urls";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import ModifyModal from "../../../components/Modals/ModifyModal/ModifyModal";
-import { useQueryClient } from "react-query";
-import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
+import { useQuery } from "react-query";
 import Form from "../../Form";
 import { toast } from "sonner";
-import { usePageContext } from "../../../contexts/PageContext";
 import { useUserContext } from "../../../contexts/UserContext";
 
 let last_res = undefined;
 
 function RecordLavorazioneForm({ showOperatore }) {
-  const { impiantoFilter } = usePageContext();
-  const queryClient = useQueryClient();
-  const { data: articoli, queryKey: articoliQueryKey } = useCustomQuery({ queryKey: URLS.ARTICOLI_NESTED }, {}, impiantoFilter);
-
   const { initialData, view } = useFormContext();
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || "");
   const [um, setUm] = useState(initialData?.um || "");
-  const [price, setPrice] = useState()
+  const [price, setPrice] = useState();
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
-  const [lottoCliente, setLottoCliente] = useState(
-    initialData?.n_lotto_cliente || ""
-  );
+  const [lottoCliente, setLottoCliente] = useState(initialData?.n_lotto_cliente || "");
   const [errorLotto, setErrorLotto] = useState(false);
   const [recordModify, setRecordModify] = useState(undefined);
-  const cleanCliente = (nome) => nome?.replace("SPA", "")?.replace("SRL", "");
-
-  const initialCliente =
-    articoli && initialData?.articolo
-      ? findElementFromID(initialData?.articolo, articoli).cliente?.nome
-      : "";
-  const [cliente, setCliente] = useState(
-    initialCliente
-      ? { value: initialCliente, label: cleanCliente(initialCliente) }
-      : null
-  );
   const [articoloID, setArticoloID] = useState(initialData?.articolo || "");
-  const articolo = findElementFromID(articoloID, articoli);
-  const clienti = articoli
-    ? new Set(articoli.map((articolo) => articolo.cliente?.nome))
-    : new Set([]);
-  
-  useEffect(() => {
-    if (initialData?.articolo && articoli) {
-      const newCliente = findElementFromID(initialData?.articolo, articoli).cliente?.nome;
-      setCliente({ value: newCliente, label: cleanCliente(newCliente) })
-    }
-  }, [articoli, initialData?.articolo])
+
+  const articoloQuery = useQuery({ queryKey: URLS.ARTICOLI_NESTED + articoloID + "/", enabled: !!articoloID });
+  const articolo = articoloQuery.data;
+  const cliente = articolo?.cliente?.nome;
 
   const loadLotto = (e) => {
     if (view || initialData) {
@@ -98,12 +70,7 @@ function RecordLavorazioneForm({ showOperatore }) {
         setPrice(res[0].price);
         apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0])
           .then((res) => {
-            if (last_res && last_res > parseInt(value.split(".").at(-1)))
-              return;
-            if (!articoli.map((a) => a.id).includes(res.articolo.id)) {
-              queryClient.setQueryData(articoliQueryKey, () => [res.articolo, ...articoli])
-              queryClient.invalidateQueries(URLS.ARTICOLI)
-            }
+            if (last_res && last_res > parseInt(value.split(".").at(-1))) return;
             setLoadingLotto(false);
             if (res.record) {
               setLotto("");
@@ -112,10 +79,6 @@ function RecordLavorazioneForm({ showOperatore }) {
               setLotto(value);
               setRecordModify(undefined);
               setArticoloID(res.articolo.id);
-              setCliente({
-                value: res.articolo.cliente.nome,
-                label: cleanCliente(res.articolo.cliente.nome),
-              });
               setQty(res.quantità);
               setUm(res.um);
               setLottoCliente(res.lotto_cliente);
@@ -150,10 +113,7 @@ function RecordLavorazioneForm({ showOperatore }) {
   }, []);
   return (
     <>
-      <ModifyModal
-        show={recordModify}
-        handleClose={() => setRecordModify(undefined)}
-      >
+      <ModifyModal show={recordModify} handleClose={() => setRecordModify(undefined)}>
         <Form
           initialData={recordModify}
           onSuccess={() => {
@@ -174,41 +134,8 @@ function RecordLavorazioneForm({ showOperatore }) {
         </Col>
         <Col xs={6} className="pl-10 flex">
           <Stack gap={2} className="text-left justify-center">
-            <SearchSelect
-              name="cliente"
-              labelCols={3}
-              inputProps={{
-                isDisabled: true,
-                value: cliente,
-              }}
-              options={
-                clienti &&
-                [...clienti].map((cliente) => ({
-                  value: cliente,
-                  label: cleanCliente(cliente),
-                }))
-              }
-            />
-            <SearchSelect
-              name="articolo"
-              labelCols={3}
-              inputProps={{
-                isDisabled: true,
-                value: articolo
-                  ? {
-                      value: articolo.id,
-                      label: `${articolo.nome} (${articolo.codice || "-"})`,
-                    }
-                  : null,
-                onChange: (e) => setArticoloID(e?.value ? e.value : null),
-              }}
-              options={articoli
-                ?.filter((arti) => arti.cliente.nome === cliente?.value)
-                .map((a) => ({
-                  value: a.id,
-                  label: `${a.nome} (${a.codice || "-"})`,
-                }))}
-            />
+            <Input label="Cliente:" labelCols={3} isDisabled inputProps={{ value: cliente }} />
+            <Input label="Articolo:" labelCols={3} isDisabled inputProps={{ value: articolo?.nome }} />
             <Hidden name="articolo" value={articoloID} />
           </Stack>
         </Col>
@@ -270,8 +197,7 @@ function RecordLavorazioneForm({ showOperatore }) {
               isDisabled={true}
               inputProps={{
                 value: um.replace("NR", "N"),
-                className:
-                  "max-w-[40px] absolute top-0 -right-[8px] text-center px-0 rounded-l-none border-l-0",
+                className: "max-w-[40px] absolute top-0 -right-[8px] text-center px-0 rounded-l-none border-l-0",
               }}
             />
             <Hidden value={um} name="um" />
@@ -306,11 +232,7 @@ function RecordLavorazioneForm({ showOperatore }) {
             <ReactForm.Label className="mt-2">Note:</ReactForm.Label>
           </Col>
           <Col sm={8}>
-            <Input
-              label={false}
-              inputProps={{ as: "textarea", rows: 3, className: "text-left" }}
-              name="note"
-            />
+            <Input label={false} inputProps={{ as: "textarea", rows: 3, className: "text-left" }} name="note" />
           </Col>
           <Col xs={3} className="flex">
             <Checkbox

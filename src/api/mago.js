@@ -7,39 +7,28 @@ const Connection = window?.require
   : null;
 
 const EXAMPLE = [{
-  "docno": "001234",
-  "documentdate": "2023-1-12T10:10:10",
-  "shippingreason": "asd",
-  "companyname": "CIAO",
-  "address": "Via",
-  "zipcode": "123513",
-  "taxidnumber": "",
-  "city": "MI",
-  "county": "MI",
-  "email": "asdf",
-  "line": "1",
-  "description": "ciao", 
-  "item": "234567890",
-  "uom": "NR",
-  "qty": "56",
-  "grossvolume": "123",
-  "impianto": "Roto 500",
-  "trattamento1": "Stagnatura",
+  "quantity": 12,
+  "description": "ciao",
+  "uom": "KG",
+  "item": "Test arti",
+  "taxableamount": 120,
+  "lotto_super": "24/11111.2",
+  "articolo_certificato": "ciao",
+  "companyname": "Test",
+  "impianto": "ROTO 500",
+  "trattamento1": "STAGNATURA",
   "trattamento2": "",
   "trattamento3": "",
   "trattamento4": "",
   "trattamento5": "",
-  "superficie": "",
-  "articolo_certificato": "Prova 123",
+  "superficie": 1.2,
+  "peso": 12.3,
   "specifiche_it": "",
   "specifiche_en": "",
-  "trattamento_certificato": "NICHEL 2-4.5 & STAGNO",
-  "spessore_minimo": "12",
-  "spessore_massimo": "",
-  "n_misurazioni": "",
-  "mail_cliente": "",
-  "n_lotto_super": "23/12345",
-  "line_lotto": "2"
+  "trattamento_certificato": "STAGNATURA",
+  "spessore_minimo": 10,
+  "spessore_massimo": 20,
+  "n_misurazioni": 10,
 }]
 
 const serverConfigs = {
@@ -211,6 +200,7 @@ export const getLottoInformation = async (n_lotto) => {
     WHERE sale.job = '${job}' AND sale.line = '${line}'
   `
   const res = await makeDatabaseRequest(query);
+  // const res = EXAMPLE;
   return res
 }
 
