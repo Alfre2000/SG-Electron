@@ -31,6 +31,7 @@ import { UserContext } from "./contexts/UserContext";
 import SelezioneCliente from "./pages/AndamentoProduzione/FocusCliente/SelezioneCliente";
 import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati/DatabaseCertificati";
 import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
+import MappaClienti from "@pages/AndamentoProduzione/MappaClienti/MappaClienti";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -95,6 +96,7 @@ function App() {
               <Route path="focus-articolo/:articoloId" element={<FocusArticolo />}></Route>
               <Route path="focus-cliente/" element={<SelezioneCliente />}></Route>
               <Route path="focus-cliente/:cliente" element={<FocusCliente />}></Route>
+              <Route path="mappa-clienti/" element={<MappaClienti />}></Route>
             </Route>
           </Routes>
         </HashRouter>

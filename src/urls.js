@@ -33,6 +33,7 @@ export const URLS = {
     TRAVERSINI: BASE_PATH + '/base/traversini/',
 
     CLIENTI_ANAGRAFICA: BASE_PATH + '/base/clienti/anagrafica/',
+    CLIENTI_MAPPA: BASE_PATH + '/base/mappa-clienti/',
 
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',

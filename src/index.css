@@ -227,3 +227,8 @@ input.no-arrows::-webkit-inner-spin-button {
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background-color: rgba(245, 246, 247, 0.9) !important;
+}
