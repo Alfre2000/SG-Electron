@@ -15,23 +15,24 @@ import Form from '../../Form';
 
 function ArticoliInput() {
   const articoliQuery = useCustomQuery({ queryKey: URLS.ARTICOLI_NESTED });
+  const results = articoliQuery.data?.results
   
   const { initialData } = useFormContext()
   const [modalArticolo, setModalArticolo] = useState(false)
   const [ricerca, setRicerca] = useState("")
   const [cliente, setCliente] = useState(null)
-  const [articoli, setArticoli] = useState(!!initialData ? articoliQuery.data.filter(a => a.scheda_controllo?.id === initialData.id && initialData.id): [])
+  const [articoli, setArticoli] = useState(!!initialData ? results?.filter(a => a.scheda_controllo?.id === initialData.id && initialData.id): [])
   const handleAddArticolo = (event) => {
-    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), articoliQuery.data)
+    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), results)
     setArticoli([...articoli, selectedArticolo])
   }
   const handleRemoveArticolo = (event) => {
-    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), articoliQuery.data)
+    const selectedArticolo = findElementFromID(event.target.getAttribute("value"), results)
     setArticoli(articoli.filter(articolo => articolo.id !== selectedArticolo.id))
   }
   const idSelezionati = articoli.map(articolo => articolo.id)
-  const articoliPossibili = articoliQuery.data 
-    ? articoliQuery.data.filter(articolo => {
+  const articoliPossibili = results 
+    ? results.filter(articolo => {
       const noScheda = articolo.scheda_controllo === null
       const tolto = initialData && initialData.id === articolo.scheda_controllo?.id
       const nonSelezionato = !idSelezionati.includes(articolo.id)
@@ -40,7 +41,7 @@ function ArticoliInput() {
       return (noScheda || tolto) && nonSelezionato && clienteFilter &&  articoloNomeFilter
     }) 
     : []
-  const clienti = articoliQuery.data ? new Set(articoliQuery.data.map(articolo => articolo.cliente?.nome)) : new Set([]);
+  const clienti = results ? new Set(results.map(articolo => articolo.cliente?.nome)) : new Set([]);
   return (
     <>
       {modalArticolo && (
