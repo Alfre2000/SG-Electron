@@ -9,7 +9,7 @@ import { useQuery } from "react-query";
 import { Alert, AlertDescription, AlertTitle } from "@components/shadcn/Alert";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import PrezziPreziosi from "./components/prezzi-preziosi";
-import { Cliente } from "@interfaces/global";
+import { InfoPrezzi } from "@interfaces/global";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@components/shadcn/Button";
@@ -20,7 +20,7 @@ function Prezzi() {
   const [domReady, setDomReady] = useState(false);
   const { cliente } = useParams();
   const prezziQuery = useQuery<ArticoloPrice[]>(`${URLS.CLIENTI}${cliente}/prezzi`);
-  const clienteQuery = useQuery<Cliente>(`${URLS.CLIENTI}${cliente}/`);
+  const infoPrezziQuery = useQuery<InfoPrezzi>(`${URLS.INFO_PREZZI}${cliente}/`);
   const lavorazioni = useMemo(() => {
     const res = new Set<string>();
     prezziQuery.data?.forEach((p) => {
@@ -32,11 +32,11 @@ function Prezzi() {
   }, [prezziQuery.data]);
   const hasPreziosi = lavorazioni.includes("Doratura") || lavorazioni.includes("Argentatura");
   const needsUpdate =
-    clienteQuery.data &&
-    (clienteQuery.data.scadenza_prezzo_oro === undefined ||
-      clienteQuery.data.scadenza_prezzo_argento === undefined ||
-      new Date(clienteQuery.data.scadenza_prezzo_oro) < today ||
-      new Date(clienteQuery.data.scadenza_prezzo_argento) < today);
+    infoPrezziQuery.data &&
+    (infoPrezziQuery.data.scadenza_prezzo_oro === undefined ||
+      infoPrezziQuery.data.scadenza_prezzo_argento === undefined ||
+      new Date(infoPrezziQuery.data.scadenza_prezzo_oro) < today ||
+      new Date(infoPrezziQuery.data.scadenza_prezzo_argento) < today);
 
   useEffect(() => {
     setDomReady(true);
@@ -53,16 +53,16 @@ function Prezzi() {
                 Inserisci i prezzi dei metalli preziosi per poter calcolare automaticamente i prezzi degli articoli
               </AlertDescription>
             </div>
-            {clienteQuery.data && <PrezziPreziosi data={clienteQuery.data} />}
+            {infoPrezziQuery.data && <PrezziPreziosi data={infoPrezziQuery.data} />}
           </div>
         </Alert>
       )}
       {hasPreziosi &&
         !needsUpdate &&
         domReady &&
-        clienteQuery.data &&
+        infoPrezziQuery.data &&
         createPortal(
-          <PrezziPreziosi data={clienteQuery.data}>
+          <PrezziPreziosi data={infoPrezziQuery.data}>
             <Button variant="outline" className="relative -right-2">
               Prezzi Preziosi
             </Button>
@@ -77,8 +77,8 @@ function Prezzi() {
         <CardContent>
           {prezziQuery.isError && <Error />}
           {prezziQuery.isLoading && <Loading className="m-auto relative top-60" />}
-          {prezziQuery.isSuccess && clienteQuery.isSuccess && (
-            <DataTable columns={columns} data={prezziQuery.data} cliente={clienteQuery.data} />
+          {prezziQuery.isSuccess && infoPrezziQuery.isSuccess && (
+            <DataTable columns={columns} data={prezziQuery.data} cliente={infoPrezziQuery.data} />
           )}
         </CardContent>
       </Card>

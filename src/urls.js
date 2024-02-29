@@ -28,6 +28,7 @@ export const URLS = {
     IMPIANTI: BASE_PATH + '/base/impianti/',
     CLIENTI: BASE_PATH + '/base/clienti/',
     CONTATTI: BASE_PATH + '/base/contatti/',
+    INFO_PREZZI: BASE_PATH + '/base/info-prezzi/',
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',
     MATERIALI: BASE_PATH + '/base/materiali/',
     TRAVERSINI: BASE_PATH + '/base/traversini/',

@@ -22,7 +22,7 @@ type AndamentoPrezziPopoverProps<TData> = {
 type AndamentoPrezzi = {
   andamento_prezzo: {
     date: string;
-    prezzo_unitario: number;
+    prezzo_unitario_calc: number;
   }[];
 };
 
@@ -116,7 +116,7 @@ function AndamentoPrezziPopover<TData>({ id, data, setShow }: AndamentoPrezziPop
               labels: prezziQuery.data.andamento_prezzo.map((r) => r.date),
               datasets: [
                 {
-                  data: prezziQuery.data.andamento_prezzo.map((r) => r.prezzo_unitario.toFixed(4)),
+                  data: prezziQuery.data.andamento_prezzo.map((r) => r.prezzo_unitario_calc.toFixed(4)),
                   label: "Prezzo",
                   fill: false,
                   tension: 0.1,

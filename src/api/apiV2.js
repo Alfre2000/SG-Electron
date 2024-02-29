@@ -16,11 +16,11 @@ export const apiUpdate = async (url, body) => {
 
 export const apiUpdateWithGet = async (url, body) => {
   const data = await apiGet(url);
-  Object.keys(data).forEach((key) => {
-    if (Array.isArray(data[key])) {
-      delete data[key];
-    }
-  });
+  // Object.keys(data).forEach((key) => {
+  //   if (Array.isArray(data[key])) {
+  //     delete data[key];
+  //   }
+  // });
   const finalBody = { ...data, ...body };
   console.log("finalBody", finalBody);
   return axios.patch(url, finalBody, { headers: getHeaders() });

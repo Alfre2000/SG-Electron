@@ -37,7 +37,7 @@ import {
   SelectValue,
 } from "../../../../../components/shadcn/Select";
 import AnagraficaArticolo from "./anagrafica-prezzi";
-import { Cliente } from "../../../../../interfaces/global";
+import { InfoPrezzi } from "../../../../../interfaces/global";
 import AndamentoPrezziPopover from "./andamento-prezzi";
 
 
@@ -45,7 +45,7 @@ declare module '@tanstack/table-core' {
   interface TableMeta<TData extends RowData> {
     setAnagraficaPopover?: (id: string | undefined) => void;
     setAndamentoPopover?: (id: string | undefined) => void;
-    cliente?: Cliente;
+    cliente?: InfoPrezzi;
     auxQueries?: Record<string, { data: any, isLoading: boolean, isSuccess: boolean, isError: boolean }>; 
   }
 }
@@ -53,7 +53,7 @@ declare module '@tanstack/table-core' {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  cliente: Cliente;
+  cliente: InfoPrezzi;
 }
 
 

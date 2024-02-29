@@ -27,11 +27,18 @@ export type Clienti = {
   dal: string;
   campi_aggiuntivi?: Record;
   note?: string;
+}[];
+
+export type InfoPrezzi = {
   prezzo_oro?: number;
   prezzo_argento?: number;
   scadenza_prezzo_oro?: string;
   scadenza_prezzo_argento?: string;
-}[];
+  densità_oro: number;
+  densità_argento: number;
+  minimo_per_pezzo?: number;
+  minimo_per_riga?: number;
+}
 
 export type Cliente = Unpacked<Clienti>;
 

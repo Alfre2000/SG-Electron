@@ -18,11 +18,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faEllipsis, faTriangleExclamation, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../../../../../components/shadcn/HoverCard";
+import { round } from "@lib/utils";
 
 export type Articolo = {
   superficie: number | null;
   peso: number | null;
   costo_manodopera: number | null;
+  fattore_moltiplicativo: number | null;
+  prezzo_dmq: number | null;
   richieste: {
     id: string;
     articolo: string;
@@ -113,6 +116,10 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
       const peso = row.original.articolo.peso;
       const costo_manodopera = row.original.articolo.costo_manodopera;
       const um = row.original.um;
+      const densità_argento = cliente?.densità_argento;
+      const densità_oro = cliente?.densità_oro;
+      const fattoreMoltiplicativo = row.original.articolo.fattore_moltiplicativo || 1;
+      const prezzoDmq = row.original.articolo.prezzo_dmq;
       const richieste = row.original.articolo.richieste
         .filter((r) => r.lavorazione.nome === "Argentatura" || r.lavorazione.nome === "Doratura")
         .map((r) => {
@@ -128,7 +135,7 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
             lavorazione: r.lavorazione.nome,
             spessore: r.spessore_massimo,
             prezzoMetallo: r.lavorazione.nome === "Argentatura" ? prezzoArgento! / 1000 : prezzoOro,
-            densità: r.lavorazione.nome === "Argentatura" ? 10.49 : 19.32,
+            densità: r.lavorazione.nome === "Argentatura" ? 10.49 : 19.5,
           };
         });
       const hasArgentatura = richieste.some((r) => r.lavorazione === "Argentatura");
@@ -140,8 +147,8 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
       if (um === "KG" && peso === null) {
         errors.push("Peso");
       }
-      if (costo_manodopera === null) {
-        errors.push("Costo della manodopera");
+      if (costo_manodopera === null && prezzoDmq === null) {
+        errors.push("Costo della manodopera o prezzo al dm²");
       }
 
       if (errors.length > 0) {
@@ -169,13 +176,66 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
         );
       }
 
-      if (richieste.length === 0) {
-        return <div className="font-medium">Non Prezioso</div>;
+      // Caso di non prezioso
+      if (richieste.length === 0 && prezzoDmq) {
+        const amount = prezzoDmq * superficie!;
+        const formatted = new Intl.NumberFormat("it-IT", {
+          style: "currency",
+          currency: "EUR",
+          minimumFractionDigits: 4,
+          maximumFractionDigits: 4,
+        }).format(amount);
+        return (
+          <div>
+            <HoverCard>
+              <HoverCardTrigger className="font-medium">
+                <div className="hover:underline cursor-help">{formatted}</div>
+              </HoverCardTrigger>
+              <HoverCardContent className="py-3 pb-4 px-6 w-[30rem]">
+                <h4 className="text-center mb-3 font-semibold">Calcolo Eseguito</h4>
+                <div className="text-xs space-y-2">
+                  <div className="grid grid-cols-2">
+                    <span className="col-span-2">
+                      <span className="font-semibold">Superficie:</span> {superficie} dm²
+                      <span className="mx-2">-</span>
+                      <span className="font-semibold">Prezzo al dm²:</span> {prezzoDmq} €/dm²
+                    </span>
+                    {um === "KG" && (
+                      <span>
+                        <span className="font-semibold">Peso:</span> {peso} kg
+                      </span>
+                    )}
+                  </div>
+                  <ol className="ml-3">
+                    {row.original.articolo.richieste.map((r, index) => (
+                      <li key={index} className="list-decimal">
+                        <span className="font-semibold">{r.lavorazione.nome}:</span>{" "}
+                        {r.spessore_minimo && r.spessore_massimo && (
+                          <>
+                            {r.spessore_minimo} µm ÷ {r.spessore_massimo} µm
+                          </>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                  <hr className="w-2/3 my-3 mx-auto" />
+                  <div>
+                    <span className="font-semibold">Prezzo Suggerito:</span> {superficie} dm² * {prezzoDmq} € / dm²
+                    = <span className="font-semibold">{round(amount, 4).toFixed(4)} €</span>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+        );
       }
 
-      let amount = costo_manodopera!;
+      let amount = round(costo_manodopera! * superficie!, 4);
       richieste.forEach((r) => {
-        let increase = r.prezzoMetallo! * (superficie! * 100) * (r.spessore / 10000) * r.densità;
+        let increase = round(
+          (r.prezzoMetallo! * round(superficie! * r.spessore * r.densità * fattoreMoltiplicativo * 10, 2)) / 1000,
+          4
+        );
         if (um === "KG") {
           increase = increase / peso!;
         }
@@ -199,12 +259,14 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
             <HoverCardTrigger className="font-medium">
               <div className="hover:underline cursor-help">{formatted}</div>
             </HoverCardTrigger>
-            <HoverCardContent className="py-3 pb-4 px-6 w-[28rem]">
+            <HoverCardContent className="py-3 pb-4 px-6 w-[30rem]">
               <h4 className="text-center mb-3 font-semibold">Calcolo Eseguito</h4>
               <div className="text-xs space-y-2">
                 <div className="grid grid-cols-2">
-                  <span>
+                  <span className="col-span-2">
                     <span className="font-semibold">Superficie:</span> {superficie} dm²
+                    <span className="mx-2">-</span>
+                    <span className="font-semibold">Fattore Moltiplicativo:</span> {fattoreMoltiplicativo}
                   </span>
                   {um === "KG" && (
                     <span>
@@ -215,13 +277,13 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
                 {hasArgentatura && (
                   <div>
                     <span className="font-semibold">Argento:</span> {prezzoArgento} €/kg -{" "}
-                    <span className="font-semibold">Densità:</span> 10.49 g/cm³
+                    <span className="font-semibold">Densità:</span> {densità_argento} g/cm³
                   </div>
                 )}
                 {hasDoratura && (
                   <div>
                     <span className="font-semibold">Oro:</span> {prezzoOro} €/g -{" "}
-                    <span className="font-semibold">Densità:</span> 19.32 g/cm³
+                    <span className="font-semibold">Densità:</span> {densità_oro} g/cm³
                   </div>
                 )}
                 <ol className="ml-3">
@@ -235,23 +297,31 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
                 {richieste.map((r) => (
                   <>
                     <div>
-                      <span className="font-semibold">Volume {r.lavorazione}:</span> {superficie} dm² * 100 *{" "}
-                      {r.spessore} µm / 10000 = {(superficie! * 100 * (r.spessore / 10000)).toFixed(4)} cm³
+                      <span className="font-semibold">Peso {r.lavorazione}:</span> {superficie} dm² * {r.spessore}{" "}
+                      µm * {r.densità} g/cm³ * {fattoreMoltiplicativo} * 10 ={" "}
+                      {round(superficie! * r.spessore * r.densità * 10 * fattoreMoltiplicativo, 2)} mg
                     </div>
                     <div>
                       <span className="font-semibold">Prezzo {r.lavorazione}:</span>{" "}
-                      {(superficie! * 100 * (r.spessore / 10000)).toFixed(4)} cm³ * {r.densità} g/cm³ *{" "}
+                      {round(superficie! * r.spessore * r.densità * 10 * fattoreMoltiplicativo, 2)} mg / 1000 *{" "}
                       {r.prezzoMetallo} €/g ={" "}
-                      {(superficie! * 100 * (r.spessore / 10000) * r.densità * r.prezzoMetallo!).toFixed(4)} €
+                      {round(
+                        (r.prezzoMetallo! *
+                          round(superficie! * r.spessore * r.densità * 10 * fattoreMoltiplicativo, 2)) /
+                          1000,
+                        4
+                      )}{" "}
+                      €
                     </div>
                   </>
                 ))}
                 <div>
-                  <span className="font-semibold">Costo Manodopera:</span> {costo_manodopera} €/{um}
+                  <span className="font-semibold">Costo Manodopera:</span> {costo_manodopera} €/dm² * {superficie}{" "}
+                  dm² = {round(costo_manodopera! * superficie!, 4)} €
                 </div>
                 <hr className="w-2/3 my-3 mx-auto" />
                 <div>
-                  <span className="font-semibold">Prezzo Suggerito:</span> {amount.toFixed(4)} €{" "}
+                  <span className="font-semibold">Prezzo Suggerito:</span> {round(amount, 4).toFixed(4)} €{" "}
                   {um === "KG" && "/ kg"}
                 </div>
               </div>
