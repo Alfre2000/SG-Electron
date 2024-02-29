@@ -30,6 +30,7 @@ import DatePicker from "../../../../../components/shadcn/DatePicker";
 import { InfoPrezzi } from "../../../../../interfaces/global";
 import { useState } from "react";
 import { dateToDatePicker } from "../../../../../utils";
+import { HashLoader } from "react-spinners";
 
 type Props = {
   data: InfoPrezzi;
@@ -61,6 +62,7 @@ const formSchema = z.object({
 });
 
 function PrezziPreziosi({ data, children }: Props) {
+  const [loading, setLoading] = useState(false);
   const { cliente } = useParams();
   const today = new Date();
   today.setHours(0);
@@ -105,9 +107,13 @@ function PrezziPreziosi({ data, children }: Props) {
         console.log(errors);
         toast.error("Si è verificato un errore.");
       },
+      onSettled: () => {
+        setLoading(false);
+      },
     }
   );
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     updateMutation.mutate(values);
   }
   return (
@@ -228,44 +234,50 @@ function PrezziPreziosi({ data, children }: Props) {
             </FormControl>
             <hr className="col-span-3 mb-3 w-3/4 mx-auto" />
             <div className="col-span-3 mx-auto flex gap-x-8">
-            <FormControl>
-              <FormField
-                control={form.control}
-                name="minimo_per_riga"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prezzo minimo per riga</FormLabel>
-                    <FormControl>
-                      <UmInput {...field} step="0.0001" type="number" um="€" className="pr-14" />
-                    </FormControl>
-                    <div className="h-5">
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </FormControl>
-            <FormControl>
-              <FormField
-                control={form.control}
-                name="minimo_per_pezzo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prezzo minimo per pezzo</FormLabel>
-                    <FormControl>
-                      <UmInput {...field} step="0.0001" type="number" um="€" className="pr-14" />
-                    </FormControl>
-                    <div className="h-5">
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </FormControl>
+              <FormControl>
+                <FormField
+                  control={form.control}
+                  name="minimo_per_riga"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prezzo minimo per riga</FormLabel>
+                      <FormControl>
+                        <UmInput {...field} step="0.0001" type="number" um="€" className="pr-14" />
+                      </FormControl>
+                      <div className="h-5">
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </FormControl>
+              <FormControl>
+                <FormField
+                  control={form.control}
+                  name="minimo_per_pezzo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prezzo minimo per pezzo</FormLabel>
+                      <FormControl>
+                        <UmInput {...field} step="0.0001" type="number" um="€" className="pr-14" />
+                      </FormControl>
+                      <div className="h-5">
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </FormControl>
             </div>
-            <Button className="col-span-3 w-1/4 mx-auto mt-4" type="submit">
-              Aggiorna
-            </Button>
+            <div className="flex justify-between items-center mt-4 col-span-3 px-12">
+              <div className="w-5"></div>
+              <Button className="mx-auto " type="submit">
+                Aggiorna
+              </Button>
+              <div className="relative w-5">
+                {loading && <HashLoader color="#36d7b7" size={30} className="mb-1" />}
+              </div>
+            </div>
           </form>
         </Form>
       </DialogContent>

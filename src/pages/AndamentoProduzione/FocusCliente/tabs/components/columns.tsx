@@ -19,6 +19,7 @@ import { faChartLine, faEllipsis, faTriangleExclamation, faWrench } from "@forta
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../../../../../components/shadcn/HoverCard";
 import { round } from "@lib/utils";
+import { toast } from "sonner";
 
 export type Articolo = {
   superficie: number | null;
@@ -47,6 +48,7 @@ export type ArticoloPrice = {
   nome: string;
   codice: string;
   ultimo_prezzo: number | null;
+  n_lotto: string | null;
   um: "N" | "KG";
   prezzo_suggerito: number | null;
   articolo: Articolo;
@@ -84,6 +86,7 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
     accessorKey: "ultimo_prezzo",
     header: "Ultimo Prezzo",
     cell: ({ row }) => {
+      const lotto = row.original.n_lotto || "";
       const amount = parseFloat(row.getValue("ultimo_prezzo"));
       if (isNaN(amount) || amount === null) {
         return <div className="font-medium pl-2">-</div>;
@@ -95,7 +98,26 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
         maximumFractionDigits: 4,
       }).format(amount);
 
-      return <div className="font-medium">{formatted}</div>;
+      return (
+        <div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="font-medium cursor-help">{formatted}</div>
+              </TooltipTrigger>
+              <TooltipContent
+                onClick={() => {
+                  navigator.clipboard.writeText(lotto);
+                  toast.success("Lotto copiato negli appunti");
+                }}
+                className="cursor-pointer"
+              >
+                Lotto: {lotto}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      );
     },
   },
   {
@@ -118,18 +140,18 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
       const um = row.original.um;
       const densità_argento = cliente?.densità_argento;
       const densità_oro = cliente?.densità_oro;
+      const minimoPerPezzo = cliente?.minimo_per_pezzo;
       const fattoreMoltiplicativo = row.original.articolo.fattore_moltiplicativo || 1;
       const prezzoDmq = row.original.articolo.prezzo_dmq;
-      console.log(row.original.articolo.richieste);
       const richieste = row.original.articolo.richieste
         .filter((r) => r.lavorazione?.nome === "Argentatura" || r.lavorazione?.nome === "Doratura")
         .map((r) => {
-          if (r.lavorazione?.nome === "Argentatura" && prezzoArgento === null) {
+          if (r.lavorazione?.nome === "Argentatura" && prezzoArgento === null && !prezzoDmq) {
             errors.push("Prezzo Argento");
-          } else if (r.lavorazione?.nome === "Doratura" && prezzoOro === null) {
+          } else if (r.lavorazione?.nome === "Doratura" && prezzoOro === null && !prezzoDmq) {
             errors.push("Prezzo Oro");
           }
-          if (r.spessore_massimo === null) {
+          if (r.spessore_massimo === null && !prezzoDmq) {
             errors.push("Spessore Massimo " + r.lavorazione?.nome);
           }
           return {
@@ -178,8 +200,12 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
       }
 
       // Caso di non prezioso
-      if (richieste.length === 0 && prezzoDmq) {
-        const amount = prezzoDmq * superficie!;
+      if (prezzoDmq) {
+        let amount = prezzoDmq * superficie!;
+        let isBelowMinimum = minimoPerPezzo && amount < minimoPerPezzo;
+        if (minimoPerPezzo && isBelowMinimum) {
+          amount = minimoPerPezzo;
+        }
         const formatted = new Intl.NumberFormat("it-IT", {
           style: "currency",
           currency: "EUR",
@@ -220,10 +246,25 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
                     ))}
                   </ol>
                   <hr className="w-2/3 my-3 mx-auto" />
-                  <div>
-                    <span className="font-semibold">Prezzo Suggerito:</span> {superficie} dm² * {prezzoDmq} € / dm²
-                    = <span className="font-semibold">{round(amount, 4).toFixed(4)} €</span>
-                  </div>
+
+                  {isBelowMinimum ? (
+                    <>
+                      <div>
+                        <span className="font-semibold">Prezzo Teorico:</span> {superficie} dm² * {prezzoDmq} € /
+                        dm² = {round(prezzoDmq * superficie!, 4).toFixed(4)} €
+                      </div>
+                      <div>
+                        <span className="font-semibold">Prezzo Suggerito:</span> ={" "}
+                        <span className="font-semibold">{round(amount, 4).toFixed(4)} € </span>{" "}
+                        <span className="ml-2 text-muted">(minimo per pezzo)</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      <span className="font-semibold">Prezzo Suggerito:</span> {superficie} dm² * {prezzoDmq} € /
+                      dm² = <span className="font-semibold">{round(amount, 4).toFixed(4)} €</span>
+                    </div>
+                  )}
                 </div>
               </HoverCardContent>
             </HoverCard>

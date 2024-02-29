@@ -59,6 +59,8 @@ interface DataTableProps<TData, TValue> {
 
 
 export function DataTable<TData, TValue>({ columns, data, cliente }: DataTableProps<TData, TValue>) {
+  console.log(data);
+  
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [anagraficaPopover, setAnagraficaPopover] = React.useState<string | undefined>()
