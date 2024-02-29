@@ -196,7 +196,7 @@ export default function AnagraficaArticolo<TData>({ id, data, setShow }: Anagraf
                       {articolo.richieste
                         .map((richiesta) => (
                           <TableRow key={richiesta.id}>
-                            <TableCell className="px-4">{richiesta.lavorazione.nome}</TableCell>
+                            <TableCell className="px-4">{richiesta.lavorazione?.nome || ""}</TableCell>
                             <TableCell className="px-4">{richiesta.spessore_massimo && (<>{richiesta.spessore_massimo} µm</>)}</TableCell>
                           </TableRow>
                         ))}

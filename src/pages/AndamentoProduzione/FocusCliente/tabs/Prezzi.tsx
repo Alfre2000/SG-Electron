@@ -25,7 +25,9 @@ function Prezzi() {
     const res = new Set<string>();
     prezziQuery.data?.forEach((p) => {
       p.articolo.richieste.forEach((r) => {
-        res.add(r.lavorazione?.nome);
+        if (r.lavorazione) {
+          res.add(r.lavorazione?.nome);
+        }
       });
     });
     return Array.from(res);

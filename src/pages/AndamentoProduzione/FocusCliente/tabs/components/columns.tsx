@@ -38,7 +38,7 @@ export type Articolo = {
       norma: string;
       metallo: number;
       impianti: number[];
-    };
+    } | null;
   }[];
 };
 
@@ -120,22 +120,23 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
       const densità_oro = cliente?.densità_oro;
       const fattoreMoltiplicativo = row.original.articolo.fattore_moltiplicativo || 1;
       const prezzoDmq = row.original.articolo.prezzo_dmq;
+      console.log(row.original.articolo.richieste);
       const richieste = row.original.articolo.richieste
-        .filter((r) => r.lavorazione.nome === "Argentatura" || r.lavorazione.nome === "Doratura")
+        .filter((r) => r.lavorazione?.nome === "Argentatura" || r.lavorazione?.nome === "Doratura")
         .map((r) => {
-          if (r.lavorazione.nome === "Argentatura" && prezzoArgento === null) {
+          if (r.lavorazione?.nome === "Argentatura" && prezzoArgento === null) {
             errors.push("Prezzo Argento");
-          } else if (r.lavorazione.nome === "Doratura" && prezzoOro === null) {
+          } else if (r.lavorazione?.nome === "Doratura" && prezzoOro === null) {
             errors.push("Prezzo Oro");
           }
           if (r.spessore_massimo === null) {
-            errors.push("Spessore Massimo " + r.lavorazione.nome);
+            errors.push("Spessore Massimo " + r.lavorazione?.nome);
           }
           return {
-            lavorazione: r.lavorazione.nome,
+            lavorazione: r.lavorazione?.nome,
             spessore: r.spessore_massimo,
-            prezzoMetallo: r.lavorazione.nome === "Argentatura" ? prezzoArgento! / 1000 : prezzoOro,
-            densità: r.lavorazione.nome === "Argentatura" ? 10.49 : 19.5,
+            prezzoMetallo: r.lavorazione?.nome === "Argentatura" ? prezzoArgento! / 1000 : prezzoOro,
+            densità: r.lavorazione?.nome === "Argentatura" ? 10.49 : 19.5,
           };
         });
       const hasArgentatura = richieste.some((r) => r.lavorazione === "Argentatura");
@@ -209,7 +210,7 @@ export const columns: ColumnDef<ArticoloPrice>[] = [
                   <ol className="ml-3">
                     {row.original.articolo.richieste.map((r, index) => (
                       <li key={index} className="list-decimal">
-                        <span className="font-semibold">{r.lavorazione.nome}:</span>{" "}
+                        <span className="font-semibold">{r.lavorazione?.nome}:</span>{" "}
                         {r.spessore_minimo && r.spessore_massimo && (
                           <>
                             {r.spessore_minimo} µm ÷ {r.spessore_massimo} µm
