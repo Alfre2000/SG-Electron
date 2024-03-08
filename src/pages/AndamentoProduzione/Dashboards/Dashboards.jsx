@@ -2,7 +2,6 @@ import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Wrapper from "../Wrapper";
 import LastSchedaImpianto from "./components/LastSchedaImpianto/LastSchedaImpianto";
-import LatestSchedeControllo from "./components/LatestSchedeControllo/LatestSchedeControllo";
 import GraficoSchede from "./components/GraficoSchede/GraficoSchede";
 import RecordMancanti from "./components/RecordMancanti/RecordMancanti";
 
@@ -21,11 +20,6 @@ function Dashboards() {
         <Row className="gap-8">
           <Col className="px-0">
             <RecordMancanti />
-          </Col>
-        </Row>
-        <Row>
-          <Col className="px-0">
-            <LatestSchedeControllo />
           </Col>
         </Row>
       </Container>

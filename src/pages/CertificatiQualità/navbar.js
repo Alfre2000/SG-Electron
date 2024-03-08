@@ -1,4 +1,4 @@
-import { faCertificate, faDatabase, faFileCircleCheck, faTags } from "@fortawesome/free-solid-svg-icons";
+import { faCertificate, faDatabase, faFileCircleCheck, faListCheck, faTags } from "@fortawesome/free-solid-svg-icons";
 
 export const getNavItems = (user) => {
   let items = [
@@ -8,9 +8,9 @@ export const getNavItems = (user) => {
       links: [{ name: "Certificati Qualità", link: "/certificati-qualita/record-certificato/" }],
     },
     {
-      title: "Modelli Certificati",
-      icon: faFileCircleCheck,
-      links: [{ name: "Modelli Certificati", link: "/certificati-qualita/certificato/" }],
+      title: "Verifica Prezzi",
+      icon: faListCheck,
+      links: [{ name: "Verifica Prezzi", link: "/certificati-qualita/verifica-prezzi/" }],
     },
     {
       title: "Etichette MTA",
@@ -22,6 +22,14 @@ export const getNavItems = (user) => {
       icon: faDatabase,
       links: [{ name: "Database", link: "/certificati-qualita/database-certificati/" }],
     },
+    {
+      title: "Modelli Certificati",
+      icon: faFileCircleCheck,
+      links: [{ name: "Modelli Certificati", link: "/certificati-qualita/certificato/" }],
+    },
   ];
+  if (!user.is_staff) {
+    items.pop(); // Remove Modelli Certificati
+  }
   return items;
 };

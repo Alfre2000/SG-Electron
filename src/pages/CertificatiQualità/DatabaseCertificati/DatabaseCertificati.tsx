@@ -210,7 +210,7 @@ function DatabaseCertificati() {
                 value={(table.getColumn("n_bolla")?.getFilterValue() as string) ?? ""}
                 onChange={(event) => table.getColumn("n_bolla")?.setFilterValue(event.target.value)}
                 className="max-w-sm h-8"
-                style={{ borderColor: "#ced4da", color: "red" }}
+                style={{ borderColor: "#ced4da" }}
               />
             </div>
             <NewSearchSelect

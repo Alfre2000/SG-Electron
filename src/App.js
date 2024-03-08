@@ -26,10 +26,10 @@ import Dashboards from "./pages/AndamentoProduzione/Dashboards/Dashboards";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { defaultQueryFn } from "./api/queryFn";
 import { Toaster, toast } from 'sonner';
-import FocusArticolo from "./pages/AndamentoProduzione/FocusArticolo/FocusArticolo";
 import { UserContext } from "./contexts/UserContext";
 import SelezioneCliente from "./pages/AndamentoProduzione/FocusCliente/SelezioneCliente";
 import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati/DatabaseCertificati";
+import VerificaPrezzi from "./pages/CertificatiQualità/VerificaPrezzi/VerificaPrezzi";
 import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
 import MappaClienti from "@pages/AndamentoProduzione/MappaClienti/MappaClienti";
 
@@ -89,11 +89,11 @@ function App() {
               <Route path="certificato/" element={<Certificato />}></Route>
               <Route path="etichette-mta/" element={<EtichetteMTA />}></Route>
               <Route path="database-certificati/" element={<DatabaseCertificati />}></Route>
+              <Route path="verifica-prezzi/" element={<VerificaPrezzi />}></Route>
             </Route>
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">
               <Route path="dashboards/" element={<Dashboards />}></Route>
-              <Route path="focus-articolo/:articoloId" element={<FocusArticolo />}></Route>
               <Route path="focus-cliente/" element={<SelezioneCliente />}></Route>
               <Route path="focus-cliente/:cliente" element={<FocusCliente />}></Route>
               <Route path="mappa-clienti/" element={<MappaClienti />}></Route>

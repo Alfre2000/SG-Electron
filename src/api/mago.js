@@ -207,6 +207,51 @@ export const getLottoInformation = async (n_lotto) => {
   return res
 }
 
+export const getEntireLottoInformation = async (n_lotto) => {
+  const query = `
+    SELECT
+      sale.qty as quantity,
+      sale.description,
+      sale.uom,
+      sale.item,
+      sale.taxableamount as price,
+      sale.unitvalue as prezzo_unitario,
+      base_item.description as descrizione_articolo,
+      CONCAT(sale.job, '.', sale.line) AS lotto_super,
+      cust.companyname,
+      cust.address,
+      cust.zipcode,
+      cust.taxidnumber,
+      cust.city,
+      cust.county,
+      cust.email,
+      cust.custsupp,
+      item.impianto,
+      item.trattamento1,
+      item.trattamento2,
+      item.trattamento3,
+      item.trattamento4,
+      item.trattamento5,
+      item.superficie,
+      item.pesopezzo as peso,
+      CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
+      item.specifiche_it,
+      item.specifiche_en,
+      item.trattamento_certificato,
+      item.spessore_minimo,
+      item.spessore_massimo,
+      item.n_misurazioni,
+      item.mail_cliente
+    FROM ma_saleorddetails AS sale
+      JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
+      JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
+      JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
+    WHERE sale.job = '${n_lotto}'
+  `
+  const res = await makeDatabaseRequest(query);
+  return res
+}
+
 export const getDatiEtichettaMago = async (n_lotto) => {
   const query = `
     SELECT

@@ -18,13 +18,12 @@ export const URLS = {
     FISSAGGI: BASE_PATH + '/analisi-manutenzioni/fissaggi/',
     MANUTENZIONI: BASE_PATH + '/analisi-manutenzioni/manutenzioni/',
     ANALISI: BASE_PATH + '/analisi-manutenzioni/analisi/',
-    OPERAZIONI_DEEP: BASE_PATH + '/analisi-manutenzioni/operazioni-deep/',
+    PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
 
     // BASE
     OPERATORI: BASE_PATH + '/base/operatori/',
     ARTICOLI: BASE_PATH + '/base/articoli/',
     ARTICOLI_NESTED: BASE_PATH + '/base/articoli-nested/',
-    ARTICOLI_NAMES: BASE_PATH + '/base/articoli-names/',
     IMPIANTI: BASE_PATH + '/base/impianti/',
     CLIENTI: BASE_PATH + '/base/clienti/',
     CONTATTI: BASE_PATH + '/base/contatti/',
@@ -33,7 +32,6 @@ export const URLS = {
     MATERIALI: BASE_PATH + '/base/materiali/',
     TRAVERSINI: BASE_PATH + '/base/traversini/',
 
-    CLIENTI_ANAGRAFICA: BASE_PATH + '/base/clienti/anagrafica/',
     CLIENTI_MAPPA: BASE_PATH + '/base/mappa-clienti/',
 
     // SCHEDE CONTROLLO
@@ -42,18 +40,12 @@ export const URLS = {
     RECORD_LAVORAZIONI_NOT_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=False',
     RECORD_LAVORAZIONI_IN_SOSPESO: BASE_PATH + '/scheda-controllo/record-lavorazioni?completata=false',
     SCHEDE_CONTROLLO: BASE_PATH + '/scheda-controllo/schede-controllo/',
-
     SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',
-    ANDAMENTO_PRODUZIONE: BASE_PATH + '/scheda-controllo/andamento-produzione/',
-    PRODUZIONE_PER_OPERATORE: BASE_PATH + '/scheda-controllo/produzione-per-operatore/',
-
     RECORD_LAVORAZIONE_INFO: BASE_PATH + '/scheda-controllo/record-lavorazione-info/',
 
     UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
 
     // CERTIFICATI
-    RECORD_LAVORAZIONI_SEARCH: BASE_PATH + '/scheda-controllo/record-lavorazioni-search/',
-    RECORD_LAVORAZIONI_CERTIFICATO: BASE_PATH + '/scheda-controllo/record-lavorazioni-certificato/',
     CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',
     CERTIFICATI_BOLLA: BASE_PATH + '/certificati/builder-async/',
     CERTIFICATI_BOLLA_STATUS: BASE_PATH + '/certificati/builder-async-status/',
@@ -66,14 +58,8 @@ export const URLS = {
     RECORD_SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/record-schede-impianti/',
     ULTIMA_SCHEDA_IMPIANTO: BASE_PATH + '/scheda-impianto/ultima-scheda-impianto/',
 
-    // PAGINA
-    PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
-    PAGINA_RICERCA_DATABASE: BASE_PATH + '/analisi-manutenzioni/pagina-ricerca-database/',
-
     // ANDAMENTO PRODUZIONE
     LAST_SCHEDE_IMPIANTO: BASE_PATH + '/base/dashboards/last-schede-impianto/',
-    LATEST_SCHEDE_CONTROLLO: BASE_PATH + '/base/dashboards/latest-schede-controllo/',
     RECORD_LAVORAZIONI_OVER_TIME: BASE_PATH + '/base/dashboards/record-lavorazione-over-time/',
     RECORD_MANCANTI: BASE_PATH + '/base/dashboards/record-mancanti/',
-    RICAVI: BASE_PATH + '/base/dashboards/ricavi/',
 }

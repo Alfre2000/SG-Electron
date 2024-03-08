@@ -8,11 +8,6 @@ export type RecordMancantiType = {
   inseriti: number;
 }[];
 
-export type RicaviType = {
-  impianto__nome: string;
-  month: string;
-  ricavi: number;
-}[];
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 
