@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import { useQuery } from "react-query";
 import { URLS } from "../../../urls";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/shadcn/Tabs";

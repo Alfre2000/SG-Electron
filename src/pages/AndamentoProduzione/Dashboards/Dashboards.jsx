@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import LastSchedaImpianto from "./components/LastSchedaImpianto/LastSchedaImpianto";
 import GraficoSchede from "./components/GraficoSchede/GraficoSchede";
 import RecordMancanti from "./components/RecordMancanti/RecordMancanti";

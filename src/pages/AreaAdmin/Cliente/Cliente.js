@@ -2,10 +2,10 @@ import { Col, Container, Row, Card } from "react-bootstrap";
 import PageTitle from "@components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
-import Wrapper from "../../AreaAdmin/Wrapper";
 import ClienteForm from "./ClienteForm";
 import PageContext from "@contexts/PageContext";
 import DataTable from "@ui/data-table/DataTable";
+import Wrapper from "@ui/wrapper/Wrapper";
 
 function Cliente() {
   return (

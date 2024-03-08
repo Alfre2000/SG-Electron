@@ -8,7 +8,7 @@ import Checkbox from "../../../components/form-components/Checkbox";
 import Input from "../../../components/form-components/Input";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@components/shadcn/Tooltip";
 
 const electron = window?.require ? window.require("electron") : null;

@@ -1,7 +1,7 @@
 import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card } from "react-bootstrap";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import Form from "../../Form";
 import AnalisiForm from "./AnalisiForm";
 import PageTitle from "../../../components/PageTitle/PageTitle";

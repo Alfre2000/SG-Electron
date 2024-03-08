@@ -1,4 +1,4 @@
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import { PaginationData, RecordCertificato } from "@interfaces/global";
 import {
   ColumnDef,

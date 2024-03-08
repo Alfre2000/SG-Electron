@@ -7,6 +7,7 @@ export interface UserContextType {
       id: number;
       impianto: {
         id: number;
+        nome: string;
       } | null;
       is_staff: boolean;
       username: string;

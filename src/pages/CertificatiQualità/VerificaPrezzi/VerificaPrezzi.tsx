@@ -1,5 +1,5 @@
 import React from "react";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/shadcn/Card";
 import { Input } from "@components/shadcn/Input";
 import { Button } from "@components/shadcn/Button";

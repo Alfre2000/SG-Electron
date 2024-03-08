@@ -1,7 +1,7 @@
 import React from "react";
 import { URLS } from "../../../urls";
 import { Col, Container, Row, Card, Stack, Alert } from "react-bootstrap";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import Form from "../../Form";
 import RecordLavorazioneOssidoForm from "./RecordLavorazioneOssidoForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

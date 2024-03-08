@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Alert, Container, ListGroup } from "react-bootstrap";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import { findElementFromID } from "../../../utils";

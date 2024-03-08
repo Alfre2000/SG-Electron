@@ -1,4 +1,4 @@
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import { useQuery } from "react-query";
 import { URLS } from "../../../urls";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/shadcn/Card";

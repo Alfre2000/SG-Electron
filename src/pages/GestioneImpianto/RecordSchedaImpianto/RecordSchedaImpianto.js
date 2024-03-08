@@ -7,7 +7,7 @@ import { Col, Container, Row, Card, Alert } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Form from "../../Form";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import RecordSchedaImpiantoForm from "./RecordSchedaImpiantoForm";
 import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 import PageContext from "../../../contexts/PageContext";

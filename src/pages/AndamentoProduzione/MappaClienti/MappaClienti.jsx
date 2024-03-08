@@ -3,10 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { URLS } from "urls";
 import { useQuery } from "react-query";
-import Wrapper from "../Wrapper";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../../components/shadcn/Card";
 import Error from "@components/Error/Error";
 import Loading from "@components/Loading/Loading";
+import Wrapper from "@ui/wrapper/Wrapper";
 import { Icon } from "leaflet";
 
 function MappaClienti() {

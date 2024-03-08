@@ -5,7 +5,7 @@ import { Button, Container, ListGroup, ListGroupItem, Spinner } from "react-boot
 import { useSearchParams } from "react-router-dom";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
-import Wrapper from "../../CertificatiQualità/Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import Form from "../../Form";
 import CertificatoForm from "./CertificatoForm";
 import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";

@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Container, Row, Card } from "react-bootstrap";
 import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import RecordLavorazioneForm from "./../RecordLavorazione/RecordLavorazioneForm";
 import PageContext from "../../../contexts/PageContext";
 import DataTable from "@ui/data-table/DataTable";

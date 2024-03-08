@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { Card, Col, Container, Placeholder, Row, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { URLS } from "../../../urls";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import { parseProssimeManutenzioni } from "../parsers";
 import InfoPopup from "./InfoPopup";
 import PageTitle from "../../../components/PageTitle/PageTitle";

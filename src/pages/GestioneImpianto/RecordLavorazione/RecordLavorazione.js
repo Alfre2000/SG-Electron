@@ -7,7 +7,7 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import { isDateRecent } from "../../../utils";
 import Form from "../../Form";
-import Wrapper from "../Wrapper";
+import Wrapper from "@ui/wrapper/Wrapper";
 import RecordLavorazioneForm from "./RecordLavorazioneForm";
 import useImpiantoQuery from "../../../hooks/useImpiantoQuery/useImpiantoQuery";
 import PageContext from "../../../contexts/PageContext";
@@ -25,7 +25,7 @@ function RecordLavorazione() {
       queriesToInvalidate={[URLS.RECORD_LAVORAZIONI_IN_SOSPESO, URLS.RECORD_LAVORAZIONI_NOT_OSSIDO]}
       impiantoFilter={true}
     >
-      <Wrapper title="Scheda di Controllo">
+      <Wrapper>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
           <PageTitle>Scheda di Controllo</PageTitle>
           {isSchedaImpiantoOld && (
