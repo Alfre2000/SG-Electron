@@ -5,7 +5,6 @@ import useOutsideAlerter from "../../hooks/useOutsideAlerter/useOutsideAlerter";
 import { Link, useNavigate } from "react-router-dom";
 import { LinkType } from "./Navbar";
 
-
 type MenuProps = {
   title: string;
   icon: IconDefinition;
@@ -14,6 +13,8 @@ type MenuProps = {
 };
 
 function Menu({ title, icon, links, navOpen = false }: MenuProps) {
+  const active = title === "Programmi" ? false : links.map((l) => l.link).includes(window.location.hash.slice(1));
+
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLUListElement>(null);
@@ -39,18 +40,16 @@ function Menu({ title, icon, links, navOpen = false }: MenuProps) {
       onClick={handleClick}
       data-testid="container"
     >
-      <div className="flex justify-between py-2 px-4 sg-nav-link rounded-md">
+      <div
+        className={`flex justify-between py-2 px-4 sg-nav-link rounded-md ${active ? "sg-nav-link-active" : ""}`}
+      >
         <div className="flex items-center">
           <FontAwesomeIcon icon={icon} />
           <div className="pl-4 title">{title}</div>
         </div>
         {links.length > 1 && (
           <div className="text-right caret">
-            <FontAwesomeIcon
-              data-testid="caret-icon"
-              icon={faCaretDown}
-              className={`caret ${open ? "up" : ""}`}
-            />
+            <FontAwesomeIcon data-testid="caret-icon" icon={faCaretDown} className={`caret ${open ? "up" : ""}`} />
           </div>
         )}
       </div>

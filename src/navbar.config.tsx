@@ -197,10 +197,10 @@ export const useGetTitle = () => {
     case "certificati-qualita":
       return "Certificati Qualità";
     case "andamento-produzione":
-      return "";
+      return "Andamento Produzione";
     case "area-admin":
       return "Area Admin";
     default:
-      return "Andamento Produzione";
+      return "";
   }
 };
