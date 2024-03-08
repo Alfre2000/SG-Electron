@@ -171,7 +171,6 @@ function DataTable<TData extends WithID, TValue>({
   });
 
   const ready = dataQuery.isSuccess && Object.values(auxQueries).every((query) => query.isSuccess);
-  console.log(dataQuery.data?.results);
 
   const defaultData = React.useMemo(() => [], []);
 

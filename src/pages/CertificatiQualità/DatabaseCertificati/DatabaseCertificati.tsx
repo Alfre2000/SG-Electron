@@ -49,7 +49,7 @@ import { getErrors } from "@api/utils";
 const electron = window?.require ? window.require("electron") : null;
 
 declare module "@tanstack/table-core" {
-  interface TableMeta<TData extends RowData> {
+  interface TableMeta<TData extends RowData> { // eslint-disable-line
     setDialog?: React.Dispatch<React.SetStateAction<RecordCertificato | null>>;
   }
 }
@@ -380,7 +380,6 @@ const ChangeDialog = ({ recordOpen, setRecordOpen, dataQuery }: ChangeDialogProp
       const formData = new FormData();
       formData.append("certificato", file);
       updateMutation.mutate(formData);
-      console.log(formData.get("certificato"));
     }
   };
   const updateMutation = useMutation(

@@ -5,13 +5,12 @@ import { apiUpdate } from "../api/api";
 import { apiPost } from "../api/apiV2";
 import FormContext from "../contexts/FormContext";
 import { focusErrorInput, parseFormData } from "./utils";
-import useCustomQuery from "../hooks/useCustomQuery/useCustomQuery";
 import useImpiantoMutation from "../hooks/useImpiantoMutation/useImpiantoMutation";
 import { usePageContext } from "../contexts/PageContext";
 import { toast } from "sonner";
 
 function Form({ children = undefined, initialData, onSuccess = undefined, view = false, validator = undefined, componentProps = undefined }) {
-  const { FormComponent, FormComponentFn, queryKey, postURL, copyData, setCopyData, queriesToInvalidate } = usePageContext();
+  const { FormComponent, FormComponentFn, postURL, copyData, setCopyData, queriesToInvalidate } = usePageContext();
 
   initialData = initialData || copyData
   const finalURL = typeof postURL === "function" ? postURL(initialData) : postURL
@@ -29,14 +28,10 @@ function Form({ children = undefined, initialData, onSuccess = undefined, view =
     toast.error('Si è verificato un errore !')
   }
 
-  const { data: queryData } = useCustomQuery({ queryKey: queryKey })
-  
   const createMutation = useImpiantoMutation(({ formData, form }) => apiPost(finalURL, formData), {
     onSuccess: (response, variables, { queryClient, impianto }) => {
-      let queryKey = [finalURL, {page: 1}]
       queryClient.invalidateQueries([finalURL])
       queriesToInvalidate.forEach(query => queryClient.invalidateQueries(query))
-      queryClient.setQueryData(queryKey, { ...queryData, results: [response.data, ...queryData.results] })
       if (onSuccess) onSuccess(response, queryClient)
       setKey(key + 1)
       setCopyData(null)
@@ -50,10 +45,8 @@ function Form({ children = undefined, initialData, onSuccess = undefined, view =
 
   const updateMutation = useImpiantoMutation(({ formData, form }) => apiUpdate(finalURL + initialData.id + '/', formData), {
     onSuccess: (response, variables, { queryClient, impianto }) => {
-      const records = queryData.results.map(record => record.id === response.id ? response : record)
       queryClient.invalidateQueries([finalURL])
       queriesToInvalidate.forEach(query => queryClient.invalidateQueries(query))
-      queryClient.setQueryData(queryKey, { ...queryData, results: records })
       if (onSuccess) onSuccess(response, queryClient)
       setKey(key + 1)
     },

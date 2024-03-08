@@ -47,7 +47,6 @@ function Anagrafica() {
   const { cliente } = useParams();
   const clienteQuery = useQuery([URLS.CLIENTI + cliente + "/"]);
   const location = { lat: clienteQuery.data?.latitudine, lng: clienteQuery.data?.longitudine };
-  console.log(clienteQuery.data);
   const form = useForm({ defaultValues: formDefaults(clienteQuery.data) });
 
   const updateMutation = useMutation((data) => apiUpdate(URLS.CLIENTI + cliente + "/anagrafica/", data), {
