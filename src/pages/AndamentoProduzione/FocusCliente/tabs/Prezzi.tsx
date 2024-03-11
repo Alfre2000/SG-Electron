@@ -35,8 +35,10 @@ function Prezzi() {
   const hasPreziosi = lavorazioni.includes("Doratura") || lavorazioni.includes("Argentatura");
   const needsUpdate =
     infoPrezziQuery.data &&
-    (infoPrezziQuery.data.scadenza_prezzo_oro === undefined ||
-      infoPrezziQuery.data.scadenza_prezzo_argento === undefined ||
+    (!infoPrezziQuery.data.prezzo_oro ||
+      !infoPrezziQuery.data.prezzo_argento ||
+      infoPrezziQuery.data.scadenza_prezzo_oro === null ||
+      infoPrezziQuery.data.scadenza_prezzo_argento === null ||
       new Date(infoPrezziQuery.data.scadenza_prezzo_oro) < today ||
       new Date(infoPrezziQuery.data.scadenza_prezzo_argento) < today);
 

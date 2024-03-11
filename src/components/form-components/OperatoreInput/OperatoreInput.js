@@ -75,7 +75,7 @@ function OperatoreInput({ show }) {
     <>
       <SearchSelect
         name="operatore"
-        initialData={view ? initialData.operatore : {}}
+        initialData={view ? initialData?.operatore : {}}
         inputProps={{
           value: { value: operatore?.id, label: operatore?.nome },
           onChange: changeOperatore,

@@ -11,8 +11,12 @@ function FormContext({ children, errors, initialData, view, isValidated }) {
   initialData = startingData
 
   useEffect(() => {
+    if (pageContext?.copyData === undefined) {
+      setInitialData(undefined)
+      pageContext?.setCopyData(null)
+    }
     if (pageContext?.copyData) setInitialData(pageContext?.copyData)
-  }, [pageContext?.copyData])
+  }, [pageContext?.copyData, pageContext?.setCopyData])
   return (
     <Context.Provider value={{ errors, initialData, view, isValidated, setInitialData }}>
       {children}

@@ -12,7 +12,7 @@ const EXAMPLE = [{
   "uom": "KG",
   "item": "Test arti",
   "taxableamount": 120,
-  "lotto_super": "24/11111.2",
+  "lotto_super": "24/01039.5",
   "articolo_certificato": "ciao",
   "companyname": "Test",
   "impianto": "ROTO 500",
@@ -210,14 +210,16 @@ export const getLottoInformation = async (n_lotto) => {
 export const getEntireLottoInformation = async (n_lotto) => {
   const query = `
     SELECT
-      sale.qty as quantity,
+      sale.orderdate as documentdate,
+      sale.qty as qty,
       sale.description,
       sale.uom,
       sale.item,
-      sale.taxableamount as price,
+      sale.taxableamount as taxableamount,
       sale.unitvalue as prezzo_unitario,
       base_item.description as descrizione_articolo,
-      CONCAT(sale.job, '.', sale.line) AS lotto_super,
+      sale.job as n_lotto_super,
+      sale.line as line_lotto,
       cust.companyname,
       cust.address,
       cust.zipcode,
@@ -249,6 +251,7 @@ export const getEntireLottoInformation = async (n_lotto) => {
     WHERE sale.job = '${n_lotto}'
   `
   const res = await makeDatabaseRequest(query);
+  // return EXAMPLE;
   return res
 }
 

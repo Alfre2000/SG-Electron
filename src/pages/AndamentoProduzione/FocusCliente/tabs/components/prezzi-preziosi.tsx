@@ -1,5 +1,5 @@
 import { Button } from "../../../../../components/shadcn/Button";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getErrors } from "../../../../../api/utils";
@@ -27,14 +27,17 @@ import { URLS } from "../../../../../urls";
 import { apiUpdateWithGet } from "../../../../../api/apiV2";
 import { useParams } from "react-router-dom";
 import DatePicker from "../../../../../components/shadcn/DatePicker";
-import { InfoPrezzi } from "../../../../../interfaces/global";
+import { InfoPrezzi, PrezziMetalli } from "../../../../../interfaces/global";
 import { useState } from "react";
 import { dateToDatePicker } from "../../../../../utils";
 import { HashLoader } from "react-spinners";
+import { toFormattedNumber } from "@utils/main";
+import { round } from "@lib/utils";
 
 type Props = {
   data: InfoPrezzi;
   children?: React.ReactNode;
+  clienteID?: string;
 };
 
 const numberSchema = z
@@ -61,9 +64,11 @@ const formSchema = z.object({
   minimo_per_riga: numberSchema,
 });
 
-function PrezziPreziosi({ data, children }: Props) {
+function PrezziPreziosi({ data, children, clienteID }: Props) {
   const [loading, setLoading] = useState(false);
   const { cliente } = useParams();
+  clienteID = clienteID || cliente;
+  const prezziMetalliQuery = useQuery<PrezziMetalli>(URLS.PREZZI_METALLI);
   const today = new Date();
   today.setHours(0);
   const oroScaduto = !data.scadenza_prezzo_oro || !data.prezzo_oro || new Date(data.scadenza_prezzo_oro) < today;
@@ -74,18 +79,18 @@ function PrezziPreziosi({ data, children }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prezzo_oro: oroScaduto ? undefined : data.prezzo_oro,
-      prezzo_argento: argentoScaduto ? undefined : data.prezzo_argento,
-      scadenza_prezzo_oro: oroScaduto ? undefined : data.scadenza_prezzo_oro,
-      scadenza_prezzo_argento: argentoScaduto ? undefined : data.scadenza_prezzo_argento,
+      prezzo_oro: oroScaduto ? undefined : data.prezzo_oro || undefined,
+      prezzo_argento: argentoScaduto ? undefined : data.prezzo_argento || undefined,
+      scadenza_prezzo_oro: oroScaduto ? undefined : data.scadenza_prezzo_oro || undefined,
+      scadenza_prezzo_argento: argentoScaduto ? undefined : data.scadenza_prezzo_argento || undefined,
       densità_argento: data.densità_argento,
       densità_oro: data.densità_oro,
-      minimo_per_pezzo: data.minimo_per_pezzo,
-      minimo_per_riga: data.minimo_per_riga,
+      minimo_per_pezzo: data.minimo_per_pezzo || undefined,
+      minimo_per_riga: data.minimo_per_riga || undefined,
     },
   });
   const updateMutation = useMutation(
-    (data: z.infer<typeof formSchema>) => apiUpdateWithGet(URLS.INFO_PREZZI + cliente + "/", data),
+    (data: z.infer<typeof formSchema>) => apiUpdateWithGet(URLS.INFO_PREZZI + clienteID + "/", data),
     {
       onSuccess: (response) => {
         toast.success("Prezzi aggiornati con successo.");
@@ -100,7 +105,7 @@ function PrezziPreziosi({ data, children }: Props) {
           minimo_per_riga: response.data.minimo_per_riga,
         });
         setOpen(false);
-        queryClient.invalidateQueries(`${URLS.INFO_PREZZI}${cliente}/`);
+        queryClient.invalidateQueries(`${URLS.INFO_PREZZI}${clienteID}/`);
       },
       onError: (error) => {
         const errors = getErrors(error);
@@ -140,7 +145,12 @@ function PrezziPreziosi({ data, children }: Props) {
                     <FormControl>
                       <UmInput {...field} step="0.0001" type="number" um="€ / g" className="pr-14" />
                     </FormControl>
-                    <div className="h-5">
+                    <div className="h-5 mt-0 text-right">
+                      {prezziMetalliQuery.data && (
+                        <span className="text-muted text-xs">
+                          Prezzo attuale: {toFormattedNumber(round(prezziMetalliQuery.data.Oro / 1000, 1))} € / g
+                        </span>
+                      )}
                       <FormMessage />
                     </div>
                   </FormItem>
@@ -191,7 +201,12 @@ function PrezziPreziosi({ data, children }: Props) {
                     <FormControl>
                       <UmInput {...field} step="0.0001" type="number" um="€ / kg" className="pr-14" />
                     </FormControl>
-                    <div className="h-5">
+                    <div className="h-5 mt-0 text-right">
+                      {prezziMetalliQuery.data && (
+                        <span className="text-muted text-xs">
+                          Prezzo attuale: {toFormattedNumber(round(prezziMetalliQuery.data.Argento, 0))} € / kg
+                        </span>
+                      )}
                       <FormMessage />
                     </div>
                   </FormItem>
@@ -232,7 +247,7 @@ function PrezziPreziosi({ data, children }: Props) {
                 )}
               />
             </FormControl>
-            <hr className="col-span-3 mb-3 w-3/4 mx-auto" />
+            <hr className="col-span-3 mb-3 mt-3 w-3/4 mx-auto" />
             <div className="col-span-3 mx-auto flex gap-x-8">
               <FormControl>
                 <FormField

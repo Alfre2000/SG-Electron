@@ -33,15 +33,17 @@ export const URLS = {
     TRAVERSINI: BASE_PATH + '/base/traversini/',
 
     CLIENTI_MAPPA: BASE_PATH + '/base/mappa-clienti/',
+    PREZZI_METALLI: BASE_PATH + '/base/prezzi-metalli/',
 
     // SCHEDE CONTROLLO
-    RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni/',
-    RECORD_LAVORAZIONI_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=True',
-    RECORD_LAVORAZIONI_NOT_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=False',
-    RECORD_LAVORAZIONI_IN_SOSPESO: BASE_PATH + '/scheda-controllo/record-lavorazioni?completata=false',
+    RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni?pre_lavorazione=false',
+    RECORD_LAVORAZIONI_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=True&pre_lavorazione=false',
+    RECORD_LAVORAZIONI_NOT_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=False&pre_lavorazione=false',
+    RECORD_LAVORAZIONI_IN_SOSPESO: BASE_PATH + '/scheda-controllo/record-lavorazioni?completata=false&pre_lavorazione=false',
     SCHEDE_CONTROLLO: BASE_PATH + '/scheda-controllo/schede-controllo/',
     SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',
     RECORD_LAVORAZIONE_INFO: BASE_PATH + '/scheda-controllo/record-lavorazione-info/',
+    LOTTO_INFO: BASE_PATH + '/scheda-controllo/lotto-info/',
 
     UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
 

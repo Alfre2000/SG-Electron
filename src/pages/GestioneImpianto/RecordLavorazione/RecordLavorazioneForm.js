@@ -25,11 +25,13 @@ import { useQuery } from "react-query";
 import Form from "../../Form";
 import { toast } from "sonner";
 import { useUserContext } from "../../../contexts/UserContext";
+import { usePageContext } from "@contexts/PageContext";
 
 let last_res = undefined;
 
 function RecordLavorazioneForm({ showOperatore }) {
   const { initialData, view } = useFormContext();
+  const { setCopyData } = usePageContext();
   const { user } = useUserContext();
   const [qty, setQty] = useState(initialData?.quantità || "");
   const [um, setUm] = useState(initialData?.um || "");
@@ -72,16 +74,21 @@ function RecordLavorazioneForm({ showOperatore }) {
           .then((res) => {
             if (last_res && last_res > parseInt(value.split(".").at(-1))) return;
             setLoadingLotto(false);
-            if (res.record) {
+            if (res.record && res.record.status !== "PL") {
               setLotto("");
               setRecordModify(res.record);
             } else {
-              setLotto(value);
-              setRecordModify(undefined);
-              setArticoloID(res.articolo.id);
-              setQty(res.quantità);
-              setUm(res.um);
-              setLottoCliente(res.lotto_cliente);
+              if (res.record?.status === "PL") {
+                delete res.record.data;
+                setCopyData(res.record);
+              } else {
+                setLotto(value);
+                setRecordModify(undefined);
+                setArticoloID(res.articolo.id);
+                setQty(res.quantità);
+                setUm(res.um);
+                setLottoCliente(res.lotto_cliente);
+              }
             }
             last_res = parseInt(value.split(".").at(-1));
             setTimeout(() => {
@@ -116,6 +123,7 @@ function RecordLavorazioneForm({ showOperatore }) {
       <ModifyModal show={recordModify} handleClose={() => setRecordModify(undefined)}>
         <Form
           initialData={recordModify}
+          forceNoCopy={true}
           onSuccess={() => {
             setRecordModify(undefined);
             toast.success("Record modificato con successo !");
@@ -125,6 +133,7 @@ function RecordLavorazioneForm({ showOperatore }) {
       <Row className="mb-4">
         <Hidden name="impianto" value={user.user.impianto?.id || initialData?.impianto} />
         <Hidden name="prezzo" value={price} />
+        <Hidden name="status" value="L" />
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">
             <DateInput />

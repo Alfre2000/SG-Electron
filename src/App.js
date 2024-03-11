@@ -32,6 +32,7 @@ import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati
 import VerificaPrezzi from "./pages/CertificatiQualità/VerificaPrezzi/VerificaPrezzi";
 import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
 import MappaClienti from "@pages/AndamentoProduzione/MappaClienti/MappaClienti";
+import Impianti from "@pages/AndamentoProduzione/Impianti/Impianti";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -97,6 +98,7 @@ function App() {
               <Route path="focus-cliente/" element={<SelezioneCliente />}></Route>
               <Route path="focus-cliente/:cliente" element={<FocusCliente />}></Route>
               <Route path="mappa-clienti/" element={<MappaClienti />}></Route>
+              <Route path="impianti/" element={<Impianti />}></Route>
             </Route>
           </Routes>
         </HashRouter>

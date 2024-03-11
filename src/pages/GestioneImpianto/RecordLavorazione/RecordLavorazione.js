@@ -51,7 +51,7 @@ function RecordLavorazione() {
                   Aggiungi lavorazione lotto
                 </Card.Header>
                 <Card.Body className="px-5">
-                  <Form />
+                  <Form forceNoCopy={true} />
                 </Card.Body>
               </Card>
             </Col>

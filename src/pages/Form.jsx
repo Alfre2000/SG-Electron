@@ -9,11 +9,14 @@ import useImpiantoMutation from "../hooks/useImpiantoMutation/useImpiantoMutatio
 import { usePageContext } from "../contexts/PageContext";
 import { toast } from "sonner";
 
-function Form({ children = undefined, initialData, onSuccess = undefined, view = false, validator = undefined, componentProps = undefined }) {
+function Form({ children = undefined, initialData, onSuccess = undefined, view = false, validator = undefined, componentProps = undefined, forceNoCopy = false }) {
   const { FormComponent, FormComponentFn, postURL, copyData, setCopyData, queriesToInvalidate } = usePageContext();
 
   initialData = initialData || copyData
   const finalURL = typeof postURL === "function" ? postURL(initialData) : postURL
+  let endpoint = finalURL.split('?')[0]
+  if (!endpoint.endsWith('/')) endpoint += '/'
+
   const FormComponentFinal = FormComponentFn ? FormComponentFn(initialData) : FormComponent
 
   const staticForm = Boolean(view)
@@ -28,13 +31,13 @@ function Form({ children = undefined, initialData, onSuccess = undefined, view =
     toast.error('Si è verificato un errore !')
   }
 
-  const createMutation = useImpiantoMutation(({ formData, form }) => apiPost(finalURL, formData), {
+  const createMutation = useImpiantoMutation(({ formData, form }) => apiPost(endpoint, formData), {
     onSuccess: (response, variables, { queryClient, impianto }) => {
       queryClient.invalidateQueries([finalURL])
       queriesToInvalidate.forEach(query => queryClient.invalidateQueries(query))
       if (onSuccess) onSuccess(response, queryClient)
       setKey(key + 1)
-      setCopyData(null)
+      setCopyData(undefined)
       toast.success('Record creato con successo !')
       if (document.querySelector('.paginator-first a')) {
         document.querySelector('.paginator-first a').click()
@@ -43,12 +46,13 @@ function Form({ children = undefined, initialData, onSuccess = undefined, view =
     onError: (error, { form }) => onError(error, form)
   })
 
-  const updateMutation = useImpiantoMutation(({ formData, form }) => apiUpdate(finalURL + initialData.id + '/', formData), {
+  const updateMutation = useImpiantoMutation(({ formData, form }) => apiUpdate(endpoint + initialData.id + '/', formData), {
     onSuccess: (response, variables, { queryClient, impianto }) => {
       queryClient.invalidateQueries([finalURL])
       queriesToInvalidate.forEach(query => queryClient.invalidateQueries(query))
       if (onSuccess) onSuccess(response, queryClient)
       setKey(key + 1)
+      setCopyData(undefined)
     },
     onError: (error, { form }) => onError(error, form)
   })
@@ -73,7 +77,7 @@ function Form({ children = undefined, initialData, onSuccess = undefined, view =
     const finalFormData = new FormData()
     Object.entries(formData).forEach((obj) => finalFormData.append(obj[0], obj[1]))
     console.log(formData);
-    if (initialData && !copyData) {
+    if (initialData && (!copyData || forceNoCopy)) {
       updateMutation.mutate({ formData: finalFormData, form })
     } else {
       createMutation.mutate({ formData: finalFormData, form })

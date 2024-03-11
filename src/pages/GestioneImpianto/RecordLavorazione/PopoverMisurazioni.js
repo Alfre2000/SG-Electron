@@ -117,7 +117,7 @@ function PopoverMisurazioni({ controllo, idxControllo, initialData, articolo }) 
           <Popover.Body>
             {lavorazioniQuery.isSuccess && (
               <Tabs defaultValue="misurazioni" className="text-center">
-                <TabsList className={`${impianto.nome !== "Oro 140" ? "hidden" : ""}`}>
+                <TabsList className={`${impianto?.nome !== "Oro 140" ? "hidden" : ""}`}>
                   <TabsTrigger value="misurazioni">Misurazioni</TabsTrigger>
                   <TabsTrigger  value="min-max">Min-Max</TabsTrigger>
                 </TabsList>
