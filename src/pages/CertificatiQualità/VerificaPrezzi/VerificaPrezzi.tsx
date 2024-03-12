@@ -3,7 +3,7 @@ import Wrapper from "@ui/wrapper/Wrapper";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/shadcn/Card";
 import { Input } from "@components/shadcn/Input";
 import { Button } from "@components/shadcn/Button";
-import { CheckIcon, ExclamationTriangleIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { CaretDownIcon, CaretSortIcon, CheckIcon, ExclamationTriangleIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
 import { getEntireLottoInformation } from "@api/mago";
@@ -27,6 +27,7 @@ import PrezziPreziosi from "@pages/AndamentoProduzione/FocusCliente/tabs/compone
 import { Alert, AlertDescription, AlertTitle } from "@components/shadcn/Alert";
 import AnagraficaArticolo from "./AnagraficaArticolo";
 import { z } from "zod";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@components/shadcn/Collapsible";
 
 type Lotto = {
   articolo: Articolo;
@@ -38,6 +39,7 @@ type Lotto = {
 const lottoSchema = z.string().regex(/^\d{2}\/\d{5}$/, "Inserire un numero di lotto valido");
 
 function VerificaPrezzi() {
+  const [isInfoOpen, setIsInfoOpen] = React.useState(false)
   const [nLotto, setNLotto] = React.useState("");
   const [lotto, setLotto] = React.useState<Lotto | undefined>();
   const [loading, setLoading] = React.useState(false);
@@ -64,9 +66,10 @@ function VerificaPrezzi() {
       const newLotto = [...(prevLotto || [])];
       newLotto.forEach((riga) => {
         riga.prezzoSuggerito = prezzoSuggerito(riga.record, riga.articolo, infoPrezziQuery.data) || undefined;
-        riga.differenza = riga.prezzoSuggerito
-          ? round(riga.prezzoSuggerito - parseFloat(riga.record.prezzo), 2)
-          : undefined;
+        riga.differenza =
+          riga.prezzoSuggerito && riga.record.prezzo
+            ? round(riga.prezzoSuggerito - parseFloat(riga.record.prezzo), 2)
+            : undefined;
       });
       return newLotto;
     });
@@ -98,9 +101,10 @@ function VerificaPrezzi() {
       if (infoPrezziQuery.data) {
         newLotto.forEach((riga) => {
           riga.prezzoSuggerito = prezzoSuggerito(riga.record, riga.articolo, infoPrezziQuery.data) || undefined;
-          riga.differenza = riga.prezzoSuggerito
-            ? round(riga.prezzoSuggerito - parseFloat(riga.record.prezzo), 2)
-            : undefined;
+          riga.differenza =
+            riga.prezzoSuggerito && riga.record.prezzo
+              ? round(riga.prezzoSuggerito - parseFloat(riga.record.prezzo), 2)
+              : undefined;
         });
       }
       return newLotto;
@@ -180,14 +184,21 @@ function VerificaPrezzi() {
           <CardHeader>
             <CardTitle>Riepilogo Ordine</CardTitle>
             <CardDescription>
-              Tabella riepilogativa dell'ordine con il confronto tra i prezzi inseriti e i prezzi suggeriti dal
-              programma.
-              <br /> - In caso di <CheckIcon className="h-5 w-5 text-green-700 inline" /> il prezzo suggerito
-              corrisponde al prezzo dell'ordine.
-              <br /> - In caso di differenza negativa <span className="text-green-700">(colore verde)</span> il
-              prezzo suggerito è inferiore al prezzo dell'ordine.
-              <br /> - In caso di differenza positiva <span className="text-red-700">(colore rosso)</span> il
-              prezzo suggerito è maggiore al prezzo dell'ordine. Verificare il motivo della discrepanza.
+              <Collapsible open={isInfoOpen} onOpenChange={setIsInfoOpen}>
+                <CollapsibleTrigger className="hover:underline">
+                  Come interpretare la tabella <CaretDownIcon className={`h-4 w-4 inline text-gray-700 transition-transform duration-500 ${isInfoOpen ? 'rotate-180' : ''}`} />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  Tabella riepilogativa dell'ordine con il confronto tra i prezzi inseriti e i prezzi suggeriti dal
+                  programma.
+                  <br /> - In caso di <CheckIcon className="h-5 w-5 text-green-700 inline" /> il prezzo suggerito
+                  corrisponde al prezzo dell'ordine.
+                  <br /> - In caso di differenza negativa <span className="text-green-700">(colore verde)</span> il
+                  prezzo suggerito è inferiore al prezzo dell'ordine.
+                  <br /> - In caso di differenza positiva <span className="text-red-700">(colore rosso)</span> il
+                  prezzo suggerito è maggiore al prezzo dell'ordine. Verificare il motivo della discrepanza.
+                </CollapsibleContent>
+              </Collapsible>
             </CardDescription>
           </CardHeader>
           <CardContent className="mb-10 min-h-64 flex justify-center items-center">
@@ -216,11 +227,15 @@ function VerificaPrezzi() {
                       <TableCell className="border">
                         <AnagraficaArticolo articolo={riga.articolo} updateArticolo={updateArticolo} />
                       </TableCell>
-                      <TableCell className="border">{toEuro(riga.record.prezzo_unitario, 4)}</TableCell>
+                      <TableCell className="border">
+                        {riga.record.prezzo_unitario ? toEuro(riga.record.prezzo_unitario, 4) : "-"}
+                      </TableCell>
                       <TableCell className="border">
                         {toFormattedNumber(riga.record.quantità)} {riga.record.um === "KG" && <> Kg</>}
                       </TableCell>
-                      <TableCell className="border">{toEuro(riga.record.prezzo)}</TableCell>
+                      <TableCell className="border">
+                        {riga.record.prezzo ? toEuro(riga.record.prezzo) : "-"}
+                      </TableCell>
                       <TableCell className="border">
                         <PrezzoSuggerito
                           articolo={riga.articolo}

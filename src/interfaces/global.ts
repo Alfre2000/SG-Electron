@@ -131,8 +131,8 @@ export type RecordLavorazione = {
   quantità: number;
   um: string;
   n_pezzi_scartati: number;
-  prezzo: string;
-  prezzo_unitario: string;
+  prezzo: string | null;
+  prezzo_unitario: string | null;
   impianto: number;
   operatore: number;
   status: string;
