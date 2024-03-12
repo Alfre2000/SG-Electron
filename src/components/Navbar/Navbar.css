@@ -2,7 +2,8 @@
     background-color: rgb(71 85 105 / 0.3);
 }
 .sg-nav-link-active, .sg-nav-link-active:hover {
-    background: linear-gradient(180deg, #f9fafb21, #e6d2ae0a);
+    /* background: linear-gradient(180deg, #f9fafb21, #e6d2ae0a); */
+    background-color: rgba(240, 248, 255, 0.042);
 }
 .dropdown ul {
   max-height: 0;
