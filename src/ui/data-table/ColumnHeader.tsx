@@ -109,6 +109,7 @@ export function DataTableColumnHeader<TData, TValue>({
             ) : (
               <>
                 <SearchInput
+                  autoFocus
                   type="text"
                   placeholder="Cerca..."
                   className="py-1 h-8 max-w-32"
@@ -129,11 +130,11 @@ export function DataTableColumnHeader<TData, TValue>({
               </>
             )}
           </div>
-          <DropdownMenuItem onClick={() => toggleSorting(false)}>
+          <DropdownMenuItem textValue="" onClick={() => toggleSorting(false)}>
             <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Crescente
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => toggleSorting(true)}>
+          <DropdownMenuItem textValue="" onClick={() => toggleSorting(true)}>
             <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Decrescente
           </DropdownMenuItem>
