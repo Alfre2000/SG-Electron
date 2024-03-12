@@ -46,6 +46,7 @@ export const URLS = {
     LOTTO_INFO: BASE_PATH + '/scheda-controllo/lotto-info/',
 
     UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
+    VERIFICA_PREZZI_PDF: BASE_PATH + '/scheda-controllo/verifica-prezzi-pdf/',
 
     // CERTIFICATI
     CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',

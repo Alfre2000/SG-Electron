@@ -3,7 +3,7 @@ import Wrapper from "@ui/wrapper/Wrapper";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/shadcn/Card";
 import { Input } from "@components/shadcn/Input";
 import { Button } from "@components/shadcn/Button";
-import { CaretDownIcon, CaretSortIcon, CheckIcon, ExclamationTriangleIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { CaretDownIcon, CheckIcon, ExclamationTriangleIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
 import { getEntireLottoInformation } from "@api/mago";
@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@components/shadcn/Table";
-import { apiPost } from "@api/api";
+import { apiGet, apiPost } from "@api/api";
 import { toEuro, toFormattedNumber } from "@utils/main";
 import PrezzoSuggerito from "./PrezzoSuggerito";
 import { Articolo, InfoPrezzi, RecordLavorazione } from "@interfaces/global";
@@ -28,6 +28,11 @@ import { Alert, AlertDescription, AlertTitle } from "@components/shadcn/Alert";
 import AnagraficaArticolo from "./AnagraficaArticolo";
 import { z } from "zod";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@components/shadcn/Collapsible";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload, faPrint } from "@fortawesome/free-solid-svg-icons";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components/shadcn/Tooltip";
+
+const electron = window?.require ? window.require("electron") : null;
 
 type Lotto = {
   articolo: Articolo;
@@ -39,7 +44,7 @@ type Lotto = {
 const lottoSchema = z.string().regex(/^\d{2}\/\d{5}$/, "Inserire un numero di lotto valido");
 
 function VerificaPrezzi() {
-  const [isInfoOpen, setIsInfoOpen] = React.useState(false)
+  const [isInfoOpen, setIsInfoOpen] = React.useState(false);
   const [nLotto, setNLotto] = React.useState("");
   const [lotto, setLotto] = React.useState<Lotto | undefined>();
   const [loading, setLoading] = React.useState(false);
@@ -122,6 +127,16 @@ function VerificaPrezzi() {
       return false;
     }
   };
+  const downloadPDF = () => {
+    apiGet(`${URLS.VERIFICA_PREZZI_PDF}?n_lotto=${nLotto}`).then((res) => {
+      electron.ipcRenderer.invoke("save-pdf", res, `verifica_prezzi_${nLotto.replace('/', '_')}.pdf`);
+    });
+  };
+  const printPDF = () => {
+    apiGet(`${URLS.VERIFICA_PREZZI_PDF}?n_lotto=${nLotto}`).then((res) => {
+      electron.ipcRenderer.invoke("print-pdf", res);
+    });
+  };
   return (
     <Wrapper>
       <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full mb-20">
@@ -182,11 +197,42 @@ function VerificaPrezzi() {
         )}
         <Card className="mt-5">
           <CardHeader>
-            <CardTitle>Riepilogo Ordine</CardTitle>
+            <CardTitle className="flex justify-between items-center relative">
+              <div>Riepilogo Ordine</div>
+              {lotto && lotto.length > 0 && (
+                <div className="flex gap-x-3 absolute right-2 top-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button variant="ghost" className="px-3" onClick={printPDF}>
+                          <FontAwesomeIcon icon={faPrint} size="lg" className="text-slate-700" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Stampa</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button variant="ghost" className="px-3" onClick={downloadPDF}>
+                          <FontAwesomeIcon icon={faDownload} size="lg" className="text-slate-700" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Salva PDF</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              )}
+            </CardTitle>
             <CardDescription>
               <Collapsible open={isInfoOpen} onOpenChange={setIsInfoOpen}>
                 <CollapsibleTrigger className="hover:underline">
-                  Come interpretare la tabella <CaretDownIcon className={`h-4 w-4 inline text-gray-700 transition-transform duration-500 ${isInfoOpen ? 'rotate-180' : ''}`} />
+                  Come interpretare la tabella{" "}
+                  <CaretDownIcon
+                    className={`h-4 w-4 inline text-gray-700 transition-transform duration-500 ${
+                      isInfoOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   Tabella riepilogativa dell'ordine con il confronto tra i prezzi inseriti e i prezzi suggeriti dal

@@ -29,7 +29,7 @@ const Error = ({ message }: { message: string }) => {
 };
 
 function PrezzoSuggerito({ record, articolo, infoPrezzi }: PrezzoSuggeritoProps) {
-  const richieste = articolo.richieste.filter((r) => r.spessore_minimo && r.spessore_massimo);
+  const richieste = articolo.richieste.filter((r) => r.spessore_massimo);
   const lavorazioni = richieste.map((r) => r.lavorazione.nome);
 
   const prezzo_oro_valido =
@@ -77,10 +77,14 @@ function PrezzoSuggerito({ record, articolo, infoPrezzi }: PrezzoSuggeritoProps)
                 {articolo.richieste.map((r, index) => (
                   <li key={index} className="list-decimal">
                     <span className="font-semibold">{r.lavorazione.nome}:</span>{" "}
-                    {r.spessore_minimo && r.spessore_massimo && (
+                    {r.spessore_minimo && r.spessore_massimo ? (
                       <>
                         {toFormattedNumber(r.spessore_minimo)} µm ÷ {toFormattedNumber(r.spessore_massimo)} µm
                       </>
+                    ) : r.spessore_massimo ? (
+                      <>{toFormattedNumber(r.spessore_massimo)} µm</>
+                    ) : (
+                      null
                     )}
                   </li>
                 ))}
@@ -358,13 +362,13 @@ function PrezzoSuggerito({ record, articolo, infoPrezzi }: PrezzoSuggeritoProps)
   }
 
   const mancaSpessoreArgento = articolo.richieste.some(
-    (r) => r.lavorazione.nome === "Argentatura" && (!r.spessore_minimo || !r.spessore_massimo)
+    (r) => r.lavorazione.nome === "Argentatura" && (!r.spessore_massimo)
   );
   if (mancaSpessoreArgento) {
     return <Error message="Manca lo spessore per l'argentatura oppure il prezzo a dm²" />;
   }
   const mancaSpessoreOro = articolo.richieste.some(
-    (r) => r.lavorazione.nome === "Doratura" && (!r.spessore_minimo || !r.spessore_massimo)
+    (r) => r.lavorazione.nome === "Doratura" && (!r.spessore_massimo)
   );
   if (mancaSpessoreOro) {
     return <Error message="Manca lo spessore per la doratura oppure il prezzo a dm²" />;

@@ -10,7 +10,14 @@ import { toast } from "sonner";
 import { getErrors } from "@api/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/shadcn/Table";
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from "@components/shadcn/Form";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@components/shadcn/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@components/shadcn/Dialog";
 import { Input, UmInput } from "@components/shadcn/Input";
 import { Button } from "@components/shadcn/Button";
 
@@ -21,15 +28,21 @@ const numberSchema = z
     message: "Inserire un valore positivo",
   });
 
+const richiestaSchema = z.object({
+  id: z.string(),
+  spessore_massimo: numberSchema,
+});
+
 const formSchema = z.object({
   superficie: numberSchema,
   peso: numberSchema,
   costo_manodopera: numberSchema,
   fattore_moltiplicativo: numberSchema,
   prezzo_dmq: numberSchema,
+  richieste: z.array(richiestaSchema),
 });
 
-type AnagraficaArticoloProps = { articolo: Articolo, updateArticolo: (articolo: Articolo) => void};
+type AnagraficaArticoloProps = { articolo: Articolo; updateArticolo: (articolo: Articolo) => void };
 
 function AnagraficaArticolo({ articolo, updateArticolo }: AnagraficaArticoloProps) {
   const [open, setOpen] = React.useState(false);
@@ -42,6 +55,7 @@ function AnagraficaArticolo({ articolo, updateArticolo }: AnagraficaArticoloProp
       costo_manodopera: articolo.costo_manodopera ?? undefined,
       fattore_moltiplicativo: articolo.fattore_moltiplicativo ?? undefined,
       prezzo_dmq: articolo.prezzo_dmq ?? undefined,
+      richieste: articolo.richieste.map((r) => ({ id: r.id, spessore_massimo: r.spessore_massimo ?? undefined })),
     },
   });
   const updateMutation = useMutation(
@@ -54,7 +68,14 @@ function AnagraficaArticolo({ articolo, updateArticolo }: AnagraficaArticoloProp
         form.setValue("fattore_moltiplicativo", formData.fattore_moltiplicativo);
         form.setValue("prezzo_dmq", formData.prezzo_dmq);
         queryClient.invalidateQueries(URLS.ARTICOLI + articolo.id + "/");
-        const newArticolo = { ...articolo, ...formData };
+        const newArticolo = {
+          ...articolo,
+          ...formData,
+          richieste: articolo.richieste.map((r) => ({
+            ...r,
+            spessore_massimo: formData.richieste.find((rr) => rr.id === r.id)?.spessore_massimo ?? r.spessore_massimo,
+          })),
+        };
         updateArticolo(newArticolo);
         toast.success("Anagrafica aggiornata");
         setOpen(false);
@@ -182,13 +203,30 @@ function AnagraficaArticolo({ articolo, updateArticolo }: AnagraficaArticoloProp
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {articolo.richieste
-                        .map((richiesta) => (
-                          <TableRow key={richiesta.id}>
-                            <TableCell className="px-4">{richiesta.lavorazione?.nome || ""}</TableCell>
-                            <TableCell className="px-4">{richiesta.spessore_massimo && (<>{richiesta.spessore_massimo} µm</>)}</TableCell>
-                          </TableRow>
-                        ))}
+                      {articolo.richieste.map((richiesta, index) => (
+                        <TableRow key={richiesta.id}>
+                          <TableCell className="px-4 w-1/2 py-3">{richiesta.lavorazione?.nome || ""}</TableCell>
+                          <TableCell className="px-4 w-1/2 py-3">
+                            <FormField
+                              control={form.control}
+                              name={`richieste.${index}.spessore_massimo`}
+                              render={({ field }) => (
+                                <FormItem className="w-2/3">
+                                  <FormControl>
+                                    <UmInput {...field} type="number" step="0.0001" um="µ" className="pr-8" />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`richieste.${index}.id`}
+                              render={({ field }) => <input type="hidden" {...field} />}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </div>

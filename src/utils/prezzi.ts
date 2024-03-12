@@ -2,7 +2,7 @@ import { Articolo, InfoPrezzi, RecordLavorazione } from "@interfaces/global";
 import { round } from "@lib/utils";
 
 export const prezzoSuggerito = (record: RecordLavorazione, articolo: Articolo, infoPrezzi: InfoPrezzi) => {
-  const richieste = articolo.richieste.filter((r) => r.spessore_minimo && r.spessore_massimo);
+  const richieste = articolo.richieste.filter((r) => r.spessore_massimo);
   const lavorazioni = richieste.map((r) => r.lavorazione.nome);
 
   const prezzo_oro_valido =

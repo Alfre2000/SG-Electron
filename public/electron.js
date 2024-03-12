@@ -110,6 +110,24 @@ app.whenReady().then(() => {
       }
   }))
   })
+  ipcMain.handle('print-pdf', (event, data) => {
+    const pdfBuffer = Buffer.from(data, 'binary');
+    const tempFilePath = app.getPath('desktop') + '/verifica_prezzi.pdf';
+    fs.writeFileSync(tempFilePath, pdfBuffer);
+    console.log('PDF written to', tempFilePath);
+    const printWin = new BrowserWindow({ show: false });
+    printWin.loadURL(`file://${tempFilePath}`).then(() => {
+      printWin.webContents.print({}, (success, failureReason) => {
+        if (!success) console.log('Printing failed', failureReason);
+        else console.log('Printed successfully');
+        // Optionally, delete the temp file after printing
+        fs.unlink(tempFilePath, (err) => {
+          if (err) console.error('Failed to delete temporary PDF file', err);
+        });
+        printWin.close();
+      });
+    });
+  })
   ipcMain.handle('save-zip', (_, file, defaultName) => {
     const win = BrowserWindow.getFocusedWindow()
     const defaultPath = app.getPath('desktop') + '/' + defaultName

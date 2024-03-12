@@ -193,13 +193,19 @@ function DatabaseCertificati() {
             <NewSearchSelect
               options={searchOptions(clientiQuery.data, "nome")}
               label="Cliente"
-              onChange={(e) => table.getColumn("cliente")?.setFilterValue(e?.value)}
+              onChange={(e) => {
+                table.getColumn("cliente")?.setFilterValue(e?.value)
+                setPagination((prev) => ({ ...prev, pageIndex: 0}))
+              }}
             />
             <div>
               <Label className="mb-1.5">Articolo</Label>
               <Input
                 value={(table.getColumn("articolo")?.getFilterValue() as string) ?? ""}
-                onChange={(event) => table.getColumn("articolo")?.setFilterValue(event.target.value)}
+                onChange={(event) => {
+                  table.getColumn("articolo")?.setFilterValue(event.target.value)
+                  setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                }}
                 className="max-w-sm h-8"
                 style={{ borderColor: "#ced4da !important" }}
               />
@@ -208,7 +214,10 @@ function DatabaseCertificati() {
               <Label className="mb-1.5">N° Bolla</Label>
               <Input
                 value={(table.getColumn("n_bolla")?.getFilterValue() as string) ?? ""}
-                onChange={(event) => table.getColumn("n_bolla")?.setFilterValue(event.target.value)}
+                onChange={(event) => {
+                  table.getColumn("n_bolla")?.setFilterValue(event.target.value)
+                  setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                }}
                 className="max-w-sm h-8"
                 style={{ borderColor: "#ced4da" }}
               />
@@ -216,18 +225,27 @@ function DatabaseCertificati() {
             <NewSearchSelect
               options={anni.map((a) => ({ label: a, value: a }))}
               label="Anno"
-              onChange={(e) => setColumnFilters((prev) => [...prev, { id: "anno", value: e?.value }])}
+              onChange={(e) => {
+                setColumnFilters((prev) => [...prev, { id: "anno", value: e?.value }])
+                setPagination((prev) => ({ ...prev, pageIndex: 0}))
+              }}
             />
             <NewSearchSelect
               options={MESI.map((a, idx) => ({ label: a, value: idx + 1 }))}
               label="Mese"
-              onChange={(e) => setColumnFilters((prev) => [...prev, { id: "mese", value: e?.value }])}
+              onChange={(e) => {
+                setColumnFilters((prev) => [...prev, { id: "mese", value: e?.value }])
+                setPagination((prev) => ({ ...prev, pageIndex: 0}))
+              }}
             />
             <div>
               <Label className="mb-1.5">N° Lotto</Label>
               <Input
                 value={(table.getColumn("n_lotto_super")?.getFilterValue() as string) ?? ""}
-                onChange={(event) => table.getColumn("n_lotto_super")?.setFilterValue(event.target.value)}
+                onChange={(event) => {
+                  table.getColumn("n_lotto_super")?.setFilterValue(event.target.value)
+                  setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                }}
                 className="max-w-sm h-8"
                 style={{ borderColor: "#ced4da !important" }}
               />
