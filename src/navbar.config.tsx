@@ -16,6 +16,7 @@ import {
   faFileCircleCheck,
   faListCheck,
   faTags,
+  faIndustry,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -112,6 +113,11 @@ const navbarAndamentoProduzione = () => {
       title: "Dashboards",
       icon: faChartLine,
       links: [{ name: "Dashboards", link: "/andamento-produzione/dashboards/" }],
+    },
+    {
+      title: "Impianti",
+      icon: faIndustry,
+      links: [{ name: "Impianti", link: "/andamento-produzione/impianti/" }],
     },
     {
       title: "Mappa Clienti",

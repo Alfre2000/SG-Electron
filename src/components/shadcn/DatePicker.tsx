@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Button } from "./Button";
 import { Calendar } from "./Calendar";
 import { FormControl } from "./Form";
@@ -5,7 +6,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import { cn } from "../../lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-import { SelectSingleEventHandler } from "react-day-picker";
+import { Matcher, SelectRangeEventHandler, SelectSingleEventHandler } from "react-day-picker";
+import { DateRange } from "react-day-picker";
 import { it } from "date-fns/locale";
 
 type Props = {
@@ -13,7 +15,7 @@ type Props = {
   onChange: SelectSingleEventHandler;
 };
 
-function DatePicker({ value, onChange }: Props) {
+export function DatePicker({ value, onChange }: Props) {
   if (typeof value === "string") value = new Date(value);
   return (
     <Popover>
@@ -44,4 +46,49 @@ function DatePicker({ value, onChange }: Props) {
   );
 }
 
-export default DatePicker;
+
+type DatePickerWithRangeProps = {
+  value?: DateRange;
+  onChange: SelectRangeEventHandler;
+  disabled?: Matcher | Matcher[] | undefined;
+};
+
+export function DatePickerWithRange({ value, onChange, disabled }: DatePickerWithRangeProps) {
+  const prevMonth = value?.from ? new Date(value.from) : undefined;
+  if (prevMonth) prevMonth.setMonth(prevMonth.getMonth() - 1);
+  return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id="date"
+            variant={"outline"}
+            className={cn("w-full justify-start text-left font-normal", !value && "text-muted-foreground")}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {value?.from ? (
+              value.to ? (
+                <>
+                  {format(value.from, "LLL dd, y")} - {format(value.to, "LLL dd, y")}
+                </>
+              ) : (
+                format(value.from, "LLL dd, y")
+              )
+            ) : (
+              <span>Seleziona un periodo</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            initialFocus
+            mode="range"
+            defaultMonth={prevMonth}
+            selected={value}
+            onSelect={onChange}
+            numberOfMonths={2}
+            disabled={disabled}
+          />
+        </PopoverContent>
+      </Popover>
+  );
+}

@@ -1,3 +1,31 @@
+export const tooltipStyle = {
+    backgroundColor: "rgba(245, 246, 247, 0.9)",
+    titleColor: "rgba(1, 54, 145, 1)",
+    bodyColor: "rgba(1, 54, 145, 1)",
+    footerColor: "rgba(1, 54, 145, 1)",
+    borderColor: "rgb(0, 46, 92)",
+    borderWidth: 1,
+    padding: {
+      y: 10,
+      left: 10,
+      right: 20,
+    },
+    displayColors: false,
+    titleFont: {
+      size: 13,
+    },
+    bodyFont: {
+      size: 13,
+    },
+    footerFont: {
+      size: 13,
+      weight: "normal",
+    },
+    footerMarginTop: 4,
+    cornerRadius: 4,
+    titleMarginBottom: 5,
+  };  
+
 export const options = {
   maintainAspectRatio: false,
   responsive: true,

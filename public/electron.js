@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const http = require('http');
 
 const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('electron');
@@ -18,6 +19,12 @@ app.whenReady().then(() => {
     const win = BrowserWindow.getFocusedWindow()
     win.setFullScreen(!win.isFullScreen())  
   })
+  ipcMain.handle('get-query', async (event, queryFileName) => {
+      const BASE_PATH = path.join(__dirname, '..', 'src', 'api', 'queries');
+      const queryFilePath = path.join(BASE_PATH, queryFileName);
+      const queryContent = fs.readFileSync(queryFilePath, 'utf8');
+      return queryContent;
+  });
   ipcMain.handle('save-schreenshot', () => {
     desktopCapturer.getSources({ types: ['window'], thumbnailSize: {width: 1350, height: 800} }).then(sources => {
         const win = BrowserWindow.getFocusedWindow()

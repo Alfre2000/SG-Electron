@@ -43,3 +43,17 @@ export const toFormattedNumber = (value: string | number) => {
   }
   return value.toLocaleString("it-IT", {maximumFractionDigits: 4});
 };
+
+
+export const addSign = (value: string | number) => {
+  if (typeof value === "string") {
+    value = parseFloat(value);
+  }
+  const isPositive = value > 0;
+  value = value.toLocaleString("it-IT");
+  return isPositive ? `+${value}` : value;
+}
+
+export const toTitle = (value: string) => {
+    return value.replace(/\b\w/g, (l) => l.toUpperCase());
+}

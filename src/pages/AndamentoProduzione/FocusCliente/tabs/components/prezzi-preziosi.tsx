@@ -26,7 +26,7 @@ import { z } from "../../../../../it-zod";
 import { URLS } from "../../../../../urls";
 import { apiUpdateWithGet } from "../../../../../api/apiV2";
 import { useParams } from "react-router-dom";
-import DatePicker from "../../../../../components/shadcn/DatePicker";
+import { DatePicker } from "../../../../../components/shadcn/DatePicker";
 import { InfoPrezzi, PrezziMetalli } from "../../../../../interfaces/global";
 import { useState } from "react";
 import { dateToDatePicker } from "../../../../../utils";
