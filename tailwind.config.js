@@ -15,7 +15,11 @@ module.exports = {
     extend: {
       boxShadow: {
         'header': 'inset 0px 1px 40px 6px rgb(0 0 25 / 20%)',
-        'my-card': '0px 30px 40px -20px rgb(137 137 137 / 20%)'
+        'my-card': '0px 30px 40px -20px rgb(137 137 137 / 20%)',
+        'input': '0 0 0 0.25rem #cbdafc',
+      },
+      ringColor: {
+        'b-blue': "rgb(13 110 253 / 25%)"
       },
       colors: {
         'nav-blue': '#123A73',

@@ -14,7 +14,6 @@ import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
-import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
 import AdminManutenzione from "./pages/AreaAdmin/Manutenzione/Manutenzione";
 import Cliente from "./pages/AreaAdmin/Cliente/Cliente";
@@ -77,7 +76,6 @@ function App() {
             <Route path="area-admin/">
               <Route path="scheda-controllo/" element={<SchedaControllo />}></Route>
               <Route path="articolo/" element={<Articolo />}></Route>
-              <Route path="scheda-impianto/" element={<SchedaImpianto />}></Route>
               <Route path="analisi/" element={<AdminAnalisi />}></Route>
               <Route path="manutenzione/" element={<AdminManutenzione />}></Route>
               <Route path="cliente/" element={<Cliente />}></Route>

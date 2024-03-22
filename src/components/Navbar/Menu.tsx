@@ -55,6 +55,7 @@ function Menu({ title, icon, links, navOpen = false }: MenuProps) {
       </div>
       <ul className="pl-6 pr-2 ml-[1.15em] list-disc" ref={wrapperRef}>
         {links.map((el) => {
+          if (!el) return null;
           if (el.link) {
             return (
               <li className="text-sm mb-2 hover:underline" key={el.name}>

@@ -1,6 +1,10 @@
-import React from "react";
+type FieldsetProps = {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+};
 
-function Fieldset({ title, children, className }) {
+function Fieldset({ title, children, className }: FieldsetProps) {
   return (
     <fieldset
       className={`${className || ""} border-[groove] border-2 px-8 py-1 m-0 rounded-md border-blue-100 mb-4`}

@@ -44,7 +44,7 @@ function HomePage(props) {
         <Header toggleNavbar={toggleNavbar} title="HomePage" />
         <div className="bg-gray-50 grow flex">
           <div className="flex flex-wrap gap-y-16 gap-x-24 2xl:gap-x-40 justify-center m-auto p-10">
-            {programmi && programmi.map(programma => (
+            {programmi && programmi.filter(p => !!p).map(programma => (
                 <Card key={programma.name} title={programma.name} icon={programma.icon} link={programma.link} />
               )
             )}

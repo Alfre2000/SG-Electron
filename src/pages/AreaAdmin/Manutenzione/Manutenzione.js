@@ -20,7 +20,7 @@ function Manutenzione() {
                   Nuova manutenzione
                 </Card.Header>
                 <Card.Body className="px-5">
-                  <Form />
+                  <ManutenzioneForm />
                 </Card.Body>
               </Card>
             </Col>

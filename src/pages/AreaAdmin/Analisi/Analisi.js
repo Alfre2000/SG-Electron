@@ -3,7 +3,6 @@ import PageTitle from "@components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import AnalisiForm from "./AnalisiForm";
 import PageContext from "@contexts/PageContext";
-import Form from "../../Form";
 import DataTable from "@ui/data-table/DataTable";
 import Wrapper from "@ui/wrapper/Wrapper";
 
@@ -20,7 +19,7 @@ function Analisi() {
                   Nuova analisi
                 </Card.Header>
                 <Card.Body className="px-5">
-                  <Form />
+                  <AnalisiForm />
                 </Card.Body>
               </Card>
             </Col>

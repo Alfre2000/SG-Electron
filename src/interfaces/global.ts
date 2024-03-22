@@ -2,6 +2,11 @@ export type Record = {
   [key: string]: unknown;
 };
 
+
+export type Error = {
+  [key: string]: string[];
+};
+
 export type RecordMancantiType = {
   impianto__nome: string;
   total: number;
@@ -148,4 +153,29 @@ export type PrezziMetalli = {
   Rame: number;
   Stagno: number;
   Zinco: number;
+}
+
+export type Manutenzione = {
+  id: string;
+  impianto: number;
+  nome: string;
+  intervallo_pezzi: number;
+  intervallo_giorni: number;
+  attiva: boolean;
+};
+
+export type Analisi = {
+  id: string;
+  impianto: number;
+  nome: string;
+  intervallo_pezzi: number;
+  intervallo_giorni: number;
+  attiva: boolean;
+  parametri: {
+    id: string;
+    nome: string;
+    minimo: number;
+    ottimo: number;
+    massimo: number;
+  }[];
 }

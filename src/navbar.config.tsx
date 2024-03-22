@@ -141,11 +141,6 @@ const navbarAreaAdmin = () => {
       links: [{ name: "Articolo", link: "/area-admin/articolo/" }],
     },
     {
-      title: "Scheda impianto",
-      icon: faClipboardList,
-      links: [{ name: "Scheda impianto", link: "/area-admin/scheda-impianto/" }],
-    },
-    {
       title: "Analisi",
       icon: faClipboardCheck,
       links: [{ name: "Analisi", link: "/area-admin/analisi/" }],

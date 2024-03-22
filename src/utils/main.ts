@@ -57,3 +57,8 @@ export const addSign = (value: string | number) => {
 export const toTitle = (value: string) => {
     return value.replace(/\b\w/g, (l) => l.toUpperCase());
 }
+
+export const capitalize = (s: string) => {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}

@@ -11,6 +11,7 @@ import {
 } from "react-hook-form"
 import { cn } from "../../lib/utils"
 import { Label } from "./Label"
+import { capitalize } from "@utils/main"
 
 
 const Form = FormProvider
@@ -145,7 +146,7 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message) : children
+  const body = error ? capitalize(String(error?.message)) : children
 
   if (!body) {
     return null
