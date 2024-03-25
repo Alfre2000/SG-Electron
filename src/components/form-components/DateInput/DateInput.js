@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useId } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useFormContext } from "../../../contexts/FormContext";
@@ -11,9 +11,15 @@ function DateInput({ vertical = false }) {
   const errorsValue = errors
     ? findNestedElement(errors, "data")?.join(" - ")
     : undefined;
-  const defaultValue = dateToDatePicker(
-    initialData?.data ? new Date(initialData.data) : new Date()
+
+  const [date, setDate] = useState(
+    dateToDatePicker(initialData?.data ? new Date(initialData.data) : new Date())
   );
+    setInterval(() => {
+      if (!initialData) {
+        setDate(dateToDatePicker(new Date()));
+      }
+    }, 1000 * 60 * 10); // 10 minutes
   const Input = (
     <Form.Control
       size="sm"
@@ -21,7 +27,7 @@ function DateInput({ vertical = false }) {
       type="date"
       name="data"
       id={id}
-      defaultValue={defaultValue}
+      value={date}
       isInvalid={errors && Boolean(errorsValue)}
       isValid={!errorsValue && !!errors}
       disabled={view}
