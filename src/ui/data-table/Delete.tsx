@@ -24,7 +24,9 @@ type DeleteProps<TData> = {
 
 function Delete<TData extends WithID>({ isOpen, setIsOpen, record, endpoint, onSuccess }: DeleteProps<TData>) {
   const queryClient = useQueryClient();
-  const deleteMutation = useMutation(() => apiDelete(endpoint + record.id + "/"), {
+  const baseEndpoint = endpoint.split("?")[0].endsWith("/") ? endpoint.split("?")[0] : endpoint.split("?")[0] + "/";
+  
+  const deleteMutation = useMutation(() => apiDelete(baseEndpoint + record.id + "/"), {
     onSuccess: (data) => {
       setIsOpen(false);
       toast.success("Record eliminato con successo!");
