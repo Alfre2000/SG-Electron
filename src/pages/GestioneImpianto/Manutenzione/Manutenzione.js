@@ -14,6 +14,7 @@ function Manutenzione() {
       getURL={URLS.RECORD_MANUTENZIONE}
       FormComponent={ManutenzioneForm}
       impiantoFilter={true}
+      queriesToInvalidate={[URLS.PAGINA_PROSSIME]}
     >
       <Wrapper>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">

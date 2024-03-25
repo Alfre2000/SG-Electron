@@ -14,6 +14,7 @@ function Analisi() {
       getURL={URLS.RECORD_ANALISI}
       FormComponent={AnalisiForm}
       impiantoFilter={true}
+      queriesToInvalidate={[URLS.PAGINA_PROSSIME]}
     >
       <Wrapper>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
