@@ -5,10 +5,7 @@ import Wrapper from "@ui/wrapper/Wrapper";
 import Form from "../../Form";
 import RecordLavorazioneOssidoForm from "./RecordLavorazioneOssidoForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowCircleRight,
-  faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { parseProssimeManutenzioni } from "../parsers";
 import PageTitle from "../../../components/PageTitle/PageTitle";
@@ -36,10 +33,9 @@ function RecordLavorazioneOssido() {
   const schedaImpiantoQuery = useImpiantoQuery({ queryKey: URLS.ULTIMA_SCHEDA_IMPIANTO });
   const avvisiQuery = useImpiantoQuery(
     { queryKey: URLS.PAGINA_PROSSIME },
-    { select: parseProssimeManutenzioni }
+    { select: parseProssimeManutenzioni, refetchInterval: 1000 * 60 * 5 } // 5 minutes
   );
-  const isSchedaImpiantoOld =
-    schedaImpiantoQuery.data?.id && !isDateRecent(schedaImpiantoQuery.data.data, 8);
+  const isSchedaImpiantoOld = schedaImpiantoQuery.data?.id && !isDateRecent(schedaImpiantoQuery.data.data, 8);
   return (
     <PageContext
       getURL={URLS.RECORD_LAVORAZIONI_OSSIDO}
@@ -60,15 +56,9 @@ function RecordLavorazioneOssido() {
                       variant="danger"
                       className="py-2 mb-2 text-left pl-[7%] inline-flex items-center w-full"
                     >
-                      <FontAwesomeIcon
-                        icon={faTriangleExclamation}
-                        className="mr-10"
-                      ></FontAwesomeIcon>
+                      <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
                       <div className="w-[30%]">Attenzione:</div>
-                      <b className="pl-4 w-[55%]">
-                        {" "}
-                        Compilare la scheda dell'impianto !
-                      </b>
+                      <b className="pl-4 w-[55%]"> Compilare la scheda dell'impianto !</b>
                       <Link to="/manutenzione/record-scheda-impianto/">
                         <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
                       </Link>
@@ -83,13 +73,8 @@ function RecordLavorazioneOssido() {
                         variant="danger"
                         className="py-2 mb-2 text-left pl-[7%] inline-flex items-center w-full"
                       >
-                        <FontAwesomeIcon
-                          icon={faTriangleExclamation}
-                          className="mr-10"
-                        ></FontAwesomeIcon>
-                        <div className="w-[30%]">
-                          {capitalize(operazione.tipologia)} da effettuare:
-                        </div>
+                        <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
+                        <div className="w-[30%]">{capitalize(operazione.tipologia)} da effettuare:</div>
                         <b className="pl-4 w-[55%] pr-2">{operazione.nome}</b>
                         <Link to={operazione.link}>
                           <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
