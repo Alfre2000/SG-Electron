@@ -8,7 +8,7 @@ import ModifyModal from "../../../components/Modals/ModifyModal/ModifyModal";
 import { useFormContext } from "../../../contexts/FormContext";
 import { URLS } from "../../../urls";
 import { findElementFromID } from "../../../utils";
-import ArticoloForm from "../Articolo/ArticoloForm";
+import ArticoloForm from "../Articolo/OldArticoloForm";
 import useCustomQuery from "../../../hooks/useCustomQuery/useCustomQuery";
 import Loading from "../../../components/Loading/Loading";
 import Form from "../../Form";

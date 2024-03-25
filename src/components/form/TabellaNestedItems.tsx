@@ -7,12 +7,13 @@ import RemoveIcon from "./RemoveIcon";
 import AddIcon from "./AddIcon";
 import Hidden from "./Hidden";
 import SearchSelect from "./SearchSelect";
+import FileField from "./FileField";
 
 type TabellaNestedItemsProps = {
   name: string;
   colonne: {
     name: string;
-    type?: "text" | "password" | "email" | "number" | "select" | "hidden";
+    type?: "text" | "password" | "email" | "number" | "select" | "hidden" | "file";
     label?: string;
     value?: any;
     options?: { value: string | number; label: string | number }[];
@@ -35,7 +36,7 @@ function TabellaNestedItems({ name, colonne }: TabellaNestedItemsProps) {
     }
   }, [field, colonne]);
   return (
-    <Table className="border align-middle text-sm text-center mb-3">
+    <Table containerClassName="overflow-visible" className="border align-middle text-sm text-center mb-3">
       <TableHeader>
         <TableRow className="hover:bg-white">
           {colonne.map((colonna) => {
@@ -55,24 +56,30 @@ function TabellaNestedItems({ name, colonne }: TabellaNestedItemsProps) {
             {colonne.map((colonna) => {
               const inputName = `${name}[${index}].${colonna.name}`;
               return (
-                <TableCell key={colonna.name} className="border py-2">
+                <TableCell
+                  key={colonna.name}
+                  className="border py-2 px-2"
+                  style={{ width: 100 / colonne.length + "%" }}
+                >
                   {colonna.type === "hidden" ? (
                     <Hidden name={inputName} value={colonna.value} />
                   ) : colonna.type === "select" ? (
                     <SearchSelect name={inputName} label={false} options={colonna.options || []} />
+                  ) : colonna.type === "file" ? (
+                    <FileField name={inputName} label={false} />
                   ) : (
                     <Input name={inputName} label={false} type={colonna.type || "text"} />
                   )}
                 </TableCell>
               );
             })}
-            <TableCell className="border py-2">
+            <TableCell className="border py-2 px-2">
               <RemoveIcon onClick={() => field.remove(index)} disabled={form.formState.disabled} />
             </TableCell>
           </TableRow>
         ))}
         <TableRow className="hover:bg-white">
-          <TableCell colSpan={colonne.length + 1} className="border py-2">
+          <TableCell colSpan={colonne.length + 1} className="border py-2 px-2">
             <AddIcon
               onClick={() => field.append({ ...colonne.map((colonna) => ({ [colonna.name]: "" })) })}
               disabled={form.formState.disabled}

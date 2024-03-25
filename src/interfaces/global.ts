@@ -2,7 +2,6 @@ export type Record = {
   [key: string]: unknown;
 };
 
-
 export type Error = {
   [key: string]: string[];
 };
@@ -115,6 +114,43 @@ export type Articolo = {
   richieste: Richiesta[];
 };
 
+export type ArticoloCreate = {
+  id: string;
+  nome: string;
+  codice: string;
+  descrizione: string | null;
+  impianto: number;
+  scheda_controllo: string | null;
+  cliente: string;
+  superficie: number | null;
+  peso: number | null;
+  // attivo: boolean;
+  pezzi_per_telaio: number | null;
+  specifica_it: string | null;
+  specifica_en: string | null;
+  // info_aggiuntive: Record;
+  // data_creazione: string;
+  // ultima_modifica: string;
+  // costo_manodopera: number | null;
+  // fattore_moltiplicativo: number | null;
+  // prezzo_dmq: number | null;
+
+  richieste: {
+    punto: number;
+    spessore_minimo: number | null;
+    spessore_massimo: number | null;
+    lavorazione: string;
+  }[];
+  immagini_supporto: {
+    titolo: string;
+    documento: string;
+  }[];
+  documenti_supporto: {
+    titolo: string;
+    documento: string;
+  }[];
+};
+
 export type InfoPrezzi = {
   cliente: string;
   prezzo_oro: number | null;
@@ -126,7 +162,6 @@ export type InfoPrezzi = {
   minimo_per_pezzo: number | null;
   minimo_per_riga: number | null;
 };
-
 
 export type RecordLavorazione = {
   id: string;
@@ -153,7 +188,7 @@ export type PrezziMetalli = {
   Rame: number;
   Stagno: number;
   Zinco: number;
-}
+};
 
 export type Manutenzione = {
   id: string;
@@ -178,4 +213,4 @@ export type Analisi = {
     ottimo: number;
     massimo: number;
   }[];
-}
+};

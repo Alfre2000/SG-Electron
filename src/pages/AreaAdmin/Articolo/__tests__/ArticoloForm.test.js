@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import ArticoloForm from "../ArticoloForm";
+import ArticoloForm from "../OldArticoloForm";
 import FormContext from "../../../../contexts/FormContext";
 
 describe("ArticoloForm", () => {

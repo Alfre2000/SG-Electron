@@ -5,6 +5,7 @@ import { FormField, FormControl, FormItem, FormLabel, FormMessage } from "@compo
 import RequiredSelect from "@components/form-components/RequiredSelect";
 import Select from "react-select";
 import { customStyle } from "./stylesSelect";
+import { cn } from "@lib/utils";
 
 type Option = { value: string | number; label: string | number };
 
@@ -12,13 +13,16 @@ type SearchSelectProps = {
   name: string;
   label?: string | boolean;
   options: Option[];
+  inputColumns?: number;
+  inputClassName?: string;
 };
 
-function SearchSelect({ name, label, options }: SearchSelectProps) {
+function SearchSelect({ name, label, options, inputColumns = 8, inputClassName }: SearchSelectProps) {
   const form = useFormContext();
 
-  const labelText = label || `${capitalize(name).replace("_", " ")}:`;
-  const colInput = label === false ? "col-span-12" : "col-span-8";
+  const labelText = label || `${capitalize(name).replaceAll("_", " ")}:`;
+  const colInput = label === false ? 12 : inputColumns;
+  const colLabel = label === false ? 0 : 12 - colInput;
   return (
     <FormField
       control={form.control}
@@ -29,15 +33,20 @@ function SearchSelect({ name, label, options }: SearchSelectProps) {
         const errorClass = fieldState.invalid ? "react-select-invalid" : "";
         const successClass = success ? "react-select-valid" : "";
         return (
-          <FormItem>
-            <div className="grid grid-cols-12 items-center">
+          <FormItem className="w-full">
+            <div className="grid grid-cols-12 items-center overflow-visible">
               {label !== false && (
-                <FormLabel className="col-span-4 text-left text-base font-normal">{labelText}</FormLabel>
+                <FormLabel
+                  style={{ gridColumn: `span ${colLabel} / span ${colLabel}` }}
+                  className="text-left text-base font-normal"
+                >
+                  {labelText}
+                </FormLabel>
               )}
-              <FormControl className={`${colInput}`}>
+              <FormControl style={{ gridColumn: `span ${colInput} / span ${colInput}` }}>
                 <div>
                   <RequiredSelect
-                    className={`react-select h-10 hover:border-[#e5e7eb] text-left ${errorClass} ${successClass}`}
+                    className={cn(`react-select flex flex-col justify-center items-center h-8 hover:border-[#e5e7eb] text-left ${errorClass} ${successClass}`, inputClassName)}
                     SelectComponent={Select}
                     placeholder=""
                     noOptionsMessage={() => "Nessun risultato"}
