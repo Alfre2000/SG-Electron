@@ -128,7 +128,7 @@ export const getDatiBollaMago = async (n_bolla) => {
     item.trattamento5,
     item.superficie,
     item.pesopezzo as peso,
-    CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
+    item.articolo_certificato as articolo_certificato,
     item.specifiche_it,
     item.specifiche_en,
     item.trattamento_certificato,
