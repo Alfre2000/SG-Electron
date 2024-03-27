@@ -1,4 +1,4 @@
-WITH DateRange AS (
+const query = `WITH DateRange AS (
     SELECT TOP (DATEDIFF(HOUR, DATEADD(week, -2, GETDATE()), GETDATE()))
         hourNum = DATEADD(HOUR, ROW_NUMBER() OVER(ORDER BY a.object_id) - 1, DATEADD(week, -2, GETDATE()))
     FROM sys.all_objects a
@@ -51,4 +51,6 @@ FROM FilteredHours f
 LEFT JOIN ProductionData p ON f.date = p.date AND f.hour = p.hour AND f.WeekCategory = p.WeekCategory
 WHERE f.IncludeHour = 1
     AND ISNULL(p.nTelai, 0) BETWEEN 1 AND 6
-GROUP BY f.WeekCategory;
+GROUP BY f.WeekCategory;`;
+
+export default query;

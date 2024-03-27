@@ -1,7 +1,8 @@
 import { AvgTelai, TimeSeriesProduction } from "@interfaces/isa";
+import TimeSeriesTelaiQuery from "@api/queries/impianti/time_series_telai";
+import AvgTelaiQuery from "@api/queries/impianti/avg_telai";
 
 const tedious = window?.require ? window.require("tedious") : null;
-const electron = window?.require ? window.require("electron") : null;
 
 const SERVER_IP = "192.168.1.229";
 
@@ -21,11 +22,10 @@ const serverConfigs = {
   },
 };
 
-const query = async (filePath: string, options: Record<string, string> = {}): Promise<string> => {
-  const txt = await electron.ipcRenderer.invoke("get-query", filePath);
+const query = (queryTxt: string, options: Record<string, string> = {}): string => {
   return Object.keys(options).reduce((acc, key) => {
     return acc.replace(`{{ ${key} }}`, options[key]);
-  }, txt);
+  }, queryTxt);
 };
 
 export const makeDatabaseRequest = async <T>(query: string) => {
@@ -98,11 +98,11 @@ export const getProduction = async (
     startDate: startDate.toISOString().split(".")[0],
     endDate: endDate.toISOString().split(".")[0],
   };
-  return await query("impianti/time_series_telai.sql", options).then((res) => {
-    return makeDatabaseRequest<TimeSeriesProduction>(res);
-  });
+  const queryTxt =query(TimeSeriesTelaiQuery, options)
+  return makeDatabaseRequest<TimeSeriesProduction>(queryTxt);
 };
 
 export const avgTelai = async () => {
-  return await query("impianti/avg_telai.sql").then((res) => makeDatabaseRequest<AvgTelai>(res));
+  const queryTxt =query(AvgTelaiQuery)
+  return makeDatabaseRequest<AvgTelai>(queryTxt);
 };

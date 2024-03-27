@@ -1,4 +1,4 @@
-DECLARE @GroupByHour INT = {{ groupByHour }};
+const query = `DECLARE @GroupByHour INT = {{ groupByHour }};
 DECLARE @StartDate DATETIME = '{{ startDate }}';
 DECLARE @EndDate DATETIME = '{{ endDate }}';
 
@@ -43,4 +43,6 @@ SELECT DISTINCT
 FROM FilteredHours f
 LEFT JOIN AggregatedProduction p ON f.date = p.date AND f.hourGroup = p.hourGroup
 WHERE f.IncludeHour = 1
-ORDER BY f.date, f.hourGroup;
+ORDER BY f.date, f.hourGroup;`;
+
+export default query;
