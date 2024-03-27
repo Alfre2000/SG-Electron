@@ -32,6 +32,7 @@ AggregatedProduction AS (
         AND PartNumber <> 'Vuoto'
         AND DateUnload IS NOT NULL
         AND DateFrom BETWEEN @StartDate AND @EndDate
+        AND (DATEDIFF(minute, DateFrom, DateUnload) > 10 OR State IN ('U', 'N'))
     GROUP BY
         CAST(DateFrom AS DATE),
         (DATEPART(hour, DateFrom) / @GroupByHour) * @GroupByHour
