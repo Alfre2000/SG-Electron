@@ -14,9 +14,10 @@ import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
-import VisualizzaDocumenti from "./pages/GestioneImpianto/VisualizzaDocumenti/VisualizzaDocumenti";
+import VisualizzaDocumenti from "./pages/DatabaseDocumenti/VisualizzaDocumenti/VisualizzaDocumenti";
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
 import GestisciDocumenti from "./pages/DatabaseDocumenti/GestisciDocumenti/GestisciDocumenti";
+import NuovaRichiesta from "./pages/CorrezioneBagni/GestisciRichieste/GestisciRichieste";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
 import AdminManutenzione from "./pages/AreaAdmin/Manutenzione/Manutenzione";
 import Cliente from "./pages/AreaAdmin/Cliente/Cliente";
@@ -110,6 +111,10 @@ function App() {
             <Route path="documenti/">
               <Route path="gestisci/" element={<GestisciDocumenti />}></Route>
               <Route path="visualizza/" element={<VisualizzaDocumenti />}></Route>
+            </Route>
+            {/* Correzione Bagni */}
+            <Route path="correzione-bagni/">
+              <Route path="gestisci-richieste/" element={<NuovaRichiesta />}></Route>
             </Route>
           </Routes>
         </HashRouter>

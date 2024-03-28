@@ -19,6 +19,7 @@ import {
   faIndustry,
   faFolderTree,
   faFilePdf,
+  faAtom,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -200,6 +201,17 @@ const navbarDatabaseDocumenti = (user: UserContextType["user"]["user"]) => {
   return items;
 };
 
+const navbarCorrezioneBagni = () => {
+  return [
+    {
+      title: "Richieste",
+      icon: faAtom,
+      links: [{ name: "Richieste", link: "/correzione-bagni/gestisci-richieste/" }],
+    },
+  
+  ];
+};
+
 export const useGetNavItems = () => {
   const user = useUserContext();
   const currentUrl = window.location.hash;
@@ -219,6 +231,9 @@ export const useGetNavItems = () => {
       break;
     case "documenti":
       navFn = navbarDatabaseDocumenti;
+      break;
+    case "correzione-bagni":
+      navFn = navbarCorrezioneBagni;
       break;
     default:
       navFn = () => [];
@@ -242,6 +257,8 @@ export const useGetTitle = () => {
       return "Area Admin";
     case "documenti":
       return "Database Documenti";
+    case "correzione-bagni":
+      return "Correzione Bagni";
     default:
       return "";
   }
