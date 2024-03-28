@@ -18,6 +18,7 @@ import {
   faTags,
   faIndustry,
   faFolderTree,
+  faFilePdf,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -49,12 +50,23 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       icon: faChartLine,
       links: [{ name: "Prossime Manutenzioni", link: "/manutenzione/prossime/" }],
     },
+    {
+      title: "Documenti",
+      icon: faFilePdf,
+      links: [
+        { name: "Schede di sicurezza", link: "/manutenzione/schede-sicurezza/" },
+        { name: "Schede tecniche", link: "/manutenzione/schede-tecniche/" },
+        { name: "Metodi di analisi", link: "/manutenzione/modalità-analisi/" },
+        { name: "Istruzioni controlli finali", link: "/manutenzione/controlli-finali/" },
+        { name: "Istruzioni di sicurezza", link: "/manutenzione/istruzioni-sicurezza/" },
+      ],
+    },
   ];
   // Se non è l'impianto Ossido, rimuovi le manutenzioni e aggiungi la scheda dell'ossido
   if (!user.impianto?.nome.toLowerCase().includes("ossido")) {
     items.splice(2, 1); // Remove Manutenzioni
     items[2].links.splice(0, 1); // Remove Prossime Manutenzioni
-    items.pop(); // Remove Informazioni
+    items.splice(2, 1); // Remove Informazioni
   } else {
     items[0].links.splice(1, 1); // Remove Schede in sospeso
     items.splice(0, 0, {
@@ -177,7 +189,7 @@ const navbarAreaAdmin = () => {
 
 export const useGetNavItems = () => {
   const user = useUserContext();
-  const currentUrl = window.location.hash
+  const currentUrl = window.location.hash;
   let navFn;
   switch (currentUrl.split("/")[1]) {
     case "manutenzione":
@@ -202,10 +214,10 @@ export const useGetNavItems = () => {
 
 export const useGetTitle = () => {
   const user = useUserContext();
-  const currentUrl = window.location.hash
+  const currentUrl = window.location.hash;
   switch (currentUrl.split("/")[1]) {
     case "manutenzione":
-      return `Gestione ${user?.user?.user?.impianto?.nome || "Impianti"}`;;
+      return `Gestione ${user?.user?.user?.impianto?.nome || "Impianti"}`;
     case "certificati-qualita":
       return "Certificati Qualità";
     case "andamento-produzione":

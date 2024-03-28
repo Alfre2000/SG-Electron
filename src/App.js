@@ -14,6 +14,7 @@ import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
+import Documenti from "./pages/GestioneImpianto/Documenti/Documenti";
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
 import Documento from "./pages/AreaAdmin/Documento/Documento";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
@@ -73,6 +74,11 @@ function App() {
               <Route path="record-lavorazione-in-sospeso/" element={<LavorazioniInSospeso />}></Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
               <Route path="record-scheda-impianto/" element={<RecordSchedaImpianto />}></Route>
+              <Route path="schede-sicurezza/" element={<Documenti directory="Schede Sicurezza" />}></Route>
+              <Route path="istruzioni-sicurezza/" element={<Documenti directory="Istruzioni operative della sicurezza" />}></Route>
+              <Route path="schede-tecniche/" element={<Documenti directory="Schede tecniche" />}></Route>
+              <Route path="controlli-finali/" element={<Documenti directory="Istruzioni Controlli Finali" />}></Route>
+              <Route path="modalità-analisi/" element={<Documenti directory="Metodi di analisi" />}></Route>
             </Route>
             {/* Area Admin */}
             <Route path="area-admin/">
