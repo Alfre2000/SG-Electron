@@ -32,9 +32,11 @@ export const URLS = {
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',
     MATERIALI: BASE_PATH + '/base/materiali/',
     TRAVERSINI: BASE_PATH + '/base/traversini/',
+    DOCUMENTI: BASE_PATH + '/base/documenti/',
 
     CLIENTI_MAPPA: BASE_PATH + '/base/mappa-clienti/',
     PREZZI_METALLI: BASE_PATH + '/base/prezzi-metalli/',
+    UPDATE_DOCUMENTO: BASE_PATH + '/base/update-documento/',
 
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni?pre_lavorazione=false',

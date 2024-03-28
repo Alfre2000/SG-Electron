@@ -17,6 +17,7 @@ import {
   faListCheck,
   faTags,
   faIndustry,
+  faFolderTree,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -130,6 +131,11 @@ const navbarAndamentoProduzione = () => {
 
 const navbarAreaAdmin = () => {
   let items = [
+    {
+      title: "Documenti",
+      icon: faFolderTree,
+      links: [{ name: "Documenti", link: "/area-admin/documento/" }],
+    },
     {
       title: "Scheda controllo",
       icon: faFileInvoice,

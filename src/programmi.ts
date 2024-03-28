@@ -13,7 +13,7 @@ export const PROGRAMMI = {
     "Programma 4": {name: 'Programma 4', link: '#', icon: WorkInProgress},
     "Programma 5": {name: 'Programma 5', link: '#', icon: WorkInProgress},
     "Programma 6": {name: 'Programma 6', link: '#', icon: WorkInProgress},
-    "Area Admin": {name: 'Area Admin', link: '/area-admin/scheda-controllo/', icon: Admin},
+    "Area Admin": {name: 'Area Admin', link: '/area-admin/documento/', icon: Admin},
     "Certificati Qualità": {name: 'Certificati Qualità', link: '/certificati-qualita/record-certificato/', icon: Certificate},
     "Andamento Produzione": {name: 'Andamento Produzione', link: '/andamento-produzione/focus-cliente/', icon: Monitoring},
 }

@@ -37,7 +37,6 @@ function ArticoliInput() {
     setArticoli(articoli.filter((articolo) => articolo.id !== selectedArticolo.id));
   };
 
-  console.log(articoli, initialData);
   const idSelezionati = articoli.map((articolo) => articolo.id);
   const articoliPossibili = results
     ? results.filter((articolo) => {

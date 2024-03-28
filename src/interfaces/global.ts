@@ -149,3 +149,12 @@ export type PrezziMetalli = {
   Stagno: number;
   Zinco: number;
 }
+
+export type Documento = {
+  id: string;
+  nome: string;
+  path: string;
+  file: string;
+  data_creazione: string;
+  ultima_modifica: string;
+}

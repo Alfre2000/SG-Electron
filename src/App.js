@@ -15,6 +15,7 @@ import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
+import Documento from "./pages/AreaAdmin/Documento/Documento";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
 import AdminManutenzione from "./pages/AreaAdmin/Manutenzione/Manutenzione";
 import Cliente from "./pages/AreaAdmin/Cliente/Cliente";
@@ -83,6 +84,7 @@ function App() {
               <Route path="cliente/" element={<Cliente />}></Route>
               <Route path="operatore/" element={<Operatore />}></Route>
               <Route path="certificato/" element={<Certificato />}></Route>
+              <Route path="documento/" element={<Documento />}></Route>
             </Route>
             {/* Certificati Qualità */}
             <Route path="certificati-qualita/">

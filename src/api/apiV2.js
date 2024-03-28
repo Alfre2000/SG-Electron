@@ -2,8 +2,8 @@ import axios from "axios";
 import { getHeaders } from "./utils";
 import { apiGet } from "./api";
 
-export const apiPost = async (url, body = {}) => {
-  return axios.post(url, body, { headers: getHeaders() });
+export const apiPost = async (url, body = {}, config) => {
+  return axios.post(url, body, { ...config, headers: { ...getHeaders(), ...config.headers } });
 };
 
 export const apiDelete = async (url) => {
@@ -24,4 +24,4 @@ export const apiUpdateWithGet = async (url, body) => {
   const finalBody = { ...data, ...body };
   console.log("finalBody", finalBody);
   return axios.patch(url, finalBody, { headers: getHeaders() });
-}
+};

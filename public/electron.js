@@ -174,7 +174,7 @@ app.whenReady().then(() => {
       }
   }))
   })
-  ipcMain.handle('open-file', (_, link) => {
+  ipcMain.handle('open-file', (_, link, sidebar=true) => {
     const win = new BrowserWindow({
       width: 700, minWidth: 700,
       height: 800, minHeight: 500,
@@ -186,7 +186,11 @@ app.whenReady().then(() => {
       show: false,
     });
     win.once('ready-to-show', win.show)
-    win.loadURL(link)
+    if (sidebar) {
+      win.loadURL(link)
+    } else {
+      win.loadURL(link + '#toolbar=0&navpanes=0')
+    }
   })
 });
 
