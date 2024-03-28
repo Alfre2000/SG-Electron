@@ -56,7 +56,6 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       links: [
         { name: "Schede di sicurezza", link: "/manutenzione/schede-sicurezza/" },
         { name: "Schede tecniche", link: "/manutenzione/schede-tecniche/" },
-        { name: "Metodi di analisi", link: "/manutenzione/modalità-analisi/" },
         { name: "Istruzioni controlli finali", link: "/manutenzione/controlli-finali/" },
         { name: "Istruzioni di sicurezza", link: "/manutenzione/istruzioni-sicurezza/" },
       ],
@@ -144,11 +143,6 @@ const navbarAndamentoProduzione = () => {
 const navbarAreaAdmin = () => {
   let items = [
     {
-      title: "Documenti",
-      icon: faFolderTree,
-      links: [{ name: "Documenti", link: "/area-admin/documento/" }],
-    },
-    {
       title: "Scheda controllo",
       icon: faFileInvoice,
       links: [{ name: "Scheda controllo", link: "/area-admin/scheda-controllo/" }],
@@ -187,6 +181,25 @@ const navbarAreaAdmin = () => {
   return items;
 };
 
+const navbarDatabaseDocumenti = (user: UserContextType["user"]["user"]) => {
+  let items = [
+    {
+      title: "Visualizza",
+      icon: faFilePdf,
+      links: [{ name: "Documenti", link: "/documenti/visualizza/" }],
+    },
+    {
+      title: "Gestisci",
+      icon: faFolderTree,
+      links: [{ name: "Gestisci Documenti", link: "/documenti/gestisci/" }],
+    },
+  ];
+  if (!user.is_staff) {
+    items.pop(); // Remove Gestisci
+  }
+  return items;
+};
+
 export const useGetNavItems = () => {
   const user = useUserContext();
   const currentUrl = window.location.hash;
@@ -203,6 +216,9 @@ export const useGetNavItems = () => {
       break;
     case "area-admin":
       navFn = navbarAreaAdmin;
+      break;
+    case "documenti":
+      navFn = navbarDatabaseDocumenti;
       break;
     default:
       navFn = () => [];
@@ -224,6 +240,8 @@ export const useGetTitle = () => {
       return "Andamento Produzione";
     case "area-admin":
       return "Area Admin";
+    case "documenti":
+      return "Database Documenti";
     default:
       return "";
   }

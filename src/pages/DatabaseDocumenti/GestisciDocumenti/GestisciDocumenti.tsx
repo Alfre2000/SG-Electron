@@ -32,11 +32,11 @@ import {
   BreadcrumbSeparator,
 } from "@components/shadcn/BreadCrumb";
 import { SlashIcon } from "@radix-ui/react-icons";
-import Draggable from "@pages/AreaAdmin/Documento/Draggable";
+import Draggable from "@pages/DatabaseDocumenti/GestisciDocumenti/Draggable";
 import InputNome from "./InputNome";
 const electron = window?.require ? window.require("electron") : null;
 
-function Documento() {
+function GestisciDocumenti() {
   const [filter, setFilter] = useState("");
   const [path, setPath] = useState("");
   const [isDeleteOpen, setIsDeleteOpen] = useState("");
@@ -95,15 +95,15 @@ function Documento() {
       },
     }
   );
-  const completePath = ["Documenti di Supporto", ...path.split("/").filter((p) => p !== "")];
+  const completePath = ["Database Documenti", ...path.split("/").filter((p) => p !== "")];
   return (
     <Wrapper>
       <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full relative">
         <div className="flex justify-between items-center">
-          <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">Documenti di Supporto</h2>
+          <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">Database Documenti</h2>
         </div>
         <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
-        {documentiQuery.isLoading && <Loading />}
+        {documentiQuery.isLoading && <Loading className="mt-40" />}
         {documentiQuery.isError && <Error />}
         {documentiQuery.isSuccess && filteredDocumenti && (
           <Draggable className="relative my-3 min-h-[70vh]" path={path}>
@@ -306,4 +306,4 @@ function Documento() {
   );
 }
 
-export default Documento;
+export default GestisciDocumenti;

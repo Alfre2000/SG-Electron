@@ -1,6 +1,6 @@
 import { Progress } from "@components/shadcn/Progress";
 import { cn } from "@lib/utils";
-import { useUploadFiles } from "@pages/AreaAdmin/Documento/upload";
+import { useUploadFiles } from "@pages/DatabaseDocumenti/GestisciDocumenti/upload";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { URLS } from "urls";

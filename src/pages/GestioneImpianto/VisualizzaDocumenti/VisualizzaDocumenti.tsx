@@ -21,18 +21,19 @@ import Loading from "@components/Loading/Loading";
 const electron = window?.require ? window.require("electron") : null;
 
 type DocumentiProps = {
-  directory: string;
-}
+  directory?: string;
+};
 
-function Documenti({ directory }: DocumentiProps) {
-  console.log(directory);
-  
+function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
   const [filter, setFilter] = React.useState("");
   const [path, setPath] = React.useState(directory);
-  const schedeQuery = useQuery<Documento[]>(
-    URLS.DOCUMENTI + `?path=${directory}/&pdf=True`
-  );
-  const completePath = path.split("/").filter((p) => p !== "");
+  const queryString = directory ? `?path=${directory}&pdf=True` : "?pdf=True";
+  const schedeQuery = useQuery<Documento[]>(URLS.DOCUMENTI + queryString);
+  React.useEffect(() => {
+    setPath(directory);
+  }, [directory]);
+  let completePath = path.split("/").filter((p) => p !== "");
+  if (!directory) completePath.unshift("Database Documenti");
   const directories = schedeQuery.data
     ? [
         ...findAdjacentDirectories(
@@ -48,7 +49,7 @@ function Documenti({ directory }: DocumentiProps) {
     <Wrapper>
       <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full relative">
         <div className="flex justify-between items-center">
-          <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">{directory}</h2>
+          <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">{directory || "Database Documenti"}</h2>
         </div>
         <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
         {schedeQuery.isLoading && <Loading className="mt-40" />}
@@ -174,4 +175,4 @@ function Documenti({ directory }: DocumentiProps) {
   );
 }
 
-export default Documenti;
+export default VisualizzaDocumenti;

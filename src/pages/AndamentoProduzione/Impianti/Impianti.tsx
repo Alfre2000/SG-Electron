@@ -70,7 +70,7 @@ function Impianti() {
           <TabsList>
             {impiantiQuery.data &&
               impiantiQuery.data.map((impianto) => (
-                <TabsTrigger disabled={impianto.nome !== defaultImpianto} value={impianto.nome}>
+                <TabsTrigger disabled={impianto.nome !== defaultImpianto} value={impianto.nome} key={impianto.id}>
                   {impianto.nome}
                 </TabsTrigger>
               ))}
