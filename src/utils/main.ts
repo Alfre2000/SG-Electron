@@ -7,6 +7,10 @@ export const toCamelCase = <T>(str: T) => {
   return str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
 };
 
+export const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 type RecursiveObject = { [key: string]: any };
 
 export function removeIdRecursively(data: RecursiveObject | RecursiveObject[]): void {
