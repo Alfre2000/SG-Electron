@@ -61,10 +61,10 @@ function GestisciRichieste() {
             </CardContent>
           </Card>
           {vecchieQuery.isSuccess && vecchieQuery.data.results.length > 0 && (
-            <Card className="bg-red-500/85 text-white shadow-red-600">
+            <Card className="shadow-red-600 shadow-md" style={{boxShadow: "0px 0px 5px 5px rgba(245, 32, 32, 0.2)"}}>
               <CardHeader>
-                <CardTitle>Richieste correzioni non eseguite</CardTitle>
-                <CardDescription className="text-white">
+                <CardTitle className="text-red-700">Richieste correzioni in ritardo</CardTitle>
+                <CardDescription>
                   Qui è possibile visualizzare le richieste di correzione dei bagni che non sono state ancora fatte pur essendo passato più di un giorno dal momento della richiesta.
                 </CardDescription>
               </CardHeader>
@@ -72,12 +72,12 @@ function GestisciRichieste() {
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-inherit">
-                      <TableHead className="text-white">Data</TableHead>
-                      <TableHead className="text-white">Impianto</TableHead>
-                      <TableHead className="text-white">Vasca</TableHead>
-                      <TableHead className="text-white">Prodotto</TableHead>
-                      <TableHead className="text-white">Quantità</TableHead>
-                      <TableHead className="text-center text-white">Eseguita</TableHead>
+                      <TableHead>Data</TableHead>
+                      <TableHead>Impianto</TableHead>
+                      <TableHead>Vasca</TableHead>
+                      <TableHead>Prodotto</TableHead>
+                      <TableHead>Quantità</TableHead>
+                      <TableHead className="text-center">Eseguita</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
