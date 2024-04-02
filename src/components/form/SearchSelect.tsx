@@ -61,7 +61,7 @@ function SearchSelect({ name, label, options, inputColumns = 8, inputClassName }
                     onChange={(val: Option) => field.onChange(val?.value)}
                     value={options?.find((option) => option.value === field?.value)}
                   />
-                  <FormMessage className="-mt-1.5 text-xs text-destructive font-normal" />
+                  <FormMessage className="mt-1 text-xs text-destructive font-normal" />
                 </div>
               </FormControl>
             </div>

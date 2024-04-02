@@ -17,6 +17,54 @@ const { motion } = require("framer-motion");
 function RecordLavorazione() {
   const { data: schedaImpianto } = useImpiantoQuery({ queryKey: URLS.ULTIMA_SCHEDA_IMPIANTO });
   const isSchedaImpiantoOld = schedaImpianto?.id && !isDateRecent(schedaImpianto.data, 8);
+  const richiesteQuery = useImpiantoQuery({ queryKey: [URLS.RICHIESTE_CORREZIONE_BAGNO, { eseguita: "false" }] });
+
+  const azioniRichieste = [];
+
+  if (isSchedaImpiantoOld) {
+    azioniRichieste.push(
+      <Alert variant="danger" className="py-2 mb-2 text-left pl-[7%] inline-flex items-center w-full">
+        <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
+        <b className="w-[30%]">Attenzione:</b>
+        <div className="pl-4 w-[55%] pr-2"> compilare la scheda dell'impianto !</div>
+        <Link to="/manutenzione/record-scheda-impianto/">
+          <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
+        </Link>
+      </Alert>
+    );
+  }
+  richiesteQuery.data?.results?.forEach((richiesta) => {
+    azioniRichieste.push(
+      <Alert variant="danger">
+        <div className="text-left pl-[3.3rem] inline-flex items-center w-full">
+          <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
+          <b className="w-[30%]">Richiesta correzione bagno:</b>
+          <div className="pl-4 w-[55%] pr-2"></div>
+          <Link to={`/manutenzione/richiesta-correzione-bagno/${richiesta.id}`}>
+            <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
+          </Link>
+        </div>
+        <div className="ml-28 text-left text-sm">
+          <div className="flex space-x-5 justify-start items-start">
+            <span>
+              <b>• Vasca</b>: {richiesta.vasca}
+            </span>
+            <span>
+              <b>• Prodotto</b>: {richiesta.prodotto}
+            </span>
+            <span>
+              <b>• Quantità</b>: {richiesta.quantità}
+            </span>
+          </div>
+          {richiesta.note && (
+            <span>
+              <b>• Note</b>: {richiesta.note}
+            </span>
+          )}
+        </div>
+      </Alert>
+    );
+  });
   return (
     <PageContext
       getURL={URLS.RECORD_LAVORAZIONI_NOT_OSSIDO}
@@ -28,21 +76,16 @@ function RecordLavorazione() {
       <Wrapper>
         <Container className="text-center my-10 lg:mx-2 xl:mx-6 2xl:mx-12">
           <PageTitle>Scheda di Controllo</PageTitle>
-          {isSchedaImpiantoOld && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Alert variant="danger" className="mt-8 -mb-2 py-2 px-20 text-left inline-flex items-center">
-                <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
-                <b>Attenzione:</b>
-                <div className="pl-2 pr-16"> compilare la scheda dell'impianto !</div>
-                <Link to="/manutenzione/record-scheda-impianto/">
-                  <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
-                </Link>
-              </Alert>
-            </motion.div>
+          {azioniRichieste.length > 0 && (
+            <div className="mt-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {azioniRichieste}
+              </motion.div>
+            </div>
           )}
           <Row className="mt-6">
             <Col xs={12}>

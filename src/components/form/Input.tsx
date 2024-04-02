@@ -6,15 +6,17 @@ import { capitalize } from "@utils/main";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { cn } from "@lib/utils";
 
 type InputProps = {
   name: string;
   label?: string | boolean;
   type?: "text" | "password" | "email" | "number";
   inputColumns?: number;
+  className?: string;
 };
 
-function Input({ name, label, type, inputColumns = 8 }: InputProps) {
+function Input({ name, label, type, inputColumns = 8, className }: InputProps) {
   const form = useFormContext();
 
   const labelText = label || `${capitalize(name).replaceAll("_", " ")}:`;
@@ -43,10 +45,10 @@ function Input({ name, label, type, inputColumns = 8 }: InputProps) {
                   <div className="relative">
                     <ShadcnInput
                       {...field}
-                      // variant={variant}
+                      variant={variant}
                       disabled={formState.disabled}
                       type={type}
-                      className="h-8 w-full rounded-sm disabled:bg-[#eaecef] disabled:opacity-1 disabled:border-gray-300 disabled:cursor-auto"
+                      className={cn("h-8 w-full rounded-sm disabled:bg-[#eaecef] disabled:opacity-1 disabled:border-gray-300 disabled:cursor-auto", className)}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                       {fieldState.invalid ? (

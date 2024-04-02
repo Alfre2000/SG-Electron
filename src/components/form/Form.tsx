@@ -17,11 +17,15 @@ type FormProps<T extends ZodTypeAny> = {
   schema: T;
   initialData?: z.infer<T>;
   disabled?: boolean;
+  onSuccess?: () => void;
 };
 
-function Form<T extends ZodTypeAny>({ children, endpoint, schema, initialData, disabled = false }: FormProps<T>) {
+function Form<T extends ZodTypeAny>({ children, endpoint, schema, initialData, disabled = false, onSuccess }: FormProps<T>) {
   const [key, setKey] = React.useState(0);
-  const { copyData, setCopyData } = usePageContext();
+  const pageContext = usePageContext();
+  const copyData = pageContext?.copyData;
+  const setCopyData = pageContext?.setCopyData;
+
   initialData = initialData || copyData;
 
   const queryClient = useQueryClient();
@@ -46,7 +50,8 @@ function Form<T extends ZodTypeAny>({ children, endpoint, schema, initialData, d
       
       form.reset();
       setKey((prev) => prev + 1);
-      setCopyData(null);
+      if (setCopyData) setCopyData(null);
+      if (onSuccess) onSuccess();
     },
     onError: (error) => onError(error),
   });
@@ -58,7 +63,8 @@ function Form<T extends ZodTypeAny>({ children, endpoint, schema, initialData, d
         queryClient.invalidateQueries(endpoint);
         toast.success("Record modificato con successo !");
         setKey((prev) => prev + 1);
-      },
+        if (onSuccess) onSuccess();
+    },
       onError: (error) => onError(error),
     }
   );

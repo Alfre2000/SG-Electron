@@ -158,3 +158,17 @@ export type Documento = {
   data_creazione: string;
   ultima_modifica: string;
 }
+
+export type RichiestaCorrezioneBagno = {
+  id: string;
+  impianto: number;
+  vasca: string;
+  prodotto: string;
+  quantità: string;
+  note: string;
+  data: string;
+
+  note_completamento: string;
+  operatore: number;
+  data_completamento: string;
+}

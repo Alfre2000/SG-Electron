@@ -36,8 +36,7 @@ function TabellaNestedItems({ name, colonne }: TabellaNestedItemsProps) {
     }
   }, [field, colonne]);
   return (
-    // <Table containerClassName="overflow-visible" className="border align-middle text-sm text-center mb-3">
-    <Table className="border align-middle text-sm text-center mb-3">
+    <Table containerClassName="overflow-visible" className="border align-middle text-sm text-center mb-3">
       <TableHeader>
         <TableRow className="hover:bg-white">
           {colonne.map((colonna) => {

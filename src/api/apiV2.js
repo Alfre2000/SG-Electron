@@ -3,7 +3,7 @@ import { getHeaders } from "./utils";
 import { apiGet } from "./api";
 
 export const apiPost = async (url, body = {}, config) => {
-  return axios.post(url, body, { ...config, headers: { ...getHeaders(), ...config.headers } });
+  return axios.post(url, body, { ...config, headers: { ...getHeaders(), ...config?.headers } });
 };
 
 export const apiDelete = async (url) => {

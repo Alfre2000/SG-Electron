@@ -56,7 +56,7 @@ const FileField = React.forwardRef(({ name, label, inputColumns = 8 }: FileField
                     <ShadcnInput
                       {...field}
                       value={field.value?.fileName}
-                      // variant={variant}
+                      variant={variant}
                       disabled={formState.disabled}
                       type="file"
                       className="h-8 pt-1 w-full rounded-sm disabled:bg-[#eaecef] disabled:opacity-1 disabled:border-gray-300 disabled:cursor-auto"

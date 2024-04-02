@@ -14,6 +14,7 @@ import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
+import CorrezioneBagno from "./pages/GestioneImpianto/CorrezioneBagno/CorrezioneBagno";
 import VisualizzaDocumenti from "./pages/DatabaseDocumenti/VisualizzaDocumenti/VisualizzaDocumenti";
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
 import GestisciDocumenti from "./pages/DatabaseDocumenti/GestisciDocumenti/GestisciDocumenti";
@@ -79,6 +80,7 @@ function App() {
               <Route path="istruzioni-sicurezza/" element={<VisualizzaDocumenti directory="Istruzioni operative della sicurezza" />}></Route>
               <Route path="schede-tecniche/" element={<VisualizzaDocumenti directory="Schede tecniche" />}></Route>
               <Route path="controlli-finali/" element={<VisualizzaDocumenti directory="Istruzioni Controlli Finali" />}></Route>
+              <Route path="richiesta-correzione-bagno/:richiestaID/" element={<CorrezioneBagno />}></Route>
             </Route>
             {/* Area Admin */}
             <Route path="area-admin/">

@@ -7,6 +7,7 @@ import Certificate from "./images/certificate.png";
 import Monitoring from "./images/monitoring.png";
 import Database from "./images/database-storage.png";
 import Chemistry from "./images/chemistry.png";
+import { URLS } from "urls";
 
 export const PROGRAMMI = {
     "Gestione Impianto": {name: 'Gestione Impianto', link: '/manutenzione/selezione-impianto/', icon: ToolBox},
@@ -19,7 +20,7 @@ export const PROGRAMMI = {
     "Certificati Qualità": {name: 'Certificati Qualità', link: '/certificati-qualita/record-certificato/', icon: Certificate},
     "Andamento Produzione": {name: 'Andamento Produzione', link: '/andamento-produzione/focus-cliente/', icon: Monitoring},
     "Database Documenti": {name: 'Database Documenti', link: '/documenti/visualizza/', icon: Database},
-    "Correzione Bagni": {name: 'Correzione Bagni', link: '/correzione-bagni/gestisci-richieste/', icon: Chemistry},
+    "Correzione Bagni": {name: 'Correzione Bagni', link: '/correzione-bagni/gestisci-richieste/', icon: Chemistry, alertEndpoint: URLS.RICHIESTE_CORREZIONE_BAGNO + "?vecchie=true"},
 }
 
 export type ProgrammiNames = keyof typeof PROGRAMMI;
