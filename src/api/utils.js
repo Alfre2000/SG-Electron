@@ -1,5 +1,7 @@
 export const getHeaders = (auth = true) => {
-  const headers = {};
+  const headers = {
+    'App-Version': process.env.REACT_APP_VERSION || 'unknown'
+  };
   if (auth) {
     const authToken = JSON.parse(localStorage.getItem("user"))?.key;
     headers["Authorization"] = `Token ${authToken}`;
