@@ -197,7 +197,7 @@ const navbarDatabaseDocumenti = (user: UserContextType["user"]["user"]) => {
       links: [{ name: "Gestisci Documenti", link: "/documenti/gestisci/" }],
     },
   ];
-  if (!user.is_staff) {
+  if (!user.is_staff && user.username !== "vincenzo") {
     items.pop(); // Remove Gestisci
   }
   return items;
