@@ -178,3 +178,9 @@ export type RichiestaCorrezioneBagno = {
   operatore: number;
   data_completamento: string;
 }
+
+export type Versione = {
+  id: string;
+  username: string;
+  versione: string;
+}

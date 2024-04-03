@@ -20,6 +20,8 @@ import {
   faFolderTree,
   faFilePdf,
   faAtom,
+  faComputer,
+  faCodeBranch,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -212,6 +214,17 @@ const navbarCorrezioneBagni = () => {
   ];
 };
 
+const navbarDeveloper = () => {
+  return [
+    {
+      title: "Versioni",
+      icon: faCodeBranch,
+      links: [{ name: "Versioni", link: "/developer/versioni-programma/" }],
+    },
+  
+  ];
+};
+
 export const useGetNavItems = () => {
   const user = useUserContext();
   const currentUrl = window.location.hash;
@@ -234,6 +247,9 @@ export const useGetNavItems = () => {
       break;
     case "correzione-bagni":
       navFn = navbarCorrezioneBagni;
+      break;
+    case "developer":
+      navFn = navbarDeveloper;
       break;
     default:
       navFn = () => [];
@@ -259,6 +275,8 @@ export const useGetTitle = () => {
       return "Database Documenti";
     case "correzione-bagni":
       return "Correzione Bagni";
+    case "developer":
+      return "Developer";
     default:
       return "";
   }

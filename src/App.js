@@ -37,6 +37,7 @@ import VerificaPrezzi from "./pages/CertificatiQualità/VerificaPrezzi/VerificaP
 import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
 import MappaClienti from "@pages/AndamentoProduzione/MappaClienti/MappaClienti";
 import Impianti from "@pages/AndamentoProduzione/Impianti/Impianti";
+import VersioniProgramma from "@pages/Developer/VersioniProgramma/VersioniProgramma";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -117,6 +118,10 @@ function App() {
             {/* Correzione Bagni */}
             <Route path="correzione-bagni/">
               <Route path="gestisci-richieste/" element={<NuovaRichiesta />}></Route>
+            </Route>
+            {/* Developer */}
+            <Route path="developer/">
+              <Route path="versioni-programma/" element={<VersioniProgramma />}></Route>
             </Route>
           </Routes>
         </HashRouter>

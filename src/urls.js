@@ -35,6 +35,7 @@ export const URLS = {
     MATERIALI: BASE_PATH + '/base/materiali/',
     TRAVERSINI: BASE_PATH + '/base/traversini/',
     DOCUMENTI: BASE_PATH + '/base/documenti/',
+    VERSIONI: BASE_PATH + '/base/versioni/',
 
     CLIENTI_MAPPA: BASE_PATH + '/base/mappa-clienti/',
     PREZZI_METALLI: BASE_PATH + '/base/prezzi-metalli/',

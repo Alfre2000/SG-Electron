@@ -7,6 +7,7 @@ import Certificate from "./images/certificate.png";
 import Monitoring from "./images/monitoring.png";
 import Database from "./images/database-storage.png";
 import Chemistry from "./images/chemistry.png";
+import Coding from "./images/coding.png";
 import { URLS } from "urls";
 
 export const PROGRAMMI = {
@@ -21,6 +22,7 @@ export const PROGRAMMI = {
     "Andamento Produzione": {name: 'Andamento Produzione', link: '/andamento-produzione/focus-cliente/', icon: Monitoring},
     "Database Documenti": {name: 'Database Documenti', link: '/documenti/visualizza/', icon: Database},
     "Correzione Bagni": {name: 'Correzione Bagni', link: '/correzione-bagni/gestisci-richieste/', icon: Chemistry, alertEndpoint: [URLS.RICHIESTE_CORREZIONE_BAGNO, {vecchie: true}]},
+    "Developer": {name: 'Developer', link: '/developer/versioni-programma/', icon: Coding },
 }
 
 export type ProgrammiNames = keyof typeof PROGRAMMI;
