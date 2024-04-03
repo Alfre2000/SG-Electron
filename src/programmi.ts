@@ -20,7 +20,7 @@ export const PROGRAMMI = {
     "Certificati Qualità": {name: 'Certificati Qualità', link: '/certificati-qualita/record-certificato/', icon: Certificate},
     "Andamento Produzione": {name: 'Andamento Produzione', link: '/andamento-produzione/focus-cliente/', icon: Monitoring},
     "Database Documenti": {name: 'Database Documenti', link: '/documenti/visualizza/', icon: Database},
-    "Correzione Bagni": {name: 'Correzione Bagni', link: '/correzione-bagni/gestisci-richieste/', icon: Chemistry, alertEndpoint: URLS.RICHIESTE_CORREZIONE_BAGNO + "?vecchie=true"},
+    "Correzione Bagni": {name: 'Correzione Bagni', link: '/correzione-bagni/gestisci-richieste/', icon: Chemistry, alertEndpoint: [URLS.RICHIESTE_CORREZIONE_BAGNO, {vecchie: true}]},
 }
 
 export type ProgrammiNames = keyof typeof PROGRAMMI;

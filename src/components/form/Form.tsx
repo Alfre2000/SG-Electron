@@ -95,7 +95,8 @@ function Form<T extends ZodTypeAny>({ children, endpoint, schema, initialData, d
     }
   };
 
-  const onInvalidForm = () => {
+  const onInvalidForm = (e: any) => {
+    console.log(e);
     toast.error("Si è verificato un errore !");
     setTimeout(() => {
       form.clearErrors();

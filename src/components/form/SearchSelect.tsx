@@ -7,7 +7,7 @@ import Select from "react-select";
 import { customStyle } from "./stylesSelect";
 import { cn } from "@lib/utils";
 
-type Option = { value: string | number; label: string | number };
+export type Option = { value: string | number; label: string | number };
 
 type SearchSelectProps = {
   name: string;
@@ -15,9 +15,10 @@ type SearchSelectProps = {
   options: Option[];
   inputColumns?: number;
   inputClassName?: string;
+  onChange?: (option: Option) => void;
 };
 
-function SearchSelect({ name, label, options, inputColumns = 8, inputClassName }: SearchSelectProps) {
+function SearchSelect({ name, label, options, inputColumns = 8, inputClassName, onChange }: SearchSelectProps) {
   const form = useFormContext();
 
   const labelText = label || `${capitalize(name).replaceAll("_", " ")}:`;
@@ -58,7 +59,10 @@ function SearchSelect({ name, label, options, inputColumns = 8, inputClassName }
                     inputId={name}
                     error={fieldState.invalid}
                     errors={errors}
-                    onChange={(val: Option) => field.onChange(val?.value)}
+                    onChange={(val: Option) => {
+                      field.onChange(val?.value)
+                      if (onChange) onChange(val);
+                    }}
                     value={options?.find((option) => option.value === field?.value)}
                   />
                   <FormMessage className="mt-1 text-xs text-destructive font-normal" />

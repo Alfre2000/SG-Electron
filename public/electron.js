@@ -135,6 +135,19 @@ app.whenReady().then(() => {
       });
     });
   })
+  ipcMain.handle('print-pdf-2', (event, data, name) => {
+    const downloadsPath = app.getPath('downloads');
+    const filePath = path.join(downloadsPath, name);
+    fs.writeFile(filePath, data, (err) => {
+      if (err) {
+        console.error('Failed to save the file:', err);
+      } else {
+        let printWindow = new BrowserWindow({ show: true });
+        printWindow.loadURL(`file://${filePath}`);
+      }
+    });
+
+  })
   ipcMain.handle('save-zip', (_, file, defaultName) => {
     const win = BrowserWindow.getFocusedWindow()
     const defaultPath = app.getPath('desktop') + '/' + defaultName

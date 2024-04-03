@@ -35,33 +35,13 @@ function RecordLavorazione() {
   }
   richiesteQuery.data?.results?.forEach((richiesta) => {
     azioniRichieste.push(
-      <Alert variant="danger">
-        <div className="text-left pl-[3.3rem] inline-flex items-center w-full">
-          <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
-          <b className="w-[30%]">Richiesta correzione bagno:</b>
-          <div className="pl-4 w-[55%] pr-2"></div>
-          <Link to={`/manutenzione/richiesta-correzione-bagno/${richiesta.id}`}>
-            <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
-          </Link>
-        </div>
-        <div className="ml-28 text-left text-sm">
-          <div className="flex space-x-5 justify-start items-start">
-            <span>
-              <b>• Vasca</b>: {richiesta.vasca}
-            </span>
-            <span>
-              <b>• Prodotto</b>: {richiesta.prodotto}
-            </span>
-            <span>
-              <b>• Quantità</b>: {richiesta.quantità}
-            </span>
-          </div>
-          {richiesta.note && (
-            <span>
-              <b>• Note</b>: {richiesta.note}
-            </span>
-          )}
-        </div>
+      <Alert variant="danger" className="py-2 mb-2 text-left pl-[7%] inline-flex items-center w-full">
+        <FontAwesomeIcon icon={faTriangleExclamation} className="mr-10"></FontAwesomeIcon>
+        <b className="w-[30%]">Richiesta correzione bagno</b>
+        <div className="pl-4 w-[55%] pr-2"></div>
+        <Link to={`/manutenzione/richiesta-correzione-bagno/${richiesta.id}`}>
+          <FontAwesomeIcon icon={faArrowCircleRight} size="lg" />
+        </Link>
       </Alert>
     );
   });

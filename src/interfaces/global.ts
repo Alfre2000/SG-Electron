@@ -159,14 +159,20 @@ export type Documento = {
   ultima_modifica: string;
 }
 
-export type RichiestaCorrezioneBagno = {
+export type RichiestaProdotto = {
   id: string;
-  impianto: number;
   vasca: string;
   prodotto: string;
   quantità: string;
+}
+
+export type RichiestaCorrezioneBagno = {
+  id: string;
+  impianto: number;
   note: string;
   data: string;
+  richiesto_da: string;
+  richieste_prodotto: RichiestaProdotto[];
 
   note_completamento: string;
   operatore: number;

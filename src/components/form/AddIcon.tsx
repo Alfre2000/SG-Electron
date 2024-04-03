@@ -2,12 +2,12 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-type RemoveIconProps = {
+type AddIconProps = {
   onClick: () => void;
   disabled?: boolean;
 };
 
-function RemoveIcon({ onClick, disabled }: RemoveIconProps) {
+function AddIcon({ onClick, disabled }: AddIconProps) {
   const handleClick = (e: React.MouseEvent) => {
     if (!disabled) {
       onClick();
@@ -27,4 +27,4 @@ function RemoveIcon({ onClick, disabled }: RemoveIconProps) {
   );
 }
 
-export default RemoveIcon;
+export default AddIcon;

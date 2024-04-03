@@ -6,29 +6,31 @@ import Form from "@components/form/Form";
 import { z } from "@/../it-zod";
 import { URLS } from "urls";
 import { useQuery } from "react-query";
-import { findElementFromID, searchOptions } from "utils";
-import SearchSelect from "@components/form/SearchSelect";
+import { findElementFromID } from "utils";
 import { useImpianto } from "@contexts/UserContext";
 import { RichiestaCorrezioneBagno } from "@interfaces/global";
-import { Checkbox } from "@components/shadcn/Checkbox";
-import { Label } from "@components/shadcn/Label";
-import { Input as ShadcnInput } from "@components/shadcn/Input";
-import Input from "@components/form/Input";
+import Textarea from "@components/form/Textarea";
+import SG from "@images/certificati/sg.png";
+import ICIM from "@images/certificati/icim.png";
+import OperatoreInput from "@components/form/OperatoreInput";
 
 const schema = z.object({
   operatore: z.number(),
-  vasca: z.string().min(1, "Campo obbligatorio"),
-  quantità: z.string().min(1, "Campo obbligatorio"),
-  prodotto: z.string().min(1, "Campo obbligatorio"),
-  note: z.string().optional(),
+  note: z.string().optional().nullable(),
   impianto: z.number(),
   note_completamento: z.string().optional().nullable(),
+  richieste_prodotto: z.array(
+    z.object({
+      vasca: z.string(),
+      prodotto: z.string(),
+      quantità: z.string(),
+    })
+  ),
 });
 
 function CorrezioneBagno() {
   const { richiestaID } = useParams();
   const richiestaQuery = useQuery<RichiestaCorrezioneBagno>(URLS.RICHIESTE_CORREZIONE_BAGNO + richiestaID + "/");
-  const operatoriQuery = useQuery(URLS.OPERATORI);
   const impiantiQuery = useQuery(URLS.IMPIANTI);
   const impiantoID = useImpianto();
   const impianto = findElementFromID(impiantoID, impiantiQuery.data);
@@ -51,53 +53,69 @@ function CorrezioneBagno() {
               </CardDescription>
             </CardHeader>
             <CardContent className="px-14">
-              <div className="grid grid-cols-2 gap-y-4 opacity-75">
-                <div className="flex justify-start items-center gap-2">
-                  <span className="w-32">Impianto:</span>
-                  <ShadcnInput
-                    value={impianto.nome}
-                    disabled
-                    className="py-1 h-8 text-center text-foreground w-64 opacity-100"
-                  />
-                </div>
-                <div className="flex justify-end items-center gap-2">
-                  <span className="w-32">Vasca:</span>
-                  <ShadcnInput
-                    value={richiestaQuery.data?.vasca}
-                    disabled
-                    className="py-1 h-8 text-center text-foreground w-64 opacity-100"
-                  />
-                </div>
-                <div className="flex justify-start items-center gap-2">
-                  <span className="w-32">Prodotto:</span>
-                  <ShadcnInput
-                    value={richiestaQuery.data?.prodotto}
-                    disabled
-                    className="py-1 h-8 text-center text-foreground w-64 opacity-100"
-                  />
-                </div>
-                <div className="flex justify-end items-center gap-2">
-                  <span className="w-32">Quantità:</span>
-                  <ShadcnInput
-                    value={richiestaQuery.data?.quantità}
-                    disabled
-                    className="py-1 h-8 text-center text-foreground w-64 opacity-100"
-                  />
-                </div>
-                {richiestaQuery.data?.note && (
-                  <div className="col-span-2">
-                    <div className="flex justify-start items-center gap-2">
-                      <span className="w-36 mr-2">Note:</span>
-                      <ShadcnInput
-                        value={richiestaQuery.data?.note}
-                        disabled
-                        className="py-1 h-8 text-left text-foreground opacity-100"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <hr className="my-8 w-4/5 mx-auto" />
+              <table className="w-full border-collapse border-[1px] text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-[1px]">
+                      <img src={SG} alt="SuperGalvanica" className="h-20 m-auto" />
+                    </td>
+                    <td className="w-2/5 border-[1px]">
+                      <h2 className="text-xl font-semibold">Richiesta Correzione Bagno</h2>
+                    </td>
+                    <td className="border-[1px]">
+                      <img src={ICIM} alt="Icim" className="h-20 m-auto" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table className="w-full border-collapse border-[1px] text-center mt-8">
+                <tbody>
+                  <tr className="h-12">
+                    <td className="font-semibold border-[1px] w-[15%]">Linea:</td>
+                    <td className="border-[1px]">{impianto.nome}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <p className="mt-8 text-muted text-sm mb-2">Lista di prodotti che devono essere aggiunti:</p>
+              <table className="w-full border-collapse border-[1px] text-center">
+                <tbody>
+                  {richiestaQuery.data?.richieste_prodotto.map((richiesta) => (
+                    <tr className="h-12" key={richiesta.id}>
+                      <td className="font-semibold border-[1px] w-[15%]">Vasca:</td>
+                      <td className="border-[1px] w-[18.5%] px-2 py-1">{richiesta.vasca}</td>
+                      <td className="font-semibold border-[1px] w-[15%]">Prodotto:</td>
+                      <td className="border-[1px] w-[18.5%] px-2 py-1">{richiesta.prodotto}</td>
+                      <td className="font-semibold border-[1px] w-[15%]">Quantità:</td>
+                      <td className="border-[1px] px-2 py-1">{richiesta.quantità}</td>
+                    </tr>
+                  ))}
+                  <tr className="h-28">
+                    <td className="font-semibold border-[1px] w-[15%] px-2">Altre operazioni:</td>
+                    <td className="border-[1px]" colSpan={5}>
+                      {richiestaQuery.data?.note}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table className="w-full border-collapse border-[1px] border-t-0 text-center">
+                <tbody>
+                  <tr className="h-12">
+                    <td className="font-semibold border-[1px] border-t-0 w-[15%] px-2">Chi richiede:</td>
+                    <td className="border-[1px] border-t-0 w-[35%]">{richiestaQuery.data?.richiesto_da}</td>
+                    <td className="font-semibold border-[1px] border-t-0 w-[15%] px-2">Data:</td>
+                    <td className="border-[1px] border-t-0 w-[35%]">
+                      {richiestaQuery.data
+                        ? new Date(richiestaQuery.data.data).toLocaleDateString("it-IT", {
+                            year: "2-digit",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })
+                        : ""}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
               <Form
                 endpoint={URLS.RICHIESTE_CORREZIONE_BAGNO}
                 schema={schema}
@@ -106,23 +124,30 @@ function CorrezioneBagno() {
                   navigate("/manutenzione/record-lavorazione/");
                 }}
               >
-                <div className="grid grid-cols-2 gap-x-10 gap-y-4">
-                  <SearchSelect name="operatore" options={searchOptions(operatoriQuery.data, "nome")} />
-                  <div className="flex items-center justify-evenly">
-                    <Label className="text-base font-normal" htmlFor="eseguita">
-                      Eseguita:{" "}
-                    </Label>
-                    <Checkbox className="text-xl size-6" required name="eseguita" />
-                  </div>
-                  <div className="col-span-2">
-                    <Input
-                      name="note_completamento"
-                      label="Note:"
-                      className="relative -left-2"
-                      inputColumns={10}
-                    />
-                  </div>
-                </div>
+                <table className="w-full border-collapse border-[1px] text-center mt-10">
+                  <tbody>
+                    <tr className="h-12">
+                      <td className="font-semibold border-[1px] w-[15%] px-2">Chi ha eseguito:</td>
+                      <td className="border-[1px] w-[35%] px-3">
+                        <OperatoreInput />
+                      </td>
+                      <td className="font-semibold border-[1px] w-[15%] px-2">Data:</td>
+                      <td className="border-[1px] w-[35%]">
+                        {new Date().toLocaleDateString("it-IT", {
+                          year: "2-digit",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })}
+                      </td>
+                    </tr>
+                    <tr className="h-28">
+                      <td className="font-semibold border-[1px] w-[15%] px-2">Note:</td>
+                      <td className="border-[1px] px-3 py-2" colSpan={3}>
+                        <Textarea name="note_completamento" label={false} />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </Form>
             </CardContent>
           </Card>

@@ -20,6 +20,7 @@ export const URLS = {
     ANALISI: BASE_PATH + '/analisi-manutenzioni/analisi/',
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
     RICHIESTE_CORREZIONE_BAGNO: BASE_PATH + '/analisi-manutenzioni/richieste-correzione-bagno/',
+    RICHIESTE_CORREZIONE_BAGNO_PDF: BASE_PATH + '/analisi-manutenzioni/richiesta-correzione-bagno-pdf/',
 
     // BASE
     OPERATORI: BASE_PATH + '/base/operatori/',
