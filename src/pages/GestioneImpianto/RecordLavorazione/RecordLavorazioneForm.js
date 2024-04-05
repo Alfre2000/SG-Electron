@@ -26,6 +26,7 @@ import Form from "../../Form";
 import { toast } from "sonner";
 import { useUserContext } from "../../../contexts/UserContext";
 import { usePageContext } from "@contexts/PageContext";
+import { dateToDatePicker } from "utils";
 
 let last_res = undefined;
 
@@ -72,7 +73,7 @@ function RecordLavorazioneForm({ showOperatore }) {
           return;
         }
         setPrice(res[0].price);
-        setDataFattura(res[0].data_fattura);
+        setDataFattura(dateToDatePicker(res[0].data_fattura));
         setPrezzoUnitario(res[0].prezzo_unitario);
         apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0])
           .then((res) => {
