@@ -52,6 +52,7 @@ function Login({ from, afterLogin }) {
                     <Form.Control
                       type="username"
                       placeholder="Username"
+                      autoFocus
                       className={errors.username || errors.non_field_errors ? "is-invalid" : ""}
                       onChange={(e) => setUsername(e.target.value)}
                       required />

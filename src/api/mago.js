@@ -102,6 +102,7 @@ export const makeDatabaseRequest = async (query) => {
 export const getDatiBollaMago = async (n_bolla) => {
   const numero_documento = n_bolla.padStart(6, "0");
   const query = `SELECT
+    fattura.documentdate as data_fattura,
     doc.docno,
     doc.documentdate,
     doc.shippingreason,
@@ -145,6 +146,12 @@ export const getDatiBollaMago = async (n_bolla) => {
   JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
   JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
   JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
+  JOIN (
+    select doc.DocumentDate, sale.job, sale.line from MA_SaleDoc as doc
+    JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
+    JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
+    where doc.documenttype = '3407874'
+  ) as fattura on sale.job = fattura.job and sale.line = fattura.line
   WHERE doc.documenttype = 3407873 
     AND doc.CustSuppType = 3211264 
     AND doc.docno = '${numero_documento}' 
@@ -164,6 +171,7 @@ export const getLottoInformation = async (n_lotto) => {
   const line = n_lotto.slice(9);
   const query = `
     SELECT
+      fattura.documentdate as data_fattura,
       sale.qty as quantity,
       sale.description,
       sale.uom,
@@ -200,6 +208,12 @@ export const getLottoInformation = async (n_lotto) => {
       JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
       JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
       JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
+      JOIN (
+        select doc.DocumentDate, sale.job, sale.line from MA_SaleDoc as doc
+        JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
+        JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
+        where doc.documenttype = '3407874'
+      ) as fattura on sale.job = fattura.job and sale.line = fattura.line
     WHERE sale.job = '${job}' AND sale.line = '${line}'
   `
   const res = await makeDatabaseRequest(query);
