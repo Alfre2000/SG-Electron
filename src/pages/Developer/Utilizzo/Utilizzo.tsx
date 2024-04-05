@@ -11,8 +11,6 @@ import Loading from "@components/Loading/Loading";
 
 function Utilizzo() {
   const utilizziQuery = useQuery<any>(URLS.UTILIZZI);
-  console.log(utilizziQuery.data);
-  
   return (
     <Wrapper>
       <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full relative">

@@ -53,58 +53,58 @@ function CorrezioneBagno() {
               </CardDescription>
             </CardHeader>
             <CardContent className="px-14">
-              <table className="w-full border-collapse border-[1px] text-center">
+              <table className="w-full border-collapse border-[1px] border-slate-300 text-center">
                 <tbody>
                   <tr>
-                    <td className="border-[1px]">
+                    <td className="border-[1px] border-slate-300">
                       <img src={SG} alt="SuperGalvanica" className="h-20 m-auto" />
                     </td>
-                    <td className="w-2/5 border-[1px]">
+                    <td className="w-2/5 border-[1px] border-slate-300">
                       <h2 className="text-xl font-semibold">Richiesta Correzione Bagno</h2>
                     </td>
-                    <td className="border-[1px]">
+                    <td className="border-[1px] border-slate-300">
                       <img src={ICIM} alt="Icim" className="h-20 m-auto" />
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <table className="w-full border-collapse border-[1px] text-center mt-8">
+              <table className="w-full border-collapse border-[1px] border-slate-300 text-center mt-8">
                 <tbody>
                   <tr className="h-12">
-                    <td className="font-semibold border-[1px] w-[15%]">Linea:</td>
-                    <td className="border-[1px]">{impianto.nome}</td>
+                    <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Linea:</td>
+                    <td className="border-[1px] border-slate-300">{impianto.nome}</td>
                   </tr>
                 </tbody>
               </table>
 
               <p className="mt-8 text-muted text-sm mb-2">Lista di prodotti che devono essere aggiunti:</p>
-              <table className="w-full border-collapse border-[1px] text-center">
+              <table className="w-full border-collapse border-[1px] border-slate-300 text-center">
                 <tbody>
                   {richiestaQuery.data?.richieste_prodotto.map((richiesta) => (
                     <tr className="h-12" key={richiesta.id}>
-                      <td className="font-semibold border-[1px] w-[15%]">Vasca:</td>
-                      <td className="border-[1px] w-[18.5%] px-2 py-1">{richiesta.vasca}</td>
-                      <td className="font-semibold border-[1px] w-[15%]">Prodotto:</td>
-                      <td className="border-[1px] w-[18.5%] px-2 py-1">{richiesta.prodotto}</td>
-                      <td className="font-semibold border-[1px] w-[15%]">Quantità:</td>
-                      <td className="border-[1px] px-2 py-1">{richiesta.quantità}</td>
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Vasca:</td>
+                      <td className="border-[1px] border-slate-300 w-[18.5%] px-2 py-1">{richiesta.vasca}</td>
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Prodotto:</td>
+                      <td className="border-[1px] border-slate-300 w-[18.5%] px-2 py-1">{richiesta.prodotto}</td>
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Quantità:</td>
+                      <td className="border-[1px] border-slate-300 px-2 py-1">{richiesta.quantità}</td>
                     </tr>
                   ))}
                   <tr className="h-28">
-                    <td className="font-semibold border-[1px] w-[15%] px-2">Altre operazioni:</td>
-                    <td className="border-[1px]" colSpan={5}>
+                    <td className="font-semibold border-[1px] border-slate-300 w-[15%] px-2">Altre operazioni:</td>
+                    <td className="border-[1px] border-slate-300" colSpan={5}>
                       {richiestaQuery.data?.note}
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <table className="w-full border-collapse border-[1px] border-t-0 text-center">
+              <table className="w-full border-collapse border-[1px] border-slate-300 border-t-0 text-center">
                 <tbody>
                   <tr className="h-12">
-                    <td className="font-semibold border-[1px] border-t-0 w-[15%] px-2">Chi richiede:</td>
-                    <td className="border-[1px] border-t-0 w-[35%]">{richiestaQuery.data?.richiesto_da}</td>
-                    <td className="font-semibold border-[1px] border-t-0 w-[15%] px-2">Data:</td>
-                    <td className="border-[1px] border-t-0 w-[35%]">
+                    <td className="font-semibold border-[1px] border-slate-300 border-t-0 w-[15%] px-2">Chi richiede:</td>
+                    <td className="border-[1px] border-slate-300 border-t-0 w-[35%]">{richiestaQuery.data?.richiesto_da}</td>
+                    <td className="font-semibold border-[1px] border-slate-300 border-t-0 w-[15%] px-2">Data:</td>
+                    <td className="border-[1px] border-slate-300 border-t-0 w-[35%]">
                       {richiestaQuery.data
                         ? new Date(richiestaQuery.data.data).toLocaleDateString("it-IT", {
                             year: "2-digit",
@@ -124,15 +124,15 @@ function CorrezioneBagno() {
                   navigate("/manutenzione/record-lavorazione/");
                 }}
               >
-                <table className="w-full border-collapse border-[1px] text-center mt-10">
+                <table className="w-full border-collapse border-[1px] border-slate-300 text-center mt-10">
                   <tbody>
                     <tr className="h-12">
-                      <td className="font-semibold border-[1px] w-[15%] px-2">Chi ha eseguito:</td>
-                      <td className="border-[1px] w-[35%] px-3">
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%] px-2">Chi ha eseguito:</td>
+                      <td className="border-[1px] border-slate-300 w-[35%] px-3">
                         <OperatoreInput />
                       </td>
-                      <td className="font-semibold border-[1px] w-[15%] px-2">Data:</td>
-                      <td className="border-[1px] w-[35%]">
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%] px-2">Data:</td>
+                      <td className="border-[1px] border-slate-300 w-[35%]">
                         {new Date().toLocaleDateString("it-IT", {
                           year: "2-digit",
                           month: "2-digit",
@@ -141,8 +141,8 @@ function CorrezioneBagno() {
                       </td>
                     </tr>
                     <tr className="h-28">
-                      <td className="font-semibold border-[1px] w-[15%] px-2">Note:</td>
-                      <td className="border-[1px] px-3 py-2" colSpan={3}>
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%] px-2">Note:</td>
+                      <td className="border-[1px] border-slate-300 px-3 py-2" colSpan={3}>
                         <Textarea name="note_completamento" label={false} />
                       </td>
                     </tr>

@@ -78,26 +78,26 @@ function GestisciRichieste() {
             </CardHeader>
             <CardContent>
               <Form endpoint={URLS.RICHIESTE_CORREZIONE_BAGNO} schema={schema}>
-                <table className="w-full border-collapse border-[1px] text-center">
+                <table className="w-full border-collapse border-[1px] border-slate-300 text-center">
                   <tbody>
                     <tr>
-                      <td className="border-[1px]">
+                      <td className="border-[1px] border-slate-300">
                         <img src={SG} alt="SuperGalvanica" className="h-20 m-auto" />
                       </td>
-                      <td className="w-2/5 border-[1px]">
+                      <td className="w-2/5 border-[1px] border-slate-300">
                         <h2 className="text-xl font-semibold">Richiesta Correzione Bagno</h2>
                       </td>
-                      <td className="border-[1px]">
+                      <td className="border-[1px] border-slate-300">
                         <img src={ICIM} alt="Icim" className="h-20 m-auto" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <table className="w-full border-collapse border-[1px] text-center mt-8">
+                <table className="w-full border-collapse border-[1px] border-slate-300 text-center mt-8">
                   <tbody>
                     <tr className="h-12">
-                      <td className="font-semibold border-[1px] w-[15%]">Linea:</td>
-                      <td className="border-[1px] px-3">
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Linea:</td>
+                      <td className="border-[1px] border-slate-300 px-3">
                         <SearchSelect
                           name="impianto"
                           options={searchOptions(impiantiQuery.data, "nome")}
@@ -109,26 +109,26 @@ function GestisciRichieste() {
                   </tbody>
                 </table>
                 <p className="mt-8 text-muted text-sm mb-2">Lista di prodotti che devono essere aggiunti:</p>
-                <table className="w-full border-collapse border-[1px] text-center">
+                <table className="w-full border-collapse border-[1px] border-slate-300 text-center">
                   <tbody>
                     <RichiesteProdotto />
                     <tr className="h-28">
-                      <td className="font-semibold border-[1px] w-[15%] px-2">Altre operazioni:</td>
-                      <td className="border-[1px] px-3" colSpan={6}>
+                      <td className="font-semibold border-[1px] border-slate-300 w-[15%] px-2">Altre operazioni:</td>
+                      <td className="border-[1px] border-slate-300 px-3" colSpan={6}>
                         <Textarea name="note" label={false} rows={5} className="h-20" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <table className="w-full border-collapse border-[1px] border-t-0 text-center">
+                <table className="w-full border-collapse border-[1px] border-slate-300 border-t-0 text-center">
                   <tbody>
                     <tr className="h-12">
-                      <td className="font-semibold border-[1px] border-t-0 w-[15%] px-2">Chi richiede:</td>
-                      <td className="border-[1px] border-t-0 w-[35%] px-3">
+                      <td className="font-semibold border-[1px] border-slate-300 border-t-0 w-[15%] px-2">Chi richiede:</td>
+                      <td className="border-[1px] border-slate-300 border-t-0 w-[35%] px-3">
                         <Input name="richiesto_da" label={false} />
                       </td>
-                      <td className="font-semibold border-[1px] border-t-0 w-[15%] px-2">Data:</td>
-                      <td className="border-[1px] border-t-0 w-[35%]">
+                      <td className="font-semibold border-[1px] border-slate-300 border-t-0 w-[15%] px-2">Data:</td>
+                      <td className="border-[1px] border-slate-300 border-t-0 w-[35%]">
                         {new Date().toLocaleDateString("it-IT", {
                           year: "2-digit",
                           month: "2-digit",
@@ -256,19 +256,19 @@ const RichiesteProdotto = () => {
     <>
       {field.fields.map((item, index) => (
         <tr className="h-12" key={item.id}>
-          <td className="font-semibold border-[1px] w-[15%]">Vasca:</td>
-          <td className="border-[1px] w-[17%] px-2 py-1">
+          <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Vasca:</td>
+          <td className="border-[1px] border-slate-300 w-[17%] px-2 py-1">
             <Input name={`richieste_prodotto[${index}].vasca`} label={false} />
           </td>
-          <td className="font-semibold border-[1px] w-[15%]">Prodotto:</td>
-          <td className="border-[1px] w-[17%] px-2 py-1">
+          <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Prodotto:</td>
+          <td className="border-[1px] border-slate-300 w-[17%] px-2 py-1">
             <Input name={`richieste_prodotto[${index}].prodotto`} label={false} />
           </td>
-          <td className="font-semibold border-[1px] w-[15%]">Quantità:</td>
-          <td className="border-[1px] w-[17%] px-2 py-1">
+          <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Quantità:</td>
+          <td className="border-[1px] border-slate-300 w-[17%] px-2 py-1">
             <Input name={`richieste_prodotto[${index}].quantità`} label={false} />
           </td>
-          <td className="border-[1px]">
+          <td className="border-[1px] border-slate-300">
             <RemoveIcon onClick={() => field.remove(index)} />
           </td>
         </tr>
