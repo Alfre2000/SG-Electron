@@ -22,6 +22,7 @@ import {
   faAtom,
   faComputer,
   faCodeBranch,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -221,7 +222,11 @@ const navbarDeveloper = () => {
       icon: faCodeBranch,
       links: [{ name: "Versioni", link: "/developer/versioni-programma/" }],
     },
-  
+    {
+      title: "Utilizzo",
+      icon: faMagnifyingGlass,
+      links: [{ name: "Utilizzo", link: "/developer/utilizzo/" }],
+    },
   ];
 };
 

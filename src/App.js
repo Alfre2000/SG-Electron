@@ -38,6 +38,7 @@ import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente"
 import MappaClienti from "@pages/AndamentoProduzione/MappaClienti/MappaClienti";
 import Impianti from "@pages/AndamentoProduzione/Impianti/Impianti";
 import VersioniProgramma from "@pages/Developer/VersioniProgramma/VersioniProgramma";
+import Utilizzo from "@pages/Developer/Utilizzo/Utilizzo";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -122,6 +123,7 @@ function App() {
             {/* Developer */}
             <Route path="developer/">
               <Route path="versioni-programma/" element={<VersioniProgramma />}></Route>
+              <Route path="utilizzo/" element={<Utilizzo />}></Route>
             </Route>
           </Routes>
         </HashRouter>
