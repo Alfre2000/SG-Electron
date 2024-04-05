@@ -64,13 +64,13 @@ function RecordLavorazioneForm({ showOperatore }) {
     if (regex.test(value)) {
       setLoadingLotto(true);
       getLottoInformation(value).then((res) => {
+        console.log(res);
         if (!res.length) {
           setLoadingLotto(false);
           setErrorLotto(true);
           setTimeout(() => setErrorLotto(false), 1000 * 5);
           return;
         }
-        console.log(res);
         setPrice(res[0].price);
         setDataFattura(res[0].data_fattura);
         setPrezzoUnitario(res[0].prezzo_unitario);

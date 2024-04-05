@@ -146,7 +146,7 @@ export const getDatiBollaMago = async (n_bolla) => {
   JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
   JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
   JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
-  JOIN (
+  LEFT JOIN (
     select doc.DocumentDate, sale.job, sale.line from MA_SaleDoc as doc
     JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
     JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
@@ -208,7 +208,7 @@ export const getLottoInformation = async (n_lotto) => {
       JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
       JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
       JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
-      JOIN (
+      LEFT JOIN (
         select doc.DocumentDate, sale.job, sale.line from MA_SaleDoc as doc
         JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
         JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
