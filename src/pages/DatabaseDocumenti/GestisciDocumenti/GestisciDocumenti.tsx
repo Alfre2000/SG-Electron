@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Wrapper from "@ui/wrapper/Wrapper";
 import { useMutation, useQuery } from "react-query";
 import { URLS } from "urls";
 import { Documento as Doc } from "@interfaces/global";
@@ -97,212 +96,211 @@ function GestisciDocumenti() {
   );
   const completePath = ["Database Documenti", ...path.split("/").filter((p) => p !== "")];
   return (
-    <Wrapper>
-      <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full relative">
-        <div className="flex justify-between items-center">
-          <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">Database Documenti</h2>
-        </div>
-        <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
-        {documentiQuery.isLoading && <Loading className="mt-40" />}
-        {documentiQuery.isError && <Error />}
-        {documentiQuery.isSuccess && filteredDocumenti && (
-          <Draggable className="relative my-3 min-h-[70vh]" path={path}>
-            <div className={`flex items-center justify-between ${path ? "cursor-pointer" : ""}`}>
-              <div className="flex items-center">
-                <FontAwesomeIcon icon={faFolder} className="text-xl text-amber-500 mr-3" />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    {completePath.map((directory, index) => (
-                      <React.Fragment key={index}>
-                        <BreadcrumbItem>
-                          <BreadcrumbLink
-                            href="#"
-                            className={`${index === completePath.length - 1 ? "text-foreground" : ""}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (index !== completePath.length - 1) {
-                                setPath(path.split("/").slice(0, index).join("/"));
-                              }
-                            }}
-                          >
-                            {directory}
-                          </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        {index < completePath.length - 1 && (
-                          <BreadcrumbSeparator>
-                            <SlashIcon />
-                          </BreadcrumbSeparator>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </div>
-              <div>
-                <Input
-                  placeholder="Cerca..."
-                  className="w-48 py-1 h-6 rounded-sm relative bottom-1"
-                  onChange={(e) => setFilter(e.target.value)}
+    <div>
+      <div className="flex justify-between items-center">
+        <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">Database Documenti</h2>
+      </div>
+      <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
+      {documentiQuery.isLoading && <Loading className="mt-40" />}
+      {documentiQuery.isError && <Error />}
+      {documentiQuery.isSuccess && filteredDocumenti && (
+        <Draggable className="relative my-3 min-h-[70vh]" path={path}>
+          <div className={`flex items-center justify-between ${path ? "cursor-pointer" : ""}`}>
+            <div className="flex items-center">
+              <FontAwesomeIcon icon={faFolder} className="text-xl text-amber-500 mr-3" />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  {completePath.map((directory, index) => (
+                    <React.Fragment key={index}>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink
+                          href="#"
+                          className={`${index === completePath.length - 1 ? "text-foreground" : ""}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (index !== completePath.length - 1) {
+                              setPath(path.split("/").slice(0, index).join("/"));
+                            }
+                          }}
+                        >
+                          {directory}
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                      {index < completePath.length - 1 && (
+                        <BreadcrumbSeparator>
+                          <SlashIcon />
+                        </BreadcrumbSeparator>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            <div>
+              <Input
+                placeholder="Cerca..."
+                className="w-48 py-1 h-6 rounded-sm relative bottom-1"
+                onChange={(e) => setFilter(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex items-start justify-start">
+            <div
+              className="relative"
+              style={{
+                height: Math.max(0, filteredDocumenti.length + directories.length) * 31 + 21 + "px",
+                width: "1px",
+                left: "8px",
+                background: "#bfc2c7",
+              }}
+            ></div>
+            <div className="flex-grow">
+              <Table className="ml-8 mt-[11px] w-[96%] overflow-visible">
+                <TableHeader className="p-0">
+                  <TableRow className="p-0 text-xs text-muted font-normal">
+                    <TableHead className="py-1 pl-3 h-6">
+                      <span className="ml-[19px]">
+                        Nome File{" "}
+                        {filteredDocumenti.length ? (
+                          <span className="text-[10px] relative bottom-px left-1">
+                            ({filteredDocumenti.length}{" "}
+                            {filteredDocumenti.length === 1 ? "documento" : "documenti"})
+                          </span>
+                        ) : null}
+                      </span>
+                    </TableHead>
+                    <TableHead className="py-1 pl-3 h-6">Ultima Modifica</TableHead>
+                    <TableHead className="py-1 text-center h-6">Visualizza</TableHead>
+                    <TableHead className="py-1 text-center h-6">Sostituisci</TableHead>
+                    <TableHead className="py-1 text-center h-6">Elimina</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredDocumenti.length === 0 && directories.length === 0 && (
+                    <TableRow>
+                      <TableCell className="border border-gray-50 py-1 pl-3" colSpan={5}>
+                        <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
+                        Nessun documento trovato
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {filteredDocumenti.map((documento) => (
+                    <TableRow key={documento.id}>
+                      <TableCell className="border border-gray-50 py-1 pl-3 relative w-1/3">
+                        <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
+                        <div className="flex items-center">
+                          <FontAwesomeIcon icon={fileIcon(documento.file)} className="mr-3 text-slate-400" />
+                          <InputNome documento={documento} />
+                        </div>
+                      </TableCell>
+                      <TableCell className="border border-gray-50 py-1 pl-3 text-muted text-xs w-1/4">
+                        {new Date(documento.ultima_modifica).toLocaleDateString("it-IT", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </TableCell>
+                      <TableCell
+                        className="py-1 border border-gray-50 text-center cursor-pointer"
+                        onClick={() => open(documento)}
+                      >
+                        <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="sm" className="text-slate-400" />
+                      </TableCell>
+                      <TableCell
+                        className="py-1 border border-gray-50 text-center cursor-pointer"
+                        onClick={() => setDocumentoModify(documento.id)}
+                      >
+                        <FontAwesomeIcon icon={faUpload} size="sm" className="text-slate-400" />
+                      </TableCell>
+                      <TableCell
+                        className="py-1 border border-gray-50 text-center cursor-pointer"
+                        onClick={() => setIsDeleteOpen(documento.id)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} size="sm" className="text-red-800/70" />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {[...directories].map((directory) => (
+                    <TableRow key={directory}>
+                      <TableCell
+                        className="border border-gray-50 py-1 pl-3 relative w-1/2 cursor-pointer"
+                        onClick={() => setPath(path === "" ? directory : path + "/" + directory)}
+                      >
+                        <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
+                        <div className="h-[22px]">
+                          <FontAwesomeIcon icon={faFolder} className="text-amber-500 mr-2" />
+                          {directory}
+                        </div>
+                      </TableCell>
+                      <TableCell className="border border-gray-50 py-1 pl-3 w-1/3"></TableCell>
+                      <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
+                      <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
+                      <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </Draggable>
+      )}
+      <Dialog open={!!isDeleteOpen} onOpenChange={() => setIsDeleteOpen("")}>
+        <DialogContent>
+          <DialogHeader className="text-left">
+            <DialogTitle className="font-semibold text-xl">Sei sicuro di volerlo eliminare ?</DialogTitle>
+            <DialogDescription>
+              Questa azione non può essere annullata.
+              <br /> Una volta eliminato il documento non sarà più recuperabile.
+            </DialogDescription>
+          </DialogHeader>
+          <hr />
+          <DialogFooter>
+            <Button variant="destructive" onClick={() => deleteMutation.mutate()}>
+              Elimina
+            </Button>
+            <DialogClose asChild>
+              <Button>Annulla</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!documentoModify} onOpenChange={() => setDocumentoModify(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <Form {...form}>
+            <form onSubmit={handleSubmit}>
+              <DialogHeader>
+                <DialogTitle>Sostituisci il Documento</DialogTitle>
+              </DialogHeader>
+              <div className="mt-3">
+                <FormField
+                  control={form.control}
+                  name="file"
+                  render={({ field }) => {
+                    const { value, ...fieldProps } = field;
+                    return (
+                      <FormControl>
+                        <FormItem>
+                          <FormLabel className="relative left-1">Nuovo File:</FormLabel>
+                          <FormControl>
+                            <Input required type="file" {...fieldProps} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      </FormControl>
+                    );
+                  }}
                 />
               </div>
-            </div>
-            <div className="flex items-start justify-start">
-              <div
-                className="relative"
-                style={{
-                  height: Math.max(0, filteredDocumenti.length + directories.length) * 31 + 21 + "px",
-                  width: "1px",
-                  left: "8px",
-                  background: "#bfc2c7",
-                }}
-              ></div>
-              <div className="flex-grow">
-                <Table className="ml-8 mt-[11px] w-[96%] overflow-visible">
-                  <TableHeader className="p-0">
-                    <TableRow className="p-0 text-xs text-muted font-normal">
-                      <TableHead className="py-1 pl-3 h-6">
-                        <span className="ml-[19px]">
-                          Nome File{" "}
-                          {filteredDocumenti.length ? (
-                            <span className="text-[10px] relative bottom-px left-1">
-                              ({filteredDocumenti.length} {filteredDocumenti.length === 1 ? "documento" : "documenti"})
-                            </span>
-                          ) : null}
-                        </span>
-                      </TableHead>
-                      <TableHead className="py-1 pl-3 h-6">Ultima Modifica</TableHead>
-                      <TableHead className="py-1 text-center h-6">Visualizza</TableHead>
-                      <TableHead className="py-1 text-center h-6">Sostituisci</TableHead>
-                      <TableHead className="py-1 text-center h-6">Elimina</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredDocumenti.length === 0 && directories.length === 0 && (
-                      <TableRow>
-                        <TableCell className="border border-gray-50 py-1 pl-3" colSpan={5}>
-                          <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
-                          Nessun documento trovato
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    {filteredDocumenti.map((documento) => (
-                      <TableRow key={documento.id}>
-                        <TableCell className="border border-gray-50 py-1 pl-3 relative w-1/3">
-                          <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
-                          <div className="flex items-center">
-                            <FontAwesomeIcon icon={fileIcon(documento.file)} className="mr-3 text-slate-400" />
-                            <InputNome documento={documento} />
-                          </div>
-                        </TableCell>
-                        <TableCell className="border border-gray-50 py-1 pl-3 text-muted text-xs w-1/4">
-                          {new Date(documento.ultima_modifica).toLocaleDateString("it-IT", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </TableCell>
-                        <TableCell
-                          className="py-1 border border-gray-50 text-center cursor-pointer"
-                          onClick={() => open(documento)}
-                        >
-                          <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="sm" className="text-slate-400" />
-                        </TableCell>
-                        <TableCell
-                          className="py-1 border border-gray-50 text-center cursor-pointer"
-                          onClick={() => setDocumentoModify(documento.id)}
-                        >
-                          <FontAwesomeIcon icon={faUpload} size="sm" className="text-slate-400" />
-                        </TableCell>
-                        <TableCell
-                          className="py-1 border border-gray-50 text-center cursor-pointer"
-                          onClick={() => setIsDeleteOpen(documento.id)}
-                        >
-                          <FontAwesomeIcon icon={faTrash} size="sm" className="text-red-800/70" />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {[...directories].map((directory) => (
-                      <TableRow key={directory}>
-                        <TableCell
-                          className="border border-gray-50 py-1 pl-3 relative w-1/2 cursor-pointer"
-                          onClick={() => setPath(path === "" ? directory : path + "/" + directory)}
-                        >
-                          <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
-                          <div className="h-[22px]">
-                            <FontAwesomeIcon icon={faFolder} className="text-amber-500 mr-2" />
-                            {directory}
-                          </div>
-                        </TableCell>
-                        <TableCell className="border border-gray-50 py-1 pl-3 w-1/3"></TableCell>
-                        <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
-                        <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
-                        <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </Draggable>
-        )}
-        <Dialog open={!!isDeleteOpen} onOpenChange={() => setIsDeleteOpen("")}>
-          <DialogContent>
-            <DialogHeader className="text-left">
-              <DialogTitle className="font-semibold text-xl">Sei sicuro di volerlo eliminare ?</DialogTitle>
-              <DialogDescription>
-                Questa azione non può essere annullata.
-                <br /> Una volta eliminato il documento non sarà più recuperabile.
-              </DialogDescription>
-            </DialogHeader>
-            <hr />
-            <DialogFooter>
-              <Button variant="destructive" onClick={() => deleteMutation.mutate()}>
-                Elimina
-              </Button>
-              <DialogClose asChild>
-                <Button>Annulla</Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <Dialog open={!!documentoModify} onOpenChange={() => setDocumentoModify(null)}>
-          <DialogContent className="sm:max-w-[425px]">
-            <Form {...form}>
-              <form onSubmit={handleSubmit}>
-                <DialogHeader>
-                  <DialogTitle>Sostituisci il Documento</DialogTitle>
-                </DialogHeader>
-                <div className="mt-3">
-                  <FormField
-                    control={form.control}
-                    name="file"
-                    render={({ field }) => {
-                      const { value, ...fieldProps } = field;
-                      return (
-                        <FormControl>
-                          <FormItem>
-                            <FormLabel className="relative left-1">Nuovo File:</FormLabel>
-                            <FormControl>
-                              <Input required type="file" {...fieldProps} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        </FormControl>
-                      );
-                    }}
-                  />
-                </div>
-                <DialogFooter className="mt-4">
-                  <Button type="submit">Carica</Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </Wrapper>
+              <DialogFooter className="mt-4">
+                <Button type="submit">Carica</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
 

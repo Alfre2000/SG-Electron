@@ -1,4 +1,3 @@
-import Wrapper from "@ui/wrapper/Wrapper";
 import React from "react";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
@@ -46,132 +45,132 @@ function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
     (documento) => documento.path === path && documento.nome.toLowerCase().includes(filter.toLowerCase())
   );
   return (
-    <Wrapper>
-      <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full relative">
-        <div className="flex justify-between items-center">
-          <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">{directory || "Database Documenti"}</h2>
-        </div>
-        <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
-        {schedeQuery.isLoading && <Loading className="mt-40" />}
-        {schedeQuery.isError && <Error />}
-        {schedeQuery.isSuccess && filteredDocumenti && (
-          <>
-            <div className={`flex items-center justify-between ${path ? "cursor-pointer" : ""}`}>
-              <div className="flex items-center">
-                <FontAwesomeIcon icon={faFolder} className="text-xl text-amber-500 mr-3" />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    {completePath.map((directory, index) => (
-                      <React.Fragment key={index}>
-                        <BreadcrumbItem>
-                          <BreadcrumbLink
-                            href="#"
-                            className={`${index === completePath.length - 1 ? "text-foreground" : ""}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (index !== completePath.length - 1) {
-                                setPath(
-                                  path
-                                    .split("/")
-                                    .slice(0, index + 1)
-                                    .join("/")
-                                );
-                              }
-                            }}
-                          >
-                            {directory}
-                          </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        {index < completePath.length - 1 && (
-                          <BreadcrumbSeparator>
-                            <SlashIcon />
-                          </BreadcrumbSeparator>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </div>
-              <div>
-                <Input
-                  placeholder="Cerca..."
-                  className="w-48 py-1 h-6 rounded-sm relative bottom-1"
-                  onChange={(e) => setFilter(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex items-start justify-start">
-              <div
-                className="relative"
-                style={{
-                  height: Math.max(0, filteredDocumenti.length + directories.length) * 31 + 21 + "px",
-                  width: "1px",
-                  left: "8px",
-                  background: "#bfc2c7",
-                }}
-              ></div>
-              <div className="flex-grow">
-                <Table className="ml-8 mt-[11px] w-[96%] overflow-visible">
-                  <TableHeader className="p-0">
-                    <TableRow className="p-0 text-xs text-muted font-normal">
-                      <TableHead className="py-1 pl-3 h-6">
-                        <span className="ml-[19px]">
-                          Nome File{" "}
-                          {filteredDocumenti.length ? (
-                            <span className="text-[10px] relative bottom-px left-1">
-                              ({filteredDocumenti.length}{" "}
-                              {filteredDocumenti.length === 1 ? "documento" : "documenti"})
-                            </span>
-                          ) : null}
-                        </span>
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredDocumenti.length === 0 && directories.length === 0 && (
-                      <TableRow>
-                        <TableCell className="border border-gray-50 py-1 pl-3">
-                          <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
-                          Nessun documento trovato
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    {filteredDocumenti.map((documento) => (
-                      <TableRow key={documento.id}>
-                        <TableCell
-                          className="border border-gray-50 py-1 pl-3 relative cursor-pointer hover:underline"
-                          onClick={() => electron.ipcRenderer.invoke("open-file", documento.file, false)}
-                        >
-                          <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
-                          <div className="flex items-center h-[22px]">
-                            <FontAwesomeIcon icon={fileIcon(documento.file)} className="mr-3 text-slate-400 w-5" />
-                            {documento.nome}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {[...directories].map((directory) => (
-                      <TableRow key={directory}>
-                        <TableCell
-                          className="border border-gray-50 py-1 pl-3 relative cursor-pointer"
-                          onClick={() => setPath(path === "" ? directory : path + "/" + directory)}
-                        >
-                          <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
-                          <div className="h-[22px]">
-                            <FontAwesomeIcon icon={faFolder} className="text-amber-500 mr-2" />
-                            {directory}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </>
-        )}
+    <div>
+      <div className="flex justify-between items-center">
+        <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">
+          {directory || "Database Documenti"}
+        </h2>
       </div>
-    </Wrapper>
+      <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
+      {schedeQuery.isLoading && <Loading className="mt-40" />}
+      {schedeQuery.isError && <Error />}
+      {schedeQuery.isSuccess && filteredDocumenti && (
+        <>
+          <div className={`flex items-center justify-between ${path ? "cursor-pointer" : ""}`}>
+            <div className="flex items-center">
+              <FontAwesomeIcon icon={faFolder} className="text-xl text-amber-500 mr-3" />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  {completePath.map((directory, index) => (
+                    <React.Fragment key={index}>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink
+                          href="#"
+                          className={`${index === completePath.length - 1 ? "text-foreground" : ""}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (index !== completePath.length - 1) {
+                              setPath(
+                                path
+                                  .split("/")
+                                  .slice(0, index + 1)
+                                  .join("/")
+                              );
+                            }
+                          }}
+                        >
+                          {directory}
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                      {index < completePath.length - 1 && (
+                        <BreadcrumbSeparator>
+                          <SlashIcon />
+                        </BreadcrumbSeparator>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            <div>
+              <Input
+                placeholder="Cerca..."
+                className="w-48 py-1 h-6 rounded-sm relative bottom-1"
+                onChange={(e) => setFilter(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex items-start justify-start">
+            <div
+              className="relative"
+              style={{
+                height: Math.max(0, filteredDocumenti.length + directories.length) * 31 + 21 + "px",
+                width: "1px",
+                left: "8px",
+                background: "#bfc2c7",
+              }}
+            ></div>
+            <div className="flex-grow">
+              <Table className="ml-8 mt-[11px] w-[96%] overflow-visible">
+                <TableHeader className="p-0">
+                  <TableRow className="p-0 text-xs text-muted font-normal">
+                    <TableHead className="py-1 pl-3 h-6">
+                      <span className="ml-[19px]">
+                        Nome File{" "}
+                        {filteredDocumenti.length ? (
+                          <span className="text-[10px] relative bottom-px left-1">
+                            ({filteredDocumenti.length}{" "}
+                            {filteredDocumenti.length === 1 ? "documento" : "documenti"})
+                          </span>
+                        ) : null}
+                      </span>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredDocumenti.length === 0 && directories.length === 0 && (
+                    <TableRow>
+                      <TableCell className="border border-gray-50 py-1 pl-3">
+                        <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
+                        Nessun documento trovato
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {filteredDocumenti.map((documento) => (
+                    <TableRow key={documento.id}>
+                      <TableCell
+                        className="border border-gray-50 py-1 pl-3 relative cursor-pointer hover:underline"
+                        onClick={() => electron.ipcRenderer.invoke("open-file", documento.file, false)}
+                      >
+                        <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
+                        <div className="flex items-center h-[22px]">
+                          <FontAwesomeIcon icon={fileIcon(documento.file)} className="mr-3 text-slate-400 w-5" />
+                          {documento.nome}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {[...directories].map((directory) => (
+                    <TableRow key={directory}>
+                      <TableCell
+                        className="border border-gray-50 py-1 pl-3 relative cursor-pointer"
+                        onClick={() => setPath(path === "" ? directory : path + "/" + directory)}
+                      >
+                        <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
+                        <div className="h-[22px]">
+                          <FontAwesomeIcon icon={faFolder} className="text-amber-500 mr-2" />
+                          {directory}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

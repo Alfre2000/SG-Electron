@@ -23,6 +23,7 @@ import {
   faComputer,
   faCodeBranch,
   faMagnifyingGlass,
+  faRuler,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -100,6 +101,11 @@ const navbarCertificatiQualità = (user: UserContextType["user"]["user"]) => {
       title: "Etichette MTA",
       icon: faTags,
       links: [{ name: "Etichette MTA", link: "/certificati-qualita/etichette-mta/" }],
+    },
+    {
+      title: "Taratura",
+      icon: faRuler,
+      links: [{ name: "Taratura", link: "/certificati-qualita/taratura-strumenti/" }],
     },
     {
       title: "Database",

@@ -36,6 +36,8 @@ function RecordLavorazioneForm({ showOperatore }) {
   const [qty, setQty] = useState(initialData?.quantità || "");
   const [um, setUm] = useState(initialData?.um || "");
   const [price, setPrice] = useState();
+  const [dataFattura, setDataFattura] = useState();
+  const [prezzoUnitario, setPrezzoUnitario] = useState();
   const [loadingLotto, setLoadingLotto] = useState(false);
   const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
   const [lottoCliente, setLottoCliente] = useState(initialData?.n_lotto_cliente || "");
@@ -70,6 +72,8 @@ function RecordLavorazioneForm({ showOperatore }) {
         }
         console.log(res);
         setPrice(res[0].price);
+        setDataFattura(res[0].data_fattura);
+        setPrezzoUnitario(res[0].prezzo_unitario);
         apiPost(URLS.RECORD_LAVORAZIONE_INFO, res[0])
           .then((res) => {
             if (last_res && last_res > parseInt(value.split(".").at(-1))) return;
@@ -133,6 +137,8 @@ function RecordLavorazioneForm({ showOperatore }) {
       <Row className="mb-4">
         <Hidden name="impianto" value={user.user.impianto?.id || initialData?.impianto} />
         <Hidden name="prezzo" value={price} />
+        <Hidden name="data_fattura" value={dataFattura} />
+        <Hidden name="prezzo_unitario" value={prezzoUnitario} />
         <Hidden name="status" value="L" />
         <Col xs={6} className="flex pr-12 border-r-2 border-r-gray-500">
           <Stack gap={2} className="text-left justify-center">

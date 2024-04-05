@@ -1,5 +1,5 @@
 import "./App.css";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, Outlet } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import { useReducer } from "react";
@@ -34,11 +34,13 @@ import { UserContext } from "./contexts/UserContext";
 import SelezioneCliente from "./pages/AndamentoProduzione/FocusCliente/SelezioneCliente";
 import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati/DatabaseCertificati";
 import VerificaPrezzi from "./pages/CertificatiQualità/VerificaPrezzi/VerificaPrezzi";
+import TaraturaStrumenti from "./pages/CertificatiQualità/TaraturaStrumenti/TaraturaStrumenti";
 import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
 import MappaClienti from "@pages/AndamentoProduzione/MappaClienti/MappaClienti";
 import Impianti from "@pages/AndamentoProduzione/Impianti/Impianti";
 import VersioniProgramma from "@pages/Developer/VersioniProgramma/VersioniProgramma";
 import Utilizzo from "@pages/Developer/Utilizzo/Utilizzo";
+import Wrapper from "@ui/wrapper/Wrapper";
 
 function reducer (state, userInfo) {
   return userInfo
@@ -52,6 +54,14 @@ const queryClient = new QueryClient({
     },
   },
 })
+
+const RouteWrapper = () => (
+  <Wrapper>
+    <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full relative">
+      <Outlet />
+    </div>
+  </Wrapper>
+)
 
 function App() {
   const userData = JSON.parse(localStorage.getItem("user")) || {}
@@ -102,6 +112,9 @@ function App() {
               <Route path="etichette-mta/" element={<EtichetteMTA />}></Route>
               <Route path="database-certificati/" element={<DatabaseCertificati />}></Route>
               <Route path="verifica-prezzi/" element={<VerificaPrezzi />}></Route>
+              <Route element={<RouteWrapper />}>
+                <Route path="taratura-strumenti/" element={<TaraturaStrumenti />}></Route>
+              </Route>
             </Route>
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">
@@ -112,16 +125,16 @@ function App() {
               <Route path="impianti/" element={<Impianti />}></Route>
             </Route>
             {/* Database Documenti */}
-            <Route path="documenti/">
+            <Route path="documenti/"  element={<RouteWrapper />}>
               <Route path="gestisci/" element={<GestisciDocumenti />}></Route>
               <Route path="visualizza/" element={<VisualizzaDocumenti />}></Route>
             </Route>
             {/* Correzione Bagni */}
-            <Route path="correzione-bagni/">
+            <Route path="correzione-bagni/" element={<RouteWrapper />}>
               <Route path="gestisci-richieste/" element={<NuovaRichiesta />}></Route>
             </Route>
             {/* Developer */}
-            <Route path="developer/">
+            <Route path="developer/" element={<RouteWrapper />}>
               <Route path="versioni-programma/" element={<VersioniProgramma />}></Route>
               <Route path="utilizzo/" element={<Utilizzo />}></Route>
             </Route>

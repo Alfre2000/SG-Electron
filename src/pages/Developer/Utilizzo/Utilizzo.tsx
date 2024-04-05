@@ -1,5 +1,4 @@
 import { options4 } from "@charts/barOptions";
-import Wrapper from "@ui/wrapper/Wrapper";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/shadcn/Card";
 import { Bar } from "react-chartjs-2";
@@ -8,17 +7,15 @@ import { URLS } from "urls";
 import Error from "@components/Error/Error";
 import Loading from "@components/Loading/Loading";
 
-
 function Utilizzo() {
   const utilizziQuery = useQuery<any>(URLS.UTILIZZI);
   return (
-    <Wrapper>
-      <div className="my-10 lg:mx-2 xl:mx-6 2xl:mx-12 w-full relative">
-        <div className="flex justify-between items-center">
-          <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">Utilizzo Features</h2>
-        </div>
-        <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
-        <div className="grid gap-4 grid-cols-3">
+    <div>
+      <div className="flex justify-between items-center">
+        <h2 className="scroll-m-20 text-3xl font-semibold first:mt-0 text-gray-800">Utilizzo Features</h2>
+      </div>
+      <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
+      <div className="grid gap-4 grid-cols-3">
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Record Lavorazione</CardTitle>
@@ -112,10 +109,8 @@ function Utilizzo() {
             )}
           </CardContent>
         </Card>
-        
-        </div>
       </div>
-    </Wrapper>
+    </div>
   );
 }
 
