@@ -1,6 +1,8 @@
-import { AvgTelai, TimeSeriesProduction } from "@interfaces/isa";
+import { AvgTelai, RecordTelaio, TimeSeriesProduction } from "@interfaces/isa";
 import TimeSeriesTelaiQuery from "@api/queries/impianti/time_series_telai";
 import AvgTelaiQuery from "@api/queries/impianti/avg_telai";
+import historyTelaiQuery from "@api/queries/impianti/history_telai";
+import { toQueryDate } from "@utils/main";
 
 const tedious = window?.require ? window.require("tedious") : null;
 
@@ -91,13 +93,16 @@ export const getProduction = async (
   endDate.setHours(23, 59, 59, 999);
 
   // enddate is the minimum between the end of the day and the current date minus groupByHour hours
-  endDate = new Date(Math.min(endDate.getTime(), new Date().getTime() + 1 * 60 * 60 * 1000));
-
+  endDate = new Date(Math.min(endDate.getTime(), new Date().getTime() + 0 * 60 * 60 * 1000));
+  console.log(endDate);
+  
   const options = {
     groupByHour: groupByHour.toString(),
-    startDate: startDate.toISOString().split(".")[0],
-    endDate: endDate.toISOString().split(".")[0],
+    startDate: toQueryDate(startDate),
+    endDate: toQueryDate(endDate),
   };
+  console.log(options);
+  
   const queryTxt =query(TimeSeriesTelaiQuery, options)
   return makeDatabaseRequest<TimeSeriesProduction>(queryTxt);
 };
@@ -105,4 +110,25 @@ export const getProduction = async (
 export const avgTelai = async () => {
   const queryTxt =query(AvgTelaiQuery)
   return makeDatabaseRequest<AvgTelai>(queryTxt);
+};
+
+export const historyTelai = async (
+  startDate: Date | undefined,
+  endDate: Date | undefined
+) => {
+  if (!startDate || !endDate) {
+    return [];
+  }
+  endDate.setHours(23, 59, 59, 999);
+
+  // enddate is the minimum between the end of the day and the current date minus groupByHour hours
+  endDate = new Date(Math.min(endDate.getTime(), new Date().getTime() + 0 * 60 * 60 * 1000));
+  console.log(endDate);
+  
+  const options = {
+    startDate: toQueryDate(startDate),
+    endDate: toQueryDate(endDate),
+  };
+  const queryTxt = query(historyTelaiQuery, options)
+  return makeDatabaseRequest<RecordTelaio[]>(queryTxt);
 };

@@ -1,4 +1,4 @@
-import { avgTelai, getProduction } from "@api/isa";
+import { avgTelai, getProduction, historyTelai } from "@api/isa";
 import Error from "@components/Error/Error";
 import Loading from "@components/Loading/Loading";
 import Wrapper from "@ui/wrapper/Wrapper";
@@ -21,6 +21,8 @@ import { DatePickerWithRange } from "@components/shadcn/DatePicker";
 import { DateRange } from "react-day-picker";
 import { addDays } from "date-fns";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { DataTable } from "@ui/base-data-table/data-table";
+import { columns } from "./columns";
 
 const defaultImpianto = "Quattro Carri";
 
@@ -55,6 +57,12 @@ function Impianti() {
     }
   );
   const avgTelaiQuery = useQuery("avgTelai", avgTelai);
+  const historyTelaiQuery = useQuery(
+    ["historyTelai", periodo?.from, periodo?.to],
+    () => historyTelai(periodo?.from, periodo?.to),
+    { keepPreviousData: true }
+  );
+  console.log(historyTelaiQuery.data);
 
   const isSamePeriodo = (a: DateRange | undefined, b: DateRange | undefined) => {
     return a?.from?.getDate() === b?.from?.getDate() && a?.to?.getDate() === b?.to?.getDate();
@@ -248,6 +256,18 @@ function Impianti() {
                     },
                   }}
                 />
+              )}
+            </CardContent>
+          </Card>
+          <Card className="col-span-3">
+            <CardHeader className="space-y-0 pb-2">
+                <CardTitle>Ultime barre</CardTitle>
+            </CardHeader>
+            <CardContent className="mt-4">
+              {historyTelaiQuery.isError && <Error />}
+              {historyTelaiQuery.isLoading && <Loading />}
+              {historyTelaiQuery.isSuccess && (
+                <DataTable data={historyTelaiQuery.data} columns={columns} />
               )}
             </CardContent>
           </Card>

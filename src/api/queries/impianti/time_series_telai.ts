@@ -32,7 +32,7 @@ AggregatedProduction AS (
         AND PartNumber <> 'Vuoto'
         AND DateUnload IS NOT NULL
         AND DateFrom BETWEEN @StartDate AND @EndDate
-        AND (DATEDIFF(minute, DateFrom, DateUnload) > 10 OR State IN ('U', 'N'))
+        AND (DATEDIFF(minute, DateFrom, DateUnload) > 30 OR (DateFrom >= DATEADD(hour, -5, GETDATE()) AND State IN ('U', 'N'))) -- Minimo 30 minuti di produzione. A parte per le lavorazioni che non sono "eliminate" e che sono recenti.
     GROUP BY
         CAST(DateFrom AS DATE),
         (DATEPART(hour, DateFrom) / @GroupByHour) * @GroupByHour
