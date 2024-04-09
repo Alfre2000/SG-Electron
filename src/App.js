@@ -115,7 +115,7 @@ function App() {
               <Route path="database-certificati/" element={<DatabaseCertificati />}></Route>
               <Route path="verifica-prezzi/" element={<VerificaPrezzi />}></Route>
               <Route element={<RouteWrapper />}>
-                <Route path="taratura-strumenti/" element={<TaraturaStrumenti />}></Route>
+                {/* <Route path="taratura-strumenti/" element={<TaraturaStrumenti />}></Route> */}
               </Route>
             </Route>
             {/* Andamento Produzione */}
