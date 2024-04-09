@@ -88,10 +88,12 @@ function App() {
               <Route path="record-lavorazione-in-sospeso/" element={<LavorazioniInSospeso />}></Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
               <Route path="record-scheda-impianto/" element={<RecordSchedaImpianto />}></Route>
-              <Route path="schede-sicurezza/" element={<VisualizzaDocumenti directory="Schede Sicurezza" />}></Route>
-              <Route path="istruzioni-sicurezza/" element={<VisualizzaDocumenti directory="Istruzioni operative della sicurezza" />}></Route>
-              <Route path="schede-tecniche/" element={<VisualizzaDocumenti directory="Schede tecniche" />}></Route>
-              <Route path="controlli-finali/" element={<VisualizzaDocumenti directory="Istruzioni Controlli Finali" />}></Route>
+              <Route element={<RouteWrapper />}>
+                <Route path="schede-sicurezza/" element={<VisualizzaDocumenti directory="Schede Sicurezza" />}></Route>
+                <Route path="istruzioni-sicurezza/" element={<VisualizzaDocumenti directory="Istruzioni operative della sicurezza" />}></Route>
+                <Route path="schede-tecniche/" element={<VisualizzaDocumenti directory="Schede tecniche" />}></Route>
+                <Route path="controlli-finali/" element={<VisualizzaDocumenti directory="Istruzioni Controlli Finali" />}></Route>
+              </Route>
               <Route path="richiesta-correzione-bagno/:richiestaID/" element={<CorrezioneBagno />}></Route>
             </Route>
             {/* Area Admin */}
