@@ -5,6 +5,7 @@ const http = require('http');
 const { app, BrowserWindow, ipcMain, desktopCapturer, dialog, Menu } = require('electron');
 const isDev = require('electron-is-dev');
 const mainMenu = require('./mainMenu');
+const fetchAlerts = require('./alerts');
 const createWindow = require('./createWindow');
 const JSZip = require('jszip');
 
@@ -15,6 +16,9 @@ app.whenReady().then(() => {
   createWindow();
   const menu = Menu.buildFromTemplate(mainMenu);
   Menu.setApplicationMenu(menu);
+
+  setInterval(fetchAlerts, 1000 * 60 * 5); // 5 minuti
+
   ipcMain.handle('toggle-fullscreen', () => {
     const win = BrowserWindow.getFocusedWindow()
     win.setFullScreen(!win.isFullScreen())  
@@ -147,6 +151,13 @@ app.whenReady().then(() => {
       }
     });
 
+  })
+  ipcMain.handle('alert-visualizza-richiesta', (event, richiestaID) => {
+    const win = BrowserWindow.getFocusedWindow()
+    win.close()
+    const mainWindow = BrowserWindow.getAllWindows().filter(w => w.id !== win.id)[0];
+    mainWindow.webContents.send('go-to-richiesta', richiestaID);
+    mainWindow.show();
   })
   ipcMain.handle('save-zip', (_, file, defaultName) => {
     const win = BrowserWindow.getFocusedWindow()

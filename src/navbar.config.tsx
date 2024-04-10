@@ -67,7 +67,7 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
     },
   ];
   // Se non è l'impianto Ossido, rimuovi le manutenzioni e aggiungi la scheda dell'ossido
-  if (!user.impianto?.nome.toLowerCase().includes("ossido")) {
+  if (!user?.impianto?.nome.toLowerCase().includes("ossido")) {
     items.splice(2, 1); // Remove Manutenzioni
     items[2].links.splice(0, 1); // Remove Prossime Manutenzioni
     items.splice(2, 1); // Remove Informazioni
@@ -79,7 +79,7 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       links: [{ name: "Nuova scheda", link: "/manutenzione/record-lavorazione-ossido/" }],
     });
   }
-  if (!user.impianto?.nome) {
+  if (!user?.impianto?.nome) {
     items = [];
   }
   return items;

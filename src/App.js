@@ -1,8 +1,8 @@
 import "./App.css";
-import { HashRouter, Routes, Route, Outlet } from "react-router-dom";
+import { HashRouter, Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import RecordLavorazioneOssido from "./pages/GestioneImpianto/RecordLavorazioneOssido/RecordLavorazioneOssido";
 import Analisi from "./pages/GestioneImpianto/Analisi/Analisi";
 import Fissaggio from "./pages/GestioneImpianto/Fissaggio/Fissaggio";
@@ -14,6 +14,7 @@ import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
+import AlertRichieste from "./pages/GestioneImpianto/AlertRichieste";
 import CorrezioneBagno from "./pages/GestioneImpianto/CorrezioneBagno/CorrezioneBagno";
 import VisualizzaDocumenti from "./pages/DatabaseDocumenti/VisualizzaDocumenti/VisualizzaDocumenti";
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
@@ -41,6 +42,7 @@ import Impianti from "@pages/AndamentoProduzione/Impianti/Impianti";
 import VersioniProgramma from "@pages/Developer/VersioniProgramma/VersioniProgramma";
 import Utilizzo from "@pages/Developer/Utilizzo/Utilizzo";
 import Wrapper from "@ui/wrapper/Wrapper";
+const electron = window?.require ? window.require("electron") : null;
 
 function reducer (state, userInfo) {
   return userInfo
@@ -75,6 +77,7 @@ function App() {
       <div className="flex" style={{userSelect: "none"}}>
         <HashRouter>
           <Routes>
+          <Route element={<ElectronWrapper />}>
             <Route path="/" element={<HomePage />}></Route>
             <Route path="login/" element={<Login afterLogin={loginSuccess} />}></Route>
             {/* Gestione Impianto */}
@@ -95,6 +98,7 @@ function App() {
                 <Route path="controlli-finali/" element={<VisualizzaDocumenti directory="Istruzioni Controlli Finali" />}></Route>
               </Route>
               <Route path="richiesta-correzione-bagno/:richiestaID/" element={<CorrezioneBagno />}></Route>
+              <Route path="alert-richieste/" element={<AlertRichieste />}></Route>
             </Route>
             {/* Area Admin */}
             <Route path="area-admin/">
@@ -140,6 +144,7 @@ function App() {
               <Route path="versioni-programma/" element={<VersioniProgramma />}></Route>
               <Route path="utilizzo/" element={<Utilizzo />}></Route>
             </Route>
+            </Route>
           </Routes>
         </HashRouter>
       </div>
@@ -150,3 +155,24 @@ function App() {
 }
 
 export default App;
+
+
+const ElectronWrapper = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const handleGetUser = (event) => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      electron.ipcRenderer.send('send-user', user);
+    };
+    const handleAlertVisualizzaRichiesta = (event, richiestaID) => {
+      navigate(`/manutenzione/richiesta-correzione-bagno/${richiestaID}`);
+    }
+    electron.ipcRenderer.on('get-user', handleGetUser);
+    electron.ipcRenderer.on('go-to-richiesta', handleAlertVisualizzaRichiesta);
+    return () => {
+      electron.ipcRenderer.removeListener('get-user', handleGetUser);
+      electron.ipcRenderer.removeListener('go-to-richiesta', handleAlertVisualizzaRichiesta);
+    };
+  }, [navigate]);
+  return <Outlet />
+}

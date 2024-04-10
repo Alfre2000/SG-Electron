@@ -137,21 +137,21 @@ export const getDatiBollaMago = async (n_bolla) => {
     item.spessore_massimo,
     item.n_misurazioni,
     item.mail_cliente,
-    sale.job AS n_lotto_super,
-    sale.line as line_lotto,
+    sale.internalordno AS n_lotto_super,
+    sale.position as line_lotto,
     sale.taxableamount as taxableamount
   FROM ma_saledoc AS doc
   JOIN ma_custsupp AS cust ON doc.custsupp = cust.custsupp
   JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
   JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
   JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
-  JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
+  JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.position = detail.saleordpos
   LEFT JOIN (
-    select doc.DocumentDate, sale.job, sale.line from MA_SaleDoc as doc
+    select doc.DocumentDate, sale.internalordno, sale.position from MA_SaleDoc as doc
     JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
-    JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
+    JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.position = detail.saleordpos
     where doc.documenttype = '3407874'
-  ) as fattura on sale.job = fattura.job and sale.line = fattura.line
+  ) as fattura on sale.internalordno = fattura.internalordno and sale.position = fattura.position
   WHERE doc.documenttype = 3407873 
     AND doc.CustSuppType = 3211264 
     AND doc.docno = '${numero_documento}' 
@@ -179,7 +179,7 @@ export const getLottoInformation = async (n_lotto) => {
       sale.taxableamount as price,
       sale.unitvalue as prezzo_unitario,
       base_item.description as descrizione_articolo,
-      CONCAT(sale.job, '.', sale.line) AS lotto_super,
+      CONCAT(sale.internalordno, '.', sale.position) AS lotto_super,
       cust.companyname,
       cust.address,
       cust.zipcode,
@@ -196,7 +196,7 @@ export const getLottoInformation = async (n_lotto) => {
       item.trattamento5,
       item.superficie,
       item.pesopezzo as peso,
-      CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
+      item.articolo_certificato as articolo_certificato,
       item.specifiche_it,
       item.specifiche_en,
       item.trattamento_certificato,
@@ -209,12 +209,12 @@ export const getLottoInformation = async (n_lotto) => {
       JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
       JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
       LEFT JOIN (
-        select doc.DocumentDate, sale.job, sale.line from MA_SaleDoc as doc
+        select doc.DocumentDate, sale.internalordno, sale.position from MA_SaleDoc as doc
         JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
-        JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.line = detail.saleordpos
+        JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.position = detail.saleordpos
         where doc.documenttype = '3407874'
-      ) as fattura on sale.job = fattura.job and sale.line = fattura.line
-    WHERE sale.job = '${job}' AND sale.line = '${line}'
+      ) as fattura on sale.internalordno = fattura.internalordno and sale.position = fattura.position
+    WHERE sale.internalordno = '${job}' AND sale.position = '${line}'
   `
   const res = await makeDatabaseRequest(query);
   // const res = EXAMPLE;
@@ -232,8 +232,8 @@ export const getEntireLottoInformation = async (n_lotto) => {
       sale.taxableamount as taxableamount,
       sale.unitvalue as prezzo_unitario,
       base_item.description as descrizione_articolo,
-      sale.job as n_lotto_super,
-      sale.line as line_lotto,
+      sale.internalordno as n_lotto_super,
+      sale.position as line_lotto,
       cust.companyname,
       cust.address,
       cust.zipcode,
@@ -250,7 +250,7 @@ export const getEntireLottoInformation = async (n_lotto) => {
       item.trattamento5,
       item.superficie,
       item.pesopezzo as peso,
-      CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
+      item.articolo_certificato as articolo_certificato,
       item.specifiche_it,
       item.specifiche_en,
       item.trattamento_certificato,
@@ -262,7 +262,7 @@ export const getEntireLottoInformation = async (n_lotto) => {
       JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
       JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
       JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
-    WHERE sale.job = '${n_lotto}'
+    WHERE sale.internalordno = '${n_lotto}'
   `
   const res = await makeDatabaseRequest(query);
   // return EXAMPLE;
@@ -275,19 +275,19 @@ export const getDatiEtichettaMago = async (n_lotto) => {
       sale.item,
       sale.qty,
       sale.uom,
-      sale.job,
-      sale.line,
+      sale.internalordno,
+      sale.position,
       sale.description,
       cust.companyname,
-      CASE WHEN item.articolo_certificato = '' THEN base_item.description ELSE item.articolo_certificato end as articolo_certificato,
+      item.articolo_certificato as articolo_certificato,
       item.impianto,
       item.note
     FROM ma_saleorddetails AS sale
       JOIN bt_supergitems AS item ON sale.item = item.cod_articolo
       JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
       JOIN ma_custsupp AS cust ON sale.customer = cust.custsupp
-    WHERE sale.job = '${n_lotto}'
-    ORDER BY sale.line
+    WHERE sale.internalordno = '${n_lotto}'
+    ORDER BY sale.position
   `
   const res = await makeDatabaseRequest(query);
   return res
