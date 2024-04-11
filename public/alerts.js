@@ -9,6 +9,7 @@ const BASE_PATH =
 let alertWindow = null;
 
 module.exports = function fetchAlerts() {
+  if (BrowserWindow.getAllWindows().length === 0) return;
   let mainWindow = BrowserWindow.getAllWindows()[0];
 
   mainWindow.webContents.send("get-user");
