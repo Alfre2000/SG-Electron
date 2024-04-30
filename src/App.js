@@ -10,6 +10,7 @@ import Manutenzione from "./pages/GestioneImpianto/Manutenzione/Manutenzione";
 import Prossime from "./pages/GestioneImpianto/Prossime/Prossime";
 import RecordLavorazione from "./pages/GestioneImpianto/RecordLavorazione/RecordLavorazione";
 import SelezioneImpianto from "./pages/GestioneImpianto/SelezioneImpianto/SelezioneImpianto";
+import ListaCorrezioniBagno from "./pages/GestioneImpianto/ListaCorrezioniBagno/ListaCorrezioniBagno";
 import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
@@ -99,6 +100,7 @@ function App() {
               </Route>
               <Route path="richiesta-correzione-bagno/:richiestaID/" element={<CorrezioneBagno />}></Route>
               <Route path="alert-richieste/" element={<AlertRichieste />}></Route>
+              <Route path="lista-correzioni-bagno/" element={<ListaCorrezioniBagno />}></Route>
             </Route>
             {/* Area Admin */}
             <Route path="area-admin/">

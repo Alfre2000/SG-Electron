@@ -7,6 +7,7 @@ const log = require('electron-log');
 const BASE_PATH = isDev ? "http://localhost:8000" : "https://supergalvanica.herokuapp.com";
 
 let alertWindow = null;
+let lastClose = null;
 
 module.exports = function fetchAlerts() {
   if (BrowserWindow.getAllWindows().length === 0) return;
@@ -33,6 +34,8 @@ module.exports = function fetchAlerts() {
             alertWindow.show();
             return; 
           }
+          // if the last close was less than 20 minutes ago, don't open the window
+          if (lastClose && new Date() - lastClose < 20 * 60 * 1000) return;
           log.info("Creating alert window");
           alertWindow = new BrowserWindow({
             width: 600,
@@ -54,11 +57,9 @@ module.exports = function fetchAlerts() {
 
           alertWindow.loadURL(pageUrl);
 
-          alertWindow.on("closed", () => {
-            // Per 10 minuti dopo la chiusura della finestra, non mostrare più alert
-            setTimeout(() => {
-              alertWindow = null;
-            }, 1000 * 60 * 10); // 10 minuti
+          alertWindow.on("close", () => {
+            alertWindow = null;
+            lastClose = new Date();
           });
         } else {
           if (alertWindow) {

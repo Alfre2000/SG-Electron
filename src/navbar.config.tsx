@@ -65,6 +65,11 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
         { name: "Istruzioni di sicurezza", link: "/manutenzione/istruzioni-sicurezza/" },
       ],
     },
+    {
+      title: "Correzioni Bagno",
+      icon: faAtom,
+      links: [{ name: "Correzioni Bagno", link: "/manutenzione/lista-correzioni-bagno/" }],
+    },
   ];
   // Se non è l'impianto Ossido, rimuovi le manutenzioni e aggiungi la scheda dell'ossido
   if (!user?.impianto?.nome.toLowerCase().includes("ossido")) {
@@ -204,7 +209,7 @@ const navbarDatabaseDocumenti = (user: UserContextType["user"]["user"]) => {
       links: [{ name: "Gestisci Documenti", link: "/documenti/gestisci/" }],
     },
   ];
-  if (!user.is_staff && user.username !== "vincenzo") {
+  if (!user.is_staff && user.username !== "vincenzo" && user.username !== "gabriella") {
     items.pop(); // Remove Gestisci
   }
   return items;
