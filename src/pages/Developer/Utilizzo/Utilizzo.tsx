@@ -59,7 +59,7 @@ function Utilizzo() {
                 options={options4}
                 data={{
                   labels: utilizziQuery.data.certificati.map((item: any) =>
-                    new Date(item.data_certificato).toLocaleDateString("it-IT", {
+                    new Date(item.giorno).toLocaleDateString("it-IT", {
                       day: "numeric",
                       month: "short",
                       year: "numeric",
@@ -99,6 +99,37 @@ function Utilizzo() {
                   datasets: [
                     {
                       data: utilizziQuery.data.correzioni_bagni.map((item: any) => item.count),
+                      backgroundColor: "#212163",
+                      borderColor: "#212163",
+                      borderWidth: 1,
+                    },
+                  ],
+                }}
+              />
+            )}
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Misurazioni</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2 h-[350px]">
+            {utilizziQuery.isError && <Error />}
+            {utilizziQuery.isLoading && <Loading className="m-auto relative top-28" />}
+            {utilizziQuery.isSuccess && (
+              <Bar
+                options={options4}
+                data={{
+                  labels: utilizziQuery.data.misurazioni.map((item: any) =>
+                    new Date(item.giorno).toLocaleDateString("it-IT", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })
+                  ),
+                  datasets: [
+                    {
+                      data: utilizziQuery.data.misurazioni.map((item: any) => item.count),
                       backgroundColor: "#212163",
                       borderColor: "#212163",
                       borderWidth: 1,
