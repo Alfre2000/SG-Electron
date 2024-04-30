@@ -2,9 +2,9 @@ const { ipcMain, BrowserWindow } = require("electron");
 const axios = require("axios");
 const path = require("path");
 const isDev = require("electron-is-dev");
+const log = require('electron-log');
 
-const BASE_PATH =
-  process.env.NODE_ENV === "production" ? "https://supergalvanica.herokuapp.com" : "http://localhost:8000";
+const BASE_PATH = isDev ? "http://localhost:8000" : "https://supergalvanica.herokuapp.com";
 
 let alertWindow = null;
 
@@ -16,6 +16,7 @@ module.exports = function fetchAlerts() {
   ipcMain.once("send-user", (event, user) => {
     let url = `${BASE_PATH}/analisi-manutenzioni/richieste-correzione-bagno?eseguita=false`;
     const impianto = user?.user?.impianto;
+    log.info(user?.key, impianto);
     if (!user?.key || !impianto) return;
     url += `&impianto=${impianto.id}`;
     axios
@@ -26,11 +27,13 @@ module.exports = function fetchAlerts() {
         },
       })
       .then((response) => {
+        log.info(response.data.results);
         if (response.data.results.length > 0) {
           if (alertWindow) {
             alertWindow.show();
             return; 
           }
+          log.info("Creating alert window");
           alertWindow = new BrowserWindow({
             width: 600,
             minWidth: 600,
@@ -52,10 +55,10 @@ module.exports = function fetchAlerts() {
           alertWindow.loadURL(pageUrl);
 
           alertWindow.on("closed", () => {
-            // Per 30 minuti dopo la chiusura della finestra, non mostrare più alert
+            // Per 10 minuti dopo la chiusura della finestra, non mostrare più alert
             setTimeout(() => {
               alertWindow = null;
-            }, 1000 * 60 * 30); // 30 minuti
+            }, 1000 * 60 * 10); // 10 minuti
           });
         } else {
           if (alertWindow) {
@@ -65,6 +68,7 @@ module.exports = function fetchAlerts() {
         }
       })
       .catch((error) => {
+        log.error(error);
         console.error(error);
       });
   });

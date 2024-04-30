@@ -162,6 +162,7 @@ const ElectronWrapper = () => {
   useEffect(() => {
     const handleGetUser = (event) => {
       const user = JSON.parse(localStorage.getItem("user"));
+      console.log("Sending user", user);
       electron.ipcRenderer.send('send-user', user);
     };
     const handleAlertVisualizzaRichiesta = (event, richiestaID) => {
