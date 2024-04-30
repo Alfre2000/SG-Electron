@@ -5,7 +5,13 @@ import { Documento as Doc } from "@interfaces/global";
 import Error from "@components/Error/Error";
 import Loading from "@components/Loading/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare, faFolder, faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsRotate,
+  faArrowUpRightFromSquare,
+  faFolder,
+  faTrash,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
 import { Table, TableBody, TableCell, TableRow, TableHead, TableHeader } from "@components/shadcn/Table";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/shadcn/Form";
 import { Input } from "@components/shadcn/Input";
@@ -40,7 +46,9 @@ function GestisciDocumenti() {
   const [path, setPath] = useState("");
   const [isDeleteOpen, setIsDeleteOpen] = useState("");
   const [documentoModify, setDocumentoModify] = useState<string | null>(null);
+  const [documentoMove, setDocumentoMove] = useState<string | null>(null);
   const documentiQuery = useQuery<Doc[]>(URLS.DOCUMENTI);
+  const allDirectories = [...new Set(documentiQuery.data?.map((doc) => doc.path))];
   const filteredDocumenti = documentiQuery.data?.filter(
     (documento) => documento.path === path && documento.nome.toLowerCase().includes(filter.toLowerCase())
   );
@@ -88,6 +96,19 @@ function GestisciDocumenti() {
         setDocumentoModify(null);
         documentiQuery.refetch();
         toast.success("Documento sostituito con successo");
+      },
+      onError: (error) => {
+        toast.error("Si è verificato un errore.");
+      },
+    }
+  );
+  const moveMutation = useMutation(
+    (data: FormData) => apiUpdate(URLS.UPDATE_DOCUMENTO + documentoMove + "/", data),
+    {
+      onSuccess: () => {
+        setDocumentoMove(null);
+        documentiQuery.refetch();
+        toast.success("Documento spostato con successo");
       },
       onError: (error) => {
         toast.error("Si è verificato un errore.");
@@ -172,6 +193,7 @@ function GestisciDocumenti() {
                     <TableHead className="py-1 pl-3 h-6">Ultima Modifica</TableHead>
                     <TableHead className="py-1 text-center h-6">Visualizza</TableHead>
                     <TableHead className="py-1 text-center h-6">Sostituisci</TableHead>
+                    <TableHead className="py-1 text-center h-6">Sposta</TableHead>
                     <TableHead className="py-1 text-center h-6">Elimina</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -216,6 +238,12 @@ function GestisciDocumenti() {
                       </TableCell>
                       <TableCell
                         className="py-1 border border-gray-50 text-center cursor-pointer"
+                        onClick={() => setDocumentoMove(documento.id)}
+                      >
+                        <FontAwesomeIcon icon={faArrowsRotate} size="sm" className="text-slate-400" />
+                      </TableCell>
+                      <TableCell
+                        className="py-1 border border-gray-50 text-center cursor-pointer"
                         onClick={() => setIsDeleteOpen(documento.id)}
                       >
                         <FontAwesomeIcon icon={faTrash} size="sm" className="text-red-800/70" />
@@ -235,6 +263,7 @@ function GestisciDocumenti() {
                         </div>
                       </TableCell>
                       <TableCell className="border border-gray-50 py-1 pl-3 w-1/3"></TableCell>
+                      <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
                       <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
                       <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
                       <TableCell className="border border-gray-50 py-1 pl-3"></TableCell>
@@ -264,6 +293,33 @@ function GestisciDocumenti() {
               <Button>Annulla</Button>
             </DialogClose>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!documentoMove} onOpenChange={() => setDocumentoMove("")}>
+        <DialogContent className="w-[650px]">
+          <DialogHeader className="text-left">
+            <DialogTitle className="font-semibold text-xl">Dove vuoi spostare il file ?</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-96 overflow-scroll divide-y divide-gray-200 border-y border-gray-200">
+            {allDirectories.map((directory) => (
+              <div
+                key={directory}
+                className="cursor-pointer hover:bg-gray-100 p-2 border-x border-gray-200"
+                onClick={() => {
+                  const data = new FormData();
+                  data.append("path", directory);
+                  moveMutation.mutate(data);
+                }}
+              >
+                {directory.split("/").map((d, index) => (
+                  <span key={index} className="text-sm">
+                    {d}
+                    {index < directory.split("/").length - 1 && <span className="mx-1">/</span>}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
         </DialogContent>
       </Dialog>
       <Dialog open={!!documentoModify} onOpenChange={() => setDocumentoModify(null)}>
