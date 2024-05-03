@@ -189,14 +189,14 @@ function EtichetteMTA() {
                       <td>
                         {error &&
                           !loadingDati &&
-                          Object.keys(error)?.includes(lotto.line.toString()) && (
+                          Object.keys(error)?.includes(lotto.position.toString()) && (
                             <FontAwesomeIcon
                               icon={faCircleExclamation}
                               className="absolute -left-8 text-red-800"
                               size="lg"
                             />
                           )}
-                        {lotto.line}
+                        {lotto.position}
                       </td>
                       <td>{lotto.item}</td>
                       <td>{lotto.description}</td>
