@@ -170,11 +170,16 @@ const ElectronWrapper = () => {
     const handleAlertVisualizzaRichiesta = (event, richiestaID) => {
       navigate(`/manutenzione/richiesta-correzione-bagno/${richiestaID}`);
     }
+    const handleGoToPage = (event, page) => {
+      navigate(page);
+    }
     electron.ipcRenderer.on('get-user', handleGetUser);
     electron.ipcRenderer.on('go-to-richiesta', handleAlertVisualizzaRichiesta);
+    electron.ipcRenderer.on('go-to-page', handleGoToPage);
     return () => {
       electron.ipcRenderer.removeListener('get-user', handleGetUser);
       electron.ipcRenderer.removeListener('go-to-richiesta', handleAlertVisualizzaRichiesta);
+      electron.ipcRenderer.removeListener('go-to-page', handleGoToPage);
     };
   }, [navigate]);
   return <Outlet />
