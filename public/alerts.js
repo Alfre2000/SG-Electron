@@ -57,7 +57,7 @@ module.exports = function fetchAlerts() {
 
           const pageUrl = isDev
             ? "http://localhost:3000/#/manutenzione/alert-richieste/"
-            : `file://${path.join(__dirname, "../build/index.html")}`
+            : `file://${path.join(__dirname, "../build/index.html/#/manutenzione/alert-richieste/")}`
 
 
           alertWindow.on("close", () => {
