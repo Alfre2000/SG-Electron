@@ -17,7 +17,7 @@ app.whenReady().then(() => {
   const menu = Menu.buildFromTemplate(mainMenu);
   Menu.setApplicationMenu(menu);
 
-  setInterval(fetchAlerts, 1000 * 10); // 5 minuti
+  setInterval(fetchAlerts, 1000 * 60 * 2); // 2 minuti
 
   ipcMain.handle('toggle-fullscreen', () => {
     const win = BrowserWindow.getFocusedWindow()
