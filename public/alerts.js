@@ -50,12 +50,15 @@ module.exports = function fetchAlerts() {
             show: false,
           });
           alertWindow.once("ready-to-show", alertWindow.show);
+          
+          setTimeout(() => {
+            alertWindow.loadURL(pageUrl);
+          }, 1000)
 
           const pageUrl = isDev
             ? "http://localhost:3000/#/manutenzione/alert-richieste/"
-            : `file://${path.join(__dirname, "../build/index.html#/manutenzione/alert-richieste/")}`;
+            : `file://${path.join(__dirname, "../build/index.html")}`
 
-          alertWindow.loadURL(pageUrl);
 
           alertWindow.on("close", () => {
             alertWindow = null;

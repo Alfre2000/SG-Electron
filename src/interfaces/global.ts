@@ -138,7 +138,37 @@ export type RecordLavorazione = {
   status: string;
   completata: boolean;
   data: string;
+  data_arrivo: string;
+  data_consegna: string;
+  data_consegna_prevista: string;
   ultima_modifica: string;
+};
+
+export type RecordLavorazioneStatus = {
+  id: string;
+  status: string;
+  completata: boolean;
+  data: string;
+  data_arrivo: string;
+  data_consegna: string;
+  data_consegna_prevista: string;
+  ritardo: number;
+  articolo: string;
+  consegne: Consegna[];
+  n_lotto_super: string;
+};
+
+export type Consegna = {
+  id: string;
+  record_lavorazione: string;
+  n_bolla: string;
+  riga_bolla: string;
+  data_consegna: string;
+  data_fattura?: string;
+  quantità: number;
+  prezzo: number;
+  prezzo_unitario: number;
+  descrizione: string;
 };
 
 export type PrezziMetalli = {

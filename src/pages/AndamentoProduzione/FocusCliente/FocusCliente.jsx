@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/sh
 import Panoramica from "./tabs/Panoramica";
 import Anagrafica from "./tabs/Anagrafica";
 import Prezzi from "./tabs/Prezzi";
+import Magazzino from "./tabs/Magazzino/Magazzino";
 
 function FocusCliente() {
   const { cliente } = useParams();
@@ -22,6 +23,7 @@ function FocusCliente() {
             <TabsList>
               <TabsTrigger value="panoramica">Panoramica</TabsTrigger>
               <TabsTrigger value="anagrafica">Anagrafica</TabsTrigger>
+              <TabsTrigger value="magazzino">Magazzino</TabsTrigger>
               <TabsTrigger value="prezzi">Prezzi</TabsTrigger>
             </TabsList>
             <div id="tabs-side" className="w-40"></div>
@@ -34,6 +36,9 @@ function FocusCliente() {
           </TabsContent>
           <TabsContent value="prezzi">
             <Prezzi />
+          </TabsContent>
+          <TabsContent value="magazzino">
+            <Magazzino />
           </TabsContent>
         </Tabs>
       </div>

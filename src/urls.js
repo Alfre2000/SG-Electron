@@ -43,6 +43,7 @@ export const URLS = {
     UPDATE_DOCUMENTO: BASE_PATH + '/base/update-documento/',
 
     // SCHEDE CONTROLLO
+    RECORD_LAVORAZIONI_STATUS: BASE_PATH + '/scheda-controllo/record-lavorazione-status',
     RECORD_LAVORAZIONI: BASE_PATH + '/scheda-controllo/record-lavorazioni?pre_lavorazione=false',
     RECORD_LAVORAZIONI_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=True&pre_lavorazione=false',
     RECORD_LAVORAZIONI_NOT_OSSIDO: BASE_PATH + '/scheda-controllo/record-lavorazioni?valvola=False&pre_lavorazione=false',

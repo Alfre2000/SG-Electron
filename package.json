@@ -2,7 +2,7 @@
   "name": "SuperGalvanica",
   "description": "Applicazione per la gestione dei processi aziendali",
   "author": "Alfredo Mauri",
-  "version": "2.6.13",
+  "version": "2.6.14",
   "private": false,
   "homepage": "./",
   "dependencies": {
@@ -79,6 +79,7 @@
     "watch": "electron .",
     "dev": "BROWSER=none npm start",
     "build-el": "npm run build && electron-builder -mw",
+    "build-w": "npm run build && electron-builder -w",
     "build-m": "npm run build && electron-builder -m",
     "release": "npm run build && electron-builder -mw -p 'onTagOrDraft'"
   },
