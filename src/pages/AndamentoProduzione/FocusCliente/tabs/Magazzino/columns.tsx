@@ -56,6 +56,12 @@ export const columns: ColumnDef<RecordLavorazioneStatus>[] = [
       return (
         <div className="flex flex-col justify-between">
           <div className="flex items-center mt-[10px]">
+            <div className="bg-green-600"></div>
+            <div className="bg-red-600"></div>
+            <div className="bg-blue-600"></div>
+            <div className="bg-green-500"></div>
+            <div className="bg-red-500"></div>
+            <div className="bg-blue-500"></div>
             <div className="h-0.5 w-full bg-gray-700 rounded-full">
               <div className={`h-0.5 ${progressClass} bg-${color}-500 rounded-full relative`}>
                 <div className={`rounded-full size-3 bg-${color}-600 absolute right-0 -top-[5px]`}></div>

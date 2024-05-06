@@ -47,7 +47,7 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       links: [
         { name: "Fissaggio", link: "/manutenzione/fissaggio/" },
         { name: "Manutenzioni", link: "/manutenzione/manutenzioni/" },
-        { name: "Analisi", link: "/manutenzione/analisi/" },
+        // { name: "Analisi", link: "/manutenzione/analisi/" },
       ],
     },
     {
