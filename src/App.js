@@ -93,10 +93,7 @@ function App() {
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
               <Route path="record-scheda-impianto/" element={<RecordSchedaImpianto />}></Route>
               <Route element={<RouteWrapper />}>
-                <Route path="schede-sicurezza/" element={<VisualizzaDocumenti directory="Schede Sicurezza" />}></Route>
-                <Route path="istruzioni-sicurezza/" element={<VisualizzaDocumenti directory="Istruzioni operative della sicurezza" />}></Route>
-                <Route path="schede-tecniche/" element={<VisualizzaDocumenti directory="Schede tecniche" />}></Route>
-                <Route path="controlli-finali/" element={<VisualizzaDocumenti directory="Istruzioni Controlli Finali" />}></Route>
+                <Route path="visualizza/" element={<VisualizzaDocumenti />}></Route>
               </Route>
               <Route path="richiesta-correzione-bagno/:richiestaID/" element={<CorrezioneBagno />}></Route>
               <Route path="alert-richieste/" element={<AlertRichieste />}></Route>

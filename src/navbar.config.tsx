@@ -20,7 +20,6 @@ import {
   faFolderTree,
   faFilePdf,
   faAtom,
-  faComputer,
   faCodeBranch,
   faMagnifyingGlass,
   faRuler,
@@ -59,10 +58,7 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       title: "Documenti",
       icon: faFilePdf,
       links: [
-        { name: "Schede di sicurezza", link: "/manutenzione/schede-sicurezza/" },
-        { name: "Schede tecniche", link: "/manutenzione/schede-tecniche/" },
-        { name: "Istruzioni controlli finali", link: "/manutenzione/controlli-finali/" },
-        { name: "Istruzioni di sicurezza", link: "/manutenzione/istruzioni-sicurezza/" },
+        { name: "Documenti", link: "/manutenzione/visualizza/" },
       ],
     },
     {
