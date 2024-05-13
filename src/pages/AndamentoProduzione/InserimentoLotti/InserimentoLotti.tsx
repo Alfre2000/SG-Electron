@@ -25,7 +25,7 @@ function InserimentoLotti() {
         }))
         .sort((a, b) => a.nome.localeCompare(b.nome)),
   });
-  const start = addDays(new Date(), -30);
+  const start = addDays(new Date(), -7);
   start.setHours(0, 0, 0, 0);
   const recordsQuery = useQuery<PaginationData<RecordLavorazione>>([
     URLS.RECORD_LAVORAZIONI,
