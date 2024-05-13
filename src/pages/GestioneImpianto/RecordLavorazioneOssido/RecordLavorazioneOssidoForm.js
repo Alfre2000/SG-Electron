@@ -28,8 +28,9 @@ function RecordLavorazioneOssidoForm() {
   );
 
   const { user } = useUserContext();
-  const { initialData } = useFormContext();
+  const { initialData, view } = useFormContext();
   const info = initialData?.dati_aggiuntivi;
+  const [lotto, setLotto] = useState(initialData?.n_lotto_super || "");
   const [materiale, setMateriale] = useState(info?.n_difetti_materiale || 0);
   const [sporco, setSporco] = useState(info?.n_difetti_sporco || 0);
   const [meccanici, setMeccanici] = useState(info?.n_difetti_meccanici || 0);
@@ -79,6 +80,33 @@ function RecordLavorazioneOssidoForm() {
       });
     }
   }, [initialData, handleValoreChange]);
+
+  const loadLotto = (e) => {
+    console.log(e);
+    if (view || initialData) {
+      setLotto(e.target.value);
+      return;
+    }
+    let value = e.target.value;
+    if (/^\d{2}-\d{6,7}$/.test(value)) {
+      value = value.replace("-", "/");
+      value = value.replace(/(\d{5})/, "$1.");
+    }
+    setLotto(value);
+  }
+  useState(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.target.name === "n_lotto_super") {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    });
+    return () => {
+      document.removeEventListener("keydown", (e) => {
+        console.log(e);
+      });
+    };
+  }, []);
   return (
     <>
       <Row className="mb-4 justify-between">
@@ -120,7 +148,7 @@ function RecordLavorazioneOssidoForm() {
               label="Lotto Supergalvanica:"
               name="n_lotto_super"
               labelCols={5}
-              inputProps={{ required: true }}
+              inputProps={{ value: lotto, onChange: loadLotto }}
               labelProps={{ className: "pr-6" }}
             />
             <Checkbox
