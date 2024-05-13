@@ -61,7 +61,7 @@ function RecordLavorazioneForm({ showOperatore }) {
       value = value.replace(/(\d{5})/, "$1.");
     }
     setLotto(value);
-    const regex = /^\d{2}\/\d{5}[/.]\d{1,2}$/;
+    const regex = /^\d{2}\/\d{5}[/.]\d{1,3}$/;
     if (regex.test(value)) {
       setLoadingLotto(true);
       getLottoInformation(value).then((res) => {
