@@ -12,6 +12,7 @@ import Error from "@components/Error/Error";
 import Loading from "@components/Loading/Loading";
 import { DataTable } from "@ui/full-data-table/data-table";
 import { columns } from "./columns";
+import { dateToDatePicker } from "utils";
 
 function InserimentoLotti() {
   const [impianto, setImpianto] = useState<number>(2);
@@ -24,14 +25,13 @@ function InserimentoLotti() {
         }))
         .sort((a, b) => a.nome.localeCompare(b.nome)),
   });
-  const start = addDays(new Date(), -7);
+  const start = addDays(new Date(), -30);
   start.setHours(0, 0, 0, 0);
   const recordsQuery = useQuery<PaginationData<RecordLavorazione>>([
     URLS.RECORD_LAVORAZIONI,
-    { status: "C" },
     { consegnato: true },
     { impianto },
-    { data__gt: start.toISOString() },
+    { data_consegna__gt: dateToDatePicker(start) },
     { custom_page_size: 1000 },
   ]);
   const { inseriti, totale, misurazioni } = useMemo(() => {
