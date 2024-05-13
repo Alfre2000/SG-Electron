@@ -1,8 +1,8 @@
-export const BASE_PATH = 
-  process.env.NODE_ENV === 'production' 
-    ? 'https://supergalvanica.herokuapp.com'
-    : 'http://localhost:8000'
-// export const BASE_PATH = "https://supergalvanica.herokuapp.com"
+// export const BASE_PATH = 
+//   process.env.NODE_ENV === 'production' 
+//     ? 'https://supergalvanica.herokuapp.com'
+//     : 'http://localhost:8000'
+export const BASE_PATH = "https://supergalvanica.herokuapp.com"
 
 
 export const URLS = {
@@ -55,6 +55,9 @@ export const URLS = {
 
     UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
     VERIFICA_PREZZI_PDF: BASE_PATH + '/scheda-controllo/verifica-prezzi-pdf/',
+
+    // BARRE
+    BARRE: BASE_PATH + '/scheda-controllo/barre/',
 
     // CERTIFICATI
     CERTIFICATI: BASE_PATH + '/scheda-controllo/certificati/',

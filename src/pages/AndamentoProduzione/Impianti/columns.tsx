@@ -1,16 +1,16 @@
-import { RecordTelaio } from "@interfaces/isa";
+import { Barra } from "@interfaces/global";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<RecordTelaio>[] = [
+export const columns: ColumnDef<Barra>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "codice",
     header: "ID",
   },
   {
-    accessorKey: "dataInizio",
+    accessorKey: "inizio",
     header: "Data Inizio",
     cell: ({ row }) => {
-      return new Date(row.original.dataInizio).toLocaleString("it-IT", {
+      return new Date(row.original.inizio).toLocaleString("it-IT", {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -23,9 +23,8 @@ export const columns: ColumnDef<RecordTelaio>[] = [
     accessorKey: "dataFine",
     header: "Data Fine",
     cell: ({ row }) => {
-      const status = row.original.status;
-      if (status === "N" || status === "U") return ''
-      return new Date(row.original.dataFine).toLocaleString("it-IT", {
+      if (!row.original.fine) return "";
+      return new Date(row.original.fine).toLocaleString("it-IT", {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -35,11 +34,11 @@ export const columns: ColumnDef<RecordTelaio>[] = [
     },
   },
   {
-    accessorKey: "PartNumber",
+    accessorKey: "articolo",
     header: "Codice Trattamento",
   },
   {
-    accessorKey: "Pieces",
-    header: "N° Pezzi",
+    accessorKey: "ciclo",
+    header: "Ciclo",
   },
 ];

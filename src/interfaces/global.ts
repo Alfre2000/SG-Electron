@@ -214,3 +214,20 @@ export type Versione = {
   username: string;
   versione: string;
 }
+
+export type Barra = {
+  codice: string;
+  impianto: number;
+  record_lavorazione: string;
+  articolo: string;
+  ciclo: string;
+  inizio: string;
+  fine: string;
+  steps: Step[];
+}
+
+export type Step = {
+  ingresso: string;
+  uscita: string;
+  posizione: string;
+}

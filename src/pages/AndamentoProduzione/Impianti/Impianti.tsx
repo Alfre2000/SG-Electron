@@ -1,4 +1,3 @@
-import { avgTelai, getProduction, historyTelai } from "@api/isa";
 import Error from "@components/Error/Error";
 import Loading from "@components/Loading/Loading";
 import Wrapper from "@ui/wrapper/Wrapper";
@@ -8,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@comp
 import { Line } from "react-chartjs-2";
 import { Tabs, TabsList, TabsTrigger } from "@components/shadcn/Tabs";
 import { URLS } from "urls";
-import { Impianto } from "@interfaces/global";
+import { Barra, Impianto, PaginationData } from "@interfaces/global";
 import { tooltipStyle } from "@charts/barOptions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faChartLine } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +22,8 @@ import { addDays } from "date-fns";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { DataTable } from "@ui/base-data-table/data-table";
 import { columns } from "./columns";
+import { averageProductionPerHour, getGroupedProduction } from "./utils";
+import { dateToDatePicker } from "utils";
 
 const defaultImpianto = "Quattro Carri";
 
@@ -31,6 +32,41 @@ function Impianti() {
   const defaultHoursGroup = 1;
   const [hoursGroup, setHoursGroup] = React.useState(defaultHoursGroup);
   const [periodo, setPeriodo] = React.useState<DateRange | undefined>(defaultPeriodo);
+
+  const inizio =
+    periodo?.from && periodo.from > addDays(new Date(), -15) ? addDays(new Date(), -15) : periodo?.from;
+
+  const barreQuery = useQuery<PaginationData<Barra>>(
+    [
+      URLS.BARRE,
+      { impianto: 5 },
+      { custom_page_size: 1000 },
+      { inizio: dateToDatePicker(inizio) },
+      { end: dateToDatePicker(addDays(periodo?.to || defaultPeriodo.to, 1)) },
+    ],
+    {
+      keepPreviousData: true,
+      select: (data) => {
+        data.results = data.results.sort((a, b) => new Date(b.inizio).getTime() - new Date(a.inizio).getTime());
+        return data;
+      },
+    }
+  );
+
+  const production = React.useMemo(() => {
+    if (!barreQuery.data) return [];
+    const start = periodo?.from || defaultPeriodo.from;
+    const end = periodo?.to || defaultPeriodo.to;
+    if (end > new Date()) end.setHours(new Date().getHours());
+    return getGroupedProduction(barreQuery.data.results, start, end, hoursGroup);
+  }, [barreQuery.data, hoursGroup, periodo, defaultPeriodo.from, defaultPeriodo.to]);
+
+  const avgProduction = React.useMemo(() => {
+    return averageProductionPerHour(barreQuery.data?.results || []);
+  }, [barreQuery.data]);
+  console.log(avgProduction);
+  
+
   const impiantiQuery = useQuery<Impianto[]>(URLS.IMPIANTI, {
     select: (data) =>
       data
@@ -42,27 +78,6 @@ function Impianti() {
           a.nome === defaultImpianto ? -1 : b.nome === defaultImpianto ? 1 : a.nome.localeCompare(b.nome)
         ),
   });
-  const prodQuery = useQuery(
-    ["getProduction", hoursGroup, periodo?.from, periodo?.to],
-    () => getProduction(hoursGroup, periodo?.from, periodo?.to),
-    {
-      keepPreviousData: true,
-      select: (data) => {
-        return data.map((d) => {
-          const res = { ...d, date: new Date(d.date) };
-          res.date.setHours(d.hour);
-          return res;
-        });
-      },
-    }
-  );
-  const avgTelaiQuery = useQuery("avgTelai", avgTelai);
-  const historyTelaiQuery = useQuery(
-    ["historyTelai", periodo?.from, periodo?.to],
-    () => historyTelai(periodo?.from, periodo?.to),
-    { keepPreviousData: true }
-  );
-  console.log(historyTelaiQuery.data);
 
   const isSamePeriodo = (a: DateRange | undefined, b: DateRange | undefined) => {
     return a?.from?.getDate() === b?.from?.getDate() && a?.to?.getDate() === b?.to?.getDate();
@@ -93,16 +108,16 @@ function Impianti() {
               </div>
             </CardHeader>
             <CardContent>
-              {avgTelaiQuery.isError && <Error />}
-              {avgTelaiQuery.isLoading && <Loading />}
-              {avgTelaiQuery.isSuccess && (
+              {barreQuery.isError && <Error />}
+              {barreQuery.isLoading && <Loading />}
+              {barreQuery.isSuccess && (
                 <>
                   <div className="text-2xl font-bold">
-                    {toFormattedNumber(avgTelaiQuery.data[0].avgTelai.toFixed(2))}
+                    {toFormattedNumber(avgProduction.currentWeek.toFixed(2))}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {addSign((avgTelaiQuery.data[0].avgTelai - avgTelaiQuery.data[1].avgTelai).toFixed(2))}{" "}
-                    rispetto ai {toFormattedNumber(avgTelaiQuery.data[1].avgTelai.toFixed(2))} dei 7 giorni
+                    {addSign((avgProduction.currentWeek - avgProduction.lastWeek).toFixed(2))}{" "}
+                    rispetto ai {toFormattedNumber(avgProduction.lastWeek.toFixed(2))} dei 7 giorni
                     precedenti
                   </div>
                 </>
@@ -180,16 +195,16 @@ function Impianti() {
               </div>
             </CardHeader>
             <CardContent>
-              {prodQuery.isError && <Error />}
-              {prodQuery.isLoading && <Loading className="m-auto relative top-28" />}
-              {prodQuery.isSuccess && (
+              {barreQuery.isError && <Error />}
+              {barreQuery.isLoading && <Loading className="m-auto relative top-28" />}
+              {barreQuery.isSuccess && (
                 <Line
                   data={{
-                    labels: prodQuery.data?.map((d) => d.date),
+                    labels: production.map((d) => d.date),
                     datasets: [
                       {
                         label: "Telai",
-                        data: prodQuery.data?.map((d) => d.nTelai),
+                        data: production.map((d) => d.nTelai),
                         backgroundColor: "rgba(75,192,192,0.4)",
                         borderColor: "#007eb8",
                         borderWidth: 1,
@@ -261,14 +276,12 @@ function Impianti() {
           </Card>
           <Card className="col-span-3">
             <CardHeader className="space-y-0 pb-2">
-                <CardTitle>Ultime barre</CardTitle>
+              <CardTitle>Ultime barre</CardTitle>
             </CardHeader>
             <CardContent className="mt-4">
-              {historyTelaiQuery.isError && <Error />}
-              {historyTelaiQuery.isLoading && <Loading />}
-              {historyTelaiQuery.isSuccess && (
-                <DataTable data={historyTelaiQuery.data} columns={columns} />
-              )}
+              {barreQuery.isError && <Error />}
+              {barreQuery.isLoading && <Loading />}
+              {barreQuery.isSuccess && <DataTable data={barreQuery.data.results} columns={columns} />}
             </CardContent>
           </Card>
         </div>
