@@ -142,7 +142,23 @@ export type RecordLavorazione = {
   data_consegna: string;
   data_consegna_prevista: string;
   ultima_modifica: string;
+  record_controlli: RecordControllo[];
 };
+
+export type RecordControllo = {
+  controllo: string;
+  eseguito: boolean;
+  id: string
+  misurazioni: Misurazione[];
+  pezzi_da_testare: number;
+}
+
+export type Misurazione = {
+  id: string;
+  manuale: boolean;
+  valore: number;
+  richiesta: string;
+}
 
 export type RecordLavorazioneStatus = {
   id: string;

@@ -43,6 +43,7 @@ import Impianti from "@pages/AndamentoProduzione/Impianti/Impianti";
 import VersioniProgramma from "@pages/Developer/VersioniProgramma/VersioniProgramma";
 import Utilizzo from "@pages/Developer/Utilizzo/Utilizzo";
 import Wrapper from "@ui/wrapper/Wrapper";
+import InserimentoLotti from "@pages/AndamentoProduzione/InserimentoLotti/InserimentoLotti";
 const electron = window?.require ? window.require("electron") : null;
 
 function reducer (state, userInfo) {
@@ -128,6 +129,7 @@ function App() {
               <Route path="focus-cliente/:cliente" element={<FocusCliente />}></Route>
               <Route path="mappa-clienti/" element={<MappaClienti />}></Route>
               <Route path="impianti/" element={<Impianti />}></Route>
+              <Route path="inserimento-lotti/" element={<InserimentoLotti />}></Route>
             </Route>
             {/* Database Documenti */}
             <Route path="documenti/"  element={<RouteWrapper />}>

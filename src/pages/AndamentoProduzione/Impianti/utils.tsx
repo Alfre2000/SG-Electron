@@ -101,16 +101,13 @@ export function averageProductionPerHour(data: Barra[]): { currentWeek: number; 
   // Calculate averages for last and current week
   let totalCurrentWeek = 0, totalLastWeek = 0;
   let hoursCurrentWeek = 0, hoursLastWeek = 0;
-  console.log(counts);
   
 
   for (const hour in counts) {
     let hourFinal = hour + ":00:00.000Z";
     const dateOfHour = new Date(hourFinal);
-    console.log(dateOfHour, thisMonday, lastMonday);
     
     if (dateOfHour >= thisMonday) {
-      console.log(hour, counts[hour]);
       
       totalCurrentWeek += counts[hour];
       hoursCurrentWeek++;
@@ -119,9 +116,6 @@ export function averageProductionPerHour(data: Barra[]): { currentWeek: number; 
       hoursLastWeek++;
     }
   }
-
-  console.log(totalCurrentWeek, totalLastWeek, hoursCurrentWeek, hoursLastWeek);
-  
 
   const averageCurrentWeek = hoursCurrentWeek > 0 ? totalCurrentWeek / hoursCurrentWeek : 0;
   const averageLastWeek = hoursLastWeek > 0 ? totalLastWeek / hoursLastWeek : 0;

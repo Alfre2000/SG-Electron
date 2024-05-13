@@ -143,6 +143,11 @@ const navbarAndamentoProduzione = () => {
       links: [{ name: "Impianti", link: "/andamento-produzione/impianti/" }],
     },
     {
+      title: "Inserimento Lotti",
+      icon: faClipboardCheck,
+      links: [{ name: "Inserimento Lotti", link: "/andamento-produzione/inserimento-lotti/" }],
+    },
+    {
       title: "Mappa Clienti",
       icon: faMapLocationDot,
       links: [{ name: "Mappa Clienti", link: "/andamento-produzione/mappa-clienti/" }],
