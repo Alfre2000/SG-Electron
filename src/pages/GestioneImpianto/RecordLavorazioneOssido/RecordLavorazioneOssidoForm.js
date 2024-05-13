@@ -67,10 +67,6 @@ function RecordLavorazioneOssidoForm() {
         "spessore_ossido",
         "spessore_minimo",
         "spessore_massimo",
-        "temperatura_soda",
-        "temperatura_ossido",
-        "temperatura_colore",
-        "temperatura_fissaggio",
       ];
       inputChecks.forEach((name) => {
         const evento = {
@@ -90,7 +86,7 @@ function RecordLavorazioneOssidoForm() {
           xs={6}
           className="pr-20 pb-3 border-b-2 border-b-gray-500 border-r-2 border-r-gray-500"
         >
-          <Stack gap={1} className="text-left">
+          <Stack gap={1} className="text-left mt-3">
             <DateInput />
             <TimeInput />
             <SearchSelect
@@ -118,6 +114,13 @@ function RecordLavorazioneOssidoForm() {
               label="Numero Lotto:"
               name="n_lotto_cliente"
               labelCols={5}
+              labelProps={{ className: "pr-6" }}
+            />
+            <Input
+              label="Lotto Supergalvanica:"
+              name="n_lotto_super"
+              labelCols={5}
+              inputProps={{ required: true }}
               labelProps={{ className: "pr-6" }}
             />
             <Checkbox
@@ -344,39 +347,6 @@ function RecordLavorazioneOssidoForm() {
           </Col>
         ))}
       </Row>
-      <Row className="pb-4 mb-4 border-b-2 border-b-gray-500">
-        {[
-          "dati_aggiuntivi__temperatura_soda",
-          "dati_aggiuntivi__temperatura_ossido",
-          "dati_aggiuntivi__temperatura_colore",
-          "dati_aggiuntivi__temperatura_fissaggio",
-        ].map((name) => (
-          <Col xs={3} key={name} className="text-center">
-            <Input
-              name={name}
-              vertical={true}
-              inputProps={{
-                className: "w-3/4 m-auto text-center",
-                step: "0.01",
-                type: "number",
-                onBlur: handleValoreChange,
-              }}
-            />
-            {errValore[name] && (
-              <span
-                type="invalid"
-                className="text-xs font-semibold text-center text-[#d48208]"
-              >
-                <FontAwesomeIcon
-                  icon={faTriangleExclamation}
-                  className="mr-1"
-                />
-                {errValore[name]}
-              </span>
-            )}
-          </Col>
-        ))}
-      </Row>
       <Form.Group>
         <Row className="mb-4">
           <Col xs={1} className="flex items-center">
@@ -392,6 +362,7 @@ function RecordLavorazioneOssidoForm() {
         </Row>
       </Form.Group>
       <Hidden value={valvoleScarto} name="n_pezzi_scartati" />
+      <Hidden value="L" name="status" />
       <Hidden value={true} name="completata" />
       <Hidden value={user?.user?.impianto?.id || initialData?.impianto} name="impianto" />
       <Hidden value={lavorazione} name="lavorazione" />
