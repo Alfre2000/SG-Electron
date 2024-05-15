@@ -19,7 +19,7 @@ export const tooltipStyle = {
     },
     footerFont: {
       size: 13,
-      weight: "normal",
+      // weight: "normal",
     },
     footerMarginTop: 4,
     cornerRadius: 4,
@@ -82,7 +82,7 @@ export const options = {
       },
       footerFont: {
         size: 13,
-        weight: "normal",
+        // weight: "normal",
       },
       footerMarginTop: 4,
       cornerRadius: 4,
@@ -151,7 +151,7 @@ export const options2 = {
       },
       footerFont: {
         size: 13,
-        weight: "normal",
+        // weight: "normal",
       },
       footerMarginTop: 4,
       cornerRadius: 4,
@@ -232,7 +232,7 @@ export const options3 = {
       },
       footerFont: {
         size: 13,
-        weight: "normal",
+        // weight: "normal",
       },
       footerMarginTop: 4,
       cornerRadius: 4,
@@ -317,7 +317,7 @@ export const options4 = {
       },
       footerFont: {
         size: 13,
-        weight: "normal",
+        // weight: "normal",
       },
       footerMarginTop: 4,
       cornerRadius: 4,

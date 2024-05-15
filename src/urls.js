@@ -1,8 +1,8 @@
-export const BASE_PATH = 
-  process.env.NODE_ENV === 'production' 
-    ? 'https://supergalvanica.herokuapp.com'
-    : 'http://localhost:8000'
-// export const BASE_PATH = "https://supergalvanica.herokuapp.com"
+// export const BASE_PATH = 
+//   process.env.NODE_ENV === 'production' 
+//     ? 'https://supergalvanica.herokuapp.com'
+//     : 'http://localhost:8000'
+export const BASE_PATH = "https://supergalvanica.herokuapp.com"
 
 
 export const URLS = {

@@ -226,8 +226,8 @@ function Impianti() {
                       },
                       x: {
                         ticks: {
-                          callback: function (value: any, index) {
-                            const val: any = this.getLabelForValue(value);
+                          callback: function (value: any, index:any) {
+                            const val: any = (this as any).getLabelForValue(value);
                             return index % 2 === 0
                               ? val.toLocaleString("it-IT", {
                                   weekday: "short",
@@ -246,7 +246,7 @@ function Impianti() {
                       },
                       tooltip: {
                         callbacks: {
-                          title: function (tooltipItems) {
+                          title: function (tooltipItems:any) {
                             const date = new Date(tooltipItems[0].label);
                             const endHour = date.getHours() + hoursGroup;
                             return (
@@ -262,14 +262,53 @@ function Impianti() {
                               endHour
                             );
                           },
-                          label: function (tooltipItem) {
+                          label: function (tooltipItem:any) {
                             return "N° di telai prodotti: " + toFormattedNumber(tooltipItem.formattedValue);
                           },
                         },
                         ...tooltipStyle,
                       },
+                      annotation: {
+                        annotations: production.map(d => {
+                          const date = new Date(d.date);
+                          if (date.getDay() === 1 && date.getHours() === 6) {
+                            return {
+                              type: 'line',
+                              mode: 'vertical',
+                              scaleID: 'x',
+                              value: d.date,
+                              borderColor: '#123A73',
+                              borderWidth: 2,
+                              borderDash: [10, 5],
+                              label: {
+                                display: true,
+                                content: 'Inizio Settimana',
+                                backgroundColor: "rgba(245, 246, 247, 0.9)",
+                                borderColor: "#123A73",
+                                borderWidth: 1,
+                                textAlign: 'center',
+                                borderRadius: 4,
+                                yAdjust: 5,
+                                xAdjust: 55,
+                                padding: {
+                                  y: 5,
+                                  left: 8,
+                                  right: 8,
+                                },
+                                position: 'start',
+                                font: {
+                                  size: 10,
+                                  family: 'Arial'
+                                },
+                                color: 'rgba(1, 54, 145, 1)',
+                              }
+                            };
+                          }
+                          return null;
+                        }).filter(a => a !== null)
+                      }
                     },
-                  }}
+                  } as any}
                 />
               )}
             </CardContent>

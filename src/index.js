@@ -17,6 +17,7 @@ import {
   TimeScale
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 ChartJS.register(
   ArcElement,
@@ -28,7 +29,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  annotationPlugin
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
