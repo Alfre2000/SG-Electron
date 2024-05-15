@@ -4,7 +4,7 @@ import { round } from "@lib/utils";
 export const prezzoSuggerito = (record: RecordLavorazione, articolo: Articolo, infoPrezzi: InfoPrezzi) => {
   const richieste = articolo.richieste.filter((r) => r.spessore_massimo);
   const lavorazioni = richieste.map((r) => r.lavorazione.nome);
-  const allLavorazioni = articolo.richieste.map((r) => r.lavorazione.nome)
+  const allLavorazioni = articolo.richieste.map((r) => r.lavorazione.nome);
 
   const isPrezioso = allLavorazioni.includes("Doratura") || allLavorazioni.includes("Argentatura");
 
@@ -42,7 +42,7 @@ export const prezzoSuggerito = (record: RecordLavorazione, articolo: Articolo, i
       ? richieste.find((r) => r.lavorazione.nome === "Doratura")!
       : richieste.find((r) => r.lavorazione.nome === "Argentatura")!;
     if (hasDoratura) {
-      amount += round(
+      amount +=
         (infoPrezzi.prezzo_oro! *
           round(
             articolo.superficie *
@@ -52,11 +52,9 @@ export const prezzoSuggerito = (record: RecordLavorazione, articolo: Articolo, i
               10,
             2
           )) /
-          1000,
-        4
-      );
+        1000;
     } else if (hasArgentatura) {
-      amount += round(
+      amount +=
         (infoPrezzi.prezzo_argento! *
           round(
             articolo.superficie *
@@ -66,15 +64,20 @@ export const prezzoSuggerito = (record: RecordLavorazione, articolo: Articolo, i
               10,
             2
           )) /
-          1000,
-        4
-      );
+        1000;
     }
     let isBelowMinimumPezzo = infoPrezzi.minimo_per_pezzo && amount < infoPrezzi.minimo_per_pezzo;
     if (infoPrezzi.minimo_per_pezzo && isBelowMinimumPezzo && !isPrezioso) {
       amount = infoPrezzi.minimo_per_pezzo;
     }
-    let totale = round(amount, 4) * record.quantità;
+
+    if (hasDoratura || hasArgentatura) {
+      amount = Math.floor(amount * 10000) / 10000
+    } else {
+      amount = round(amount, 4);
+    }
+
+    let totale = amount * record.quantità;
     let isBelowMinimumRiga = infoPrezzi.minimo_per_riga && totale < infoPrezzi.minimo_per_riga;
     if (infoPrezzi.minimo_per_riga && isBelowMinimumRiga) {
       totale = infoPrezzi.minimo_per_riga;
