@@ -5,7 +5,7 @@ import { addDays } from "date-fns";
 import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
-import { Card, CardHeader, CardTitle, CardContent } from "@components/shadcn/Card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@components/shadcn/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import Error from "@components/Error/Error";
@@ -102,6 +102,7 @@ function InserimentoLotti() {
           <Card className="col-span-3 min-h-[500px]">
             <CardHeader>
               <CardTitle>Lotti</CardTitle>
+              <CardDescription>Dati relativi ai lotti che sono stati consegnati negli ultimi 7 giorni.</CardDescription>
             </CardHeader>
             <CardContent>
               {recordsQuery.isError && <Error />}

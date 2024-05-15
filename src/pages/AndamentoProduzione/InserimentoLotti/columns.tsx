@@ -10,6 +10,34 @@ export const columns: ColumnDef<RecordLavorazione>[] = [
     header: "N° Lotto Super",
   },
   {
+    accessorKey: "data_arrivo",
+    header: "Data Ordine",
+    cell: ({ row }) => {
+      return new Date(row.original.data_arrivo).toLocaleDateString("it-IT", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    },
+  },
+  {
+    accessorKey: "data",
+    header: "Data Lavorazione",
+    cell: ({ row }) => {
+      const data = new Date(row.original.data);
+      if (data.getHours() === 0 && data.getMinutes() === 0 && data.getSeconds() === 0) {
+        return "-";
+      }
+      return data.toLocaleDateString("it-IT", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      });
+    },
+  },
+  {
     id: "inserito",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Inserito" />,
     cell: ({ row }) => {
@@ -35,6 +63,6 @@ export const columns: ColumnDef<RecordLavorazione>[] = [
     cell: ({ row }) => {
       const text = row.original.status === "C" ? "Consegnato" : row.original.status === "F" ? "Fatturato" : "";
       return <span>{text}</span>;
-    }
-  }
+    },
+  },
 ];
