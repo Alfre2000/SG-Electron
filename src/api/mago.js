@@ -102,7 +102,6 @@ export const makeDatabaseRequest = async (query) => {
 export const getDatiBollaMago = async (n_bolla) => {
   const numero_documento = n_bolla.padStart(6, "0");
   const query = `SELECT
-    fattura.documentdate as data_fattura,
     doc.docno,
     doc.documentdate,
     doc.shippingreason,
@@ -146,12 +145,6 @@ export const getDatiBollaMago = async (n_bolla) => {
   JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
   JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
   JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.position = detail.saleordpos
-  LEFT JOIN (
-    select doc.DocumentDate, sale.internalordno, sale.position from MA_SaleDoc as doc
-    JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
-    JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.position = detail.saleordpos
-    where doc.documenttype = '3407874'
-  ) as fattura on sale.internalordno = fattura.internalordno and sale.position = fattura.position
   WHERE doc.documenttype = 3407873 
     AND doc.CustSuppType = 3211264 
     AND doc.docno = '${numero_documento}' 
