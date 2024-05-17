@@ -52,6 +52,7 @@ function Impianti() {
       },
     }
   );
+  
 
   const production = React.useMemo(() => {
     if (!barreQuery.data) return [];
@@ -81,6 +82,28 @@ function Impianti() {
 
   const isSamePeriodo = (a: DateRange | undefined, b: DateRange | undefined) => {
     return a?.from?.getDate() === b?.from?.getDate() && a?.to?.getDate() === b?.to?.getDate();
+  };
+  const limitNewDate = new Date();
+  limitNewDate.setHours(limitNewDate.getHours() - 7);
+
+  const firstRedIndex = production.findIndex(d => {
+    return d.date > limitNewDate;
+  });
+
+  const data = {
+    labels: production.map(d => d.date),
+    datasets: [
+      {
+        label: "Telai - Blue",
+        data: production.map(d => d.nTelai),
+        backgroundColor: "rgba(75, 192, 192, 0.4)",
+        borderColor: "#007eb8",
+        borderWidth: 1,
+        pointBackgroundColor: "rgba(75, 192, 192, 0.4)",
+        pointBorderColor: "#007eb8",
+        fill: true,
+      },
+    ]
   };
   return (
     <Wrapper>
@@ -117,8 +140,7 @@ function Impianti() {
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {addSign((avgProduction.currentWeek - avgProduction.lastWeek).toFixed(2))}{" "}
-                    rispetto ai {toFormattedNumber(avgProduction.lastWeek.toFixed(2))} dei 7 giorni
-                    precedenti
+                    rispetto ai {toFormattedNumber(avgProduction.lastWeek.toFixed(2))} della settimana precedente
                   </div>
                 </>
               )}
@@ -130,8 +152,9 @@ function Impianti() {
                 <div>
                   <CardTitle className="font-medium pb-1.5">Produzione Telai</CardTitle>
                   <CardDescription className="text-xs">
-                    I dati dalle 7 di mattina di Sabato alle 7 di mattina di Lunedì non vengono mostrati in quanto
-                    sono orari non lavorativi.
+                    I dati dalle 10 di mattina di Sabato alle 6 di mattina di Lunedì non vengono mostrati in quanto
+                    sono orari non lavorativi.<br />
+                    L'area grigia rappresenta il periodo in cui la produzione è ancora incerta.
                   </CardDescription>
                 </div>
                 <Popover>
@@ -199,22 +222,10 @@ function Impianti() {
               {barreQuery.isLoading && <Loading className="m-auto relative top-28" />}
               {barreQuery.isSuccess && (
                 <Line
-                  data={{
-                    labels: production.map((d) => d.date),
-                    datasets: [
-                      {
-                        label: "Telai",
-                        data: production.map((d) => d.nTelai),
-                        backgroundColor: "rgba(75,192,192,0.4)",
-                        borderColor: "#007eb8",
-                        borderWidth: 1,
-                      },
-                    ],
-                  }}
+                  data={data}
                   options={{
                     maintainAspectRatio: true,
                     responsive: true,
-                    borderColor: "#007eb8",
                     scales: {
                       y: {
                         grace: "5%",
@@ -269,7 +280,7 @@ function Impianti() {
                         ...tooltipStyle,
                       },
                       annotation: {
-                        annotations: production.map(d => {
+                        annotations: [...production.map(d => {
                           const date = new Date(d.date);
                           if (date.getDay() === 1 && date.getHours() === 6) {
                             return {
@@ -305,7 +316,14 @@ function Impianti() {
                             };
                           }
                           return null;
-                        }).filter(a => a !== null)
+                        }).filter(a => a !== null),
+                        {
+                          type: 'box',
+                          xMin: production[firstRedIndex]?.date,
+                          xMax: 'now',
+                          backgroundColor: 'rgba(100, 100, 100, 0.2)',
+                          borderWidth: 0,
+                        }]
                       }
                     },
                   } as any}

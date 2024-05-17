@@ -234,11 +234,12 @@ export type Versione = {
 export type Barra = {
   codice: string;
   impianto: number;
-  record_lavorazione: string;
+  record_lavorazione?: string;
   articolo: string;
   ciclo: string;
   inizio: string;
   fine: string;
+  n_steps: number;
   steps: Step[];
 }
 

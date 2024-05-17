@@ -107,8 +107,10 @@ export function averageProductionPerHour(data: Barra[]): { currentWeek: number; 
     let hourFinal = hour + ":00:00.000Z";
     const dateOfHour = new Date(hourFinal);
     
-    if (dateOfHour >= thisMonday) {
-      
+    // date needs to be more than 6 hours ago
+    const sixHoursAgo = new Date();
+    sixHoursAgo.setHours(sixHoursAgo.getHours() - 6);
+    if (dateOfHour >= thisMonday && dateOfHour <= sixHoursAgo) {
       totalCurrentWeek += counts[hour];
       hoursCurrentWeek++;
     } else if (dateOfHour >= lastMonday && dateOfHour < thisMonday) {

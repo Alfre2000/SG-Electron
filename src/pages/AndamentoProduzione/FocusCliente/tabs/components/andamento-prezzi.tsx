@@ -68,11 +68,11 @@ function AndamentoPrezziPopover<TData>({ id, data, setShow }: AndamentoPrezziPop
                 },
                 tooltip: {
                   callbacks: {
-                    title: function (tooltipItems) {
+                    title: function (tooltipItems: any) {
                       const date = new Date(tooltipItems[0].parsed.x);
                       return date.toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });                      
                     },
-                    label: function (context) {
+                    label: function (context: any) {
                       var label = context.dataset.label || "";
                       if (label) {
                         label += ": ";
