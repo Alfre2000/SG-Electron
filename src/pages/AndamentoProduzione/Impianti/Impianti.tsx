@@ -32,7 +32,7 @@ function Impianti() {
   const defaultHoursGroup = 1;
   const [hoursGroup, setHoursGroup] = React.useState(defaultHoursGroup);
   const [periodo, setPeriodo] = React.useState<DateRange | undefined>(defaultPeriodo);
-  const [impianto, setImpianto] = useState("5")
+  const [impianto, setImpianto] = useState("5");
 
   const inizio =
     periodo?.from && periodo.from > addDays(new Date(), -15) ? addDays(new Date(), -15) : periodo?.from;
@@ -53,7 +53,6 @@ function Impianti() {
       },
     }
   );
-  
 
   const production = React.useMemo(() => {
     if (!barreQuery.data) return [];
@@ -66,11 +65,9 @@ function Impianti() {
   const avgProduction = React.useMemo(() => {
     return averageProductionPerHour(barreQuery.data?.results || []);
   }, [barreQuery.data]);
-  console.log(avgProduction);
   const avgTime = React.useMemo(() => {
     return { currentWeek: 60 / avgProduction.currentWeek, lastWeek: 60 / avgProduction.lastWeek };
   }, [avgProduction]);
-  console.log(avgTime);
 
   const impiantiQuery = useQuery<Impianto[]>(URLS.IMPIANTI, {
     select: (data) =>
@@ -91,24 +88,26 @@ function Impianti() {
   const limitNewDate = new Date();
   limitNewDate.setHours(limitNewDate.getHours() - 7);
 
-  const firstRedIndex = production.findIndex(d => {
+  const firstRedIndex = production.findIndex((d) => {
     return d.date > limitNewDate;
   });
 
+  const datasets = [
+    {
+      label: "Telai - Blue",
+      data: production.map((d) => d.nTelai),
+      backgroundColor: "rgba(75, 192, 192, 0.4)",
+      borderColor: "#007eb8",
+      borderWidth: 1,
+      pointBackgroundColor: "rgba(75, 192, 192, 0.4)",
+      pointBorderColor: "#007eb8",
+      fill: true,
+    },
+  ];
+
   const data = {
-    labels: production.map(d => d.date),
-    datasets: [
-      {
-        label: "Telai - Blue",
-        data: production.map(d => d.nTelai),
-        backgroundColor: "rgba(75, 192, 192, 0.4)",
-        borderColor: "#007eb8",
-        borderWidth: 1,
-        pointBackgroundColor: "rgba(75, 192, 192, 0.4)",
-        pointBorderColor: "#007eb8",
-        fill: true,
-      },
-    ]
+    labels: production.map((d) => d.date),
+    datasets: datasets,
   };
   return (
     <Wrapper>
@@ -144,8 +143,8 @@ function Impianti() {
                     {toFormattedNumber(avgProduction.currentWeek.toFixed(2))}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {addSign((avgProduction.currentWeek - avgProduction.lastWeek).toFixed(2))}{" "}
-                    rispetto ai {toFormattedNumber(avgProduction.lastWeek.toFixed(2))} della settimana precedente
+                    {addSign((avgProduction.currentWeek - avgProduction.lastWeek).toFixed(2))} rispetto ai{" "}
+                    {toFormattedNumber(avgProduction.lastWeek.toFixed(2))} della settimana precedente
                   </div>
                 </>
               )}
@@ -167,8 +166,8 @@ function Impianti() {
                     {toFormattedNumber(avgTime.currentWeek.toFixed())} minuti
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {addSign((avgTime.currentWeek - avgTime.lastWeek).toFixed())}{" "}
-                    rispetto ai {toFormattedNumber(avgTime.lastWeek.toFixed())} della settimana precedente
+                    {addSign((avgTime.currentWeek - avgTime.lastWeek).toFixed())} rispetto ai{" "}
+                    {toFormattedNumber(avgTime.lastWeek.toFixed())} della settimana precedente
                   </div>
                 </>
               )}
@@ -180,8 +179,9 @@ function Impianti() {
                 <div>
                   <CardTitle className="font-medium pb-1.5">Produzione Telai</CardTitle>
                   <CardDescription className="text-xs">
-                    I dati dalle 10 di mattina di Sabato alle 6 di mattina di Lunedì non vengono mostrati in quanto
-                    sono orari non lavorativi.<br />
+                    I dati dalle 6 di mattina di Sabato alle 6 di mattina di Lunedì non vengono mostrati in quanto
+                    sono orari non lavorativi.
+                    <br />
                     L'area grigia rappresenta il periodo in cui la produzione è ancora incerta.
                   </CardDescription>
                 </div>
@@ -224,11 +224,7 @@ function Impianti() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="1">1 Ora</SelectItem>
-                            <SelectItem value="2">2 Ore</SelectItem>
-                            <SelectItem value="3">3 Ore</SelectItem>
-                            <SelectItem value="4">4 Ore</SelectItem>
-                            <SelectItem value="8">8 Ore</SelectItem>
-                            <SelectItem value="24">24 Ore</SelectItem>
+                            <SelectItem value="12">Turno</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -251,110 +247,117 @@ function Impianti() {
               {barreQuery.isSuccess && (
                 <Line
                   data={data}
-                  options={{
-                    maintainAspectRatio: true,
-                    responsive: true,
-                    scales: {
-                      y: {
-                        grace: "5%",
-                        beginAtZero: true,
-                        title: {
-                          display: true,
-                          text: "N° telai prodotti",
+                  options={
+                    {
+                      maintainAspectRatio: true,
+                      responsive: true,
+                      scales: {
+                        y: {
+                          grace: "5%",
+                          beginAtZero: true,
+                          title: {
+                            display: true,
+                            text: "N° telai prodotti",
+                          },
                         },
-                      },
-                      x: {
-                        ticks: {
-                          callback: function (value: any, index:any) {
-                            const val: any = (this as any).getLabelForValue(value);
-                            return index % 2 === 0
-                              ? val.toLocaleString("it-IT", {
-                                  weekday: "short",
-                                  day: "numeric",
-                                  month: "short",
-                                  hour: "numeric",
-                                })
-                              : "";
+                        x: {
+                          ticks: {
+                            callback: function (value: any, index: any) {
+                              const val: any = (this as any).getLabelForValue(value);
+                              return index % 2 === 0
+                                ? val.toLocaleString("it-IT", {
+                                    weekday: "short",
+                                    day: "numeric",
+                                    month: "short",
+                                    hour: "numeric",
+                                  })
+                                : "";
+                            },
                           },
                         },
                       },
-                    },
-                    plugins: {
-                      legend: {
-                        display: false,
-                      },
-                      tooltip: {
-                        callbacks: {
-                          title: function (tooltipItems:any) {
-                            const date = new Date(tooltipItems[0].label);
-                            const endHour = date.getHours() + hoursGroup;
-                            return (
-                              toTitle(
-                                date.toLocaleString("it-IT", {
-                                  weekday: "long",
-                                  day: "numeric",
-                                  month: "long",
-                                  hour: "numeric",
-                                })
-                              ) +
-                              " - " +
-                              endHour
-                            );
-                          },
-                          label: function (tooltipItem:any) {
-                            return "N° di telai prodotti: " + toFormattedNumber(tooltipItem.formattedValue);
-                          },
+                      plugins: {
+                        legend: {
+                          display: false,
                         },
-                        ...tooltipStyle,
+                        tooltip: {
+                          callbacks: {
+                            title: function (tooltipItems: any) {
+                              const date = new Date(tooltipItems[0].label);
+                              let endHour = date.getHours() + hoursGroup;
+                              if (endHour >= 24) endHour -= 24;
+                              return (
+                                toTitle(
+                                  date.toLocaleString("it-IT", {
+                                    weekday: "long",
+                                    day: "numeric",
+                                    month: "long",
+                                    hour: "numeric",
+                                  })
+                                ) +
+                                " - " +
+                                endHour
+                              );
+                            },
+                            label: function (tooltipItem: any) {
+                              return "N° di telai prodotti: " + toFormattedNumber(tooltipItem.formattedValue);
+                            },
+                          },
+                          ...tooltipStyle,
+                        },
+                        annotation: {
+                          annotations: [
+                            ...production
+                              .map((d) => {
+                                const date = new Date(d.date);
+                                if (date.getDay() === 1 && date.getHours() === 6) {
+                                  return {
+                                    type: "line",
+                                    mode: "vertical",
+                                    scaleID: "x",
+                                    value: d.date,
+                                    borderColor: "#123A73",
+                                    borderWidth: 2,
+                                    borderDash: [10, 5],
+                                    label: {
+                                      display: true,
+                                      content: "Inizio Settimana",
+                                      backgroundColor: "rgba(245, 246, 247, 0.9)",
+                                      borderColor: "#123A73",
+                                      borderWidth: 1,
+                                      textAlign: "center",
+                                      borderRadius: 4,
+                                      yAdjust: 5,
+                                      xAdjust: 55,
+                                      padding: {
+                                        y: 5,
+                                        left: 8,
+                                        right: 8,
+                                      },
+                                      position: "start",
+                                      font: {
+                                        size: 10,
+                                        family: "Arial",
+                                      },
+                                      color: "rgba(1, 54, 145, 1)",
+                                    },
+                                  };
+                                }
+                                return null;
+                              })
+                              .filter((a) => a !== null),
+                            {
+                              type: "box",
+                              xMin: production[firstRedIndex]?.date,
+                              xMax: "now",
+                              backgroundColor: "rgba(100, 100, 100, 0.2)",
+                              borderWidth: 0,
+                            },
+                          ],
+                        },
                       },
-                      annotation: {
-                        annotations: [...production.map(d => {
-                          const date = new Date(d.date);
-                          if (date.getDay() === 1 && date.getHours() === 6) {
-                            return {
-                              type: 'line',
-                              mode: 'vertical',
-                              scaleID: 'x',
-                              value: d.date,
-                              borderColor: '#123A73',
-                              borderWidth: 2,
-                              borderDash: [10, 5],
-                              label: {
-                                display: true,
-                                content: 'Inizio Settimana',
-                                backgroundColor: "rgba(245, 246, 247, 0.9)",
-                                borderColor: "#123A73",
-                                borderWidth: 1,
-                                textAlign: 'center',
-                                borderRadius: 4,
-                                yAdjust: 5,
-                                xAdjust: 55,
-                                padding: {
-                                  y: 5,
-                                  left: 8,
-                                  right: 8,
-                                },
-                                position: 'start',
-                                font: {
-                                  size: 10,
-                                  family: 'Arial'
-                                },
-                                color: 'rgba(1, 54, 145, 1)',
-                              }
-                            };
-                          }
-                          return null;
-                        }).filter(a => a !== null),
-                        {
-                          type: 'box',
-                          xMin: production[firstRedIndex]?.date,
-                          xMax: 'now',
-                          backgroundColor: 'rgba(100, 100, 100, 0.2)',
-                          borderWidth: 0,
-                        }]
-                      }
-                    },
-                  } as any}
+                    } as any
+                  }
                 />
               )}
             </CardContent>

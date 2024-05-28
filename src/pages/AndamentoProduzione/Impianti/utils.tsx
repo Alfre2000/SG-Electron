@@ -6,6 +6,14 @@ const roundDownHour = (date: Date) => {
   return rounded;
 };
 
+// Helper function to round to the nearest 6 AM or 6 PM
+const roundToNearestShift = (date: Date): Date => {
+  let hours = date.getHours();
+  let roundedHours = hours < 6 ? 6 : hours < 18 ? 6 : 18;
+  date.setHours(roundedHours, 0, 0, 0);
+  return date;
+};
+
 const addHours = (date: Date, hours: number) => {
   const result = new Date(date);
   result.setHours(result.getHours() + hours);
@@ -23,7 +31,10 @@ export function getGroupedProduction(
 
   // Calculate the range of each group
   let currentStart = roundDownHour(new Date(start));
-  
+  if (hoursGroup === 12) {
+    currentStart = roundToNearestShift(currentStart);
+  }
+
   let endDate = new Date(end);
   endDate.setHours(endDate.getHours() - 1);
 
@@ -32,7 +43,7 @@ export function getGroupedProduction(
     const dayOfWeek = currentStart.getDay();
     const hourOfDay = currentStart.getHours();
 
-    if (dayOfWeek === 6 && hourOfDay >= 9) {
+    if (dayOfWeek === 6 && hourOfDay >= 6) {
       // It's Saturday post 8 AM, skip to Monday at 6 AM
       currentStart = new Date(currentStart);
       currentStart.setDate(currentStart.getDate() + (8 - dayOfWeek)); // Moving to Sunday
@@ -66,7 +77,6 @@ export function getGroupedProduction(
   return results;
 }
 
-
 export function averageProductionPerHour(data: Barra[]): { currentWeek: number; lastWeek: number } {
   // Helper function to get Monday of the current week
   const getMonday = (d: Date) => {
@@ -74,7 +84,7 @@ export function averageProductionPerHour(data: Barra[]): { currentWeek: number; 
     const day = date.getDay();
     const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
     return new Date(date.setDate(diff));
-  }
+  };
 
   // Set reference dates
   const today = new Date();
@@ -87,10 +97,10 @@ export function averageProductionPerHour(data: Barra[]): { currentWeek: number; 
   // Count the number of barre per hour
   const counts: { [key: string]: number } = {};
 
-  data.forEach(barra => {
+  data.forEach((barra) => {
     const startTime = new Date(barra.inizio);
 
-    if (startTime > roundDownHour(new Date())) return; 
+    if (startTime > roundDownHour(new Date())) return;
     const hour = startTime.toISOString().substring(0, 13); // Extract YYYY-MM-DDTHH
 
     if (startTime >= lastMonday && startTime < new Date(thisMonday.getTime() + 7 * 24 * 60 * 60 * 1000)) {
@@ -99,14 +109,15 @@ export function averageProductionPerHour(data: Barra[]): { currentWeek: number; 
   });
 
   // Calculate averages for last and current week
-  let totalCurrentWeek = 0, totalLastWeek = 0;
-  let hoursCurrentWeek = 0, hoursLastWeek = 0;
-  
+  let totalCurrentWeek = 0,
+    totalLastWeek = 0;
+  let hoursCurrentWeek = 0,
+    hoursLastWeek = 0;
 
   for (const hour in counts) {
     let hourFinal = hour + ":00:00.000Z";
     const dateOfHour = new Date(hourFinal);
-    
+
     // date needs to be more than 6 hours ago
     const sixHoursAgo = new Date();
     sixHoursAgo.setHours(sixHoursAgo.getHours() - 6);
@@ -124,6 +135,6 @@ export function averageProductionPerHour(data: Barra[]): { currentWeek: number; 
 
   return {
     currentWeek: averageCurrentWeek,
-    lastWeek: averageLastWeek
+    lastWeek: averageLastWeek,
   };
 }
