@@ -76,7 +76,7 @@ export const columns: ColumnDef<Barra>[] = [
     cell: ({ row }) => {
       return (
         <Popover>
-          <PopoverTrigger>{row.original.codice}</PopoverTrigger>
+          <PopoverTrigger>{row.original.codice.split('-').at(-1)!}</PopoverTrigger>
           <PopoverContent className="max-h-[450px] overflow-scroll w-[700px]">
             <PopoverBarra codice={row.original.codice} />
           </PopoverContent>

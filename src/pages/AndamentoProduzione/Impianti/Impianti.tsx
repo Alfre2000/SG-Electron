@@ -1,7 +1,7 @@
 import Error from "@components/Error/Error";
 import Loading from "@components/Loading/Loading";
 import Wrapper from "@ui/wrapper/Wrapper";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@components/shadcn/Card";
 import { Line } from "react-chartjs-2";
@@ -32,6 +32,7 @@ function Impianti() {
   const defaultHoursGroup = 1;
   const [hoursGroup, setHoursGroup] = React.useState(defaultHoursGroup);
   const [periodo, setPeriodo] = React.useState<DateRange | undefined>(defaultPeriodo);
+  const [impianto, setImpianto] = useState("5")
 
   const inizio =
     periodo?.from && periodo.from > addDays(new Date(), -15) ? addDays(new Date(), -15) : periodo?.from;
@@ -39,7 +40,7 @@ function Impianti() {
   const barreQuery = useQuery<PaginationData<Barra>>(
     [
       URLS.BARRE,
-      { impianto: 5 },
+      { impianto: impianto },
       { custom_page_size: 1000 },
       { inizio: dateToDatePicker(inizio) },
       { end: dateToDatePicker(addDays(periodo?.to || defaultPeriodo.to, 1)) },
@@ -66,7 +67,10 @@ function Impianti() {
     return averageProductionPerHour(barreQuery.data?.results || []);
   }, [barreQuery.data]);
   console.log(avgProduction);
-  
+  const avgTime = React.useMemo(() => {
+    return { currentWeek: 60 / avgProduction.currentWeek, lastWeek: 60 / avgProduction.lastWeek };
+  }, [avgProduction]);
+  console.log(avgTime);
 
   const impiantiQuery = useQuery<Impianto[]>(URLS.IMPIANTI, {
     select: (data) =>
@@ -75,6 +79,7 @@ function Impianti() {
           ...impianto,
           nome: impianto.nome === "Statico 1.650 - Quattro Carri" ? "Quattro Carri" : impianto.nome,
         }))
+        .filter((impianto) => impianto.nome !== "Statico 500")
         .sort((a, b) =>
           a.nome === defaultImpianto ? -1 : b.nome === defaultImpianto ? 1 : a.nome.localeCompare(b.nome)
         ),
@@ -112,11 +117,11 @@ function Impianti() {
           Andamento Impianti
         </h2>
         <hr className="mt-3 text-gray-800 w-64 mr-auto relative -top-3" />
-        <Tabs defaultValue={defaultImpianto} className="mb-3">
+        <Tabs value={impianto} onValueChange={setImpianto} className="mb-3">
           <TabsList>
             {impiantiQuery.data &&
               impiantiQuery.data.map((impianto) => (
-                <TabsTrigger disabled={impianto.nome !== defaultImpianto} value={impianto.nome} key={impianto.id}>
+                <TabsTrigger value={impianto.id.toString()} key={impianto.id}>
                   {impianto.nome}
                 </TabsTrigger>
               ))}
@@ -141,6 +146,29 @@ function Impianti() {
                   <div className="text-xs text-muted-foreground">
                     {addSign((avgProduction.currentWeek - avgProduction.lastWeek).toFixed(2))}{" "}
                     rispetto ai {toFormattedNumber(avgProduction.lastWeek.toFixed(2))} della settimana precedente
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="space-y-0 pb-2">
+              <div className="flex flex-row items-center justify-between">
+                <CardTitle className="font-medium">Frequenza Telai</CardTitle>
+                <FontAwesomeIcon icon={faBolt} className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {barreQuery.isError && <Error />}
+              {barreQuery.isLoading && <Loading />}
+              {barreQuery.isSuccess && (
+                <>
+                  <div className="text-2xl font-bold">
+                    {toFormattedNumber(avgTime.currentWeek.toFixed())} minuti
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {addSign((avgTime.currentWeek - avgTime.lastWeek).toFixed())}{" "}
+                    rispetto ai {toFormattedNumber(avgTime.lastWeek.toFixed())} della settimana precedente
                   </div>
                 </>
               )}
