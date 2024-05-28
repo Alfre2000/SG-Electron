@@ -26,7 +26,7 @@ type DocumentiProps = {
 function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
   const [filter, setFilter] = React.useState("");
   const [path, setPath] = React.useState(directory);
-  const queryString = directory ? `?path=${directory}&pdf=True` : "?pdf=True";
+  const queryString = directory ? `?path=${directory}` : "";
   const schedeQuery = useQuery<Documento[]>(URLS.DOCUMENTI + queryString);
   React.useEffect(() => {
     setPath(directory);

@@ -8,6 +8,9 @@ const mainMenu = require('./mainMenu');
 const fetchAlerts = require('./alerts');
 const createWindow = require('./createWindow');
 const JSZip = require('jszip');
+const { exec } = require('child_process');
+const axios = require('axios');
+const os = require('os');
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -198,24 +201,49 @@ app.whenReady().then(() => {
       }
   }))
   })
-  ipcMain.handle('open-file', (_, link, sidebar=true) => {
+  ipcMain.handle('open-file', async (_, link, sidebar = true) => {
+    // Check the file extension
+    const fileUrl = new URL(link);
+    const fileName = path.basename(fileUrl.pathname);
+    const fileExt = path.extname(fileName);
+
+    // Setup a new BrowserWindow
     const win = new BrowserWindow({
-      width: 700, minWidth: 700,
-      height: 800, minHeight: 500,
-      webPreferences: {
-        nodeIntegration: false,
-        contextIsolation: false,
-        enableRemoteModule: false,
-      },
-      show: false,
+        width: 700, minWidth: 700,
+        height: 800, minHeight: 500,
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            enableRemoteModule: false,
+        },
+        show: false,
     });
-    win.once('ready-to-show', win.show)
-    if (sidebar) {
-      win.loadURL(link)
+
+    if (fileExt === '.docx') {
+        // Download the file
+        const filePath = path.join(require('os').tmpdir(), fileName);
+        const response = await axios({
+            method: 'GET',
+            url: link,
+            responseType: 'stream'
+        });
+        response.data.pipe(fs.createWriteStream(filePath));
+        console.log('File downloaded:', filePath);
+        
+        const command = os.platform() === 'win32' ? `start ${filePath}` : `open ${filePath}`;
+        exec(command, (error) => {
+            if (error) {
+                console.error('Failed to open file:', error);
+            }
+        });
+
     } else {
-      win.loadURL(link + '#toolbar=0&navpanes=0')
+        // Load the URL with or without the sidebar
+        const loadUrl = sidebar ? link : `${link}#toolbar=0&navpanes=0`;
+        win.once('ready-to-show', win.show)
+          win.loadURL(loadUrl);
     }
-  })
+});
 });
 
 
