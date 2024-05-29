@@ -44,6 +44,8 @@ import VersioniProgramma from "@pages/Developer/VersioniProgramma/VersioniProgra
 import Utilizzo from "@pages/Developer/Utilizzo/Utilizzo";
 import Wrapper from "@ui/wrapper/Wrapper";
 import InserimentoLotti from "@pages/AndamentoProduzione/InserimentoLotti/InserimentoLotti";
+import Prelievo from "@pages/Magazzino/Prelievo/Prelievo";
+import StatusMagazzino from "@pages/AndamentoProduzione/StatusMagazzino/StatusMagazzino";
 const electron = window?.require ? window.require("electron") : null;
 
 function reducer (state, userInfo) {
@@ -130,6 +132,9 @@ function App() {
               <Route path="mappa-clienti/" element={<MappaClienti />}></Route>
               <Route path="impianti/" element={<Impianti />}></Route>
               <Route path="inserimento-lotti/" element={<InserimentoLotti />}></Route>
+              <Route element={<RouteWrapper />}>
+                <Route path="status-magazzino/" element={<StatusMagazzino />}></Route>
+              </Route>
             </Route>
             {/* Database Documenti */}
             <Route path="documenti/"  element={<RouteWrapper />}>
@@ -144,6 +149,10 @@ function App() {
             <Route path="developer/" element={<RouteWrapper />}>
               <Route path="versioni-programma/" element={<VersioniProgramma />}></Route>
               <Route path="utilizzo/" element={<Utilizzo />}></Route>
+            </Route>
+            {/* Developer */}
+            <Route path="magazzino/" element={<RouteWrapper />}>
+              <Route path="prelievo/" element={<Prelievo />}></Route>
             </Route>
             </Route>
           </Routes>

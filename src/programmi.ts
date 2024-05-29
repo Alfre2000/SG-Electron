@@ -8,13 +8,14 @@ import Monitoring from "./images/monitoring.png";
 import Database from "./images/database-storage.png";
 import Chemistry from "./images/chemistry.png";
 import Coding from "./images/coding.png";
+import Warehouse from "./images/warehouse.png";
 import { URLS } from "urls";
 
 export const PROGRAMMI = {
     "Gestione Impianto": {name: 'Gestione Impianto', link: '/manutenzione/selezione-impianto/', icon: ToolBox},
     "Gestione Inventario": {name: 'Gestione Inventario', link: '#', icon: Inventory},
     "Gestione Preventivi": {name: 'Gestione Preventivi', link: '#', icon: Budget},
-    "Programma 4": {name: 'Programma 4', link: '#', icon: WorkInProgress},
+    "Magazzino": {name: 'Magazzino', link: '/magazzino/prelievo/', icon: Warehouse},
     "Programma 5": {name: 'Programma 5', link: '#', icon: WorkInProgress},
     "Programma 6": {name: 'Programma 6', link: '#', icon: WorkInProgress},
     "Area Admin": {name: 'Area Admin', link: '/area-admin/scheda-controllo/', icon: Admin},

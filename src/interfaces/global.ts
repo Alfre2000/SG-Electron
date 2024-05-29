@@ -172,6 +172,9 @@ export type RecordLavorazioneStatus = {
   articolo: string;
   consegne: Consegna[];
   n_lotto_super: string;
+  cliente: string;
+  impianto: string;
+  lavorazione: string;
 };
 
 export type Consegna = {
@@ -247,4 +250,44 @@ export type Step = {
   ingresso: string;
   uscita: string;
   posizione: string;
+}
+
+export type Prodotto = {
+  id: string;
+  nome: string;
+  descrizione: string | null;
+  fornitore: Fornitore;
+  impianti: number[];
+  dpi: string[] | null;
+  rischio: string | null;
+  luogo: string;
+  aspetto: string | null;
+  colore: string | null;
+  densità_minima: number | null;
+  densità_massima: number | null;
+  ph_minimo: number | null;
+  ph_massimo: number | null;
+  note: string | null;
+  scorta_minima: number;
+  scorta_magazzino: number;
+  scorta_ordinata: number;
+  prezzo_unitario: number;
+  dimensioni_unitarie: number;
+  unità_misura: string;
+}
+
+export type Fornitore = {
+  id: string;
+  nome: string;
+}
+
+export type Movimento = {
+  id: string;
+  prodotto: Prodotto;
+  tipo: string;
+  quantità: number;
+  destinazione: Impianto | null;
+  operatore: Operatore | null;
+  data: string;
+  note: string | null;
 }

@@ -1,8 +1,8 @@
-// export const BASE_PATH = 
-//   process.env.NODE_ENV === 'production' 
-//     ? 'https://supergalvanica.herokuapp.com'
-//     : 'http://localhost:8000'
-export const BASE_PATH = "https://supergalvanica.herokuapp.com"
+export const BASE_PATH = 
+  process.env.NODE_ENV === 'production' 
+    ? 'https://supergalvanica.herokuapp.com'
+    : 'http://localhost:8000'
+// export const BASE_PATH = "https://supergalvanica.herokuapp.com"
 
 
 export const URLS = {
@@ -76,4 +76,10 @@ export const URLS = {
     LAST_SCHEDE_IMPIANTO: BASE_PATH + '/base/dashboards/last-schede-impianto/',
     RECORD_LAVORAZIONI_OVER_TIME: BASE_PATH + '/base/dashboards/record-lavorazione-over-time/',
     RECORD_MANCANTI: BASE_PATH + '/base/dashboards/record-mancanti/',
+
+    // MAGAZZINO
+    FORNITORI: BASE_PATH + '/magazzino/fornitori/',
+    PRODOTTI: BASE_PATH + '/magazzino/prodotti/',
+    MOVIMENTI: BASE_PATH + '/magazzino/movimenti/',
+    ORDINI: BASE_PATH + '/magazzino/ordini/',
 }

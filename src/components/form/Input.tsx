@@ -11,12 +11,13 @@ import { cn } from "@lib/utils";
 type InputProps = {
   name: string;
   label?: string | boolean;
-  type?: "text" | "password" | "email" | "number";
+  type?: "text" | "password" | "email" | "number" | "date";
   inputColumns?: number;
   className?: string;
+  disabled?: boolean;
 };
 
-function Input({ name, label, type, inputColumns = 8, className }: InputProps) {
+function Input({ name, label, type, inputColumns = 8, className, disabled = false }: InputProps) {
   const form = useFormContext();
 
   const labelText = label || `${capitalize(name).replaceAll("_", " ")}:`;
@@ -46,7 +47,7 @@ function Input({ name, label, type, inputColumns = 8, className }: InputProps) {
                     <ShadcnInput
                       {...field}
                       variant={variant}
-                      disabled={formState.disabled}
+                      disabled={formState.disabled || disabled}
                       type={type}
                       className={cn("h-8 w-full rounded-sm disabled:bg-[#eaecef] disabled:opacity-1 disabled:border-gray-300 disabled:cursor-auto", className)}
                     />

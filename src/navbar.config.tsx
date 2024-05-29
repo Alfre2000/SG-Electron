@@ -23,6 +23,8 @@ import {
   faCodeBranch,
   faMagnifyingGlass,
   faRuler,
+  faMinus,
+  faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -131,6 +133,11 @@ const navbarAndamentoProduzione = () => {
       title: "Focus Cliente",
       icon: faUserTie,
       links: [{ name: "Focus Cliente", link: "/andamento-produzione/focus-cliente/" }],
+    },
+    {
+      title: "Status Magazzino",
+      icon: faWarehouse,
+      links: [{ name: "Status Magazzino", link: "/andamento-produzione/status-magazzino/" }],
     },
     {
       title: "Dashboards",
@@ -242,6 +249,16 @@ const navbarDeveloper = () => {
   ];
 };
 
+const navbarMagazzino = () => {
+  return [
+    {
+      title: "Prelievo",
+      icon: faMinus,
+      links: [{ name: "Prelievo", link: "/magazzino/prelievo/" }],
+    },
+  ];
+};
+
 export const useGetNavItems = () => {
   const user = useUserContext();
   const currentUrl = window.location.hash;
@@ -267,6 +284,9 @@ export const useGetNavItems = () => {
       break;
     case "developer":
       navFn = navbarDeveloper;
+      break;
+    case "magazzino":
+      navFn = navbarMagazzino;
       break;
     default:
       navFn = () => [];
