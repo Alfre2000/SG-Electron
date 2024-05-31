@@ -41,7 +41,7 @@ function Impianti() {
     [
       URLS.BARRE,
       { impianto: impianto },
-      { custom_page_size: 1000 },
+      { custom_page_size: 2000 },
       { inizio: dateToDatePicker(inizio) },
       { end: dateToDatePicker(addDays(periodo?.to || defaultPeriodo.to, 1)) },
     ],
