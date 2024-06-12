@@ -25,6 +25,8 @@ import {
   faRuler,
   faMinus,
   faWarehouse,
+  faHome,
+  faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -252,9 +254,19 @@ const navbarDeveloper = () => {
 const navbarMagazzino = () => {
   return [
     {
+      title: "HomePage",
+      icon: faHome,
+      links: [{ name: "HomePage", link: "/magazzino/home/" }],
+    },
+    {
       title: "Prelievo",
-      icon: faMinus,
+      icon: faArrowRightFromBracket,
       links: [{ name: "Prelievo", link: "/magazzino/prelievo/" }],
+    },
+    {
+      title: "Report Giacenza",
+      icon: faWarehouse,
+      links: [{ name: "Report Giacenza", link: "/magazzino/giacenza/" }],
     },
   ];
 };

@@ -11,6 +11,7 @@ export const apiDelete = async (url) => {
 };
 
 export const apiUpdate = async (url, body) => {
+  console.log("body", body);
   return axios.patch(url, body, { headers: getHeaders() });
 };
 

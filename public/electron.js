@@ -124,6 +124,27 @@ app.whenReady().then(() => {
       }
   }))
   })
+  ipcMain.handle('save-docx', (event, data, defaultName) => {
+    const win = BrowserWindow.getFocusedWindow()
+    data = Buffer.from(data, 'base64');
+    const defaultPath = app.getPath('desktop') + '/' + defaultName
+    dialog.showSaveDialog(win, { 
+      title: "Salva Documento",
+      defaultPath: defaultPath,
+      properties: ['openFile', 'openDirectory', 'createDirectory'],
+      filters: [{ name: 'Word', extensions: ['docx'] }],
+    }).then((result => {
+      if (!result.canceled && result.filePath) {
+        fs.writeFile(result.filePath, data, (error) => {
+          if (error) {
+            console.error('Error saving DOCX:', error);
+          } else {
+            console.error('DOCX saved correctly:');
+          }
+        });
+      }
+  }))
+  })
   ipcMain.handle('print-pdf', (event, data) => {
     const pdfBuffer = Buffer.from(data, 'binary');
     const tempFilePath = app.getPath('desktop') + '/verifica_prezzi.pdf';

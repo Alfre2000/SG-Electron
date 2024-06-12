@@ -17,7 +17,7 @@ type FormProps<T extends ZodTypeAny> = {
   schema: T;
   initialData?: z.infer<T>;
   disabled?: boolean;
-  onSuccess?: () => void;
+  onSuccess?: (res: any) => void;
 };
 
 function Form<T extends ZodTypeAny>({
@@ -45,10 +45,10 @@ function Form<T extends ZodTypeAny>({
   React.useEffect(() => {
     console.log("Resetting form");
     form.reset(initialData);
-  }, [initialData, form]);
+  }, []);
 
   const createMutation = useMutation((data: z.infer<typeof schema>) => apiPost(endpoint, data), {
-    onSuccess: () => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries(endpoint);
       toast.success("Record creato con successo !");
 
@@ -58,7 +58,7 @@ function Form<T extends ZodTypeAny>({
       form.reset();
       setKey((prev) => prev + 1);
       if (setCopyData) setCopyData(null);
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess(res);
     },
     onError: (error) => onError(error),
   });
@@ -66,11 +66,11 @@ function Form<T extends ZodTypeAny>({
   const updateMutation = useMutation(
     (data: z.infer<typeof schema>) => apiUpdate(`${endpoint}${initialData?.id}/`, data),
     {
-      onSuccess: () => {
+      onSuccess: (res) => {
         queryClient.invalidateQueries(endpoint);
         toast.success("Record modificato con successo !");
         setKey((prev) => prev + 1);
-        if (onSuccess) onSuccess();
+        if (onSuccess) onSuccess(res);
       },
       onError: (error) => onError(error),
     }
@@ -82,8 +82,18 @@ function Form<T extends ZodTypeAny>({
 
     // Aggiorna gli errori nello state del form
     Object.keys(errors).forEach((key, idx) => {
+      if (errors[key][0] instanceof Object) {
+        errors[key].forEach((error: any, i: number) => {
+          Object.keys(error).forEach((nestedKey) => {
+            const message = { message: error[nestedKey][0] };
+            form.setError(`${key}[${i}].${nestedKey}` as any, message, { shouldFocus: idx === 0 });
+          }
+        );
+      });
+      } else {
       const message = { message: errors[key][0] };
       form.setError(key as any, message, { shouldFocus: idx === 0 });
+    }
     });
     toast.error("Si è verificato un errore !");
 

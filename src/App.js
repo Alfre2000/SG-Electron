@@ -46,6 +46,8 @@ import Wrapper from "@ui/wrapper/Wrapper";
 import InserimentoLotti from "@pages/AndamentoProduzione/InserimentoLotti/InserimentoLotti";
 import Prelievo from "@pages/Magazzino/Prelievo/Prelievo";
 import StatusMagazzino from "@pages/AndamentoProduzione/StatusMagazzino/StatusMagazzino";
+import Giacenza from "@pages/Magazzino/Giacenza/Giacenza";
+import Home from "@pages/Magazzino/Home/Home";
 const electron = window?.require ? window.require("electron") : null;
 
 function reducer (state, userInfo) {
@@ -152,7 +154,9 @@ function App() {
             </Route>
             {/* Developer */}
             <Route path="magazzino/" element={<RouteWrapper />}>
+              <Route path="home/" element={<Home />}></Route>
               <Route path="prelievo/" element={<Prelievo />}></Route>
+              <Route path="giacenza/" element={<Giacenza />}></Route>
             </Route>
             </Route>
           </Routes>

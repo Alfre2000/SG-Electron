@@ -26,7 +26,7 @@ export type Clienti = {
 export type Cliente = Unpacked<Clienti>;
 
 export type Operatore = {
-  id: string;
+  id: number;
   nome: string;
   attivo: boolean;
   codice: string;
@@ -253,10 +253,9 @@ export type Step = {
 }
 
 export type Prodotto = {
-  id: string;
+  id: number;
   nome: string;
   descrizione: string | null;
-  fornitore: Fornitore;
   impianti: number[];
   dpi: string[] | null;
   rischio: string | null;
@@ -271,13 +270,22 @@ export type Prodotto = {
   scorta_minima: number;
   scorta_magazzino: number;
   scorta_ordinata: number;
-  prezzo_unitario: number;
   dimensioni_unitarie: number;
+  nome_unità: string;
   unità_misura: string;
+  ums: [string, string][];
+  prodotti_fornitori: FornitoreProdotto[];
 }
 
+export type FornitoreProdotto = {
+  prodotto: string;
+  fornitore: Fornitore;
+  prezzo_unitario: number;
+}
+
+
 export type Fornitore = {
-  id: string;
+  id: number;
   nome: string;
 }
 
@@ -290,4 +298,48 @@ export type Movimento = {
   operatore: Operatore | null;
   data: string;
   note: string | null;
+}
+
+export type UtilizzoProdotto = {
+  id: number;
+  nome: string;
+  descrizione: string | null;
+  impianti: number[];
+  dpi: string[] | null;
+  rischio: string | null;
+  luogo: string;
+  aspetto: string | null;
+  colore: string | null;
+  densità_minima: number | null;
+  densità_massima: number | null;
+  ph_minimo: number | null;
+  ph_massimo: number | null;
+  note: string | null;
+  scorta_minima: number;
+  scorta_magazzino: number;
+  scorta_ordinata: number;
+  dimensioni_unitarie: number;
+  nome_unità: string;
+  unità_misura: string;
+  utilizzo_ultimo_mese: number;
+  utilizzo_ultimo_trimestre: number;
+  utilizzo_ultimo_anno: number;
+}
+
+
+export type Ordine = {
+  id: number;
+  prodotto: Prodotto;
+  quantità: number;
+  prezzo_unitario: number | null;
+  fornitore: Fornitore;
+  operatore: Operatore | null;
+  data_ordine: string;
+  data_consegna: string | null;
+  data_consegna_prevista: string;
+  quantità_testo: string;
+  note: string | null;
+  attestato: boolean;
+  controllo_qualità: boolean;
+  n_ordine: string;
 }

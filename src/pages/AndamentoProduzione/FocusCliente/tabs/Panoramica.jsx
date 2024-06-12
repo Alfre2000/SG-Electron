@@ -32,7 +32,6 @@ function Panoramica() {
   const [timeframe, setTimeframe] = useState("180");
   const { cliente } = useParams();
   const panoramicaQuery = useQuery([`${URLS.CLIENTI}${cliente}/panoramica/?timeframe=${timeframe}`]);
-
   const months = timeframe === "180" ? 6 : timeframe === "90" ? 3 : 1;
 
   useEffect(() => {

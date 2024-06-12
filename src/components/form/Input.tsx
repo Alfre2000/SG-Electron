@@ -15,9 +15,10 @@ type InputProps = {
   inputColumns?: number;
   className?: string;
   disabled?: boolean;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 };
 
-function Input({ name, label, type, inputColumns = 8, className, disabled = false }: InputProps) {
+function Input({ name, label, type, inputColumns = 8, className, disabled = false, inputProps = {} }: InputProps) {
   const form = useFormContext();
 
   const labelText = label || `${capitalize(name).replaceAll("_", " ")}:`;
@@ -46,6 +47,7 @@ function Input({ name, label, type, inputColumns = 8, className, disabled = fals
                   <div className="relative">
                     <ShadcnInput
                       {...field}
+                      {...inputProps}
                       variant={variant}
                       disabled={formState.disabled || disabled}
                       type={type}
