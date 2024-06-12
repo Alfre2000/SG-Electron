@@ -82,6 +82,13 @@ function ProdottoForm() {
               name="prodotto"
               options={searchOptions(prodottiQuery.data, "nome")}
               onChange={(value) => {
+                if (!value) {
+                  setValue("fornitore", "");
+                  setValue("scorta_magazzino", "");
+                  setValue("scorta_minima", "");
+                  setValue("um", "");
+                  return;
+                }
                 if (!prodottiQuery.data) return;
                 const prodotto = prodottiQuery.data.find((prodotto) => prodotto.id === value.value)!;
                 setValue("fornitore", prodotto?.prodotti_fornitori.map((pf) => pf.fornitore.nome).join(", "));
