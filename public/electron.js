@@ -163,6 +163,18 @@ app.whenReady().then(() => {
       });
     });
   })
+  ipcMain.handle('save-open-docx', (event, data) => {
+    const pdfBuffer = Buffer.from(data, 'base64');
+    const timestamp = new Date().getTime();
+    const tempFilePath = path.join(app.getPath('temp'), `docx_${timestamp}.docx`);
+    fs.writeFileSync(tempFilePath, pdfBuffer);
+    const command = os.platform() === 'win32' ? `start ${tempFilePath}` : `open ${tempFilePath}`;
+    exec(command, (error) => {
+      if (error) {
+          console.error('Failed to open file:', error);
+      }
+    });
+  })
   ipcMain.handle('print-pdf-2', (event, data, name) => {
     const downloadsPath = app.getPath('downloads');
     const filePath = path.join(downloadsPath, name);

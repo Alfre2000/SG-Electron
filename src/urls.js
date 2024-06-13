@@ -85,4 +85,5 @@ export const URLS = {
     ORDINI: BASE_PATH + '/magazzino/ordini',
     UTILIZZO_PRODOTTO: BASE_PATH + '/magazzino/utilizzo-prodotto/',
     DOCX_ORDINE: BASE_PATH + '/magazzino/docx-ordine/',
+    DOCX_GIACENZA: BASE_PATH + '/magazzino/docx-giacenza/',
 }

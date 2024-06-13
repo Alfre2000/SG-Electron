@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@components/shadcn/Card";
 import React, { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Operatore, Prodotto, UtilizzoProdotto } from "@interfaces/global";
+import { Operatore, Prodotto } from "@interfaces/global";
 import { URLS } from "urls";
 import Input from "@components/form/Input";
 import Form from "@components/form/Form";
@@ -19,6 +19,8 @@ import { apiPost } from "@api/apiV2";
 import { getErrors } from "@api/utils";
 import { Checkbox } from "@components/shadcn/Checkbox";
 import { Label } from "@components/shadcn/Label";
+import PopoverProdotto from "./popover-prodotto";
+import DatePicker from "@components/form/DatePicker";
 const electron = window?.require ? window.require("electron") : null;
 
 const numberSchema = z
@@ -40,6 +42,7 @@ const schema = z.object({
     })
   ),
   operatore: numberSchema,
+  data_consegna_prevista: z.string(),
 });
 
 type Props = {
@@ -57,6 +60,8 @@ function Ordine({ prodotti, setProdotti }: Props) {
     return prodotti.map((prodotto) => prodottiQuery.data.find((p) => p.nome === prodotto)!);
   }, [prodotti, prodottiQuery.isSuccess, prodottiQuery.data]);
 
+  const nextWeek = new Date();
+  nextWeek.setDate(nextWeek.getDate() + 7);
   const initialData = {
     prodotti: prodottiMappati.map((prodotto) => {
       const hasPrezzo = prodotto.prodotti_fornitori.length <= 1 && prodotto.prodotti_fornitori[0]?.prezzo_unitario;
@@ -69,6 +74,7 @@ function Ordine({ prodotti, setProdotti }: Props) {
       };
     }),
     operatore: undefined,
+    data_consegna_prevista: nextWeek.toISOString().split("T")[0],
   };
   const pdfMutation = useMutation((data: FormData) => apiPost(URLS.DOCX_ORDINE, data), {
     onSuccess: (res) => {
@@ -98,8 +104,12 @@ function Ordine({ prodotti, setProdotti }: Props) {
           <CardDescription>Inserisci i dati dell'ordine e conferma per inviare la richiesta.</CardDescription>
           <div className="absolute right-8 top-5 text-base">
             <div className="flex justify-between items-center gap-x-3">
-            <Label>Scarica ordine</Label>
-            <Checkbox checked={download} onCheckedChange={() => setDownload((prev) => !prev)} className="size-6" />
+              <Label>Scarica ordine</Label>
+              <Checkbox
+                checked={download}
+                onCheckedChange={() => setDownload((prev) => !prev)}
+                className="size-6"
+              />
             </div>
           </div>
         </CardHeader>
@@ -180,7 +190,7 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
                     name={`prodotti[${index}].fornitore`}
                     options={prodotti[index].prodotti_fornitori.map((pf) => ({
                       value: pf.fornitore.id,
-                      label: pf.fornitore.nome,
+                      label: pf.fornitore.nome_semplice,
                     }))}
                     onChange={(value) => {
                       form.setValue(`prodotti[${index}].fornitore`, value?.value);
@@ -209,60 +219,20 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
           })}
         </TableBody>
       </Table>
-      <div className="flex justify-between mt-4 items-center mx-3">
+      <div className="grid grid-cols-5 mt-4 items-center mx-3">
         <div></div>
-        <div className="w-72 flex justify-end">
+        <div className="col-span-2 text-right">
           <SearchSelect
             name="operatore"
             options={searchOptions(operatoriQuery.data, "nome")}
             inputClassName="w-48"
           />
-        </div>
+          </div>
+          <div className="col-span-2 text-right">
+          <DatePicker name="data_consegna_prevista" label="Data Consegna:" />
+          </div>
       </div>
     </>
-  );
-};
-
-const PopoverProdotto = ({ prodottoId }: { prodottoId: number }) => {
-  const prodottoQuery = useQuery<UtilizzoProdotto>(URLS.UTILIZZO_PRODOTTO + prodottoId);
-  if (!prodottoQuery.isSuccess) return null;
-  const prodotto = prodottoQuery.data;
-  const color =
-    prodotto.scorta_magazzino + prodotto.scorta_ordinata < prodotto.scorta_minima ? "text-red-500" : "";
-  const scorta_minima = prodotto.scorta_minima / prodotto.dimensioni_unitarie;
-  const scorta_magazzino = prodotto.scorta_magazzino / prodotto.dimensioni_unitarie;
-  const scorta_ordinata = prodotto.scorta_ordinata / prodotto.dimensioni_unitarie;
-  const dimensioni =
-    prodotto.unità_misura !== "pz" ? `da ${prodotto.dimensioni_unitarie} ${prodotto.unità_misura}` : "";
-  return (
-    <div>
-      <span className="font-medium">{prodotto.nome}</span>
-      <div className="flex justify-between items-center">
-        <p className="text-muted text-sm">Descrizione: {prodotto.descrizione}</p>
-        <p className="text-muted text-sm min-w-24 text-right">
-          {prodotto.nome_unità} {dimensioni}
-        </p>
-      </div>
-      <hr className="mb-3 mt-2" />
-      <div className="flex justify-between items-center">
-        <div className="grid grid-cols-3 gap-2">
-          <span className="col-span-2">Scorta minima:</span>
-          <span className="text-center font-semibold">{scorta_minima}</span>
-          <span className="col-span-2">Scorta magazzino:</span>
-          <span className={`text-center font-semibold ${color}`}>{scorta_magazzino}</span>
-          <span className="col-span-2">Scorta ordinata:</span>
-          <span className="text-center font-semibold">{scorta_ordinata}</span>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          <span className="col-span-2">Utilizzo ultimo mese:</span>
-          <span className="text-center font-semibold">{prodotto.utilizzo_ultimo_mese.toFixed(1)}</span>
-          <span className="col-span-2">Utilizzo ultimo trimestre:</span>
-          <span className="text-center font-semibold">{prodotto.utilizzo_ultimo_trimestre.toFixed(1)}</span>
-          <span className="col-span-2">Utilizzo ultimo anno:</span>
-          <span className="text-center font-semibold">{prodotto.utilizzo_ultimo_anno.toFixed(1)}</span>
-        </div>
-      </div>
-    </div>
   );
 };
 

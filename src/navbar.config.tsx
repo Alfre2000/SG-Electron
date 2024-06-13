@@ -254,14 +254,14 @@ const navbarDeveloper = () => {
 const navbarMagazzino = () => {
   return [
     {
-      title: "HomePage",
-      icon: faHome,
-      links: [{ name: "HomePage", link: "/magazzino/home/" }],
-    },
-    {
       title: "Prelievo",
       icon: faArrowRightFromBracket,
       links: [{ name: "Prelievo", link: "/magazzino/prelievo/" }],
+    },
+    {
+      title: "Dashboard",
+      icon: faHome,
+      links: [{ name: "Dashboard", link: "/magazzino/home/" }],
     },
     {
       title: "Report Giacenza",

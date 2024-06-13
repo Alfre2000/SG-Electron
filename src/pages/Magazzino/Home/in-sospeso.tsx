@@ -22,8 +22,8 @@ import { useState } from "react";
 import { apiUpdate } from "@api/apiV2";
 import { toast } from "sonner";
 import { getErrors } from "@api/utils";
-import { Checkbox } from "@components/shadcn/Checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/shadcn/Select";
+import { Form } from "react-bootstrap";
 
 export const columns: ColumnDef<Ordine>[] = [
   {
@@ -39,9 +39,9 @@ export const columns: ColumnDef<Ordine>[] = [
   {
     accessorKey: "fornitore",
     header: "Fornitore",
-    cell: ({ row }) => row.original.fornitore.nome,
+    cell: ({ row }) => row.original.fornitore.nome_semplice,
     filterFn: (row, id, value) => {
-      return row.original.fornitore.nome.includes(value);
+      return row.original.fornitore.nome_semplice.includes(value);
     },
   },
   {
@@ -78,19 +78,17 @@ function InserimentoForm({ ordine }: { ordine: Ordine }) {
   const queryClient = useQueryClient();
   const today = new Date().toISOString();
   const mutation = useMutation(
-    (data: any) =>
+    (data: any) => 
       apiUpdate(URLS.ORDINI + "/" + data.id + "/", {
         data_consegna: today,
         attestato: data.attestato,
         controllo_qualità: data.controllo_qualità,
         operatore: data.operatore,
+        quantità_consegnata: data.quantità,
       }),
     {
       onSuccess: (_, variables: any) => {
-        queryClient.setQueryData<Ordine[]>(
-          [URLS.ORDINI, { in_sospeso: true }],
-          (data) => data?.filter((o) => o.id !== parseInt(variables.id)) || []
-        );
+        queryClient.invalidateQueries([URLS.ORDINI]);
         queryClient.invalidateQueries([URLS.PRODOTTI]);
         queryClient.invalidateQueries([URLS.MOVIMENTI]);
         toast.success("Ordine aggiornato con successo");
@@ -108,6 +106,17 @@ function InserimentoForm({ ordine }: { ordine: Ordine }) {
   const hasDensità = ordine.prodotto.densità_minima || ordine.prodotto.densità_massima;
   const hasPh = ordine.prodotto.ph_minimo || ordine.prodotto.ph_massimo;
   const [dialogOpen, setDialogOpen] = useState(false);
+  let placeholder = "";
+  if (ordine.prodotto.unità_misura !== "pz") {
+    placeholder = `${ordine.prodotto.nome_unità} da ${ordine.prodotto.dimensioni_unitarie} ${ordine.prodotto.unità_misura}`;
+  } else {
+    placeholder = `${ordine.prodotto.nome_unità}`;
+  }
+  const um =
+    ordine.prodotto.unità_misura === "pz"
+      ? ""
+      : `da ${ordine.prodotto.dimensioni_unitarie} ${ordine.prodotto.unità_misura}`;
+  const quantità_mancante = (ordine.quantità - ordine.quantità_consegnata) / ordine.prodotto.dimensioni_unitarie;
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
@@ -118,17 +127,34 @@ function InserimentoForm({ ordine }: { ordine: Ordine }) {
           Arrivato
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="min-w-[580px]">
         <DialogHeader>
           <DialogTitle>Ordine Consegnato</DialogTitle>
           <DialogDescription>
             Controlla che le informazioni siano corrette e conferma l'arrivo dell'ordine.
           </DialogDescription>
         </DialogHeader>
-        <div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const attestato =
+              document.querySelector<HTMLInputElement>('input[name="attestato"]')?.checked || false;
+            const controllo_qualità =
+              document.querySelector<HTMLInputElement>('input[name="controllo_qualità"]')?.checked || false;
+            const quantità = parseInt((document.querySelector<HTMLInputElement>('input[name="quantità"]')?.value || "0"));
+            const data = {
+              id: ordine.id,
+              attestato,
+              controllo_qualità,
+              operatore,
+              quantità,
+            };
+            mutation.mutate(data);
+          }}
+        >
           <div className="text-sm">
             <p>
-              Fornitore:<span className="font-semibold"> {ordine.fornitore.nome}</span>
+              Fornitore:<span className="font-semibold"> {ordine.fornitore.nome_semplice}</span>
             </p>
             <p>
               Prodotto:<span className="font-semibold"> {ordine.prodotto.nome}</span>
@@ -166,59 +192,57 @@ function InserimentoForm({ ordine }: { ordine: Ordine }) {
             </ul>
             <div className="mt-3 space-y-3">
               <div className="flex justify-between items-center mr-5">
-                È stato ricevuto l'Attestato di Controllo Qualità ?{" "}
-                <Checkbox id="attestato" className="text-lg w-6 h-6" />
+                <Label htmlFor="attestato">È stato ricevuto l'Attestato di Controllo Qualità ? </Label>
+                <Form.Check type="checkbox" name="attestato" id="attestato" className="text-xl" required />
               </div>
               <div className="flex justify-between items-center mr-5">
-                Nostro controllo qualità effettuato ?{" "}
-                <Checkbox id="controllo_qualità" className="text-lg w-6 h-6" />
+                <Label htmlFor="controllo_qualità">Nostro controllo qualità effettuato ?</Label>
+                <Form.Check type="checkbox" name="controllo_qualità" id="controllo_qualità" className="text-xl" />
               </div>
             </div>
           </div>
           <div className="flex justify-between items-center gap-x-2 mt-3">
-            <Label className="font-normal text-sm">Operatore</Label>
-            <div className="mr-5">
-              <Select value={operatore?.toString()} onValueChange={(value) => setOperatore(parseInt(value))}>
-                <SelectTrigger className="w-[180px] h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {operatoriQuery.data?.map((op) => (
-                    <SelectItem key={op.id} value={op.id.toString()}>
-                      {op.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="h-20">
+              <Label className="font-normal text-sm mb-1">Operatore:</Label>
+              <div>
+                <Select
+                  required
+                  value={operatore?.toString()}
+                  onValueChange={(value) => setOperatore(parseInt(value))}
+                >
+                  <SelectTrigger className="min-w-[180px] h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {operatoriQuery.data?.map((op) => (
+                      <SelectItem key={op.id} value={op.id.toString()}>
+                        {op.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Label className="font-normal text-sm mb-1">Quantità:</Label>
+              <Input type="number" name="quantità" className="h-8" required placeholder={placeholder} max={quantità_mancante} min={0}/>
+              <p className="text-[0.8rem] font-normal text-muted mt-1">
+                Devono essere consegnati{" "}
+                <span className="font-semibold">{ordine.quantità_testo.split("Nr.").at(-1)}</span> {um}
+              </p>
             </div>
           </div>
           <div className="text-center mt-4">
-            <Button
-              onClick={() => {
-                const attestato =
-                  document.querySelector<HTMLButtonElement>('button[id="attestato"]')?.dataset.state === "checked";
-                const controllo_qualità =
-                  document.querySelector<HTMLButtonElement>('button[id="controllo_qualità"]')?.dataset.state === "checked";
-                const data = {
-                  id: ordine.id,
-                  attestato,
-                  controllo_qualità,
-                  operatore,
-                };
-                mutation.mutate(data);
-              }}
-            >
-              Conferma
-            </Button>
+            <Button type="submit">Conferma</Button>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
 }
 
 function TableHeader({ table, data }: { table: Table<Ordine>; data: Ordine[] }) {
-  const fornitori = Array.from(new Set(data.map((o) => o.fornitore.nome)));
+  const fornitori = Array.from(new Set(data.map((o) => o.fornitore.nome_semplice)));
   return (
     <div className="flex items-center gap-x-4 mb-3">
       <Input
@@ -254,7 +278,7 @@ function InSospeso() {
       columns={columns}
       data={ordiniQuery.data}
       Header={TableHeader}
-      initialState={{ pagination: { pageSize: 5, pageIndex: 0 } }}
+      initialState={{ pagination: { pageSize: 10, pageIndex: 0 } }}
       containerClassName="min-h-[355px]"
     />
   );

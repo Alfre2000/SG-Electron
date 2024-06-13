@@ -13,9 +13,10 @@ import { it } from "date-fns/locale";
 type Props = {
   value?: Date | string;
   onChange: SelectSingleEventHandler;
+  props?: any;
 };
 
-export function DatePicker({ value, onChange }: Props) {
+export function DatePicker({ value, onChange, ...props }: Props) {
   if (typeof value === "string") value = new Date(value);
   return (
     <Popover>
@@ -40,6 +41,8 @@ export function DatePicker({ value, onChange }: Props) {
           onSelect={onChange}
           disabled={(date) => date < new Date()}
           initialFocus
+          locale={it}
+          {...props}
         />
       </PopoverContent>
     </Popover>

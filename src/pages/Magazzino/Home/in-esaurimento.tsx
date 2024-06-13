@@ -15,12 +15,12 @@ export const columns: ColumnDef<Prodotto>[] = [
   {
     accessorKey: "prodotti_fornitori",
     filterFn: (row, id, value) => {
-      const fornitori = row.original.prodotti_fornitori.map((pf) => pf.fornitore.nome).join(", ");
+      const fornitori = row.original.prodotti_fornitori.map((pf) => pf.fornitore.nome_semplice).join(", ");
       return fornitori.includes(value);
     },
     header: "Fornitori",
     cell: ({ row }) => {
-      return row.original.prodotti_fornitori.map((pf) => pf.fornitore.nome).join(", ");
+      return row.original.prodotti_fornitori.map((pf) => pf.fornitore.nome_semplice).join(", ");
     },
   },
   {
@@ -66,7 +66,7 @@ function TableHeader({ table, data }: { table: Table<Prodotto>; data: Prodotto[]
   const fornitoriSet = new Set();
   data.forEach((prodotto: any) => {
     for (const prodotto_fornitore of prodotto.prodotti_fornitori) {
-      fornitoriSet.add(prodotto_fornitore.fornitore.nome);
+      fornitoriSet.add(prodotto_fornitore.fornitore.nome_semplice);
     }
   });
   const fornitori: any = Array.from(fornitoriSet).map((fornitore) => ({ value: fornitore, label: fornitore }));

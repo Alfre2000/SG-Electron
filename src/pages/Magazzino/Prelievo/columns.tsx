@@ -32,11 +32,11 @@ export const columns: ColumnDef<Movimento>[] = [
     },
   },
   {
-    accessorKey: "operatore.nome",
+    accessorKey: "operatore",
     header: "Operatore",
   },
   {
-    accessorKey: "destinazione.nome",
+    accessorKey: "destinazione",
     header: "Destinazione",
   },
 ];

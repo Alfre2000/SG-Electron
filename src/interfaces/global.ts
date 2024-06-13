@@ -58,6 +58,7 @@ export type Impianto = {
   id: number;
   nome: string;
   volume_vasca: number | null;
+  galvanico: boolean;
 };
 
 export type Metallo = {
@@ -256,7 +257,7 @@ export type Prodotto = {
   id: number;
   nome: string;
   descrizione: string | null;
-  impianti: number[];
+  impianti: Impianto[];
   dpi: string[] | null;
   rischio: string | null;
   luogo: string;
@@ -287,6 +288,7 @@ export type FornitoreProdotto = {
 export type Fornitore = {
   id: number;
   nome: string;
+  nome_semplice: string;
 }
 
 export type Movimento = {
@@ -294,8 +296,8 @@ export type Movimento = {
   prodotto: Prodotto;
   tipo: string;
   quantità: number;
-  destinazione: Impianto | null;
-  operatore: Operatore | null;
+  destinazione: string | null;
+  operatore: string | null;
   data: string;
   note: string | null;
 }
@@ -331,6 +333,7 @@ export type Ordine = {
   id: number;
   prodotto: Prodotto;
   quantità: number;
+  quantità_consegnata: number;
   prezzo_unitario: number | null;
   fornitore: Fornitore;
   operatore: Operatore | null;

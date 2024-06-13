@@ -28,7 +28,7 @@ const schema = z.object({
 });
 
 function Prelievo() {
-  const movimentiQuery = useQuery<PaginationData<Movimento>>([URLS.MOVIMENTI, { tipo: "scarico" }, { custom_page_size: 1000 }]);
+  const movimentiQuery = useQuery<PaginationData<Movimento>>([URLS.MOVIMENTI, { tipo: "scarico" }, { custom_page_size: 200 }]);
   const queryClient = useQueryClient();
   return (
     <div>
@@ -68,10 +68,10 @@ function Prelievo() {
 
 function ProdottoForm() {
   const prodottiQuery = useQuery<Prodotto[]>(URLS.PRODOTTI);
-  const impiantiQuery = useQuery<Impianto[]>(URLS.IMPIANTI);
   const operatoriQuery = useQuery<Operatore[]>([URLS.OPERATORI, { can_magazzino: true }]);
   const [umOptions, setUmOptions] = useState<Option[]>([]);
   const { setValue } = useFormContext();
+  const [impiantoOptions, setImpiantoOptions] = useState<Option[]>([]);
   return (
     <>
       <Hidden name="tipo" value="scarico" />
@@ -87,17 +87,24 @@ function ProdottoForm() {
                   setValue("scorta_magazzino", "");
                   setValue("scorta_minima", "");
                   setValue("um", "");
+                  setValue("destinazione", "");
+                  setImpiantoOptions([]);
+                  setUmOptions([]);
                   return;
                 }
                 if (!prodottiQuery.data) return;
                 const prodotto = prodottiQuery.data.find((prodotto) => prodotto.id === value.value)!;
-                setValue("fornitore", prodotto?.prodotti_fornitori.map((pf) => pf.fornitore.nome).join(", "));
+                setValue("fornitore", prodotto?.prodotti_fornitori.map((pf) => pf.fornitore.nome_semplice).join(", "));
                 const scorta = `${(prodotto?.scorta_magazzino / prodotto?.dimensioni_unitarie)} ${prodotto?.nome_unità}`;
                 setValue("scorta_magazzino", scorta);
                 const scorta_minima = `${(prodotto?.scorta_minima / prodotto?.dimensioni_unitarie)} ${prodotto?.nome_unità}`;
                 setValue("scorta_minima", scorta_minima);
                 setUmOptions(prodotto?.ums.map((um) => ({ value: um[0], label: um[1] })));
                 setValue("um", prodotto?.ums[0][0]);
+                setImpiantoOptions(prodotto?.impianti.map((impianto) => ({ value: impianto.id, label: impianto.nome })));
+                if (prodotto?.impianti.length === 1) {
+                  setValue("destinazione", prodotto?.impianti[0].id);
+                }
               }}
             />
           </div>
@@ -123,7 +130,7 @@ function ProdottoForm() {
         </div>
         <div className="flex gap-x-20">
           <div className="w-1/2">
-            <SearchSelect name="destinazione" options={searchOptions(impiantiQuery.data, "nome")} />
+            <SearchSelect name="destinazione" options={impiantoOptions} />
           </div>
           <div className="w-1/2">
             <SearchSelect name="operatore" options={searchOptions(operatoriQuery.data, "nome")} />

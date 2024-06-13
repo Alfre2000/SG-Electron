@@ -28,16 +28,22 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setProdottiOrdine: React.Dispatch<React.SetStateAction<string[]>>;
+  setFornitore: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 function findCommonSuppliers(arrays: any) {
   let commonSuppliers = arrays[0];
   arrays.slice(1).forEach((array: any) => {
-      commonSuppliers = commonSuppliers.filter((supplier: any) => array.includes(supplier));
+    commonSuppliers = commonSuppliers.filter((supplier: any) => array.includes(supplier));
   });
   return commonSuppliers;
 }
 
-export function DataTable<TData, TValue>({ columns, data, setProdottiOrdine }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  setProdottiOrdine,
+  setFornitore,
+}: DataTableProps<TData, TValue>) {
   const [error, setError] = React.useState("");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({ pageIndex: 0, pageSize: 50 });
@@ -47,7 +53,7 @@ export function DataTable<TData, TValue>({ columns, data, setProdottiOrdine }: D
   const fornitoriSet = new Set();
   data.forEach((prodotto: any) => {
     for (const prodotto_fornitore of prodotto.prodotti_fornitori) {
-      fornitoriSet.add(prodotto_fornitore.fornitore.nome);
+      fornitoriSet.add(prodotto_fornitore.fornitore.nome_semplice);
     }
   });
   const fornitori: any = Array.from(fornitoriSet).map((fornitore) => ({ value: fornitore, label: fornitore }));
@@ -88,9 +94,17 @@ export function DataTable<TData, TValue>({ columns, data, setProdottiOrdine }: D
             column={table.getColumn("prodotti_fornitori")}
             title="Fornitore"
             options={fornitori}
+            onChange={(value) => setFornitore(value[0])}
           />
           {table.getState().columnFilters.length > 0 && (
-            <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                table.resetColumnFilters();
+                setFornitore(undefined);
+              }}
+              className="h-8 px-2 lg:px-3"
+            >
               Cancella
               <Cross2Icon className="ml-2 h-4 w-4" />
             </Button>
@@ -104,7 +118,9 @@ export function DataTable<TData, TValue>({ columns, data, setProdottiOrdine }: D
                 let fornitori: any = table
                   .getFilteredSelectedRowModel()
                   .rows.map((row) => row.getValue("prodotti_fornitori"));
-                fornitori = fornitori.map((prodotti_fornitori: any) => prodotti_fornitori.map((f: any) => f.fornitore.nome));
+                fornitori = fornitori.map((prodotti_fornitori: any) =>
+                  prodotti_fornitori.map((f: any) => f.fornitore.nome_semplice)
+                );
                 const common = findCommonSuppliers(fornitori);
                 if (!common.length) {
                   setError("I prodotti selezionati devono avere lo stesso fornitore.");
