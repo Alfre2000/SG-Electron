@@ -13,7 +13,6 @@ import SelezioneImpianto from "./pages/GestioneImpianto/SelezioneImpianto/Selezi
 import ListaCorrezioniBagno from "./pages/GestioneImpianto/ListaCorrezioniBagno/ListaCorrezioniBagno";
 import SchedaControllo from "./pages/AreaAdmin/SchedaControllo/SchedaControllo";
 import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
-import LavorazioniInSospeso from "./pages/GestioneImpianto/LavorazioniInSospeso/LavorazioniInSospeso";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
 import AlertRichieste from "./pages/GestioneImpianto/AlertRichieste";
 import CorrezioneBagno from "./pages/GestioneImpianto/CorrezioneBagno/CorrezioneBagno";
@@ -23,7 +22,6 @@ import GestisciDocumenti from "./pages/DatabaseDocumenti/GestisciDocumenti/Gesti
 import NuovaRichiesta from "./pages/CorrezioneBagni/GestisciRichieste/GestisciRichieste";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
 import AdminManutenzione from "./pages/AreaAdmin/Manutenzione/Manutenzione";
-import Cliente from "./pages/AreaAdmin/Cliente/Cliente";
 import Operatore from "./pages/AreaAdmin/Operatore/Operatore";
 import Certificato from "./pages/CertificatiQualità/Certificato/Certificato";
 import CertificatiBolla from "./pages/CertificatiQualità/CertificatiBolla/CertificatiBolla";
@@ -36,7 +34,6 @@ import { UserContext } from "./contexts/UserContext";
 import SelezioneCliente from "./pages/AndamentoProduzione/FocusCliente/SelezioneCliente";
 import DatabaseCertificati from "./pages/CertificatiQualità/DatabaseCertificati/DatabaseCertificati";
 import VerificaPrezzi from "./pages/CertificatiQualità/VerificaPrezzi/VerificaPrezzi";
-import TaraturaStrumenti from "./pages/CertificatiQualità/TaraturaStrumenti/TaraturaStrumenti";
 import FocusCliente from "./pages/AndamentoProduzione/FocusCliente/FocusCliente";
 import MappaClienti from "@pages/AndamentoProduzione/MappaClienti/MappaClienti";
 import Impianti from "@pages/AndamentoProduzione/Impianti/Impianti";
@@ -94,7 +91,6 @@ function App() {
               <Route path="prossime/" element={<Prossime />}></Route>
               <Route path="record-lavorazione/" element={<RecordLavorazione />}></Route>
               <Route path="record-lavorazione-ossido/" element={<RecordLavorazioneOssido />}></Route>
-              <Route path="record-lavorazione-in-sospeso/" element={<LavorazioniInSospeso />}></Route>
               <Route path="selezione-impianto/" element={<SelezioneImpianto />}></Route>
               <Route path="record-scheda-impianto/" element={<RecordSchedaImpianto />}></Route>
               <Route element={<RouteWrapper />}>
@@ -111,7 +107,6 @@ function App() {
               <Route path="scheda-impianto/" element={<SchedaImpianto />}></Route>
               <Route path="analisi/" element={<AdminAnalisi />}></Route>
               <Route path="manutenzione/" element={<AdminManutenzione />}></Route>
-              <Route path="cliente/" element={<Cliente />}></Route>
               <Route path="operatore/" element={<Operatore />}></Route>
               <Route path="certificato/" element={<Certificato />}></Route>
             </Route>
@@ -122,9 +117,6 @@ function App() {
               <Route path="etichette-mta/" element={<EtichetteMTA />}></Route>
               <Route path="database-certificati/" element={<DatabaseCertificati />}></Route>
               <Route path="verifica-prezzi/" element={<VerificaPrezzi />}></Route>
-              <Route element={<RouteWrapper />}>
-                {/* <Route path="taratura-strumenti/" element={<TaraturaStrumenti />}></Route> */}
-              </Route>
             </Route>
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">

@@ -29,7 +29,7 @@ function SelezioneCliente() {
               Cliente
             </label>
             <SearchSelect
-              options={searchOptions(clientiQuery.data, "nome")}
+              options={searchOptions(clientiQuery.data, "nome")?.sort((a, b) => a.label.localeCompare(b.label))}
               label={false}
               inputProps={{ className: "text-left", value: cliente, onChange: (e) => setCliente(e) }}
             />

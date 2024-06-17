@@ -36,7 +36,6 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       icon: faClipboardCheck,
       links: [
         { name: "Nuova scheda", link: "/manutenzione/record-lavorazione/" },
-        { name: "Schede in sospeso", link: "/manutenzione/record-lavorazione-in-sospeso/" },
       ],
     },
     {
@@ -77,7 +76,6 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
     items[2].links.splice(0, 1); // Remove Prossime Manutenzioni
     items.splice(2, 1); // Remove Informazioni
   } else {
-    items[0].links.splice(1, 1); // Remove Schede in sospeso
     items.splice(0, 0, {
       title: "Scheda valvole",
       icon: faClipboardCheck,
@@ -106,11 +104,6 @@ const navbarCertificatiQualità = (user: UserContextType["user"]["user"]) => {
       title: "Etichette MTA",
       icon: faTags,
       links: [{ name: "Etichette MTA", link: "/certificati-qualita/etichette-mta/" }],
-    },
-    {
-      title: "Taratura",
-      icon: faRuler,
-      links: [{ name: "Taratura", link: "/certificati-qualita/taratura-strumenti/" }],
     },
     {
       title: "Database",
@@ -191,11 +184,6 @@ const navbarAreaAdmin = () => {
       title: "Manutenzione",
       icon: faWrench,
       links: [{ name: "Manutenzione", link: "/area-admin/manutenzione/" }],
-    },
-    {
-      title: "Cliente",
-      icon: faUserTag,
-      links: [{ name: "Cliente", link: "/area-admin/cliente/" }],
     },
     {
       title: "Operatore",

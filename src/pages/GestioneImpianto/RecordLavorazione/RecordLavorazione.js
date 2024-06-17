@@ -15,7 +15,7 @@ function RecordLavorazione() {
       getURL={URLS.RECORD_LAVORAZIONI_NOT_OSSIDO}
       postURL={URLS.RECORD_LAVORAZIONI}
       FormComponent={RecordLavorazioneForm}
-      queriesToInvalidate={[URLS.RECORD_LAVORAZIONI_IN_SOSPESO, URLS.RECORD_LAVORAZIONI_NOT_OSSIDO]}
+      queriesToInvalidate={[URLS.RECORD_LAVORAZIONI_NOT_OSSIDO]}
       impiantoFilter={true}
     >
       <Wrapper>
