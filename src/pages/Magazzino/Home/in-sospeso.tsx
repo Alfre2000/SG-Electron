@@ -24,6 +24,8 @@ import { toast } from "sonner";
 import { getErrors } from "@api/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/shadcn/Select";
 import { Form } from "react-bootstrap";
+import { Popover, PopoverContent, PopoverTrigger } from "@components/shadcn/Popover";
+import PopoverProdotto from "../Giacenza/popover-prodotto";
 
 export const columns: ColumnDef<Ordine>[] = [
   {
@@ -47,7 +49,16 @@ export const columns: ColumnDef<Ordine>[] = [
   {
     accessorKey: "prodotto",
     header: "Descrizione",
-    cell: ({ row }) => row.original.prodotto.nome,
+    cell: ({ row }) => {
+      return (
+        <Popover>
+          <PopoverTrigger className="hover:underline">{row.original.prodotto.nome}</PopoverTrigger>
+          <PopoverContent className="w-[600px]">
+            <PopoverProdotto prodottoId={row.original.prodotto.id} />
+          </PopoverContent>
+        </Popover>
+      );
+    },
     filterFn: (row, id, value) => {
       return row.original.prodotto.nome.toLowerCase().includes(value.toLowerCase());
     },

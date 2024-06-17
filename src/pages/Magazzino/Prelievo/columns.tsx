@@ -1,6 +1,8 @@
 import { Movimento } from "@interfaces/global";
 import { ColumnDef } from "@tanstack/react-table";
 import { PLURALS } from "../utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@components/shadcn/Popover";
+import PopoverProdotto from "../Giacenza/popover-prodotto";
 
 export const columns: ColumnDef<Movimento>[] = [
   {
@@ -12,6 +14,16 @@ export const columns: ColumnDef<Movimento>[] = [
   {
     accessorKey: "prodotto.nome",
     header: "Prodotto",
+    cell: ({ row }) => {
+      return (
+        <Popover>
+          <PopoverTrigger className="hover:underline">{row.original.prodotto.nome}</PopoverTrigger>
+          <PopoverContent className="w-[600px]">
+            <PopoverProdotto prodottoId={row.original.prodotto.id} />
+          </PopoverContent>
+        </Popover>
+      );
+    },
   },
   {
     accessorKey: "quantità",

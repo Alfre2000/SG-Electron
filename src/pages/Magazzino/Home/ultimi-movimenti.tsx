@@ -6,10 +6,11 @@ import { Movimento, PaginationData } from "@interfaces/global";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { DataTable } from "@ui/full-data-table/data-table";
-import React from "react";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
 import { PLURALS } from "../utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@components/shadcn/Popover";
+import PopoverProdotto from "../Giacenza/popover-prodotto";
 
 export const columns: ColumnDef<Movimento>[] = [
   {
@@ -26,6 +27,16 @@ export const columns: ColumnDef<Movimento>[] = [
     id: "prodotto.nome",
     accessorKey: "prodotto.nome",
     header: "Prodotto",
+    cell: ({ row }) => {
+      return (
+        <Popover>
+          <PopoverTrigger className="hover:underline">{row.original.prodotto.nome}</PopoverTrigger>
+          <PopoverContent className="w-[600px]">
+            <PopoverProdotto prodottoId={row.original.prodotto.id} />
+          </PopoverContent>
+        </Popover>
+      );
+    },
   },
   {
     accessorKey: "quantità",

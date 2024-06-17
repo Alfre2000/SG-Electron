@@ -10,6 +10,8 @@ import { DataTableFacetedFilter } from "@ui/full-data-table/data-table-faceted-f
 import React from "react";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
+import { Popover, PopoverContent, PopoverTrigger } from "@components/shadcn/Popover";
+import PopoverProdotto from "../Giacenza/popover-prodotto";
 
 export const columns: ColumnDef<Prodotto>[] = [
   {
@@ -26,6 +28,16 @@ export const columns: ColumnDef<Prodotto>[] = [
   {
     accessorKey: "nome",
     header: "Nome",
+    cell: ({ row }) => {
+      return (
+        <Popover>
+          <PopoverTrigger className="hover:underline">{row.original.nome}</PopoverTrigger>
+          <PopoverContent className="w-[600px]">
+            <PopoverProdotto prodottoId={row.original.id} />
+          </PopoverContent>
+        </Popover>
+      );
+    },
   },
   {
     accessorKey: "scorta_minima",
