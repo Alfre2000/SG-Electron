@@ -1,6 +1,7 @@
 import { UtilizzoProdotto } from "@interfaces/global";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
+import { capitalize } from "utils";
 
 const PopoverProdotto = ({ prodottoId }: { prodottoId: number }) => {
   const prodottoQuery = useQuery<UtilizzoProdotto>(URLS.UTILIZZO_PRODOTTO + prodottoId);
@@ -43,6 +44,98 @@ const PopoverProdotto = ({ prodottoId }: { prodottoId: number }) => {
           <span className="col-span-2">Utilizzo ultimo anno:</span>
           <span className="text-center font-semibold">{utilizzo_ultimo_anno}</span>
         </div>
+      </div>
+      <hr className="mb-3 mt-2" />
+      <div className="grid grid-cols-3 gap-2">
+        <span>Utilizzato su:</span>
+        <ul className="text-left col-span-2 font-semibold text-sm ml-11">
+          {prodotto.impianti.map((impianto) => (
+            <li key={impianto} className="list-disc">
+              {impianto}
+            </li>
+          ))}
+        </ul>
+        {prodotto.dpi && prodotto.dpi.length > 0 && (
+          <>
+            <span>Dispositivi di Protezione Individuale:</span>
+            <ul className="text-left col-span-2 font-semibold text-sm ml-11">
+              {prodotto.dpi.map((dpi) => (
+                <li key={dpi} className="list-disc">
+                  {capitalize(dpi)}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        <span>Posizione magazzino:</span>
+        <span className="col-span-2 font-semibold text-sm ml-8 relative top-0.5">
+          {capitalize(prodotto.luogo)}
+        </span>
+      </div>
+      <hr className="mb-3 mt-2" />
+      <div className="grid grid-cols-3 gap-2">
+        {prodotto.aspetto && (
+          <>
+            <span>Aspetto:</span>
+            <span className="col-span-2 font-semibold text-sm ml-8">{capitalize(prodotto.aspetto)}</span>
+          </>
+        )}
+        {prodotto.colore && (
+          <>
+            <span>Colore:</span>
+            <span className="col-span-2 font-semibold text-sm ml-8">{capitalize(prodotto.colore)}</span>
+          </>
+        )}
+        {prodotto.note && (
+          <>
+            <span>Note:</span>
+            <span className="col-span-2 font-semibold text-sm ml-8">{capitalize(prodotto.note)}</span>
+          </>
+        )}
+        {prodotto.densità_minima || prodotto.densità_massima ? (
+          <>
+            <span>Densità:</span>
+            <span className="col-span-2 font-semibold text-sm ml-8">
+              {!prodotto.densità_massima && (
+                <>
+                  &gt; {prodotto.densità_minima} gm/cm<sup>3</sup>
+                </>
+              )}
+              {!prodotto.densità_minima && (
+                <>
+                  &lt; {prodotto.densità_massima} gm/cm<sup>3</sup>
+                </>
+              )}
+              {prodotto.densità_minima && prodotto.densità_massima && (
+                <>
+                  {prodotto.densità_minima} - {prodotto.densità_massima} gm/cm<sup>3</sup>
+                </>
+              )}
+            </span>
+          </>
+        ) : null}
+        {prodotto.ph_minimo || prodotto.ph_massimo ? (
+          <>
+            <span>Ph:</span>
+            <span className="col-span-2 font-semibold text-sm ml-8">
+              {!prodotto.ph_massimo && (
+                <>
+                  &gt; {prodotto.ph_minimo}
+                </>
+              )}
+              {!prodotto.ph_minimo && (
+                <>
+                  &lt; {prodotto.ph_massimo}
+                </>
+              )}
+              {prodotto.ph_minimo && prodotto.ph_massimo && (
+                <>
+                  {prodotto.ph_minimo} - {prodotto.ph_massimo}
+                </>
+              )}
+            </span>
+          </>
+        ) : null}
       </div>
     </div>
   );
