@@ -234,6 +234,14 @@ app.whenReady().then(() => {
       }
   }))
   })
+  ipcMain.handle('open-local-file', async (_, path) => {
+    const command = os.platform() === 'win32' ? `start '${path}'` : `open '${path}'`;
+    exec(command, (error) => {
+      if (error) {
+          console.error('Failed to open file:', error);
+      }
+    });
+  })
   ipcMain.handle('open-file', async (_, link, sidebar = true) => {
     // Check the file extension
     const fileUrl = new URL(link);

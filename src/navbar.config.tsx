@@ -201,15 +201,7 @@ const navbarDatabaseDocumenti = (user: UserContextType["user"]["user"]) => {
       icon: faFilePdf,
       links: [{ name: "Documenti", link: "/documenti/visualizza/" }],
     },
-    {
-      title: "Gestisci",
-      icon: faFolderTree,
-      links: [{ name: "Gestisci Documenti", link: "/documenti/gestisci/" }],
-    },
   ];
-  if (!user.is_staff && user.username !== "vincenzo" && user.username !== "gabriella") {
-    items.pop(); // Remove Gestisci
-  }
   return items;
 };
 

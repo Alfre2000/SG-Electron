@@ -18,7 +18,6 @@ import AlertRichieste from "./pages/GestioneImpianto/AlertRichieste";
 import CorrezioneBagno from "./pages/GestioneImpianto/CorrezioneBagno/CorrezioneBagno";
 import VisualizzaDocumenti from "./pages/DatabaseDocumenti/VisualizzaDocumenti/VisualizzaDocumenti";
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
-import GestisciDocumenti from "./pages/DatabaseDocumenti/GestisciDocumenti/GestisciDocumenti";
 import NuovaRichiesta from "./pages/CorrezioneBagni/GestisciRichieste/GestisciRichieste";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
 import AdminManutenzione from "./pages/AreaAdmin/Manutenzione/Manutenzione";
@@ -132,7 +131,6 @@ function App() {
             </Route>
             {/* Database Documenti */}
             <Route path="documenti/"  element={<RouteWrapper />}>
-              <Route path="gestisci/" element={<GestisciDocumenti />}></Route>
               <Route path="visualizza/" element={<VisualizzaDocumenti />}></Route>
             </Route>
             {/* Correzione Bagni */}

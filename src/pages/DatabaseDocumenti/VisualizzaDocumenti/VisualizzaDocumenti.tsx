@@ -1,6 +1,4 @@
-import React from "react";
-import { useQuery } from "react-query";
-import { URLS } from "urls";
+import React, { useMemo } from "react";
 import { Table, TableBody, TableCell, TableRow, TableHead, TableHeader } from "@components/shadcn/Table";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,37 +10,72 @@ import {
   BreadcrumbSeparator,
 } from "@components/shadcn/BreadCrumb";
 import { SlashIcon } from "@radix-ui/react-icons";
-import { fileIcon, findAdjacentDirectories } from "@utils/main";
-import { Documento } from "@interfaces/global";
+import { fileIcon } from "@utils/main";
 import { Input } from "@components/shadcn/Input";
 import Error from "@components/Error/Error";
-import Loading from "@components/Loading/Loading";
+const fs = window.require("fs");
+const path = window.require("path");
 const electron = window?.require ? window.require("electron") : null;
+
+const BASE_PATH = localStorage.getItem("BoxPath");
 
 type DocumentiProps = {
   directory?: string;
 };
 
+type Documento = { nome: string; isDirectory: boolean };
+
+const listFiles = (dir: string): Documento[] => {
+  if (!BASE_PATH) return [];
+  const fullPath = path.join(BASE_PATH, dir);
+
+  try {
+    const files = fs.readdirSync(fullPath);
+    return files.map((file: string) => {
+      const filePath = path.join(fullPath, file);
+      const stats = fs.statSync(filePath);
+      return {
+        nome: file,
+        isDirectory: stats.isDirectory(),
+      };
+    });
+  } catch (error) {
+    console.error("Error reading directory:", error);
+    return [];
+  }
+};
+
 function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
   const [filter, setFilter] = React.useState("");
-  const [path, setPath] = React.useState(directory);
-  const queryString = directory ? `?path=${directory}` : "";
-  const schedeQuery = useQuery<Documento[]>(URLS.DOCUMENTI + queryString);
+  const [currentPath, setCurrentPath] = React.useState(directory);
+
   React.useEffect(() => {
-    setPath(directory);
+    setCurrentPath(directory);
   }, [directory]);
-  let completePath = path.split("/").filter((p) => p !== "");
-  if (!directory) completePath.unshift("Database Documenti");
-  const directories = schedeQuery.data
-    ? [
-        ...findAdjacentDirectories(
-          path,
-          schedeQuery.data.map((doc) => doc.path)
-        ),
-      ].filter((d) => d !== "")
-    : [];
-  const filteredDocumenti = schedeQuery.data?.filter(
-    (documento) => documento.path === path && documento.nome.toLowerCase().includes(filter.toLowerCase())
+
+  const files = useMemo(() => listFiles(currentPath), [currentPath]);
+  const filteredDocumenti = useMemo(
+    () =>
+      files.filter(
+        (documento) =>
+          documento.nome.toLowerCase().includes(filter.toLowerCase()) && !documento.nome.startsWith(".")
+      ),
+    [files, filter]
+  );
+
+  const handleClick = (documento: Documento) => {
+    if (documento.isDirectory) {
+      const newPath = currentPath === "" ? documento.nome : path.join(currentPath, documento.nome);
+      setCurrentPath(newPath);
+    } else {
+      const finalPath = path.join(BASE_PATH, currentPath, documento.nome);
+      electron.ipcRenderer.invoke("open-local-file", finalPath).catch((error: string) => {
+        console.error("Failed to open file:", error);
+      });
+    }
+  };
+  const pathList = ["Database Documenti", ...path.normalize(currentPath).split(path.sep)].filter(
+    (p) => p !== "."
   );
   return (
     <div>
@@ -52,37 +85,32 @@ function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
         </h2>
       </div>
       <hr className="mt-2 pb-1 text-gray-800 w-40 mb-4" />
-      {schedeQuery.isLoading && <Loading className="mt-40" />}
-      {schedeQuery.isError && <Error />}
-      {schedeQuery.isSuccess && filteredDocumenti && (
+      {BASE_PATH ? (
         <>
-          <div className={`flex items-center justify-between ${path ? "cursor-pointer" : ""}`}>
+          <div className={`flex items-center justify-between ${currentPath ? "cursor-pointer" : ""}`}>
             <div className="flex items-center">
               <FontAwesomeIcon icon={faFolder} className="text-xl text-amber-500 mr-3" />
               <Breadcrumb>
                 <BreadcrumbList>
-                  {completePath.map((directory, index) => (
+                  {pathList.map((directory, index) => (
                     <React.Fragment key={index}>
                       <BreadcrumbItem>
                         <BreadcrumbLink
                           href="#"
-                          className={`${index === completePath.length - 1 ? "text-foreground" : ""}`}
+                          className={`${index === pathList.length - 1 ? "text-foreground" : ""}`}
                           onClick={(e) => {
                             e.preventDefault();
-                            if (index !== completePath.length - 1) {
-                              setPath(
-                                path
-                                  .split("/")
-                                  .slice(0, index + 1)
-                                  .join("/")
-                              );
+                            if (index === 0) {
+                              setCurrentPath("");
+                            } else if (index !== pathList.length - 1) {
+                              setCurrentPath(path.join(...pathList.slice(1, index + 1)));
                             }
                           }}
                         >
                           {directory}
                         </BreadcrumbLink>
                       </BreadcrumbItem>
-                      {index < completePath.length - 1 && (
+                      {index < pathList.length - 1 && (
                         <BreadcrumbSeparator>
                           <SlashIcon />
                         </BreadcrumbSeparator>
@@ -104,7 +132,7 @@ function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
             <div
               className="relative"
               style={{
-                height: Math.max(0, filteredDocumenti.length + directories.length) * 31 + 21 + "px",
+                height: Math.max(0, filteredDocumenti.length) * 31 + 21 + "px",
                 width: "1px",
                 left: "8px",
                 background: "#bfc2c7",
@@ -128,7 +156,7 @@ function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredDocumenti.length === 0 && directories.length === 0 && (
+                  {filteredDocumenti.length === 0 && (
                     <TableRow>
                       <TableCell className="border border-gray-50 py-1 pl-3">
                         <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
@@ -137,29 +165,20 @@ function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
                     </TableRow>
                   )}
                   {filteredDocumenti.map((documento) => (
-                    <TableRow key={documento.id}>
+                    <TableRow key={documento.nome}>
                       <TableCell
                         className="border border-gray-50 py-1 pl-3 relative cursor-pointer hover:underline"
-                        onClick={() => electron.ipcRenderer.invoke("open-file", documento.file, false)}
+                        onClick={() => handleClick(documento)}
                       >
                         <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
                         <div className="flex items-center h-[22px]">
-                          <FontAwesomeIcon icon={fileIcon(documento.file)} className="mr-3 text-slate-400 w-5" />
+                          {documento.isDirectory ? (
+                            <FontAwesomeIcon icon={faFolder} className="text-amber-500 mr-3.5 ml-0.5" />
+                          ) : (
+                            <FontAwesomeIcon icon={fileIcon(documento.nome)} className="mr-3 text-slate-400 w-5" />
+                          )}
+
                           {documento.nome}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {[...directories].map((directory) => (
-                    <TableRow key={directory}>
-                      <TableCell
-                        className="border border-gray-50 py-1 pl-3 relative cursor-pointer"
-                        onClick={() => setPath(path === "" ? directory : path + "/" + directory)}
-                      >
-                        <hr className="absolute top-[15px] w-[25px] left-[-25px]" />
-                        <div className="h-[22px]">
-                          <FontAwesomeIcon icon={faFolder} className="text-amber-500 mr-2" />
-                          {directory}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -169,6 +188,10 @@ function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
             </div>
           </div>
         </>
+      ) : (
+        <div className="text-center text-foreground mt-40">
+          <Error message="Il percorso dei documenti non è stato impostato" />
+        </div>
       )}
     </div>
   );
