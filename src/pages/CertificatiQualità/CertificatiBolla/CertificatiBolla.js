@@ -10,8 +10,7 @@ import PageTitle from "../../../components/PageTitle/PageTitle";
 import { URLS } from "../../../urls";
 import Wrapper from "@ui/wrapper/Wrapper";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@components/shadcn/Tooltip";
-
-const electron = window?.require ? window.require("electron") : null;
+import { toast } from "sonner";
 
 function CertificatiBolla() {
   const [nBolla, setNBolla] = useState("");
@@ -58,12 +57,7 @@ function CertificatiBolla() {
                 clearInterval(interval);
                 setLoadingCertificati(false);
                 setError(false);
-                const data = Buffer.from(res.result, "base64");
-                electron.ipcRenderer.invoke(
-                  "save-zip",
-                  data,
-                  `${new Date().getFullYear()} - Certificati bolla n°${nBolla.padStart(6, "0")}`
-                );
+                toast.success("Certificati generati con successo");
               } else if (res.status === "ERROR") {
                 setLoadingCertificati(false);
                 clearInterval(interval);

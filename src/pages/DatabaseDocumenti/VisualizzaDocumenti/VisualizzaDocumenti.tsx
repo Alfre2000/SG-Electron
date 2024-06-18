@@ -69,6 +69,7 @@ function VisualizzaDocumenti({ directory = "" }: DocumentiProps) {
       setCurrentPath(newPath);
     } else {
       const finalPath = path.join(BASE_PATH, currentPath, documento.nome);
+      console.log("Opening file:", finalPath);
       electron.ipcRenderer.invoke("open-local-file", finalPath).catch((error: string) => {
         console.error("Failed to open file:", error);
       });
