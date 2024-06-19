@@ -235,7 +235,7 @@ app.whenReady().then(() => {
   }))
   })
   ipcMain.handle('open-local-file', async (_, path) => {
-    const command = os.platform() === 'win32' ? `start "${path}"` : `open '${path}'`;
+    const command = os.platform() === 'win32' ? `start "" "${path}"` : `open '${path}'`;
     exec(command, (error) => {
       if (error) {
           console.error('Failed to open file:', error);
