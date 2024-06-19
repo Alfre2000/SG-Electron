@@ -1,16 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@components/shadcn/Card";
-import React from "react";
+import React, { useState } from "react";
 import Form from "@components/form/Form";
 import { z } from "@/../it-zod";
 import { URLS } from "urls";
 import Input from "@components/form/Input";
-import SearchSelect from "@components/form/SearchSelect";
+import SearchSelect, { Option } from "@components/form/SearchSelect";
 import { useQuery } from "react-query";
 import { findElementFromID, searchOptions } from "utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/shadcn/Table";
 import Loading from "@components/Loading/Loading";
 import Error from "@components/Error/Error";
-import { PaginationData, RichiestaCorrezioneBagno } from "@interfaces/global";
+import { PaginationData, Prodotto, RichiestaCorrezioneBagno } from "@interfaces/global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPrint, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { apiGet } from "@api/api";
@@ -22,6 +22,13 @@ import AddIcon from "@components/form/AddIcon";
 import RemoveIcon from "@components/form/RemoveIcon";
 const electron = window?.require ? window.require("electron") : null;
 
+const numberSchema = z
+  .union([z.string(), z.number()])
+  .transform((value) => (value == null ? undefined : parseFloat(value.toString())))
+  .refine((value) => value === undefined || value === null || (!isNaN(value) && value > 0), {
+    message: "Inserire un valore positivo",
+  });
+
 const schema = z.object({
   note: z.string().optional(),
   impianto: z.number(),
@@ -29,8 +36,9 @@ const schema = z.object({
   richieste_prodotto: z.array(
     z.object({
       vasca: z.string().min(1, "Campo obbligatorio"),
-      prodotto: z.string().min(1, "Campo obbligatorio"),
-      quantità: z.string().min(1, "Campo obbligatorio"),
+      prodotto_magazzino: z.number(),
+      quantità_magazzino: numberSchema,
+      um: z.string(),
     })
   ),
 });
@@ -108,9 +116,15 @@ function GestisciRichieste() {
               <table className="w-full border-collapse border-[1px] border-slate-300 text-center">
                 <tbody>
                   <RichiesteProdotto />
+                </tbody>
+              </table>
+              <table className="w-full border-collapse border-[1px] border-t-0 border-slate-300 text-center">
+                <tbody>
                   <tr className="h-28">
-                    <td className="font-semibold border-[1px] border-slate-300 w-[15%] px-2">Altre operazioni:</td>
-                    <td className="border-[1px] border-slate-300 px-3" colSpan={6}>
+                    <td className="font-semibold border-[1px] border-t-0 border-slate-300 w-[15%] px-2">
+                      Altre operazioni:
+                    </td>
+                    <td className="border-[1px] border-t-0 border-slate-300 px-3" colSpan={6}>
                       <Textarea name="note" label={false} rows={5} className="h-20" />
                     </td>
                   </tr>
@@ -217,7 +231,7 @@ function GestisciRichieste() {
                         })}
                       </TableCell>
                       <TableCell>{findElementFromID(richiesta.impianto, impiantiQuery.data).nome}</TableCell>
-                      <TableCell>{richiesta.richieste_prodotto.map((r) => r.prodotto).join(" - ")}</TableCell>
+                      <TableCell>{richiesta.richieste_prodotto.map((r) => r.prodotto || r.prodotto_magazzino?.nome).join(" - ")}</TableCell>
                       <TableCell className="text-center">
                         <FontAwesomeIcon icon={richiesta.data_completamento ? faCheck : faTimes} />
                       </TableCell>
@@ -239,40 +253,77 @@ function GestisciRichieste() {
 export default GestisciRichieste;
 
 const RichiesteProdotto = () => {
+  const prodottiQuery = useQuery<Prodotto[]>(URLS.PRODOTTI);
   const form = useFormContext();
   const field = useFieldArray({ control: form.control, name: "richieste_prodotto" });
   const effectRan = React.useRef(false);
   React.useEffect(() => {
     if (effectRan.current) return;
     if (field.fields.length === 0) {
-      field.append({ vasca: "", prodotto: "", quantità: "" });
+      field.append({ vasca: "", prodotto_magazzino: "", quantità_magazzino: "", um: "" });
       effectRan.current = true;
     }
   }, [field]);
+  const [prodotto, setProdotto] = useState<Record<number, Prodotto>>({});
+  const [umOptions, setUmOptions] = useState<Option[]>([]);
   return (
     <>
-      {field.fields.map((item, index) => (
-        <tr className="h-12" key={item.id}>
-          <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Vasca:</td>
-          <td className="border-[1px] border-slate-300 w-[17%] px-2 py-1">
-            <Input name={`richieste_prodotto[${index}].vasca`} label={false} />
-          </td>
-          <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Prodotto:</td>
-          <td className="border-[1px] border-slate-300 w-[17%] px-2 py-1">
-            <Input name={`richieste_prodotto[${index}].prodotto`} label={false} />
-          </td>
-          <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Quantità:</td>
-          <td className="border-[1px] border-slate-300 w-[17%] px-2 py-1">
-            <Input name={`richieste_prodotto[${index}].quantità`} label={false} />
-          </td>
-          <td className="border-[1px] border-slate-300">
-            <RemoveIcon onClick={() => field.remove(index)} />
-          </td>
-        </tr>
-      ))}
+      {field.fields.map((item, index) => {
+        return (
+          <tr className="h-12" key={item.id}>
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+              <label className="font-semibold mb-1 pl-0.5">Vasca</label>
+              <Input name={`richieste_prodotto[${index}].vasca`} label={false} />
+            </td>
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+              <label className="font-semibold mb-1 pl-0.5">Prodotto</label>
+              <SearchSelect
+                name={`richieste_prodotto[${index}].prodotto_magazzino`}
+                options={searchOptions(prodottiQuery.data, "nome")}
+                onChange={(e) => {
+                  const id = parseInt(e.value.toString());
+                  const prodotto = prodottiQuery?.data?.find((p) => p.id === id);
+                  setProdotto({ ...prodotto, [index]: prodotto });
+                  setUmOptions(prodotto?.ums.map((um) => ({ value: um[0], label: um[1] })) || []);
+                  form.setValue(`richieste_prodotto[${index}].um`, prodotto?.ums[0][0]);
+                }}
+                label={false}
+              />
+            </td>
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+              <label className="font-semibold mb-1 pl-0.5">Quantità</label>
+              <Input
+                name={`richieste_prodotto[${index}].quantità_magazzino`}
+                label={false}
+                type="number"
+                inputProps={{
+                  step: "0.01",
+                }}
+              />
+            </td>
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+              <label className="font-semibold mb-1 pl-0.5">Unità Misura</label>
+              <SearchSelect name={`richieste_prodotto[${index}].um`} label={false} options={umOptions} />
+            </td>
+            <td className="border-[1px] border-slate-300">
+              <RemoveIcon
+                onClick={() => {
+                  field.remove(index);
+                  const neProdotto = { ...prodotto };
+                  delete neProdotto[index];
+                  for (let i = index; i < field.fields.length; i++) {
+                    neProdotto[i] = prodotto[i + 1];
+                  }
+                  setProdotto(neProdotto);
+                }}
+              />
+            </td>
+          </tr>
+        );
+      })}
       <tr className="h-10">
         <td colSpan={7}>
-          <AddIcon onClick={() => field.append({ vasca: "", prodotto: "", quantità: "" })} />
+          <AddIcon onClick={() => field.append({ vasca: "", prodotto_magazzino: "", quantità_magazzino: "", um: "" })} />
         </td>
       </tr>
     </>

@@ -212,8 +212,14 @@ export type Documento = {
 export type RichiestaProdotto = {
   id: string;
   vasca: string;
-  prodotto: string;
-  quantità: string;
+  prodotto?: string;
+  quantità?: string;
+
+  prodotto_magazzino?: Prodotto;
+  quantità_magazzino?: number;
+  um?: string;
+
+  quantità_testo: string;
 }
 
 export type RichiestaCorrezioneBagno = {
@@ -256,6 +262,7 @@ export type Step = {
 export type Prodotto = {
   id: number;
   nome: string;
+  nickname: string;
   descrizione: string | null;
   impianti: Impianto[];
   dpi: string[] | null;
