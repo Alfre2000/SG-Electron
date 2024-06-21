@@ -21,6 +21,7 @@ import { Checkbox } from "@components/shadcn/Checkbox";
 import { Label } from "@components/shadcn/Label";
 import PopoverProdotto from "./popover-prodotto";
 import DatePicker from "@components/form/DatePicker";
+import RemoveIcon from "@components/form/RemoveIcon";
 const electron = window?.require ? window.require("electron") : null;
 
 const numberSchema = z
@@ -145,6 +146,7 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
   const operatoriQuery = useQuery<Operatore>([URLS.OPERATORI, { can_magazzino: true }]);
   const form = useFormContext();
   const field = useFieldArray({ control: form.control, name: "prodotti" });
+  const [prodottiOrdine, setProdottiOrdine] = useState(prodotti);
   return (
     <>
       <Table containerClassName="overflow-visible">
@@ -154,24 +156,25 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
             <TableHead>Quantità</TableHead>
             <TableHead>Fornitore</TableHead>
             <TableHead>Prezzo</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {field.fields.map((ordine, index) => {
             let placeholder = "";
-            if (prodotti[index].unità_misura !== "pz") {
-              placeholder = `${prodotti[index].nome_unità} da ${prodotti[index].dimensioni_unitarie} ${prodotti[index].unità_misura}`;
+            if (prodottiOrdine[index].unità_misura !== "pz") {
+              placeholder = `${prodottiOrdine[index].nome_unità} da ${prodottiOrdine[index].dimensioni_unitarie} ${prodottiOrdine[index].unità_misura}`;
             } else {
-              placeholder = `${prodotti[index].nome_unità}`;
+              placeholder = `${prodottiOrdine[index].nome_unità}`;
             }
             return (
               <TableRow key={ordine.id}>
                 <TableCell>
-                  <Hidden name={`prodotti[${index}].prodotto`} value={prodotti[index].id} />
+                  <Hidden name={`prodotti[${index}].prodotto`} value={prodottiOrdine[index].id} />
                   <Popover>
-                    <PopoverTrigger className="hover:underline">{prodotti[index].nome}</PopoverTrigger>
+                    <PopoverTrigger className="hover:underline">{prodottiOrdine[index].nome}</PopoverTrigger>
                     <PopoverContent className="w-[600px]">
-                      <PopoverProdotto prodottoId={prodotti[index].id} />
+                      <PopoverProdotto prodottoId={prodottiOrdine[index].id} />
                     </PopoverContent>
                   </Popover>
                 </TableCell>
@@ -188,7 +191,7 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
                 <TableCell>
                   <SearchSelect
                     name={`prodotti[${index}].fornitore`}
-                    options={prodotti[index].prodotti_fornitori.map((pf) => ({
+                    options={prodottiOrdine[index].prodotti_fornitori.map((pf) => ({
                       value: pf.fornitore.id,
                       label: pf.fornitore.nome_semplice,
                     }))}
@@ -196,7 +199,7 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
                       form.setValue(`prodotti[${index}].fornitore`, value?.value);
                       form.setValue(
                         `prodotti[${index}].prezzo_unitario`,
-                        prodotti[index].prodotti_fornitori.find((pf) => pf.fornitore.id === value?.value)
+                        prodottiOrdine[index].prodotti_fornitori.find((pf) => pf.fornitore.id === value?.value)
                           ?.prezzo_unitario ?? null
                       );
                     }}
@@ -214,6 +217,18 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
                     }}
                   />
                 </TableCell>
+                <TableCell>
+                  <RemoveIcon
+                    onClick={() => {
+                      field.remove(index);
+                      setProdottiOrdine((prev) => {
+                        const newProdotti = [...prev];
+                        newProdotti.splice(index, 1);
+                        return newProdotti;
+                      });
+                    }}
+                  />
+                </TableCell>
               </TableRow>
             );
           })}
@@ -227,10 +242,10 @@ const FormOrdine = ({ prodotti }: FormOrdineProps) => {
             options={searchOptions(operatoriQuery.data, "nome")}
             inputClassName="w-48"
           />
-          </div>
-          <div className="col-span-2 text-right">
+        </div>
+        <div className="col-span-2 text-right">
           <DatePicker name="data_consegna_prevista" label="Data Consegna:" />
-          </div>
+        </div>
       </div>
     </>
   );

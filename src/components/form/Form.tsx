@@ -45,7 +45,7 @@ function Form<T extends ZodTypeAny>({
   React.useEffect(() => {
     console.log("Resetting form");
     form.reset(initialData);
-  }, [initialData]);
+  }, []);
 
   const createMutation = useMutation((data: z.infer<typeof schema>) => apiPost(endpoint, data), {
     onSuccess: (res) => {
