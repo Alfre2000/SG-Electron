@@ -92,7 +92,7 @@ function CorrezioneBagno() {
                       <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Prodotto:</td>
                       <td className="border-[1px] border-slate-300 w-[18.5%] px-2 py-1">{nomeProdotto}</td>
                       <td className="font-semibold border-[1px] border-slate-300 w-[15%]">Quantità:</td>
-                      <td className="border-[1px] border-slate-300 px-2 py-1">{richiesta.quantità_testo}</td>
+                      <td className="border-[1px] border-slate-300 px-2 py-1">{richiesta.quantità || richiesta.quantità_testo}</td>
                     </tr>
                   )})}
                   <tr className="h-28">

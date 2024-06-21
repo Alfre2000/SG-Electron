@@ -39,6 +39,7 @@ const schema = z.object({
       prodotto_magazzino: z.number(),
       quantità_magazzino: numberSchema,
       um: z.string(),
+      quantità: z.string().optional(),
     })
   ),
 });
@@ -231,7 +232,11 @@ function GestisciRichieste() {
                         })}
                       </TableCell>
                       <TableCell>{findElementFromID(richiesta.impianto, impiantiQuery.data).nome}</TableCell>
-                      <TableCell>{richiesta.richieste_prodotto.map((r) => r.prodotto || r.prodotto_magazzino?.nome).join(" - ")}</TableCell>
+                      <TableCell>
+                        {richiesta.richieste_prodotto
+                          .map((r) => r.prodotto || r.prodotto_magazzino?.nome)
+                          .join(" - ")}
+                      </TableCell>
                       <TableCell className="text-center">
                         <FontAwesomeIcon icon={richiesta.data_completamento ? faCheck : faTimes} />
                       </TableCell>
@@ -264,18 +269,17 @@ const RichiesteProdotto = () => {
       effectRan.current = true;
     }
   }, [field]);
-  const [prodotto, setProdotto] = useState<Record<number, Prodotto>>({});
-  const [umOptions, setUmOptions] = useState<Option[]>([]);
+  const [umOptions, setUmOptions] = useState<Option[][]>([]);
   return (
     <>
       {field.fields.map((item, index) => {
         return (
           <tr className="h-12" key={item.id}>
-            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[21%]">
               <label className="font-semibold mb-1 pl-0.5">Vasca</label>
               <Input name={`richieste_prodotto[${index}].vasca`} label={false} />
             </td>
-            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[21%]">
               <label className="font-semibold mb-1 pl-0.5">Prodotto</label>
               <SearchSelect
                 name={`richieste_prodotto[${index}].prodotto_magazzino`}
@@ -283,14 +287,17 @@ const RichiesteProdotto = () => {
                 onChange={(e) => {
                   const id = parseInt(e.value.toString());
                   const prodotto = prodottiQuery?.data?.find((p) => p.id === id);
-                  setProdotto({ ...prodotto, [index]: prodotto });
-                  setUmOptions(prodotto?.ums.map((um) => ({ value: um[0], label: um[1] })) || []);
+                  setUmOptions((prevUms) => {
+                    const newUms = [...prevUms];
+                    newUms[index] = prodotto?.ums.map((um) => ({ value: um[0], label: um[1] })) || [];
+                    return newUms;
+                  });
                   form.setValue(`richieste_prodotto[${index}].um`, prodotto?.ums[0][0]);
                 }}
                 label={false}
               />
             </td>
-            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[15%]">
               <label className="font-semibold mb-1 pl-0.5">Quantità</label>
               <Input
                 name={`richieste_prodotto[${index}].quantità_magazzino`}
@@ -301,20 +308,30 @@ const RichiesteProdotto = () => {
                 }}
               />
             </td>
-            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[24%]">
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[21%]">
               <label className="font-semibold mb-1 pl-0.5">Unità Misura</label>
-              <SearchSelect name={`richieste_prodotto[${index}].um`} label={false} options={umOptions} />
+              <SearchSelect
+                name={`richieste_prodotto[${index}].um`}
+                label={false}
+                options={umOptions[index] || []}
+              />
+            </td>
+            <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[17%]">
+              <label className="font-semibold mb-1 pl-0.5">Quantità Testo</label>
+              <Input
+                name={`richieste_prodotto[${index}].quantità`}
+                label={false}
+              />
             </td>
             <td className="border-[1px] border-slate-300">
               <RemoveIcon
                 onClick={() => {
                   field.remove(index);
-                  const neProdotto = { ...prodotto };
-                  delete neProdotto[index];
-                  for (let i = index; i < field.fields.length; i++) {
-                    neProdotto[i] = prodotto[i + 1];
-                  }
-                  setProdotto(neProdotto);
+                  setUmOptions((prevUms) => {
+                    const newUms = [...prevUms];
+                    newUms.splice(index, 1);
+                    return newUms;
+                  });
                 }}
               />
             </td>
@@ -323,7 +340,9 @@ const RichiesteProdotto = () => {
       })}
       <tr className="h-10">
         <td colSpan={7}>
-          <AddIcon onClick={() => field.append({ vasca: "", prodotto_magazzino: "", quantità_magazzino: "", um: "" })} />
+          <AddIcon
+            onClick={() => field.append({ vasca: "", prodotto_magazzino: "", quantità_magazzino: "", um: "", quantità: "" })}
+          />
         </td>
       </tr>
     </>
