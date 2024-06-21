@@ -46,7 +46,7 @@ function ListaCorrezioniBagno() {
         data.results.forEach((richiesta: any) => {
           richiesta.richieste_prodotto.forEach((riga: any) => {
             aggiunte.push({
-              quantità: riga.quantità_testo,
+              quantità: riga.quantità || riga.quantità_testo,
               prodotto: riga.prodotto || riga.prodotto_magazzino?.nickname || riga.prodotto_magazzino?.nome,
               vasca: riga.vasca,
               data_completamento: richiesta.data_completamento,
