@@ -27,6 +27,7 @@ import {
   faWarehouse,
   faHome,
   faArrowRightFromBracket,
+  faBarChart,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -68,6 +69,11 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       title: "Correzioni Bagno",
       icon: faAtom,
       links: [{ name: "Correzioni Bagno", link: "/manutenzione/lista-correzioni-bagno/" }],
+    },
+    {
+      title: "Produzione",
+      icon: faBarChart,
+      links: [{ name: "Produzione", link: "/manutenzione/produzione/" }],
     },
   ];
   // Se non è l'impianto Ossido, rimuovi le manutenzioni e aggiungi la scheda dell'ossido

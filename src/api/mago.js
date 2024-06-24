@@ -113,12 +113,12 @@ export const getDatiBollaMago = async (n_bolla) => {
     cust.county,
     cust.email,
     cust.custsupp,
-    detail.line,
-    detail.description, 
-    detail.item,
-    detail.uom,
-    detail.qty,
-    detail.grossvolume,
+    bolla.line,
+    bolla.description, 
+    bolla.item,
+    bolla.uom,
+    bolla.qty,
+    bolla.grossvolume,
     base_item.description as descrizione_articolo,
     item.impianto,
     item.trattamento1,
@@ -136,15 +136,15 @@ export const getDatiBollaMago = async (n_bolla) => {
     item.spessore_massimo,
     item.n_misurazioni,
     item.mail_cliente,
-    sale.internalordno AS n_lotto_super,
-    sale.position as line_lotto,
-    sale.taxableamount as taxableamount
+    ordine.internalordno AS n_lotto_super,
+    ordine.position as line_lotto,
+    ordine.taxableamount as taxableamount
   FROM ma_saledoc AS doc
   JOIN ma_custsupp AS cust ON doc.custsupp = cust.custsupp
-  JOIN ma_saledocdetail AS detail ON doc.saledocid = detail.saledocid
-  JOIN bt_supergitems AS item ON detail.item = item.cod_articolo
+  JOIN ma_saledocdetail AS bolla ON doc.saledocid = bolla.saledocid
+  JOIN bt_supergitems AS item ON bolla.item = item.cod_articolo
   JOIN ma_items AS base_item ON item.cod_articolo = base_item.item
-  JOIN ma_saleorddetails AS sale ON sale.saleordid = detail.saleordid AND sale.position = detail.saleordpos
+  JOIN ma_saleorddetails AS ordine ON ordine.saleordid = bolla.saleordid AND ordine.position = bolla.saleordpos
   WHERE doc.documenttype = 3407873 
     AND doc.CustSuppType = 3211264 
     AND doc.docno = '${numero_documento}' 

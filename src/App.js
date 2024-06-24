@@ -44,6 +44,7 @@ import Prelievo from "@pages/Magazzino/Prelievo/Prelievo";
 import StatusMagazzino from "@pages/AndamentoProduzione/StatusMagazzino/StatusMagazzino";
 import Giacenza from "@pages/Magazzino/Giacenza/Giacenza";
 import Home from "@pages/Magazzino/Home/Home";
+import Produzione from "@pages/GestioneImpianto/Produzione/Produzione";
 const electron = window?.require ? window.require("electron") : null;
 
 function reducer (state, userInfo) {
@@ -94,6 +95,7 @@ function App() {
               <Route path="record-scheda-impianto/" element={<RecordSchedaImpianto />}></Route>
               <Route element={<RouteWrapper />}>
                 <Route path="visualizza/" element={<VisualizzaDocumenti />}></Route>
+                <Route path="produzione/" element={<Produzione />}></Route>
               </Route>
               <Route path="richiesta-correzione-bagno/:richiestaID/" element={<CorrezioneBagno />}></Route>
               <Route path="alert-richieste/" element={<AlertRichieste />}></Route>
