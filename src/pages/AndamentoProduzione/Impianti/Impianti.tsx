@@ -23,7 +23,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { DataTable } from "@ui/base-data-table/data-table";
 import { columns } from "./columns";
 import { averageProductionPerHour, getGroupedProduction } from "./utils";
-import { dateToDatePicker } from "utils";
+import { dateToDatePicker, toPercentage } from "utils";
 
 const defaultImpianto = "Quattro Carri";
 
@@ -144,6 +144,22 @@ function Impianti() {
     labels: barProduction.filter((_, idx) => idx % 2 === 0).map((d) => d.date),
     datasets: barDatasets,
   };
+
+  const lastWeekBarre =
+    barreQuery.data?.results.filter((b) => {
+      const date = new Date(b.inizio);
+      return date >= addDays(new Date(), -7);
+    }) || [];
+  const previousWeekBarre =
+    barreQuery.data?.results.filter((b) => {
+      const date = new Date(b.inizio);
+      return date >= addDays(new Date(), -14) && date < addDays(new Date(), -7);
+    }) || [];
+  const inseriteLastWeek = lastWeekBarre?.filter((b) => !!b.record_lavorazione).length || 0;
+  const inseritePreviousWeek = previousWeekBarre?.filter((b) => !!b.record_lavorazione).length || 0;
+  const pctLastWeek = (inseriteLastWeek / lastWeekBarre.length) * 100;
+  const pctPreviousWeek = (inseritePreviousWeek / previousWeekBarre.length) * 100;
+  const inseriteDiff = pctLastWeek - pctPreviousWeek;
   return (
     <Wrapper>
       <div className="my-8 lg:mx-2 xl:mx-6 2xl:mx-12 px-0 flex flex-col gap-3 min-w-96 w-full">
@@ -204,6 +220,28 @@ function Impianti() {
                     {addSign((avgTime.currentWeek - avgTime.lastWeek).toFixed())} rispetto ai{" "}
                     {toFormattedNumber(avgTime.lastWeek.toFixed())} della settimana precedente
                   </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="space-y-0 pb-2">
+              <div className="flex flex-row items-center justify-between">
+                <CardTitle className="font-medium">N° Barre Compilate</CardTitle>
+                <FontAwesomeIcon icon={faBolt} className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {barreQuery.isError && <Error />}
+              {barreQuery.isLoading && <Loading />}
+              {barreQuery.isSuccess && (
+                <>
+                  <div className="text-2xl font-bold">
+                    {toPercentage((inseriteLastWeek / lastWeekBarre?.length) * 100, false, 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {toPercentage(inseriteDiff, true, 1)} rispetto ai 7 giorni precedenti
+                  </p>
                 </>
               )}
             </CardContent>
@@ -408,76 +446,76 @@ function Impianti() {
             </CardContent>
           </Card>
           <Card className="min-h-[70vh] col-span-3">
-          <CardHeader className="space-y-0 pb-2">
-            <CardTitle className="font-medium pb-1.5">Andamento Produzione</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {barreQuery.isError && <Error />}
-            {barreQuery.isLoading && <Loading className="m-auto relative top-28" />}
-            {barreQuery.isSuccess && (
-              <Bar
-                data={barData}
-                options={
-                  {
-                    maintainAspectRatio: true,
-                    responsive: true,
-                    scales: {
-                      y: {
-                        grace: "5%",
-                        beginAtZero: true,
-                        title: {
+            <CardHeader className="space-y-0 pb-2">
+              <CardTitle className="font-medium pb-1.5">Andamento Produzione</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {barreQuery.isError && <Error />}
+              {barreQuery.isLoading && <Loading className="m-auto relative top-28" />}
+              {barreQuery.isSuccess && (
+                <Bar
+                  data={barData}
+                  options={
+                    {
+                      maintainAspectRatio: true,
+                      responsive: true,
+                      scales: {
+                        y: {
+                          grace: "5%",
+                          beginAtZero: true,
+                          title: {
+                            display: true,
+                            text: "N° telai prodotti",
+                          },
+                        },
+                        x: {
+                          ticks: {
+                            callback: function (value: any, index: any) {
+                              const val: any = (this as any).getLabelForValue(value);
+                              return val.toLocaleString("it-IT", {
+                                weekday: "short",
+                                day: "numeric",
+                                month: "short",
+                              });
+                            },
+                          },
+                        },
+                      },
+                      plugins: {
+                        legend: {
                           display: true,
-                          text: "N° telai prodotti",
+                        },
+                        tooltip: {
+                          callbacks: {
+                            title: function (tooltipItems: any) {
+                              const date = new Date(tooltipItems[0].label);
+                              let endHour = date.getHours() + 12;
+                              if (endHour >= 24) endHour -= 24;
+                              return (
+                                toTitle(
+                                  date.toLocaleString("it-IT", {
+                                    weekday: "long",
+                                    day: "numeric",
+                                    month: "long",
+                                  })
+                                ) +
+                                ", " +
+                                tooltipItems[0].dataset.label
+                              );
+                            },
+                            label: function (tooltipItem: any) {
+                              return "N° di telai prodotti: " + toFormattedNumber(tooltipItem.formattedValue);
+                            },
+                          },
+                          ...tooltipStyle,
                         },
                       },
-                      x: {
-                        ticks: {
-                          callback: function (value: any, index: any) {
-                            const val: any = (this as any).getLabelForValue(value);
-                            return val.toLocaleString("it-IT", {
-                              weekday: "short",
-                              day: "numeric",
-                              month: "short",
-                            });
-                          },
-                        },
-                      },
-                    },
-                    plugins: {
-                      legend: {
-                        display: true,
-                      },
-                      tooltip: {
-                        callbacks: {
-                          title: function (tooltipItems: any) {
-                            const date = new Date(tooltipItems[0].label);
-                            let endHour = date.getHours() + 12;
-                            if (endHour >= 24) endHour -= 24;
-                            return (
-                              toTitle(
-                                date.toLocaleString("it-IT", {
-                                  weekday: "long",
-                                  day: "numeric",
-                                  month: "long",
-                                })
-                              ) +
-                              ", " +
-                              tooltipItems[0].dataset.label
-                            );
-                          },
-                          label: function (tooltipItem: any) {
-                            return "N° di telai prodotti: " + toFormattedNumber(tooltipItem.formattedValue);
-                          },
-                        },
-                        ...tooltipStyle,
-                      },
-                    },
-                  } as any
-                }
-              />
-            )}
-          </CardContent>
-        </Card>
+                    } as any
+                  }
+                />
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Wrapper>
