@@ -72,11 +72,11 @@ function RecordLavorazioneForm({ showOperatore }) {
           .then((res) => {
             if (last_res && last_res > parseInt(value.split(".").at(-1))) return;
             setLoadingLotto(false);
-            if (res.record && res.record.status !== "PL") {
+            if (res.record && res.record.status !== "PL" && res.record.status !== "IL") {
               setLotto("");
               setRecordModify(res.record);
             } else {
-              if (res.record?.status === "PL") {
+              if (res.record?.status === "PL" || res.record?.status === "IL") {
                 delete res.record.data;
                 setCopyData(res.record);
               } else {
