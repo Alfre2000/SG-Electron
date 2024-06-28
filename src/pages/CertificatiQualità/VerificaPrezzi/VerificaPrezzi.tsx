@@ -71,6 +71,7 @@ function VerificaPrezzi() {
       const newLotto = [...(prevLotto || [])];
       newLotto.forEach((riga) => {
         riga.prezzoSuggerito = prezzoSuggerito(riga.record, riga.articolo, infoPrezziQuery.data) || undefined;
+        console.log(riga.prezzoSuggerito, riga.record.prezzo, parseFloat(riga.record.prezzo!));
         riga.differenza =
           riga.prezzoSuggerito && riga.record.prezzo
             ? round(riga.prezzoSuggerito - parseFloat(riga.record.prezzo), 2)

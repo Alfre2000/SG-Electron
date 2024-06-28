@@ -25,7 +25,12 @@ export const prezzoSuggerito = (record: RecordLavorazione, articolo: Articolo, i
     if (infoPrezzi.minimo_per_pezzo && isBelowMinimumPezzo && !isPrezioso) {
       amount = infoPrezzi.minimo_per_pezzo;
     }
-    let totale = round(amount, 4) * record.quantità;
+    if (isPrezioso) {
+      amount = Math.floor(amount * 10000) / 10000
+    } else {
+      amount = round(amount, 4);
+    }
+    let totale = amount * record.quantità;
     let isBelowMinimumRiga = infoPrezzi.minimo_per_riga && totale < infoPrezzi.minimo_per_riga;
     if (infoPrezzi.minimo_per_riga && isBelowMinimumRiga) {
       totale = infoPrezzi.minimo_per_riga;
