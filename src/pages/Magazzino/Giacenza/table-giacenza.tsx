@@ -23,12 +23,14 @@ import { Input } from "@components/shadcn/Input";
 import { Button } from "@components/shadcn/Button";
 import { DataTableFacetedFilter } from "@ui/full-data-table/data-table-faceted-filter";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { toTitle } from "@utils/main";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setProdottiOrdine: React.Dispatch<React.SetStateAction<string[]>>;
   setFornitore: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setLuogo: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 function findCommonSuppliers(arrays: any) {
   let commonSuppliers = arrays[0];
@@ -43,12 +45,15 @@ export function DataTable<TData, TValue>({
   data,
   setProdottiOrdine,
   setFornitore,
+  setLuogo,
 }: DataTableProps<TData, TValue>) {
   const [error, setError] = React.useState("");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({ pageIndex: 0, pageSize: 50 });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+    luogo: false
+  });
   const [rowSelection, setRowSelection] = React.useState({});
   const fornitoriSet = new Set();
   data.forEach((prodotto: any) => {
@@ -57,6 +62,11 @@ export function DataTable<TData, TValue>({
     }
   });
   const fornitori: any = Array.from(fornitoriSet).map((fornitore) => ({ value: fornitore, label: fornitore }));
+  const magazziniSet = new Set<any>();
+  data.forEach((prodotto: any) => {
+    magazziniSet.add(prodotto.luogo);
+  });
+  const magazzini: any = Array.from(magazziniSet).map((magazzino) => ({ value: magazzino, label: toTitle(magazzino) }));
   const table = useReactTable({
     data,
     columns,
@@ -96,12 +106,19 @@ export function DataTable<TData, TValue>({
             options={fornitori}
             onChange={(value) => setFornitore(value[0])}
           />
+          <DataTableFacetedFilter
+            column={table.getColumn("luogo")}
+            title="Magazzino"
+            options={magazzini}
+            onChange={(value) => setLuogo(value[0])}
+          />
           {table.getState().columnFilters.length > 0 && (
             <Button
               variant="ghost"
               onClick={() => {
                 table.resetColumnFilters();
                 setFornitore(undefined);
+                setLuogo(undefined);
               }}
               className="h-8 px-2 lg:px-3"
             >

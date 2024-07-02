@@ -20,7 +20,8 @@ function Giacenza() {
   const prodottiQuery = useQuery<Prodotto[]>([URLS.PRODOTTI]);
   const [prodottiOrdine, setProdottiOrdine] = useState<string[]>([]);
   const [fornitore, setFornitore] = useState<string | undefined>();
-  const endpoint = fornitore ? `${URLS.DOCX_GIACENZA}?fornitore=${fornitore}` : URLS.DOCX_GIACENZA;
+  const [luogo, setLuogo] = useState<string | undefined>();
+  const endpoint = fornitore || luogo ? `${URLS.DOCX_GIACENZA}?fornitore=${fornitore || ""}&luogo=${luogo || ""}` : URLS.DOCX_GIACENZA;
   const mutation = useMutation(() => apiGet(endpoint), {
     onSuccess: (res) => {
       electron.ipcRenderer.invoke("save-open-docx", res.docx);
@@ -55,7 +56,13 @@ function Giacenza() {
           {prodottiQuery.isLoading && <Loading />}
           {prodottiQuery.isError && <Error />}
           {prodottiQuery.isSuccess && (
-            <DataTable columns={columns} data={prodottiQuery.data} setProdottiOrdine={setProdottiOrdine} setFornitore={setFornitore} />
+            <DataTable
+              columns={columns}
+              data={prodottiQuery.data}
+              setProdottiOrdine={setProdottiOrdine}
+              setFornitore={setFornitore}
+              setLuogo={setLuogo}
+            />
           )}
         </CardContent>
       </Card>

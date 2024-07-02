@@ -27,6 +27,12 @@ export const columns: ColumnDef<Prodotto>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "luogo",
+    filterFn: (row, id, value) => {
+      return row.original.luogo.includes(value);
+    },
+  },
+  {
     accessorKey: "prodotti_fornitori",
     filterFn: (row, id, value) => {
       const fornitori = row.original.prodotti_fornitori.map((pf) => pf.fornitore.nome_semplice).join(", ");
