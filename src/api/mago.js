@@ -272,6 +272,7 @@ export const getDatiEtichettaMago = async (n_lotto) => {
       sale.position,
       sale.description,
       cust.companyname,
+      cust.taxidnumber,
       item.articolo_certificato as articolo_certificato,
       item.impianto,
       item.note

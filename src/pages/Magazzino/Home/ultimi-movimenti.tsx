@@ -11,6 +11,7 @@ import { URLS } from "urls";
 import { PLURALS } from "../utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/shadcn/Popover";
 import PopoverProdotto from "../Giacenza/popover-prodotto";
+import { DataTableFacetedFilter } from "@ui/full-data-table/data-table-faceted-filter";
 
 export const columns: ColumnDef<Movimento>[] = [
   {
@@ -62,15 +63,32 @@ export const columns: ColumnDef<Movimento>[] = [
     },
   },
   {
-    accessorKey: "tipo",
-    header: "Tipo",
+    accessorKey: "operatore",
+    header: "Operatore",
     cell: ({ row }) => {
-      return row.original.tipo.charAt(0).toUpperCase() + row.original.tipo.slice(1);
+      return row.original.operatore || "-";
     },
+  },
+  {
+    accessorKey: "destinazione",
+    header: "Destinazione",
+    cell: ({ row }) => {
+      return row.original.destinazione || "-";
+    },
+    filterFn: (row, id, value) => {
+      return row.original.destinazione?.includes(value) ?? false;
+    }
   },
 ];
 
 function TableHeader({ table, data }: { table: Table<Movimento>; data: Movimento[] }) {
+  const destinazioniSet = new Set();
+  data.forEach((movimento) => {
+    if (!movimento.destinazione) return;
+    destinazioniSet.add(movimento.destinazione);
+  });
+  const destinazioni: any = Array.from(destinazioniSet).map((destinazione) => ({ value: destinazione, label: destinazione }));
+  destinazioni.sort((a: any, b: any) => a.value.localeCompare(b.value));
   return (
     <div className="flex items-center gap-x-4 mb-3">
       <Input
@@ -78,6 +96,11 @@ function TableHeader({ table, data }: { table: Table<Movimento>; data: Movimento
         value={(table.getColumn("prodotto.nome")?.getFilterValue() as string) ?? ""}
         onChange={(event) => table.getColumn("prodotto.nome")?.setFilterValue(event.target.value)}
         className="max-w-sm w-80 h-8"
+      />
+      <DataTableFacetedFilter
+        column={table.getColumn("destinazione")}
+        title="Destinazione"
+        options={destinazioni}
       />
       {table.getState().columnFilters.length > 0 && (
         <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
