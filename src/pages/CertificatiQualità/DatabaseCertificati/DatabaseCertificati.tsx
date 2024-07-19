@@ -32,13 +32,17 @@ import { searchOptions } from "utils";
 import { MESI } from "../../../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { DataTableFacetedFilter } from "@ui/full-data-table/data-table-faceted-filter";
+import { statuses } from "@pages/AndamentoProduzione/StatusMagazzino/data-table";
 const electron = window?.require ? window.require("electron") : null;
 
 declare module "@tanstack/table-core" {
-  interface TableMeta<TData extends RowData> { // eslint-disable-line
+  interface TableMeta<TData extends RowData> {
+    // eslint-disable-line
     setDialog?: React.Dispatch<React.SetStateAction<RecordCertificato | null>>;
   }
 }
+
 
 const columns: ColumnDef<RecordCertificato>[] = [
   {
@@ -68,9 +72,12 @@ const columns: ColumnDef<RecordCertificato>[] = [
     size: 15,
   },
   {
-    accessorKey: "n_bolla",
-    header: "N° Bolla",
+    accessorKey: "status",
+    header: "Status",
     size: 15,
+    cell: ({ row }) => {
+      return statuses.find((s) => s.value === row.getValue("status"))?.label ?? "-";
+    },
   },
   {
     accessorKey: "certificato",
@@ -80,11 +87,7 @@ const columns: ColumnDef<RecordCertificato>[] = [
       if (!certificato) return <div className="text-center">-</div>;
       return (
         <div className="text-center">
-          <FontAwesomeIcon
-            icon={faFilePdf}
-            className="text-nav-blue text-lg cursor-pointer"
-            onClick={() => electron.ipcRenderer.invoke("open-file", certificato)}
-          />
+          <FontAwesomeIcon icon={faFilePdf} className="text-nav-blue text-lg" />
         </div>
       );
     },
@@ -145,8 +148,8 @@ function DatabaseCertificati() {
               options={searchOptions(clientiQuery.data, "nome")}
               label="Cliente"
               onChange={(e) => {
-                table.getColumn("cliente")?.setFilterValue(e?.value)
-                setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                table.getColumn("cliente")?.setFilterValue(e?.value);
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
             />
             <div>
@@ -154,39 +157,38 @@ function DatabaseCertificati() {
               <Input
                 value={(table.getColumn("articolo")?.getFilterValue() as string) ?? ""}
                 onChange={(event) => {
-                  table.getColumn("articolo")?.setFilterValue(event.target.value)
-                  setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                  table.getColumn("articolo")?.setFilterValue(event.target.value);
+                  setPagination((prev) => ({ ...prev, pageIndex: 0 }));
                 }}
                 className="max-w-sm h-8"
                 style={{ borderColor: "#ced4da !important" }}
               />
             </div>
-            <div>
-              <Label className="mb-1.5">N° Bolla</Label>
-              <Input
-                value={(table.getColumn("n_bolla")?.getFilterValue() as string) ?? ""}
-                onChange={(event) => {
-                  table.getColumn("n_bolla")?.setFilterValue(event.target.value)
-                  setPagination((prev) => ({ ...prev, pageIndex: 0}))
-                }}
-                className="max-w-sm h-8"
-                style={{ borderColor: "#ced4da" }}
-              />
+            <div className="flex flex-col">
+              <Label className="mb-1.5">Status</Label>
+              <div className="text-left mt-1 w-full">
+                <DataTableFacetedFilter
+                className="w-full justify-start"
+                  column={table.getColumn("status")}
+                  title="Status"
+                  options={statuses}
+                />
+              </div>
             </div>
             <NewSearchSelect
               options={anni.map((a) => ({ label: a, value: a }))}
               label="Anno"
               onChange={(e) => {
-                setColumnFilters((prev) => [...prev, { id: "anno", value: e?.value }])
-                setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                setColumnFilters((prev) => [...prev, { id: "anno", value: e?.value }]);
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
             />
             <NewSearchSelect
               options={MESI.map((a, idx) => ({ label: a, value: idx + 1 }))}
               label="Mese"
               onChange={(e) => {
-                setColumnFilters((prev) => [...prev, { id: "mese", value: e?.value }])
-                setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                setColumnFilters((prev) => [...prev, { id: "mese", value: e?.value }]);
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
             />
             <div>
@@ -194,8 +196,8 @@ function DatabaseCertificati() {
               <Input
                 value={(table.getColumn("n_lotto_super")?.getFilterValue() as string) ?? ""}
                 onChange={(event) => {
-                  table.getColumn("n_lotto_super")?.setFilterValue(event.target.value)
-                  setPagination((prev) => ({ ...prev, pageIndex: 0}))
+                  table.getColumn("n_lotto_super")?.setFilterValue(event.target.value);
+                  setPagination((prev) => ({ ...prev, pageIndex: 0 }));
                 }}
                 className="max-w-sm h-8"
                 style={{ borderColor: "#ced4da !important" }}
@@ -242,7 +244,9 @@ function DatabaseCertificati() {
                             className={`px-4 py-2 truncate ${
                               i === 1 || i === 2
                                 ? "hover:overflow-visible hover:whitespace-[unset] hover:absolute hover:bg-[#f8fafc]"
-                                : i === 6 ?  "py-0" : ""
+                                : i === 6
+                                ? "py-0"
+                                : ""
                             }`}
                           >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

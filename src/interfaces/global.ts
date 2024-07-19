@@ -38,9 +38,9 @@ export type RecordCertificato = {
   articolo: string;
   cliente: string;
   n_lotto_super: string;
-  certificato: string;
+  certificato: boolean;
+  status: string;
   data: string;
-  n_bolla: string;
 };
 
 export type WithID = {
