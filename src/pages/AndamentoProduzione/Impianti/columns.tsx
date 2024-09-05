@@ -1,11 +1,14 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@components/shadcn/Popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/shadcn/Table";
 import { Barra } from "@interfaces/global";
+import { durata } from "@lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
+import { toEuro } from "@utils/main";
+import RecordLavorazioneDialog from "features/record-lavorazione/record-lavorazione-dialog";
 import { useQuery } from "react-query";
 import { URLS } from "urls";
 
-const PopoverBarra = ({ codice }: { codice: string }) => {
+export const PopoverBarra = ({ codice }: { codice: string }) => {
   const barra = useQuery<Barra>(URLS.BARRE + codice + "/", {
     select: (data) => {
       data.steps = data.steps.sort((a, b) => {
@@ -14,7 +17,6 @@ const PopoverBarra = ({ codice }: { codice: string }) => {
       return data;
     },
   });
-
   return (
     <div>
       <Table>
@@ -32,6 +34,12 @@ const PopoverBarra = ({ codice }: { codice: string }) => {
             <TableHead>
               <strong>Uscita</strong>
             </TableHead>
+            <TableHead>
+              <strong>Durata</strong>
+            </TableHead>
+            <TableHead>
+              <strong>Costo</strong>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,10 +49,7 @@ const PopoverBarra = ({ codice }: { codice: string }) => {
               <TableCell>{step.posizione}</TableCell>
               <TableCell>
                 {step.ingresso
-                  ? new Date(step.ingresso).toLocaleDateString("it-IT", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
+                  ? new Date(step.ingresso).toLocaleTimeString("it-IT", {
                       hour: "numeric",
                       minute: "numeric",
                     })
@@ -52,15 +57,16 @@ const PopoverBarra = ({ codice }: { codice: string }) => {
               </TableCell>
               <TableCell>
                 {step.uscita
-                  ? new Date(step.uscita).toLocaleDateString("it-IT", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
+                  ? new Date(step.uscita).toLocaleTimeString("it-IT", {
                       hour: "numeric",
                       minute: "numeric",
                     })
                   : "-"}
               </TableCell>
+              <TableCell>
+                {!step.ingresso || !step.uscita ? "-" : durata(new Date(step.ingresso), new Date(step.uscita))}
+              </TableCell>
+              <TableCell>{step.costo_metallo > 0 ? toEuro(step.costo_metallo) : "-"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -76,7 +82,7 @@ export const columns: ColumnDef<Barra>[] = [
     cell: ({ row }) => {
       return (
         <Popover>
-          <PopoverTrigger>{row.original.codice.split('-').at(-1)!}</PopoverTrigger>
+          <PopoverTrigger>{row.original.codice.split("-").at(-1)!}</PopoverTrigger>
           <PopoverContent className="max-h-[450px] overflow-scroll w-[700px]">
             <PopoverBarra codice={row.original.codice} />
           </PopoverContent>
@@ -88,7 +94,19 @@ export const columns: ColumnDef<Barra>[] = [
     accessorKey: "record_lavorazione",
     header: "Record Lavorazione",
     cell: ({ row }) => {
-      return row.original.record_lavorazione || "-";
+      if (!row.original.record_lavorazione) return "-";
+      const n_lotti = row.original.record_lavorazione.split(",");
+      const ids = row.original.record_ids?.split(",");
+      return (
+        <div>
+          {n_lotti.map((n_lotto, index) => (
+            <>
+              <RecordLavorazioneDialog key={n_lotto} recordID={ids![index]} n_lotto_super={n_lotto} />
+              {index < n_lotti.length - 1 && <span>,</span>}
+            </>
+          ))}
+        </div>
+      );
     },
   },
   {

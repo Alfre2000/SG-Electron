@@ -24,6 +24,7 @@ import { DataTable } from "@ui/base-data-table/data-table";
 import { columns } from "./columns";
 import { averageProductionPerHour, getGroupedProduction } from "./utils";
 import { dateToDatePicker, toPercentage } from "utils";
+import ConsumoMetalli from "./consumo-metalli";
 
 const defaultImpianto = "Quattro Carri";
 
@@ -46,6 +47,7 @@ function Impianti() {
       { end: dateToDatePicker(addDays(periodo?.to || defaultPeriodo.to, 1)) },
     ],
     {
+      staleTime: 20 * 60 * 1000,
       keepPreviousData: true,
       select: (data) => {
         data.results = data.results.sort((a, b) => new Date(b.inizio).getTime() - new Date(a.inizio).getTime());
@@ -70,6 +72,7 @@ function Impianti() {
   }, [avgProduction]);
 
   const impiantiQuery = useQuery<Impianto[]>(URLS.IMPIANTI, {
+    staleTime: 20 * 60 * 1000,
     select: (data) =>
       data
         .map((impianto) => ({
@@ -445,6 +448,7 @@ function Impianti() {
               {barreQuery.isSuccess && <DataTable data={barreQuery.data.results} columns={columns} />}
             </CardContent>
           </Card>
+          {impianto === "2" && <ConsumoMetalli impiantoId={impianto} />}
           <Card className="min-h-[70vh] col-span-3">
             <CardHeader className="space-y-0 pb-2">
               <CardTitle className="font-medium pb-1.5">Andamento Produzione</CardTitle>

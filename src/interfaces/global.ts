@@ -1,4 +1,4 @@
-export type Record = {
+export type CustomRecord = {
   [key: string]: unknown;
 };
 
@@ -19,7 +19,7 @@ export type Clienti = {
   città?: string;
   attivo: boolean;
   dal: string;
-  campi_aggiuntivi?: Record;
+  campi_aggiuntivi?: CustomRecord;
   note?: string;
 }[];
 
@@ -101,7 +101,7 @@ export type Articolo = {
   pezzi_per_telaio: number | null;
   specifica_it: string | null;
   specifica_en: string | null;
-  info_aggiuntive: Record;
+  info_aggiuntive: CustomRecord;
   data_creazione: string;
   ultima_modifica: string;
   costo_manodopera: number | null;
@@ -122,7 +122,6 @@ export type InfoPrezzi = {
   minimo_per_pezzo: number | null;
   minimo_per_riga: number | null;
 };
-
 
 export type RecordLavorazione = {
   id: string;
@@ -149,17 +148,17 @@ export type RecordLavorazione = {
 export type RecordControllo = {
   controllo: string;
   eseguito: boolean;
-  id: string
+  id: string;
   misurazioni: Misurazione[];
   pezzi_da_testare: number;
-}
+};
 
 export type Misurazione = {
   id: string;
   manuale: boolean;
   valore: number;
   richiesta: string;
-}
+};
 
 export type RecordLavorazioneStatus = {
   id: string;
@@ -189,6 +188,7 @@ export type Consegna = {
   prezzo: number;
   prezzo_unitario: number;
   descrizione: string;
+  certificato: string;
 };
 
 export type PrezziMetalli = {
@@ -198,7 +198,7 @@ export type PrezziMetalli = {
   Rame: number;
   Stagno: number;
   Zinco: number;
-}
+};
 
 export type Documento = {
   id: string;
@@ -207,7 +207,7 @@ export type Documento = {
   file: string;
   data_creazione: string;
   ultima_modifica: string;
-}
+};
 
 export type RichiestaProdotto = {
   id: string;
@@ -220,7 +220,7 @@ export type RichiestaProdotto = {
   um?: string;
 
   quantità_testo: string;
-}
+};
 
 export type RichiestaCorrezioneBagno = {
   id: string;
@@ -233,31 +233,38 @@ export type RichiestaCorrezioneBagno = {
   note_completamento: string;
   operatore: number;
   data_completamento: string;
-}
+};
 
 export type Versione = {
   id: string;
   username: string;
   versione: string;
-}
+};
 
 export type Barra = {
   codice: string;
   impianto: number;
   record_lavorazione?: string;
+  record_ids?: string;
   articolo: string;
   ciclo: string;
   inizio: string;
   fine: string;
   n_steps: number;
   steps: Step[];
-}
+  mg_metallo: number;
+  costo_metallo: number;
+  valida: boolean;
+  quantità?: number;
+  um: string;
+};
 
 export type Step = {
   ingresso: string;
   uscita: string;
   posizione: string;
-}
+  costo_metallo: number;
+};
 
 export type Prodotto = {
   id: number;
@@ -283,20 +290,19 @@ export type Prodotto = {
   unità_misura: string;
   ums: [string, string][];
   prodotti_fornitori: FornitoreProdotto[];
-}
+};
 
 export type FornitoreProdotto = {
   prodotto: string;
   fornitore: Fornitore;
   prezzo_unitario: number;
-}
-
+};
 
 export type Fornitore = {
   id: number;
   nome: string;
   nome_semplice: string;
-}
+};
 
 export type Movimento = {
   id: string;
@@ -307,7 +313,7 @@ export type Movimento = {
   operatore: string | null;
   data: string;
   note: string | null;
-}
+};
 
 export type UtilizzoProdotto = {
   id: number;
@@ -333,8 +339,7 @@ export type UtilizzoProdotto = {
   utilizzo_ultimo_mese: number;
   utilizzo_ultimo_trimestre: number;
   utilizzo_ultimo_anno: number;
-}
-
+};
 
 export type Ordine = {
   id: number;
@@ -352,4 +357,46 @@ export type Ordine = {
   attestato: boolean;
   controllo_qualità: boolean;
   n_ordine: string;
+};
+
+export type RecordConsumo = {
+  id: string;
+  data: string;
+  quantità: number;
+  barre: Barra[];
+  articolo: string;
+  cliente: string;
+  consumo_metalli: number;
+  n_lotto_super: string;
+  um: string;
+  prezzo?: number;
+  trattamenti: string;
+  superficie: number;
+  spessore_misurato?: number;
+  richieste: Record<
+    string,
+    {
+      spessore_minimo?: number;
+      spessore_massimo?: number;
+    }
+  >;
+};
+
+export type RecordLavorazioneDetail = {
+  id: string;
+  articolo: string;
+  cliente: string;
+  quantità: number;
+  um: string;
+  n_lotto_super: string;
+  data: string;
+  status: string;
+  trattamenti: string;
+  prezzo: number;
+  impianto: string;
+  data_arrivo: string;
+  n_lotto_cliente?: string;
+  ddt_cliente?: string;
+  barre: Barra[];
+  consegne: Consegna[];
 }

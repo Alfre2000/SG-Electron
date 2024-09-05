@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { Column } from "@tanstack/react-table";
+import { Column, Table } from "@tanstack/react-table";
 
 import { cn } from "@lib/utils";
 import { Badge } from "@components/shadcn/Badge";
@@ -27,6 +27,10 @@ interface DataTableFacetedFilterProps<TData, TValue> {
     icon?: React.ReactNode;
   }[];
   onChange?: (value: string[]) => void;
+  sort?: boolean;
+  width?: number;
+  table?: Table<TData>;
+  facetCount?: boolean;
 }
 
 export function DataTableFacetedFilter<TData, TValue>({
@@ -34,11 +38,21 @@ export function DataTableFacetedFilter<TData, TValue>({
   title,
   options,
   className,
-  onChange
+  onChange,
+  table,
+  sort = false,
+  width = 200,
+  facetCount = true
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
-
+  if (sort) {
+    options.sort((a, b) => {
+      const aFacet = facets?.get(a.value) || 0;
+      const bFacet = facets?.get(b.value) || 0;
+      return bFacet - aFacet;
+    });
+  }
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -70,7 +84,7 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className="p-0" align="start" style={{ width }}>
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>
@@ -89,6 +103,9 @@ export function DataTableFacetedFilter<TData, TValue>({
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(filterValues.length ? filterValues : undefined);
+                      if (table) {
+                        table.setPageIndex(0);
+                      }
                       onChange?.(filterValues);
                     }}
                   >
@@ -102,7 +119,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     </div>
                     {option.icon && <div className="w-6 ml-1 text-gray-700">{option.icon}</div>}
                     <span>{option.label}</span>
-                    {facets?.get(option.value) && (
+                    {facetCount && facets?.get(option.value) && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
                         {facets.get(option.value)}
                       </span>

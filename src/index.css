@@ -232,3 +232,7 @@ input.no-arrows::-webkit-inner-spin-button {
 .leaflet-popup-tip {
   background-color: rgba(245, 246, 247, 0.9) !important;
 }
+
+.striped-bg {
+  background: repeating-linear-gradient(-45deg, #b8000008, #b8000008 5px, white 5px, white 25px);
+}

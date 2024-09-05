@@ -51,7 +51,9 @@ export const URLS = {
     SCHEDE_CONTROLLO: BASE_PATH + '/scheda-controllo/schede-controllo/',
     SCHEDA_CONTROLLO_OSSIDO: BASE_PATH + '/scheda-controllo/scheda-controllo-ossido/',
     RECORD_LAVORAZIONE_INFO: BASE_PATH + '/scheda-controllo/record-lavorazione-info/',
+    RECORD_LAVORAZIONE_DETAIL: BASE_PATH + '/scheda-controllo/record-lavorazione-detail/',
     LOTTO_INFO: BASE_PATH + '/scheda-controllo/lotto-info/',
+    CONSUMO_METALLI: BASE_PATH + '/scheda-controllo/consumo-metalli/',
 
     UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
     VERIFICA_PREZZI_PDF: BASE_PATH + '/scheda-controllo/verifica-prezzi-pdf/',

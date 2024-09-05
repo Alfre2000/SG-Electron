@@ -34,7 +34,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { DataTableFacetedFilter } from "@ui/full-data-table/data-table-faceted-filter";
 import { statuses } from "@pages/AndamentoProduzione/StatusMagazzino/data-table";
-const electron = window?.require ? window.require("electron") : null;
+import RecordLavorazioneDialog from "features/record-lavorazione/record-lavorazione-dialog";
 
 declare module "@tanstack/table-core" {
   interface TableMeta<TData extends RowData> {
@@ -42,7 +42,6 @@ declare module "@tanstack/table-core" {
     setDialog?: React.Dispatch<React.SetStateAction<RecordCertificato | null>>;
   }
 }
-
 
 const columns: ColumnDef<RecordCertificato>[] = [
   {
@@ -70,6 +69,9 @@ const columns: ColumnDef<RecordCertificato>[] = [
     accessorKey: "n_lotto_super",
     header: "N° Lotto",
     size: 15,
+    cell: ({ row }) => (
+      <RecordLavorazioneDialog recordID={row.original.id} n_lotto_super={row.original.n_lotto_super} />
+    ),
   },
   {
     accessorKey: "status",
@@ -168,10 +170,13 @@ function DatabaseCertificati() {
               <Label className="mb-1.5">Status</Label>
               <div className="text-left mt-1 w-full">
                 <DataTableFacetedFilter
-                className="w-full justify-start"
+                  className="w-full justify-start"
                   column={table.getColumn("status")}
                   title="Status"
                   options={statuses}
+                  onChange={() => {
+                    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+                  }}
                 />
               </div>
             </div>
