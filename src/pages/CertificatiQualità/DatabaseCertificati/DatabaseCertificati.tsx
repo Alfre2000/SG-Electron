@@ -162,8 +162,8 @@ function DatabaseCertificati() {
                   table.getColumn("articolo")?.setFilterValue(event.target.value);
                   setPagination((prev) => ({ ...prev, pageIndex: 0 }));
                 }}
-                className="max-w-sm h-8"
-                style={{ borderColor: "#ced4da !important" }}
+                className="w-full h-8"
+                style={{ borderColor: "#000000 !important" }}
               />
             </div>
             <div className="flex flex-col">
@@ -204,8 +204,8 @@ function DatabaseCertificati() {
                   table.getColumn("n_lotto_super")?.setFilterValue(event.target.value);
                   setPagination((prev) => ({ ...prev, pageIndex: 0 }));
                 }}
-                className="max-w-sm h-8"
-                style={{ borderColor: "#ced4da !important" }}
+                className="w-full h-8"
+                style={{ borderColor: "#000000 !important" }}
               />
             </div>
           </CardContent>
