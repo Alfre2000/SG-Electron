@@ -400,3 +400,5 @@ export type RecordLavorazioneDetail = {
   barre: Barra[];
   consegne: Consegna[];
 }
+
+export type Vasca = string;

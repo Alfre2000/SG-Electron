@@ -21,6 +21,7 @@ export const URLS = {
     PAGINA_PROSSIME: BASE_PATH + '/analisi-manutenzioni/pagina-prossime/',
     RICHIESTE_CORREZIONE_BAGNO: BASE_PATH + '/analisi-manutenzioni/richieste-correzione-bagno/',
     RICHIESTE_CORREZIONE_BAGNO_PDF: BASE_PATH + '/analisi-manutenzioni/richiesta-correzione-bagno-pdf/',
+    VASCHE: BASE_PATH + '/analisi-manutenzioni/vasche/',
 
     // BASE
     OPERATORI: BASE_PATH + '/base/operatori/',
@@ -34,13 +35,11 @@ export const URLS = {
     LAVORAZIONI: BASE_PATH + '/base/lavorazioni/',
     MATERIALI: BASE_PATH + '/base/materiali/',
     TRAVERSINI: BASE_PATH + '/base/traversini/',
-    DOCUMENTI: BASE_PATH + '/base/documenti/',
     VERSIONI: BASE_PATH + '/base/versioni/',
     UTILIZZI: BASE_PATH + '/base/utilizzi/',
 
     CLIENTI_MAPPA: BASE_PATH + '/base/mappa-clienti/',
     PREZZI_METALLI: BASE_PATH + '/base/prezzi-metalli/',
-    UPDATE_DOCUMENTO: BASE_PATH + '/base/update-documento/',
 
     // SCHEDE CONTROLLO
     RECORD_LAVORAZIONI_STATUS: BASE_PATH + '/scheda-controllo/record-lavorazione-status',
@@ -73,11 +72,6 @@ export const URLS = {
     SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/schede-impianti/',
     RECORD_SCHEDE_IMPIANTO: BASE_PATH + '/scheda-impianto/record-schede-impianti/',
     ULTIMA_SCHEDA_IMPIANTO: BASE_PATH + '/scheda-impianto/ultima-scheda-impianto/',
-
-    // ANDAMENTO PRODUZIONE
-    LAST_SCHEDE_IMPIANTO: BASE_PATH + '/base/dashboards/last-schede-impianto/',
-    RECORD_LAVORAZIONI_OVER_TIME: BASE_PATH + '/base/dashboards/record-lavorazione-over-time/',
-    RECORD_MANCANTI: BASE_PATH + '/base/dashboards/record-mancanti/',
 
     // MAGAZZINO
     FORNITORI: BASE_PATH + '/magazzino/fornitori/',

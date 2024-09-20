@@ -33,7 +33,7 @@ function Allarmi() {
   const richiesteQuery = useImpiantoQuery({ queryKey: [URLS.RICHIESTE_CORREZIONE_BAGNO, { eseguita: "false" }] });
   const today = new Date().toISOString().split("T")[0];
   const missingBarre = useImpiantoQuery(
-    { queryKey: [URLS.BARRE, { inizio: today, empty: true, finita: false }] },
+    { queryKey: [URLS.BARRE, { inizio: today, empty: true, finita: "false" }] },
     {
       select: (data) => data.results.filter((barra) => isDateRecent(barra.inizio, 3)),
       refetchInterval: 1000 * 60
@@ -70,7 +70,7 @@ function Allarmi() {
       link: operazione.link,
     });
   });
-  const enabled = [2, 8].includes(impianto);
+  const enabled = [2, 8, 4, 6].includes(impianto);
   if (enabled && missingBarre.data?.length > 0) {
     const single = missingBarre.data?.length === 1;
     allarmi.push({

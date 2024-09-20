@@ -6,6 +6,7 @@ import RequiredSelect from "@components/form-components/RequiredSelect";
 import Select from "react-select";
 import { customStyle } from "./stylesSelect";
 import { cn } from "@lib/utils";
+import CreatableSelect from "react-select/creatable";
 
 export type Option = { value: string | number; label: string | number };
 
@@ -16,11 +17,12 @@ type SearchSelectProps = {
   inputColumns?: number;
   inputClassName?: string;
   onChange?: (option: Option) => void;
+  createTable?: boolean;
 };
 
-function SearchSelect({ name, label, options, inputColumns = 8, inputClassName, onChange }: SearchSelectProps) {
+function SearchSelect({ name, label, options, inputColumns = 8, inputClassName, onChange, createTable = false }: SearchSelectProps) {
   const form = useFormContext();
-
+  const SelectComponent = createTable ? CreatableSelect : RequiredSelect
   const labelText = label || `${capitalize(name).replaceAll("_", " ")}:`;
   const colInput = label === false ? 12 : inputColumns;
   const colLabel = label === false ? 0 : 12 - colInput;
@@ -46,7 +48,7 @@ function SearchSelect({ name, label, options, inputColumns = 8, inputClassName, 
               )}
               <FormControl style={{ gridColumn: `span ${colInput} / span ${colInput}` }}>
                 <div>
-                  <RequiredSelect
+                  <SelectComponent
                     className={cn(`react-select flex flex-col justify-center items-center h-8 hover:border-[#e5e7eb] text-left ${errorClass} ${successClass}`, inputClassName)}
                     SelectComponent={Select}
                     placeholder=""

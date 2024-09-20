@@ -16,7 +16,7 @@ import Articolo from "./pages/AreaAdmin/Articolo/Articolo";
 import RecordSchedaImpianto from "./pages/GestioneImpianto/RecordSchedaImpianto/RecordSchedaImpianto";
 import AlertRichieste from "./pages/GestioneImpianto/AlertRichieste";
 import CorrezioneBagno from "./pages/GestioneImpianto/CorrezioneBagno/CorrezioneBagno";
-import VisualizzaDocumenti from "./pages/DatabaseDocumenti/VisualizzaDocumenti/VisualizzaDocumenti";
+import VisualizzaDocumenti from "./pages/GestioneImpianto/VisualizzaDocumenti/VisualizzaDocumenti";
 import SchedaImpianto from "./pages/AreaAdmin/SchedaImpianto/SchedaImpianto";
 import NuovaRichiesta from "./pages/CorrezioneBagni/GestisciRichieste/GestisciRichieste";
 import AdminAnalisi from "./pages/AreaAdmin/Analisi/Analisi";
@@ -25,7 +25,6 @@ import Operatore from "./pages/AreaAdmin/Operatore/Operatore";
 import Certificato from "./pages/CertificatiQualità/Certificato/Certificato";
 import CertificatiBolla from "./pages/CertificatiQualità/CertificatiBolla/CertificatiBolla";
 import EtichetteMTA from "./pages/CertificatiQualità/EtichetteMTA/EtichetteMTA";
-import Dashboards from "./pages/AndamentoProduzione/Dashboards/Dashboards";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { defaultQueryFn } from "./api/queryFn";
 import { Toaster, toast } from 'sonner';
@@ -41,7 +40,6 @@ import Utilizzo from "@pages/Developer/Utilizzo/Utilizzo";
 import Wrapper from "@ui/wrapper/Wrapper";
 import InserimentoLotti from "@pages/AndamentoProduzione/InserimentoLotti/InserimentoLotti";
 import Prelievo from "@pages/Magazzino/Prelievo/Prelievo";
-import StatusMagazzino from "@pages/AndamentoProduzione/StatusMagazzino/StatusMagazzino";
 import Giacenza from "@pages/Magazzino/Giacenza/Giacenza";
 import Home from "@pages/Magazzino/Home/Home";
 import Produzione from "@pages/GestioneImpianto/Produzione/Produzione";
@@ -121,15 +119,11 @@ function App() {
             </Route>
             {/* Andamento Produzione */}
             <Route path="andamento-produzione/">
-              <Route path="dashboards/" element={<Dashboards />}></Route>
               <Route path="focus-cliente/" element={<SelezioneCliente />}></Route>
               <Route path="focus-cliente/:cliente" element={<FocusCliente />}></Route>
               <Route path="mappa-clienti/" element={<MappaClienti />}></Route>
               <Route path="impianti/" element={<Impianti />}></Route>
               <Route path="inserimento-lotti/" element={<InserimentoLotti />}></Route>
-              <Route element={<RouteWrapper />}>
-                <Route path="status-magazzino/" element={<StatusMagazzino />}></Route>
-              </Route>
             </Route>
             {/* Database Documenti */}
             <Route path="documenti/"  element={<RouteWrapper />}>

@@ -29,11 +29,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@comp
 import { Label } from "@components/shadcn/Label";
 import NewSearchSelect from "@components/form-components/NewSearchSelect";
 import { searchOptions } from "utils";
-import { MESI } from "../../../constants";
+import { MESI, STATUS } from "../../../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { DataTableFacetedFilter } from "@ui/full-data-table/data-table-faceted-filter";
-import { statuses } from "@pages/AndamentoProduzione/StatusMagazzino/data-table";
 import RecordLavorazioneDialog from "features/record-lavorazione/record-lavorazione-dialog";
 
 declare module "@tanstack/table-core" {
@@ -78,7 +77,7 @@ const columns: ColumnDef<RecordCertificato>[] = [
     header: "Status",
     size: 15,
     cell: ({ row }) => {
-      return statuses.find((s) => s.value === row.getValue("status"))?.label ?? "-";
+      return STATUS.find((s) => s.value === row.getValue("status"))?.label ?? "-";
     },
   },
   {
@@ -173,7 +172,7 @@ function DatabaseCertificati() {
                   className="w-full justify-start"
                   column={table.getColumn("status")}
                   title="Status"
-                  options={statuses}
+                  options={STATUS}
                   onChange={() => {
                     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
                   }}

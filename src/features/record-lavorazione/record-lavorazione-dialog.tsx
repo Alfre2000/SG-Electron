@@ -65,7 +65,7 @@ function RecordLavorazioneDialog({ recordID, n_lotto_super }: Props) {
                 </div>
                 <div className="flex justify-start items-center gap-x-2">
                   <h4 className="font-semibold w-32 text-left">Status:</h4>
-                  <span>{STATUS[data.status]}</span>
+                  <span>{STATUS.find((s) => s.value === data.status)?.label}</span>
                 </div>
                 <div className="flex justify-start items-center gap-x-2">
                   <h4 className="font-semibold w-32 text-left">Impianto:</h4>

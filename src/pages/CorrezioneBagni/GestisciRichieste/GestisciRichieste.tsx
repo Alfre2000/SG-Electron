@@ -10,7 +10,7 @@ import { findElementFromID, searchOptions } from "utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/shadcn/Table";
 import Loading from "@components/Loading/Loading";
 import Error from "@components/Error/Error";
-import { PaginationData, Prodotto, RichiestaCorrezioneBagno } from "@interfaces/global";
+import { PaginationData, Prodotto, RichiestaCorrezioneBagno, Vasca } from "@interfaces/global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPrint, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { apiGet } from "@api/api";
@@ -188,7 +188,11 @@ function GestisciRichieste() {
                         })}
                       </TableCell>
                       <TableCell>{findElementFromID(richiesta.impianto, impiantiQuery.data).nome}</TableCell>
-                      <TableCell>{richiesta.richieste_prodotto.map((r) => r.prodotto).join(" - ")}</TableCell>
+                      <TableCell>
+                        {richiesta.richieste_prodotto
+                          .map((r) => r.prodotto || r.prodotto_magazzino?.nome)
+                          .join(" - ")}
+                      </TableCell>
                       <TableCell className="text-center">
                         <FontAwesomeIcon icon={richiesta.data_completamento ? faCheck : faTimes} />
                       </TableCell>
@@ -258,6 +262,7 @@ function GestisciRichieste() {
 export default GestisciRichieste;
 
 const RichiesteProdotto = () => {
+  const vascheQuery = useQuery<Vasca[]>(URLS.VASCHE);
   const prodottiQuery = useQuery<Prodotto[]>(URLS.PRODOTTI);
   const form = useFormContext();
   const field = useFieldArray({ control: form.control, name: "richieste_prodotto" });
@@ -277,7 +282,12 @@ const RichiesteProdotto = () => {
           <tr className="h-12" key={item.id}>
             <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[21%]">
               <label className="font-semibold mb-1 pl-0.5">Vasca</label>
-              <Input name={`richieste_prodotto[${index}].vasca`} label={false} />
+              <SearchSelect
+                name={`richieste_prodotto[${index}].vasca`}
+                options={vascheQuery.data?.map((v) => ({ value: v, label: v })) || []}
+                label={false}
+                createTable
+              />
             </td>
             <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[21%]">
               <label className="font-semibold mb-1 pl-0.5">Prodotto</label>
@@ -318,10 +328,7 @@ const RichiesteProdotto = () => {
             </td>
             <td className="border-[1px] border-slate-300 text-left px-3 py-3 w-[17%]">
               <label className="font-semibold mb-1 pl-0.5">Quantità Testo</label>
-              <Input
-                name={`richieste_prodotto[${index}].quantità`}
-                label={false}
-              />
+              <Input name={`richieste_prodotto[${index}].quantità`} label={false} />
             </td>
             <td className="border-[1px] border-slate-300">
               <RemoveIcon
@@ -341,7 +348,9 @@ const RichiesteProdotto = () => {
       <tr className="h-10">
         <td colSpan={7}>
           <AddIcon
-            onClick={() => field.append({ vasca: "", prodotto_magazzino: "", quantità_magazzino: "", um: "", quantità: "" })}
+            onClick={() =>
+              field.append({ vasca: "", prodotto_magazzino: "", quantità_magazzino: "", um: "", quantità: "" })
+            }
           />
         </td>
       </tr>

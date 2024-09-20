@@ -136,16 +136,6 @@ const navbarAndamentoProduzione = () => {
       links: [{ name: "Focus Cliente", link: "/andamento-produzione/focus-cliente/" }],
     },
     {
-      title: "Status Magazzino",
-      icon: faWarehouse,
-      links: [{ name: "Status Magazzino", link: "/andamento-produzione/status-magazzino/" }],
-    },
-    {
-      title: "Dashboards",
-      icon: faChartLine,
-      links: [{ name: "Dashboards", link: "/andamento-produzione/dashboards/" }],
-    },
-    {
       title: "Impianti",
       icon: faIndustry,
       links: [{ name: "Impianti", link: "/andamento-produzione/impianti/" }],
@@ -200,17 +190,6 @@ const navbarAreaAdmin = () => {
   return items;
 };
 
-const navbarDatabaseDocumenti = (user: UserContextType["user"]["user"]) => {
-  let items = [
-    {
-      title: "Visualizza",
-      icon: faFilePdf,
-      links: [{ name: "Documenti", link: "/documenti/visualizza/" }],
-    },
-  ];
-  return items;
-};
-
 const navbarCorrezioneBagni = () => {
   return [
     {
@@ -218,7 +197,6 @@ const navbarCorrezioneBagni = () => {
       icon: faAtom,
       links: [{ name: "Richieste", link: "/correzione-bagni/gestisci-richieste/" }],
     },
-  
   ];
 };
 
@@ -274,9 +252,6 @@ export const useGetNavItems = () => {
     case "area-admin":
       navFn = navbarAreaAdmin;
       break;
-    case "documenti":
-      navFn = navbarDatabaseDocumenti;
-      break;
     case "correzione-bagni":
       navFn = navbarCorrezioneBagni;
       break;
@@ -306,8 +281,6 @@ export const useGetTitle = () => {
       return "Andamento Produzione";
     case "area-admin":
       return "Area Admin";
-    case "documenti":
-      return "Database Documenti";
     case "correzione-bagni":
       return "Correzione Bagni";
     case "developer":

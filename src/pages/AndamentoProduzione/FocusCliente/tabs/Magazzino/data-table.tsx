@@ -21,49 +21,14 @@ import { Input } from "@components/shadcn/Input";
 import { DataTablePagination } from "@ui/full-data-table/data-table-pagination";
 import { Button } from "@components/shadcn/Button";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { DataTableViewOptions } from "@ui/full-data-table/data-table-view-options";
 import { DataTableFacetedFilter } from "@ui/full-data-table/data-table-faceted-filter";
-import {
-  faEuro,
-  faFlagCheckered,
-  faIndustry,
-  faRightToBracket,
-  faTruckArrowRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { STATUS } from "../../../../../constants";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export const statuses = [
-  {
-    value: "PL",
-    label: "Ricezione",
-    icon: <FontAwesomeIcon icon={faRightToBracket} />,
-  },
-  {
-    value: "IL",
-    label: "In Lavorazione",
-    icon: <FontAwesomeIcon icon={faIndustry} />,
-  },
-  {
-    value: "L",
-    label: "Completato",
-    icon: <FontAwesomeIcon icon={faFlagCheckered} />,
-  },
-  {
-    value: "C",
-    label: "Consegnato",
-    icon: <FontAwesomeIcon icon={faTruckArrowRight} />,
-  },
-  {
-    value: "F",
-    label: "Fatturato",
-    icon: <FontAwesomeIcon icon={faEuro} />,
-  },
-];
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -121,7 +86,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
             className="max-w-sm h-8"
           />
         </div>
-        <DataTableFacetedFilter column={table.getColumn("status")} title="Status" options={statuses} />
+        <DataTableFacetedFilter column={table.getColumn("status")} title="Status" options={STATUS} />
         {isFiltered && (
           <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
             Resetta
