@@ -397,8 +397,22 @@ export type RecordLavorazioneDetail = {
   data_arrivo: string;
   n_lotto_cliente?: string;
   ddt_cliente?: string;
+  descrizione: string;
   barre: Barra[];
   consegne: Consegna[];
 }
 
 export type Vasca = string;
+
+export type RecordInserimentoLotti = {
+  id: string;
+  n_lotto_super: string;
+  data_arrivo: string;
+  data: string;
+  status: string;
+  n_barre: number;
+  commento: {
+    message: string;
+    ok: boolean;
+  }
+}

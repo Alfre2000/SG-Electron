@@ -8,7 +8,7 @@ import RecordLavorazioneDialog from "features/record-lavorazione/record-lavorazi
 import { useQuery } from "react-query";
 import { URLS } from "urls";
 
-export const PopoverBarra = ({ codice }: { codice: string }) => {
+export const PopoverBarra = ({ codice, costo = true }: { codice: string; costo?: boolean }) => {
   const barra = useQuery<Barra>(URLS.BARRE + codice + "/", {
     select: (data) => {
       data.steps = data.steps.sort((a, b) => {
@@ -37,9 +37,11 @@ export const PopoverBarra = ({ codice }: { codice: string }) => {
             <TableHead>
               <strong>Durata</strong>
             </TableHead>
-            <TableHead>
-              <strong>Costo</strong>
-            </TableHead>
+            {costo && (
+              <TableHead>
+                <strong>Costo</strong>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,7 +68,7 @@ export const PopoverBarra = ({ codice }: { codice: string }) => {
               <TableCell>
                 {!step.ingresso || !step.uscita ? "-" : durata(new Date(step.ingresso), new Date(step.uscita))}
               </TableCell>
-              <TableCell>{step.costo_metallo > 0 ? toEuro(step.costo_metallo) : "-"}</TableCell>
+              {costo && <TableCell>{step.costo_metallo > 0 ? toEuro(step.costo_metallo) : "-"}</TableCell>}
             </TableRow>
           ))}
         </TableBody>

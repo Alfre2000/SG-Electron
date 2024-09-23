@@ -53,7 +53,8 @@ export const URLS = {
     RECORD_LAVORAZIONE_DETAIL: BASE_PATH + '/scheda-controllo/record-lavorazione-detail/',
     LOTTO_INFO: BASE_PATH + '/scheda-controllo/lotto-info/',
     CONSUMO_METALLI: BASE_PATH + '/scheda-controllo/consumo-metalli/',
-
+    INSERIMENTO_LOTTI: BASE_PATH + '/scheda-controllo/inserimento-lotti/',
+    
     UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
     VERIFICA_PREZZI_PDF: BASE_PATH + '/scheda-controllo/verifica-prezzi-pdf/',
 
