@@ -44,24 +44,30 @@ function RecordLavorazioneDialog({ recordID, n_lotto_super }: Props) {
                   <div className="flex justify-start items-center gap-x-2">
                     <h4 className="font-semibold w-32 text-left">Quantità:</h4>
                     <span>
-                      {toFormattedNumber(data.quantità)}
-                      {data.um === "KG" ? <span> Kg</span> : <span> pz</span>}
+                      {data.quantità && (
+                        <>
+                          {toFormattedNumber(data.quantità)}
+                          {data.um === "KG" ? <span> Kg</span> : <span> pz</span>}
+                        </>
+                      )}
                     </span>
                   </div>
                   <div className="flex justify-start items-center gap-x-2">
                     <h4 className="font-semibold w-32 text-left">Prezzo:</h4>
-                    <span>{toEuro(data.prezzo)}</span>
+                    <span>{data.prezzo ? toEuro(data.prezzo) : "-"}</span>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-start items-center gap-x-2">
                     <h4 className="font-semibold w-32 text-left">Data Ordine:</h4>
                     <span>
-                      {new Date(data.data_arrivo).toLocaleDateString("it-IT", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
+                      {data.data_arrivo
+                        ? new Date(data.data_arrivo).toLocaleDateString("it-IT", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })
+                        : "-"}
                     </span>
                   </div>
                   <div className="flex justify-start items-center gap-x-2">

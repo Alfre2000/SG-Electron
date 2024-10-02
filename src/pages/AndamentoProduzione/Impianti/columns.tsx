@@ -103,7 +103,7 @@ export const columns: ColumnDef<Barra>[] = [
         <div>
           {n_lotti.map((n_lotto, index) => (
             <>
-              <RecordLavorazioneDialog key={n_lotto} recordID={ids![index]} n_lotto_super={n_lotto} />
+              <RecordLavorazioneDialog key={n_lotto.trim()} recordID={ids![index]} n_lotto_super={n_lotto.trim()} />
               {index < n_lotti.length - 1 && <span>,</span>}
             </>
           ))}

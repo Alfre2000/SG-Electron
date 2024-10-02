@@ -58,7 +58,7 @@ type DatePickerWithRangeProps = {
 
 export function DatePickerWithRange({ value, onChange, disabled }: DatePickerWithRangeProps) {
   const prevMonth = value?.from ? new Date(value.from) : undefined;
-  if (prevMonth) prevMonth.setMonth(prevMonth.getMonth() - 1);
+  if (prevMonth) prevMonth.setMonth(prevMonth.getMonth());
   return (
       <Popover>
         <PopoverTrigger asChild>
@@ -71,10 +71,10 @@ export function DatePickerWithRange({ value, onChange, disabled }: DatePickerWit
             {value?.from ? (
               value.to ? (
                 <>
-                  {format(value.from, "LLL dd, y")} - {format(value.to, "LLL dd, y")}
+                  {format(value.from, "LLL dd, y", { locale: it })} - {format(value.to, "LLL dd, y", { locale: it })}
                 </>
               ) : (
-                format(value.from, "LLL dd, y")
+                format(value.from, "LLL dd, y", { locale: it })
               )
             ) : (
               <span>Seleziona un periodo</span>
@@ -90,6 +90,7 @@ export function DatePickerWithRange({ value, onChange, disabled }: DatePickerWit
             onSelect={onChange}
             numberOfMonths={2}
             disabled={disabled}
+            locale={it}
           />
         </PopoverContent>
       </Popover>

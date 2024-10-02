@@ -43,6 +43,9 @@ import Prelievo from "@pages/Magazzino/Prelievo/Prelievo";
 import Giacenza from "@pages/Magazzino/Giacenza/Giacenza";
 import Home from "@pages/Magazzino/Home/Home";
 import Produzione from "@pages/GestioneImpianto/Produzione/Produzione";
+import UtilizzoProdotti from "@pages/Magazzino/UtilizzoProdotti/UtilizzoProdotti";
+import GestioneTerzisti from "@pages/CertificatiQualità/GestioneTerzisti/GestioneTerzisti";
+import OrdiniInCorso from "@pages/GestioneImpianto/OrdiniInCorso/OrdiniInCorso";
 const electron = window?.require ? window.require("electron") : null;
 
 function reducer (state, userInfo) {
@@ -94,6 +97,7 @@ function App() {
               <Route element={<RouteWrapper />}>
                 <Route path="visualizza/" element={<VisualizzaDocumenti />}></Route>
                 <Route path="produzione/" element={<Produzione />}></Route>
+                <Route path="ordini-in-corso/" element={<OrdiniInCorso />}></Route>
               </Route>
               <Route path="richiesta-correzione-bagno/:richiestaID/" element={<CorrezioneBagno />}></Route>
               <Route path="alert-richieste/" element={<AlertRichieste />}></Route>
@@ -115,6 +119,9 @@ function App() {
               <Route path="certificato/" element={<Certificato />}></Route>
               <Route path="etichette-mta/" element={<EtichetteMTA />}></Route>
               <Route path="database-certificati/" element={<DatabaseCertificati />}></Route>
+              <Route element={<RouteWrapper />}>
+                <Route path="gestione-terzisti/" element={<GestioneTerzisti />}></Route>
+              </Route>
               <Route path="verifica-prezzi/" element={<VerificaPrezzi />}></Route>
             </Route>
             {/* Andamento Produzione */}
@@ -138,11 +145,12 @@ function App() {
               <Route path="versioni-programma/" element={<VersioniProgramma />}></Route>
               <Route path="utilizzo/" element={<Utilizzo />}></Route>
             </Route>
-            {/* Developer */}
+            {/* Magazzino */}
             <Route path="magazzino/" element={<RouteWrapper />}>
               <Route path="home/" element={<Home />}></Route>
               <Route path="prelievo/" element={<Prelievo />}></Route>
               <Route path="giacenza/" element={<Giacenza />}></Route>
+              <Route path="utilizzo-prodotti/" element={<UtilizzoProdotti />}></Route>
             </Route>
             </Route>
           </Routes>

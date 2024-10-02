@@ -4,7 +4,6 @@ import {
   faFileInvoice,
   faGear,
   faUserGear,
-  faUserTag,
   faWrench,
   faMapLocationDot,
   faUserTie,
@@ -17,17 +16,16 @@ import {
   faListCheck,
   faTags,
   faIndustry,
-  faFolderTree,
   faFilePdf,
   faAtom,
   faCodeBranch,
   faMagnifyingGlass,
-  faRuler,
-  faMinus,
   faWarehouse,
   faHome,
   faArrowRightFromBracket,
   faBarChart,
+  faMagnifyingGlassChart,
+  faTruckFast,
 } from "@fortawesome/free-solid-svg-icons";
 
 const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
@@ -57,6 +55,11 @@ const navbarGestioneImpianto = (user: UserContextType["user"]["user"]) => {
       title: "Informazioni",
       icon: faChartLine,
       links: [{ name: "Prossime Manutenzioni", link: "/manutenzione/prossime/" }],
+    },
+    {
+      title: "Ordini in corso",
+      icon: faTruckFast,
+      links: [{ name: "Ordini in corso", link: "/manutenzione/ordini-in-corso/" }],
     },
     {
       title: "Documenti",
@@ -115,6 +118,11 @@ const navbarCertificatiQualità = (user: UserContextType["user"]["user"]) => {
       title: "Database",
       icon: faDatabase,
       links: [{ name: "Database", link: "/certificati-qualita/database-certificati/" }],
+    },
+    {
+      title: "Gestione Terzisti",
+      icon: faTruckFast,
+      links: [{ name: "Gestione Terzisti", link: "/certificati-qualita/gestione-terzisti/" }],
     },
     {
       title: "Modelli Certificati",
@@ -231,6 +239,11 @@ const navbarMagazzino = () => {
       title: "Report Giacenza",
       icon: faWarehouse,
       links: [{ name: "Report Giacenza", link: "/magazzino/giacenza/" }],
+    },
+    {
+      title: "Utilizzo Prodotti",
+      icon: faMagnifyingGlassChart,
+      links: [{ name: "Utilizzo Prodotti", link: "/magazzino/utilizzo-prodotti/" }],
     },
   ];
 };

@@ -54,6 +54,8 @@ export const URLS = {
     LOTTO_INFO: BASE_PATH + '/scheda-controllo/lotto-info/',
     CONSUMO_METALLI: BASE_PATH + '/scheda-controllo/consumo-metalli/',
     INSERIMENTO_LOTTI: BASE_PATH + '/scheda-controllo/inserimento-lotti/',
+    BARRE_TREND_CHART: BASE_PATH + '/scheda-controllo/barre/trend-chart/',
+    LAVORAZIONI_ESTERNE: BASE_PATH + '/scheda-controllo/lavorazioni-esterne/',
     
     UPDATE_CERTIFICATO: BASE_PATH + '/scheda-controllo/update-certificato/',
     VERIFICA_PREZZI_PDF: BASE_PATH + '/scheda-controllo/verifica-prezzi-pdf/',
@@ -76,10 +78,12 @@ export const URLS = {
 
     // MAGAZZINO
     FORNITORI: BASE_PATH + '/magazzino/fornitori/',
+    ALL_FORNITORI: BASE_PATH + '/magazzino/all-fornitori/',
     PRODOTTI: BASE_PATH + '/magazzino/prodotti/',
     MOVIMENTI: BASE_PATH + '/magazzino/movimenti/',
     ORDINI: BASE_PATH + '/magazzino/ordini',
     UTILIZZO_PRODOTTO: BASE_PATH + '/magazzino/utilizzo-prodotto/',
     DOCX_ORDINE: BASE_PATH + '/magazzino/docx-ordine/',
     DOCX_GIACENZA: BASE_PATH + '/magazzino/docx-giacenza/',
+    UTILIZZO_PRODOTTI: BASE_PATH + '/magazzino/utilizzo-prodotti/',
 }

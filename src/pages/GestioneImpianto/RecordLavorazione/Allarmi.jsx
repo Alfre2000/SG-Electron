@@ -70,7 +70,7 @@ function Allarmi() {
       link: operazione.link,
     });
   });
-  const enabled = [2, 8, 4, 6].includes(impianto);
+  const enabled = [1, 2, 4, 6, 8].includes(impianto);
   if (enabled && missingBarre.data?.length > 0) {
     const single = missingBarre.data?.length === 1;
     allarmi.push({

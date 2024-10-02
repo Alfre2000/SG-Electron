@@ -170,6 +170,9 @@ export type RecordLavorazioneStatus = {
   data_consegna_prevista: string;
   ritardo: number;
   articolo: string;
+  quantità: number;
+  um: string;
+  urgente: boolean;
   consegne: Consegna[];
   n_lotto_super: string;
   cliente: string;
@@ -313,6 +316,7 @@ export type Movimento = {
   operatore: string | null;
   data: string;
   note: string | null;
+  prezzo: number;
 };
 
 export type UtilizzoProdotto = {
@@ -415,4 +419,18 @@ export type RecordInserimentoLotti = {
     message: string;
     ok: boolean;
   }
+}
+
+export type LavorazioneEsterna = {
+  id: string;
+  n_bolla: string;
+  riga_bolla: string;
+  record_lavorazione: RecordLavorazione;
+  galvanica: string;
+  descrizione: string;
+  quantità: number;
+  prezzo: number | null;
+  data_ordine: string;
+  data_riconsegna: string | null;
+  data_fattura: string | null;
 }

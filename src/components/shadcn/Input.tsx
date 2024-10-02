@@ -3,7 +3,9 @@ import { cn } from "../../lib/utils";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { VariantProps, cva } from "class-variance-authority";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement>,
+    VariantProps<typeof inputVariants> {}
 
 const inputVariants = cva(
   "flex h-10 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-offset-0 focus-visible:ring-1",
@@ -70,4 +72,46 @@ const SearchInput = React.forwardRef<HTMLInputElement, InputProps>(({ className,
 });
 SearchInput.displayName = "Input";
 
-export { Input, UmInput, SearchInput };
+export interface DebouncedInputProps extends InputProps {
+  debounceDelay?: number;
+}
+
+const DebouncedInput = React.forwardRef<HTMLInputElement, DebouncedInputProps>(
+  ({ className, variant, value, onChange, debounceDelay = 500, ...props }, ref) => {
+  const [internalValue, setInternalValue] = React.useState(value);
+
+  React.useEffect(() => {
+    const handleChange = () => {
+      if (onChange) {
+        onChange(internalValue as any);
+      }
+    };
+
+    const debounceTimer = setTimeout(handleChange, debounceDelay);
+
+    return () => clearTimeout(debounceTimer);
+  }, [internalValue, debounceDelay, onChange]);
+
+  React.useEffect(() => {
+    setInternalValue(value);
+  }, [value]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInternalValue(e.target.value);
+  };
+
+  return (
+    <input
+      className={cn(inputVariants({ variant, className }))}
+      ref={ref}
+      value={internalValue}
+      onChange={handleInputChange}
+      {...props}
+    />
+  );
+}
+);
+
+DebouncedInput.displayName = "Input";
+
+export { Input, UmInput, DebouncedInput, SearchInput };

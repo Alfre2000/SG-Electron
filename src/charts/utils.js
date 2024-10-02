@@ -46,3 +46,30 @@ export const colors = [
   "#8549ba",
   "#58595b",
 ];
+
+const colorPalette = [
+  "rgb(31, 119, 180)",   // Cool Blue
+  "rgb(255, 127, 14)",   // Vivid Orange
+  "rgb(44, 160, 44)",    // Fresh Green
+  "rgb(214, 39, 40)",    // Bright Red
+  "rgb(148, 103, 189)",  // Soft Purple
+  "rgb(140, 86, 75)",    // Warm Brown
+  "rgb(227, 119, 194)",  // Pastel Pink
+  "rgb(127, 127, 127)",  // Neutral Gray
+  "rgb(188, 189, 34)",   // Olive Yellow
+  "rgb(23, 190, 207)"    // Aqua Cyan
+];
+
+export const getColors = (n, opacity) => {
+  const colors = [];
+  const palette = [...colorPalette];
+  for (let i = 0; i < n; i++) {
+    const idx = Math.floor(Math.random() * palette.length);
+    colors.push(palette[idx]);
+    palette.splice(idx, 1);
+  }
+  if (opacity) {
+    return colors.map(color => color.replace(")", `, ${opacity})`));
+  }
+  return colors;
+};

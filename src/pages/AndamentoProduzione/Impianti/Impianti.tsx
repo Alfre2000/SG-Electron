@@ -4,7 +4,7 @@ import Wrapper from "@ui/wrapper/Wrapper";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@components/shadcn/Card";
-import { Bar, Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { Tabs, TabsList, TabsTrigger } from "@components/shadcn/Tabs";
 import { URLS } from "urls";
 import { Barra, Impianto, PaginationData } from "@interfaces/global";
@@ -25,6 +25,7 @@ import { columns } from "./columns";
 import { averageProductionPerHour, getGroupedProduction } from "./utils";
 import { dateToDatePicker, toPercentage } from "utils";
 import ConsumoMetalli from "./consumo-metalli";
+import TrendChart from "./trend-chart";
 
 const defaultImpianto = "Quattro Carri";
 
@@ -143,10 +144,6 @@ function Impianti() {
       barDatasets[1].data.push(d.nTelai);
     }
   });
-  const barData = {
-    labels: barProduction.filter((_, idx) => idx % 2 === 0).map((d) => d.date),
-    datasets: barDatasets,
-  };
 
   const lastWeekBarre =
     barreQuery.data?.results.filter((b) => {
@@ -449,77 +446,7 @@ function Impianti() {
             </CardContent>
           </Card>
           {impianto === "2" && <ConsumoMetalli impiantoId={impianto} />}
-          <Card className="min-h-[70vh] col-span-3">
-            <CardHeader className="space-y-0 pb-2">
-              <CardTitle className="font-medium pb-1.5">Andamento Produzione</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {barreQuery.isError && <Error />}
-              {barreQuery.isLoading && <Loading className="m-auto relative top-28" />}
-              {barreQuery.isSuccess && (
-                <Bar
-                  data={barData}
-                  options={
-                    {
-                      maintainAspectRatio: true,
-                      responsive: true,
-                      scales: {
-                        y: {
-                          grace: "5%",
-                          beginAtZero: true,
-                          title: {
-                            display: true,
-                            text: "N° telai prodotti",
-                          },
-                        },
-                        x: {
-                          ticks: {
-                            callback: function (value: any, index: any) {
-                              const val: any = (this as any).getLabelForValue(value);
-                              return val.toLocaleString("it-IT", {
-                                weekday: "short",
-                                day: "numeric",
-                                month: "short",
-                              });
-                            },
-                          },
-                        },
-                      },
-                      plugins: {
-                        legend: {
-                          display: true,
-                        },
-                        tooltip: {
-                          callbacks: {
-                            title: function (tooltipItems: any) {
-                              const date = new Date(tooltipItems[0].label);
-                              let endHour = date.getHours() + 12;
-                              if (endHour >= 24) endHour -= 24;
-                              return (
-                                toTitle(
-                                  date.toLocaleString("it-IT", {
-                                    weekday: "long",
-                                    day: "numeric",
-                                    month: "long",
-                                  })
-                                ) +
-                                ", " +
-                                tooltipItems[0].dataset.label
-                              );
-                            },
-                            label: function (tooltipItem: any) {
-                              return "N° di telai prodotti: " + toFormattedNumber(tooltipItem.formattedValue);
-                            },
-                          },
-                          ...tooltipStyle,
-                        },
-                      },
-                    } as any
-                  }
-                />
-              )}
-            </CardContent>
-          </Card>
+          <TrendChart impianto={impianto} />
         </div>
       </div>
     </Wrapper>

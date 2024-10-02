@@ -14,6 +14,7 @@ import { tooltipStyle } from "@charts/barOptions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
+import TrendChart from "./trend-chart";
 
 function Produzione() {
   const impianto = useImpianto();
@@ -133,6 +134,7 @@ function Produzione() {
             )}
           </CardContent>
         </Card>
+        <TrendChart impianto={impianto?.toString() || ""} />
         <Card className="min-h-[70vh] col-span-3">
           <CardHeader className="space-y-0 pb-2">
             <CardTitle className="font-medium pb-1.5">Andamento Produzione</CardTitle>
